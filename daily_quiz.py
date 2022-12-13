@@ -1,5 +1,5 @@
 import random
-from util import get_verb
+from util import get_verb, conjugate
 
 
 def daily_quiz():
@@ -10,35 +10,62 @@ def daily_quiz():
 
     # Select a verb
     verb = get_verb()
+    verb_english = verb["English"]
+    verb_spanish = verb["Español"]
 
     # Select a person
     persons = [
-        "first person",  # yo
-        "second person singular informal",  # tú
-        "third person singular or second person singular formal",  # él/ella/usted
-        "first person plural",  # nosotros
-        "second person plural informal",  # vosotros
-        "third person plural or second person plural formal"  # ellos/ellas/ustedes
+        "yo",
+        "tú",
+        "él/ella/usted",
+        "nosotros",
+        "vosotros",
+        "ellos/ellas/ustedes",
     ]
+    persons_english = {
+        "yo": "first person",
+        "tú": "second person singular informal",
+        "él/ella/usted": "third person singular or second person singular formal",
+        "nosotros": "first person plural",
+        "vosotros": "second person plural informal",
+        "ellos/ellas/ustedes": "third person plural or second person plural formal",
+    }
     person = random.choice(persons)
-
-    # Get the verb stem and ending
-    stem, ending = verb["English"][:-2], verb["English"][-2:]
+    person_english = persons_english[person]
 
     # Get the conjugation of the verb in the tense and person
-    raise NotImplementedError
+    conjugated_verb = conjugate(verb_spanish, tense, person)
+
+    # Print out special characters
+    print("¡Bienvenidos a la clase de español! á, é, í, ó, ú, ü, ñ")
 
     # Ask the user to conjugate the verb in the tense and person
-    response = input(f"Conjugate {verb['English']} in the {tense} tense and {person}: ")
+    response = input(f'Conjugate "{verb_english}" in the {tense} tense and {person_english}: ')
 
     # Check if the user's response is correct
-    raise NotImplementedError
+    correct = response == conjugated_verb
 
     # If the user's response is correct, congratulate them
-    raise NotImplementedError
+    if correct:
+        print("Correct!")
 
     # If the user's response is incorrect, tell them the correct answer
-    raise NotImplementedError
+    if not correct:
+        print(f"Incorrect. The answer is {conjugated_verb}.")
 
     # Record the score for that verb
-    raise NotImplementedError
+    pass  # raise NotImplementedError
+
+    # Ask if the user wants to play again
+    play_again = input("Play again? (y/n): ")
+
+    # If the user wants to play again, play again
+    if play_again == "y":
+        daily_quiz()
+    else:
+        print("¡Hasta luego!")
+        return
+
+
+if __name__ == "__main__":
+    daily_quiz()
