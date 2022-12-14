@@ -36,9 +36,6 @@ def daily_quiz():
     # Get the conjugation of the verb in the tense and person
     conjugated_verb = conjugate(verb_spanish, tense, person)
 
-    # Print out special characters
-    print("¡Bienvenidos a la clase de español! á, é, í, ó, ú, ü, ñ")
-
     # Ask the user to conjugate the verb in the tense and person
     response = input(f'Conjugate "{verb_english}" in the {tense} tense and {person_english}: ')
 
@@ -68,4 +65,6 @@ def daily_quiz():
 
 
 if __name__ == "__main__":
+    # Print out special characters
+    print("¡Bienvenidos a la clase de español! á, é, í, ó, ú, ü, ñ")
     daily_quiz()
