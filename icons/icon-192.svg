@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" rx="32" fill="#1a1a2e"/>
+  <rect x="16" y="16" width="160" height="160" rx="24" fill="#c7553b"/>
+  <text x="96" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="36" font-weight="bold" fill="white">LD</text>
+  <text x="96" y="108" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="rgba(255,255,255,0.9)">Lección</text>
+  <text x="96" y="130" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="rgba(255,255,255,0.9)">Diaria</text>
+  <text x="96" y="158" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.6)">Aprende español</text>
+</svg>

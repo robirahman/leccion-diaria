@@ -1,0 +1,14 @@
+{
+  "name": "Leccion Diaria",
+  "short_name": "Leccion Diaria",
+  "description": "Learn Spanish every day with spaced repetition",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#c7553b",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
+}
