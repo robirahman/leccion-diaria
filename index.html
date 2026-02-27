@@ -329,6 +329,33 @@
     </div>
   </div>
 
+  <!-- ════════ PLACEMENT TEST ════════ -->
+  <div class="screen" id="screen-placement">
+    <div class="placement-header">
+      <div class="pt-progress-bar"><div class="pt-progress-bar-fill" id="pt-progress-bar-fill"></div></div>
+      <div class="placement-meta">
+        <span class="quiz-progress" id="pt-progress">1 / 30</span>
+        <span class="placement-level-tag" id="pt-level-badge">Testing: A1</span>
+      </div>
+    </div>
+    <div class="quiz-container" id="pt-container"></div>
+    <div class="quiz-nav" id="pt-next" style="display:none">
+      <button class="btn btn-primary btn-block" data-action="next-placement">Next</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-placement-results">
+    <div class="results-screen" style="text-align:center">
+      <h2 class="mb-2">Your Spanish Level</h2>
+      <div class="placement-level-badge" id="ptr-level"></div>
+      <div class="placement-level-name" id="ptr-level-name"></div>
+      <div class="placement-breakdown mt-2" id="ptr-breakdown"></div>
+      <p class="text-muted mt-2" id="ptr-message"></p>
+      <button class="btn btn-primary btn-block mt-3" data-action="placement-done">Start Learning</button>
+      <button class="btn btn-secondary btn-block mt-1" data-action="retake-placement">Retake Test</button>
+    </div>
+  </div>
+
   <!-- ════════ SETTINGS SCREEN ════════ -->
   <div class="screen" id="screen-settings">
     <h2 class="mb-2">Settings</h2>
@@ -401,6 +428,13 @@
           <button class="pill" data-action="set-tts-rate" data-val="1.3">Fast</button>
         </div>
       </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Placement Test</div>
+          <div class="setting-desc">Assess your level and unlock content</div>
+        </div>
+        <button class="btn btn-outline btn-sm" data-action="start-placement">Take Test</button>
+      </div>
     </div>
 
     <div class="settings-group">
@@ -457,9 +491,11 @@
     <span class="tab-icon">&#128172;</span>
     <span>Phrases</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="culture" style="position:relative">
-    <span class="tab-icon">&#127928;</span>
-    <span>Culture</span>
+  <div class="tab-wrapper" style="position:relative">
+    <button class="tab" data-action="switch-tab" data-tab="culture">
+      <span class="tab-icon">&#127928;</span>
+      <span>Culture</span>
+    </button>
     <div class="tab-dropdown" id="culture-dropdown">
       <button class="dropdown-item" data-action="open-culture" data-module="music">Music</button>
       <button class="dropdown-item" data-action="open-culture" data-module="movies">Movies</button>
@@ -467,10 +503,12 @@
       <button class="dropdown-item" data-action="open-culture" data-module="proverbs">Proverbs</button>
       <button class="dropdown-item" data-action="open-culture" data-module="folktales">Folk Tales</button>
     </div>
-  </button>
-  <button class="tab" data-action="switch-tab" data-tab="explore" style="position:relative">
-    <span class="tab-icon">&#127758;</span>
-    <span>Explore</span>
+  </div>
+  <div class="tab-wrapper" style="position:relative">
+    <button class="tab" data-action="switch-tab" data-tab="explore">
+      <span class="tab-icon">&#127758;</span>
+      <span>Explore</span>
+    </button>
     <div class="tab-dropdown" id="explore-dropdown">
       <button class="dropdown-item" data-action="open-culture" data-module="conversations">Conversations</button>
       <button class="dropdown-item" data-action="open-culture" data-module="recipes">Recipes</button>
@@ -481,7 +519,7 @@
       <button class="dropdown-item" data-action="open-culture" data-module="trivia">Trivia</button>
       <button class="dropdown-item" data-action="open-culture" data-module="idioms">Idioms</button>
     </div>
-  </button>
+  </div>
 </div>
 
 <!-- ════════ MODAL ════════ -->

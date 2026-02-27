@@ -11,6 +11,16 @@ let progress = null;
 let screenStack = [];
 let activeDropdown = null;
 
+// Placement test state
+let placementPool = {};
+let placementIdx = 0;
+let placementScore = 0;
+let placementLevelScores = {};
+let placementLevelTotals = {};
+let placementCurrentLevel = 0;
+let placementConsecutive = 0;
+let placementLastCorrect = null;
+
 // ── UI Strings for Immersion Mode ──
 const UI_ES = {
   today: 'Hoy', verbs: 'Verbos', numbers: 'Números', vocab: 'Vocabulario',
@@ -33,6 +43,8 @@ function newProgress() {
     numberMastery: {},
     cultureDone: {},
     practiceLog: {},
+    placementLevel: null,
+    placementDate: null,
     settings: {
       display: 'standard', region: 'latam', theme: 'dark', palette: 'alhambra',
       accents: 'warn', ttsRate: 1,
@@ -165,6 +177,16 @@ function confirmCreateProfile() {
   saveProfiles(profiles);
   closeModal();
   selectProfile(name);
+  // Offer placement test for new profiles
+  setTimeout(() => {
+    showModal('Placement Test', `
+      <p>Want to take a quick placement test to skip content you already know?</p>
+      <p class="text-muted">~5 minutes, 30 questions covering grammar, vocabulary, and verbs.</p>
+    `, [
+      { label: 'Skip', action: 'close-modal', cls: 'btn-secondary' },
+      { label: 'Take Test', action: 'start-placement', cls: 'btn-primary' },
+    ]);
+  }, 300);
 }
 
 // ════════════════════════════════════════
@@ -349,7 +371,7 @@ function renderToday() {
   const hour = new Date().getHours();
   const greet = hour < 12 ? '¡Buenos días!' : hour < 18 ? '¡Buenas tardes!' : '¡Buenas noches!';
   document.getElementById('today-greeting').textContent = greet;
-  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   // Stats cards
   const verbsLearned = Object.keys(progress.verbMastery).length;
@@ -1375,6 +1397,365 @@ function showResults(score, total, module, label) {
 }
 
 // ════════════════════════════════════════
+//  PLACEMENT TEST
+// ════════════════════════════════════════
+
+const PLACEMENT_LEVELS = ['A1', 'A2', 'B1', 'B2'];
+const LEVEL_ORDER = { A1: 0, A2: 1, B1: 2, B2: 3 };
+
+function levelAtOrBelow(itemLevel, targetLevel) {
+  return (LEVEL_ORDER[itemLevel] || 0) <= (LEVEL_ORDER[targetLevel] || 0);
+}
+
+function buildPlacementGrammarQs(level, count) {
+  if (typeof GRAMMAR_DATA === 'undefined') return [];
+  const lessons = GRAMMAR_DATA.filter(l => l.level === level);
+  const picked = pickN(lessons, count);
+  return picked.map(l => {
+    const q = pick(l.quiz);
+    return {
+      domain: 'grammar', level, type: q.type,
+      prompt: q.question, answer: q.answer,
+      options: q.options ? shuffle([...q.options]) : null,
+      explanation: q.explanation || '',
+    };
+  });
+}
+
+function buildPlacementVocabQs(level, count) {
+  if (typeof VOCAB_DATA === 'undefined') return [];
+  const words = VOCAB_DATA.filter(w => w.level === level);
+  if (words.length < 4) return [];
+  const picked = pickN(words, count);
+  return picked.map(w => {
+    const reverse = Math.random() < 0.5;
+    const pool = words.filter(x => x.word !== w.word);
+    const wrongs = pickN(pool, 3);
+    if (reverse) {
+      return {
+        domain: 'vocab', level, type: 'mc',
+        prompt: `How do you say "${w.english}" in Spanish?`,
+        answer: w.word,
+        options: shuffle([w.word, ...wrongs.map(x => x.word)]),
+        explanation: `${w.word} = ${w.english}`,
+      };
+    } else {
+      return {
+        domain: 'vocab', level, type: 'mc',
+        prompt: `What does "${w.word}" mean?`,
+        answer: w.english,
+        options: shuffle([w.english, ...wrongs.map(x => x.english)]),
+        explanation: `${w.word} = ${w.english}`,
+      };
+    }
+  });
+}
+
+function buildPlacementVerbQs(level, count) {
+  if (typeof VERB_DATA === 'undefined' || typeof conjugate === 'undefined') return [];
+  const verbs = VERB_DATA.filter(v => v.level === level);
+  const tenses = Object.keys(TENSE_META).filter(t => TENSE_META[t].level === level && !TENSE_META[t].compound);
+  if (verbs.length === 0) return [];
+  // Fallback to present tense if no tenses at this level
+  const useTenses = tenses.length > 0 ? tenses : ['present'];
+  const picked = pickN(verbs, count);
+  return picked.map(v => {
+    const tense = pick(useTenses);
+    const person = Math.floor(Math.random() * 6);
+    const correct = conjugate(v.infinitive, tense, person);
+    if (!correct || correct === '—' || correct === '?') return null;
+    const wrongs = new Set();
+    let attempts = 0;
+    while (wrongs.size < 3 && attempts < 20) {
+      const wv = pick(VERB_DATA);
+      const wp = Math.floor(Math.random() * 6);
+      const w = conjugate(wv.infinitive, tense, wp);
+      if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
+      attempts++;
+    }
+    if (wrongs.size < 3) return null;
+    return {
+      domain: 'verb', level, type: 'mc',
+      prompt: `Conjugate "<strong>${esc(v.infinitive)}</strong>" (${esc(v.english)})<br><span class="text-muted">${TENSE_META[tense]?.labelEn || tense} — ${PERSON_LABELS[PERSONS[person]]}</span>`,
+      answer: correct,
+      options: shuffle([correct, ...wrongs]),
+      explanation: `${v.infinitive} → ${correct}`,
+    };
+  }).filter(Boolean);
+}
+
+function buildPlacementPool() {
+  const pool = {};
+  for (const level of PLACEMENT_LEVELS) {
+    const grammar = buildPlacementGrammarQs(level, 3);
+    const vocab = buildPlacementVocabQs(level, 3);
+    const verbs = buildPlacementVerbQs(level, 2);
+    pool[level] = shuffle([...grammar, ...vocab, ...verbs]);
+    // Ensure at least some questions; pad with grammar if available
+    if (pool[level].length < 4) {
+      const extra = buildPlacementGrammarQs(level, 8 - pool[level].length);
+      pool[level] = shuffle([...pool[level], ...extra]);
+    }
+  }
+  return pool;
+}
+
+function startPlacementTest() {
+  closeModal();
+  placementPool = buildPlacementPool();
+  placementIdx = 0;
+  placementScore = 0;
+  placementCurrentLevel = 0;
+  placementConsecutive = 0;
+  placementLastCorrect = null;
+  placementLevelScores = { A1: 0, A2: 0, B1: 0, B2: 0 };
+  placementLevelTotals = { A1: 0, A2: 0, B1: 0, B2: 0 };
+  showScreen('placement');
+  renderPlacementQuestion();
+}
+
+function renderPlacementQuestion() {
+  if (placementIdx >= 30) { finishPlacementTest(); return; }
+
+  // Find next question from current level's pool
+  const level = PLACEMENT_LEVELS[placementCurrentLevel];
+  let q = null;
+  if (placementPool[level] && placementPool[level].length > 0) {
+    q = placementPool[level].shift();
+  } else {
+    // Try adjacent levels
+    for (let d = 1; d < 4; d++) {
+      for (const dir of [1, -1]) {
+        const idx = placementCurrentLevel + d * dir;
+        if (idx >= 0 && idx < 4) {
+          const lv = PLACEMENT_LEVELS[idx];
+          if (placementPool[lv] && placementPool[lv].length > 0) {
+            q = placementPool[lv].shift();
+            break;
+          }
+        }
+      }
+      if (q) break;
+    }
+  }
+  if (!q) { finishPlacementTest(); return; }
+
+  // Store current question for answer checking
+  placementPool._current = q;
+
+  // Update UI
+  document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 30`;
+  const pct = Math.round(((placementIdx) / 30) * 100);
+  document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
+  document.getElementById('pt-level-badge').textContent = `Testing: ${level}`;
+  document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[level]?.color || 'var(--accent)';
+  document.getElementById('pt-next').style.display = 'none';
+
+  const container = document.getElementById('pt-container');
+  const domainLabel = q.domain === 'grammar' ? 'Grammar' : q.domain === 'vocab' ? 'Vocabulary' : 'Conjugation';
+
+  if (q.type === 'mc' && q.options) {
+    container.innerHTML = `
+      <div class="text-muted mb-1" style="font-size:0.75rem">${domainLabel} — ${q.level}</div>
+      <div class="quiz-question">${q.prompt}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) =>
+          `<button class="quiz-option" data-action="answer-placement" data-idx="${i}">${esc(opt)}</button>`
+        ).join('')}
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="text-muted mb-1" style="font-size:0.75rem">${domainLabel} — ${q.level}</div>
+      <div class="quiz-question">${q.prompt}</div>
+      <div class="quiz-input-row">
+        <input type="text" id="pt-fib-input" placeholder="Type your answer..." autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="submit-placement-fib">Check</button>
+      </div>
+      <div class="accent-bar">
+        <button class="accent-btn" data-action="insert-accent-pt" data-char="á">á</button>
+        <button class="accent-btn" data-action="insert-accent-pt" data-char="é">é</button>
+        <button class="accent-btn" data-action="insert-accent-pt" data-char="í">í</button>
+        <button class="accent-btn" data-action="insert-accent-pt" data-char="ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-pt" data-char="ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-pt" data-char="ñ">ñ</button>
+      </div>
+      <div class="quiz-feedback" id="pt-fib-feedback" style="display:none"></div>
+    `;
+    setTimeout(() => document.getElementById('pt-fib-input')?.focus(), 50);
+  }
+}
+
+function answerPlacementMC(idx) {
+  const q = placementPool._current;
+  if (!q) return;
+  const selected = q.options[idx];
+  const isCorrect = selected === q.answer;
+
+  // Highlight buttons
+  const btns = document.querySelectorAll('#pt-container .quiz-option');
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (q.options[i] === q.answer) btn.classList.add('correct');
+    if (i === idx && !isCorrect) btn.classList.add('incorrect');
+  });
+
+  recordPlacementAnswer(q, isCorrect);
+  document.getElementById('pt-next').style.display = 'flex';
+}
+
+function submitPlacementFIB() {
+  const q = placementPool._current;
+  if (!q) return;
+  const input = document.getElementById('pt-fib-input');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+
+  const result = checkAnswer(val, q.answer);
+  const fb = document.getElementById('pt-fib-feedback');
+  fb.style.display = 'block';
+  input.disabled = true;
+
+  if (result.correct) {
+    fb.className = 'quiz-feedback correct';
+    fb.innerHTML = result.accentWarn
+      ? `Correct! <span class="text-muted">(Watch your accents: ${esc(q.answer)})</span>`
+      : `Correct! <strong>${esc(q.answer)}</strong>`;
+    recordPlacementAnswer(q, true);
+  } else {
+    fb.className = 'quiz-feedback incorrect';
+    fb.innerHTML = `Incorrect. The answer is: <strong>${esc(q.answer)}</strong>`;
+    if (q.explanation) fb.innerHTML += `<br><span class="text-muted">${esc(q.explanation)}</span>`;
+    recordPlacementAnswer(q, false);
+  }
+  document.getElementById('pt-next').style.display = 'flex';
+}
+
+function recordPlacementAnswer(q, isCorrect) {
+  placementLevelTotals[q.level]++;
+  if (isCorrect) {
+    placementScore++;
+    placementLevelScores[q.level]++;
+  }
+  placementLastCorrect = isCorrect;
+
+  // Adaptive: track consecutive correct/wrong
+  if (isCorrect) {
+    placementConsecutive = placementConsecutive >= 0 ? placementConsecutive + 1 : 1;
+  } else {
+    placementConsecutive = placementConsecutive <= 0 ? placementConsecutive - 1 : -1;
+  }
+}
+
+function nextPlacementQuestion() {
+  // Adaptive level adjustment
+  if (placementConsecutive >= 2 && placementCurrentLevel < 3) {
+    placementCurrentLevel++;
+    placementConsecutive = 0;
+  } else if (placementConsecutive <= -2 && placementCurrentLevel > 0) {
+    placementCurrentLevel--;
+    placementConsecutive = 0;
+  }
+
+  placementIdx++;
+  renderPlacementQuestion();
+}
+
+function determinePlacementLevel() {
+  let level = 'A1';
+  for (const lv of PLACEMENT_LEVELS) {
+    if (placementLevelTotals[lv] >= 2 && placementLevelScores[lv] / placementLevelTotals[lv] >= 0.6) {
+      level = lv;
+    } else {
+      break;
+    }
+  }
+  return level;
+}
+
+function seedMatureFsrs(store, key) {
+  store[key] = { s: 30, d: 5, lastRev: Date.now() };
+}
+
+function applyPlacementResults(level) {
+  // Mark grammar lessons as done
+  if (typeof GRAMMAR_DATA !== 'undefined') {
+    GRAMMAR_DATA.forEach(l => {
+      if (levelAtOrBelow(l.level, level)) {
+        progress.grammarDone[l.id] = true;
+      }
+    });
+  }
+
+  // Mark vocab as mastered
+  if (typeof VOCAB_DATA !== 'undefined') {
+    VOCAB_DATA.forEach(w => {
+      if (levelAtOrBelow(w.level, level)) {
+        progress.vocabMastery[w.word] = 3;
+        seedMatureFsrs(progress.vocabFsrs, w.word);
+      }
+    });
+  }
+
+  // Mark verb forms as mastered
+  if (typeof VERB_DATA !== 'undefined' && typeof TENSE_META !== 'undefined') {
+    VERB_DATA.forEach(v => {
+      if (!levelAtOrBelow(v.level, level)) return;
+      Object.keys(TENSE_META).forEach(tense => {
+        if (!levelAtOrBelow(TENSE_META[tense].level, level)) return;
+        for (let p = 0; p < 6; p++) {
+          const key = `${v.infinitive}:${tense}:${p}`;
+          progress.verbMastery[key] = 3;
+          seedMatureFsrs(progress.verbFsrs, key);
+        }
+      });
+    });
+  }
+
+  progress.placementLevel = level;
+  progress.placementDate = todayStr();
+  saveProgress();
+}
+
+function finishPlacementTest() {
+  const level = determinePlacementLevel();
+  applyPlacementResults(level);
+
+  showScreen('placement-results');
+  const info = (typeof GRAMMAR_LEVELS !== 'undefined' ? GRAMMAR_LEVELS[level] : null) || { name: level, color: '#888' };
+  document.getElementById('ptr-level').textContent = level;
+  document.getElementById('ptr-level').style.background = info.color;
+  document.getElementById('ptr-level-name').textContent = info.name;
+
+  // Breakdown
+  let breakdownHtml = '';
+  for (const lv of PLACEMENT_LEVELS) {
+    const s = placementLevelScores[lv] || 0;
+    const t = placementLevelTotals[lv] || 0;
+    const pct = t > 0 ? Math.round((s / t) * 100) : 0;
+    const passed = t >= 2 && s / t >= 0.6;
+    const lvInfo = (typeof GRAMMAR_LEVELS !== 'undefined' ? GRAMMAR_LEVELS[lv] : null) || { color: '#888' };
+    breakdownHtml += `
+      <div class="placement-breakdown-row">
+        <span class="placement-breakdown-label">${lv}</span>
+        <div class="placement-breakdown-bar">
+          <div class="placement-breakdown-fill" style="width:${pct}%;background:${lvInfo.color}"></div>
+        </div>
+        <span class="placement-breakdown-score">${s}/${t}${passed ? ' ✓' : ''}</span>
+      </div>
+    `;
+  }
+  document.getElementById('ptr-breakdown').innerHTML = breakdownHtml;
+
+  // Message
+  const grammarCount = typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.filter(l => levelAtOrBelow(l.level, level)).length : 0;
+  const vocabCount = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.filter(w => levelAtOrBelow(w.level, level)).length : 0;
+  document.getElementById('ptr-message').innerHTML =
+    `Based on your results, <strong>${grammarCount} grammar lessons</strong> and <strong>${vocabCount} vocabulary words</strong> have been marked as known. You can start learning at the <strong>${level}</strong> level!`;
+}
+
+// ════════════════════════════════════════
 //  EXPORT / IMPORT
 // ════════════════════════════════════════
 
@@ -1552,6 +1933,14 @@ document.addEventListener('click', e => {
     // Review
     case 'start-review': startVerbDrill(); break;
 
+    // Placement Test
+    case 'start-placement': startPlacementTest(); break;
+    case 'answer-placement': answerPlacementMC(parseInt(target.dataset.idx)); break;
+    case 'submit-placement-fib': submitPlacementFIB(); break;
+    case 'next-placement': nextPlacementQuestion(); break;
+    case 'placement-done': switchTab('today'); break;
+    case 'retake-placement': startPlacementTest(); break;
+
     // TTS
     case 'speak': speak(target.dataset.text); break;
 
@@ -1568,6 +1957,11 @@ document.addEventListener('click', e => {
     }
     case 'insert-accent-gq': {
       const input = document.getElementById('gq-fib-input');
+      if (input) insertCharAtCursor(input, target.dataset.char);
+      break;
+    }
+    case 'insert-accent-pt': {
+      const input = document.getElementById('pt-fib-input');
       if (input) insertCharAtCursor(input, target.dataset.char);
       break;
     }
@@ -1594,6 +1988,13 @@ document.addEventListener('keydown', e => {
       const fibInput = document.getElementById('gq-fib-input');
       if (fibInput && document.activeElement === fibInput) {
         submitGrammarFIB();
+        e.preventDefault();
+      }
+    }
+    if (document.getElementById('screen-placement')?.classList.contains('active')) {
+      const fibInput = document.getElementById('pt-fib-input');
+      if (fibInput && document.activeElement === fibInput) {
+        submitPlacementFIB();
         e.preventDefault();
       }
     }

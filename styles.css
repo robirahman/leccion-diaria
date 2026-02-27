@@ -197,6 +197,13 @@ input:focus, select:focus, textarea:focus {
 .tab-bar .tab.active { color: var(--accent); }
 .tab-bar .tab:hover { color: var(--text); }
 
+.tab-wrapper {
+  flex: 1;
+  position: relative;
+  max-width: 80px;
+}
+.tab-wrapper .tab { max-width: none; width: 100%; }
+
 /* Dropdown tabs */
 .tab-dropdown {
   position: absolute;
@@ -879,3 +886,82 @@ input:focus, select:focus, textarea:focus {
 .justify-between { justify-content: space-between; }
 .w-full { width: 100%; }
 .hidden { display: none !important; }
+
+/* ── Placement Test ── */
+.placement-header { margin-bottom: 1.5rem; }
+.pt-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.pt-progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.placement-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.placement-level-tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  background: var(--accent);
+}
+.placement-level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 1rem auto;
+}
+.placement-level-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.placement-breakdown { max-width: 400px; margin: 0 auto; }
+.placement-breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.placement-breakdown-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  min-width: 28px;
+}
+.placement-breakdown-bar {
+  flex: 1;
+  height: 12px;
+  background: var(--bg3);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.placement-breakdown-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+.placement-breakdown-score {
+  font-size: 0.8rem;
+  color: var(--text3);
+  min-width: 50px;
+  text-align: right;
+}
