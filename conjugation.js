@@ -27,6 +27,10 @@ const TENSE_META = {
   future_perfect:      { label: 'Futuro Perfecto',        labelEn: 'Future Perfect',        level: 'B2', compound: true, auxTense: 'future' },
   conditional_perfect: { label: 'Condicional Perfecto',   labelEn: 'Conditional Perfect',   level: 'B2', compound: true, auxTense: 'conditional' },
   subjunctive_perfect: { label: 'Subjuntivo Perfecto',    labelEn: 'Present Perfect Subj.', level: 'B2', compound: true, auxTense: 'subjunctive_present' },
+  subjunctive_pluperfect: { label: 'Pluscuamperfecto del Subjuntivo', labelEn: 'Pluperfect Subjunctive', level: 'B2', compound: true, auxTense: 'subjunctive_imperfect' },
+  progressive_present: { label: 'Presente Progresivo',  labelEn: 'Present Progressive',  level: 'A2', compound: false, progressive: true, auxTense: 'present' },
+  progressive_preterite: { label: 'Pretérito Progresivo', labelEn: 'Preterite Progressive', level: 'B1', compound: false, progressive: true, auxTense: 'preterite' },
+  progressive_imperfect: { label: 'Imperfecto Progresivo', labelEn: 'Imperfect Progressive', level: 'B1', compound: false, progressive: true, auxTense: 'imperfect' },
 };
 const TENSES = Object.keys(TENSE_META);
 const SIMPLE_TENSES = TENSES.filter(t => !TENSE_META[t].compound);
@@ -98,6 +102,13 @@ const HABER = {
   future: ['habré', 'habrás', 'habrá', 'habremos', 'habréis', 'habrán'],
   conditional: ['habría', 'habrías', 'habría', 'habríamos', 'habríais', 'habrían'],
   subjunctive_present: ['haya', 'hayas', 'haya', 'hayamos', 'hayáis', 'hayan'],
+  subjunctive_imperfect: ['hubiera', 'hubieras', 'hubiera', 'hubiéramos', 'hubierais', 'hubieran'],
+};
+
+const ESTAR = {
+  present: ['estoy', 'estás', 'está', 'estamos', 'estáis', 'están'],
+  preterite: ['estuve', 'estuviste', 'estuvo', 'estuvimos', 'estuvisteis', 'estuvieron'],
+  imperfect: ['estaba', 'estabas', 'estaba', 'estábamos', 'estabais', 'estaban'],
 };
 
 // ── Irregular past participles ──
@@ -332,8 +343,15 @@ function conjugate(infinitive, tense, personIdx) {
 
   let form;
 
-  // 1. Check compound tenses
-  if (TENSE_META[tense] && TENSE_META[tense].compound) {
+  // 1. Check progressive tenses (estar + gerund)
+  if (TENSE_META[tense] && TENSE_META[tense].progressive) {
+    const auxTense = TENSE_META[tense].auxTense;
+    const aux = ESTAR[auxTense] ? ESTAR[auxTense][personIdx] : conjugate('estar', auxTense, personIdx);
+    const gerund = getGerund(base);
+    form = aux + ' ' + gerund;
+  }
+  // 2. Check compound tenses (haber + participle)
+  else if (TENSE_META[tense] && TENSE_META[tense].compound) {
     const auxTense = TENSE_META[tense].auxTense;
     const aux = HABER[auxTense] ? HABER[auxTense][personIdx] : conjugate('haber', auxTense, personIdx);
     const participle = getParticiple(base);

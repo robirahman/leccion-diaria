@@ -1,11 +1,13 @@
 // =============================================================================
 // verbs.js - Spanish Verb Database
 // =============================================================================
-// Contains 160+ verbs organized by type:
+// Contains 200+ verbs organized by type:
 //   - 100 regular verbs (from verbos regulares.csv)
 //   - 20  irregular verbs
 //   - 22  stem-changing verbs
 //   - 11  reflexive verbs (some also stem-changing)
+//   - 25  C1 verbs (advanced)
+//   - 15  C2 verbs (mastery)
 //
 // Fields:
 //   infinitive  - Spanish infinitive form
@@ -13,7 +15,7 @@
 //   type        - 'regular' | 'irregular' | 'stem-changing' | 'reflexive'
 //   group       - 'ar' | 'er' | 'ir'
 //   stemChange  - null | 'e>ie' | 'o>ue' | 'e>i' | 'u>ue'
-//   level       - CEFR level: 'A1' | 'A2' | 'B1' | 'B2'
+//   level       - CEFR level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'
 //   frequency   - Frequency rank (lower = more common)
 // =============================================================================
 
@@ -199,6 +201,54 @@ const VERB_DATA = [
   { infinitive: 'consistir', english: 'to consist', type: 'regular', group: 'ir', stemChange: null, level: 'B2', frequency: 151 },
   { infinitive: 'funcionar', english: 'to function, to run', type: 'regular', group: 'ar', stemChange: null, level: 'A2', frequency: 152 },
   { infinitive: 'insistir', english: 'to insist', type: 'regular', group: 'ir', stemChange: null, level: 'B1', frequency: 153 },
+
+  // ---------------------------------------------------------------------------
+  // C1 VERBS — Advanced (25)
+  // ---------------------------------------------------------------------------
+  { infinitive: 'abarcar', english: 'to encompass, to cover', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 170 },
+  { infinitive: 'abordar', english: 'to address, tackle', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 171 },
+  { infinitive: 'acudir', english: 'to attend, go to', type: 'regular', group: 'ir', stemChange: null, level: 'C1', frequency: 172 },
+  { infinitive: 'agotar', english: 'to exhaust, deplete', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 173 },
+  { infinitive: 'alcanzar', english: 'to reach, achieve', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 174 },
+  { infinitive: 'aportar', english: 'to contribute', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 175 },
+  { infinitive: 'carecer', english: 'to lack', type: 'regular', group: 'er', stemChange: null, level: 'C1', frequency: 176 },
+  { infinitive: 'conllevar', english: 'to entail', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 177 },
+  { infinitive: 'desempeñar', english: 'to perform, carry out', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 178 },
+  { infinitive: 'destacar', english: 'to stand out, highlight', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 179 },
+  { infinitive: 'disponer', english: 'to arrange, have available', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 180 },
+  { infinitive: 'ejercer', english: 'to practice, exercise (a profession)', type: 'regular', group: 'er', stemChange: null, level: 'C1', frequency: 181 },
+  { infinitive: 'emprender', english: 'to undertake', type: 'regular', group: 'er', stemChange: null, level: 'C1', frequency: 182 },
+  { infinitive: 'enfrentar', english: 'to face, confront', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 183 },
+  { infinitive: 'fomentar', english: 'to promote, foster', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 184 },
+  { infinitive: 'generar', english: 'to generate', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 185 },
+  { infinitive: 'impulsar', english: 'to drive, boost', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 186 },
+  { infinitive: 'otorgar', english: 'to grant, award', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 187 },
+  { infinitive: 'percibir', english: 'to perceive', type: 'regular', group: 'ir', stemChange: null, level: 'C1', frequency: 188 },
+  { infinitive: 'plantear', english: 'to raise, propose', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 189 },
+  { infinitive: 'prevenir', english: 'to prevent', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 190 },
+  { infinitive: 'promover', english: 'to promote', type: 'stem-changing', group: 'er', stemChange: 'o>ue', level: 'C1', frequency: 191 },
+  { infinitive: 'proporcionar', english: 'to provide', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 192 },
+  { infinitive: 'surgir', english: 'to arise, emerge', type: 'regular', group: 'ir', stemChange: null, level: 'C1', frequency: 193 },
+  { infinitive: 'suponer', english: 'to suppose, assume', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 194 },
+
+  // ---------------------------------------------------------------------------
+  // C2 VERBS — Mastery (15)
+  // ---------------------------------------------------------------------------
+  { infinitive: 'acaecer', english: 'to occur, happen (literary)', type: 'regular', group: 'er', stemChange: null, level: 'C2', frequency: 200 },
+  { infinitive: 'atañer', english: 'to concern, pertain to', type: 'regular', group: 'er', stemChange: null, level: 'C2', frequency: 201 },
+  { infinitive: 'cernirse', english: 'to loom, hover', type: 'stem-changing', group: 'ir', stemChange: 'e>ie', level: 'C2', frequency: 202 },
+  { infinitive: 'deparar', english: 'to provide, hold in store', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 203 },
+  { infinitive: 'desdeñar', english: 'to scorn, disdain', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 204 },
+  { infinitive: 'dilucidar', english: 'to elucidate', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 205 },
+  { infinitive: 'esgrimir', english: 'to wield, brandish', type: 'regular', group: 'ir', stemChange: null, level: 'C2', frequency: 206 },
+  { infinitive: 'menoscabar', english: 'to diminish, undermine', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 207 },
+  { infinitive: 'ostentar', english: 'to hold, display', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 208 },
+  { infinitive: 'prorrumpir', english: 'to burst out', type: 'regular', group: 'ir', stemChange: null, level: 'C2', frequency: 209 },
+  { infinitive: 'soslayar', english: 'to avoid, sidestep', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 210 },
+  { infinitive: 'subyacer', english: 'to underlie', type: 'irregular', group: 'er', stemChange: null, level: 'C2', frequency: 211 },
+  { infinitive: 'versar', english: 'to deal with, be about', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 212 },
+  { infinitive: 'yacer', english: 'to lie, rest', type: 'irregular', group: 'er', stemChange: null, level: 'C2', frequency: 213 },
+  { infinitive: 'zanjar', english: 'to settle, resolve', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 214 },
 ];
 
 // =============================================================================
@@ -257,5 +307,7 @@ const VERB_STATS = {
     A2: VERB_DATA.filter(v => v.level === 'A2').length,
     B1: VERB_DATA.filter(v => v.level === 'B1').length,
     B2: VERB_DATA.filter(v => v.level === 'B2').length,
+    C1: VERB_DATA.filter(v => v.level === 'C1').length,
+    C2: VERB_DATA.filter(v => v.level === 'C2').length,
   },
 };

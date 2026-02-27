@@ -2,7 +2,9 @@ const GRAMMAR_LEVELS = {
   A1: { name: 'Principiante', color: '#4CAF50' },
   A2: { name: 'Elemental', color: '#8BC34A' },
   B1: { name: 'Intermedio', color: '#FF9800' },
-  B2: { name: 'Intermedio Alto', color: '#F44336' }
+  B2: { name: 'Intermedio Alto', color: '#F44336' },
+  C1: { name: 'Avanzado', color: '#9C27B0' },
+  C2: { name: 'Maestría', color: '#311B92' }
 };
 
 const GRAMMAR_DATA = [
@@ -804,6 +806,419 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Which connector adds information?", answer: "además", options: ["sin embargo","además","por eso","aunque"], explanation: "Además = moreover/in addition." },
       { type: "fib", question: "_____ de que llueve, hace frío. (despite/apart from)", answer: "Aparte", options: null, explanation: "Aparte de = apart from / besides the fact that." },
       { type: "mc", question: "'Ya que estás aquí, ayúdame' — 'ya que' means:", answer: "Since", options: ["Already","Since","Even though","When"], explanation: "Ya que = since/given that." }
+    ]
+  },
+  // ===== C1 =====
+  {
+    id: "gram-43", title: "El subjuntivo pluscuamperfecto", titleEn: "Past Perfect Subjunctive", level: "C1", order: 43,
+    content: `<h3>Past Perfect Subjunctive</h3>
+<p>Formed with the <strong>imperfect subjunctive of haber</strong> + past participle: <em>hubiera/hubiese hablado</em>.</p>
+<p><strong>Uses:</strong></p>
+<ul>
+<li>Unreal past conditions: <em>Si hubiera sabido, habría venido.</em> (If I had known, I would have come.)</li>
+<li>Wishes about the past: <em>Ojalá hubieras estado allí.</em> (I wish you had been there.)</li>
+<li>After expressions of emotion about past events: <em>Me alegré de que hubieran llegado a tiempo.</em></li>
+</ul>
+<p><strong>Two forms:</strong> -ra (hubiera) and -se (hubiese) are interchangeable in most contexts.</p>`,
+    quiz: [
+      { type: "mc", question: "Complete: Si yo lo _____ (saber), te habría avisado.", answer: "hubiera sabido", options: ["hubiera sabido","habría sabido","haya sabido","sabría"], explanation: "Si + pluperfect subjunctive for unreal past conditions." },
+      { type: "fib", question: "Ojalá tú _____ _____ allí. (haber + estar, past perfect subj.)", answer: "hubieras estado", options: null, explanation: "Hubiera/hubieras + past participle for wishes about the past." },
+      { type: "mc", question: "Which two forms of the past perfect subjunctive are interchangeable?", answer: "-ra and -se forms", options: ["-ra and -se forms","-ra and -ría forms","-se and -ado forms","-re and -ra forms"], explanation: "Hubiera/hubiese are both valid past perfect subjunctive forms." },
+      { type: "fib", question: "Me sorprendió que no _____ _____ (haber + venir, ellos).", answer: "hubieran venido", options: null, explanation: "Past perfect subjunctive after expressions of emotion about past events." },
+      { type: "mc", question: "'Si hubiésemos llegado antes, habríamos conseguido entradas.' What does 'hubiésemos llegado' express?", answer: "An unreal past action", options: ["A future possibility","A present habit","An unreal past action","A command"], explanation: "The -se form of the past perfect subjunctive expresses unrealized past actions." }
+    ]
+  },
+  {
+    id: "gram-44", title: "Condicionales mixtas", titleEn: "Mixed Conditionals", level: "C1", order: 44,
+    content: `<h3>Mixed Conditionals</h3>
+<p>Mixed conditionals combine different time frames between the <em>si</em> clause and the main clause.</p>
+<p><strong>Type 1 — Past condition → Present result:</strong><br>
+<em>Si hubiera estudiado medicina, ahora sería médico.</em> (If I had studied medicine, I would be a doctor now.)</p>
+<p><strong>Type 2 — Present condition → Past result:</strong><br>
+<em>Si fuera más valiente, habría hablado ayer.</em> (If I were braver, I would have spoken yesterday.)</p>
+<p><strong>Type 3 — De + infinitive compound (formal alternative):</strong><br>
+<em>De haberlo sabido, no habría venido.</em> (Had I known, I wouldn't have come.)</p>`,
+    quiz: [
+      { type: "mc", question: "'Si hubiera ahorrado más, ahora tendría una casa.' This is:", answer: "Past condition → present result", options: ["Past condition → present result","Present condition → past result","Future condition → present result","Past condition → past result"], explanation: "Pluperfect subjunctive (past) + conditional (present) = mixed conditional type 1." },
+      { type: "fib", question: "Si yo _____ más alto, habría jugado al baloncesto. (ser, imperfect subj.)", answer: "fuera", options: null, explanation: "Present condition (being tall) → past result (would have played)." },
+      { type: "mc", question: "'De haberlo sabido' is equivalent to:", answer: "Si lo hubiera sabido", options: ["Si lo sabía","Si lo hubiera sabido","Si lo sepa","Si lo sabrá"], explanation: "De + compound infinitive is a formal alternative to si + pluperfect subjunctive." },
+      { type: "fib", question: "De _____ _____ antes, habríamos conseguido mesa. (llegar, compound inf.)", answer: "haber llegado", options: null, explanation: "De haber llegado = Si hubiéramos llegado." },
+      { type: "mc", question: "Which combination creates a mixed conditional with present condition → past result?", answer: "Imperfect subjunctive + conditional perfect", options: ["Imperfect subjunctive + conditional perfect","Pluperfect subjunctive + conditional","Present subjunctive + preterite","Imperfect + conditional"], explanation: "Si fuera (present unreal) + habría hecho (past unreal result)." }
+    ]
+  },
+  {
+    id: "gram-45", title: "La voz pasiva", titleEn: "Passive Voice", level: "C1", order: 45,
+    content: `<h3>Passive Voice</h3>
+<p><strong>Ser + participle (passive with agent):</strong><br>
+<em>El libro fue escrito por Cervantes.</em> (The book was written by Cervantes.)</p>
+<p>The participle agrees in gender and number with the subject: <em>Las cartas fueron enviadas.</em></p>
+<p><strong>Se pasiva (passive se, no agent):</strong><br>
+<em>Se hablan muchos idiomas aquí.</em> (Many languages are spoken here.)</p>
+<p><strong>Estar + participle (resultant state):</strong><br>
+<em>La puerta está cerrada.</em> (The door is closed.) — describes the state, not the action.</p>
+<p><strong>Key distinction:</strong> Spanish strongly prefers <em>se</em> constructions or active voice over <em>ser</em> passives in everyday speech. <em>Ser</em> passives are more common in formal/written registers.</p>`,
+    quiz: [
+      { type: "mc", question: "'La carta fue escrita por María.' The participle 'escrita' agrees with:", answer: "la carta (feminine singular)", options: ["María","la carta (feminine singular)","fue","por"], explanation: "In ser-passives, the participle agrees with the subject." },
+      { type: "fib", question: "Se _____ muchos idiomas en Suiza. (hablar)", answer: "hablan", options: null, explanation: "Se pasiva: se + verb agrees with the logical subject (idiomas)." },
+      { type: "mc", question: "'La puerta está cerrada' expresses:", answer: "A resultant state", options: ["An action in progress","A resultant state","A habitual action","A future event"], explanation: "Estar + participle describes a state resulting from an action." },
+      { type: "fib", question: "Los cuadros _____ _____ por Picasso. (ser + pintar, preterite)", answer: "fueron pintados", options: null, explanation: "Ser passive: fueron (preterite of ser) + pintados (agrees with cuadros, masc. pl.)." },
+      { type: "mc", question: "Which passive construction is preferred in everyday spoken Spanish?", answer: "Se pasiva", options: ["Ser + participle","Se pasiva","Estar + participle","Haber + participle"], explanation: "Spanish prefers se constructions over ser passives in speech." }
+    ]
+  },
+  {
+    id: "gram-46", title: "Nominalizaciones", titleEn: "Nominalizations (lo + adj, el que, lo que)", level: "C1", order: 46,
+    content: `<h3>Nominalizations</h3>
+<p><strong>Lo + adjective</strong> = "the … thing/part":<br>
+<em>Lo bueno es que tenemos tiempo.</em> (The good thing is we have time.)<br>
+<em>Lo difícil fue el examen.</em> (The hard part was the exam.)</p>
+<p><strong>Lo que</strong> = "what / that which":<br>
+<em>Lo que dices es verdad.</em> (What you say is true.)<br>
+<em>No entiendo lo que quieres.</em> (I don't understand what you want.)</p>
+<p><strong>El/la/los/las que</strong> = "the one(s) who/that":<br>
+<em>El que llegue primero gana.</em> (The one who arrives first wins.)<br>
+<em>Las que compraste son bonitas.</em> (The ones you bought are pretty.)</p>
+<p><strong>Lo + adjective/adverb + que</strong> = emphasizes degree:<br>
+<em>No sabes lo cansado que estoy.</em> (You don't know how tired I am.)</p>`,
+    quiz: [
+      { type: "mc", question: "'Lo bueno es que tenemos tiempo.' What does 'lo bueno' mean?", answer: "The good thing", options: ["The good man","The good thing","Very good","He is good"], explanation: "Lo + adjective creates an abstract noun: 'the [adj] thing/part'." },
+      { type: "fib", question: "No entiendo _____ _____ dices. (what you say)", answer: "lo que", options: null, explanation: "Lo que = what / that which." },
+      { type: "mc", question: "'El que llegue primero gana.' Why is 'llegue' in subjunctive?", answer: "The person is unknown/hypothetical", options: ["It's a command","The person is unknown/hypothetical","It's in the past","It's a wish"], explanation: "Subjunctive after el que when referring to an unknown/unspecified person." },
+      { type: "fib", question: "No sabes _____ difícil _____ es. (how difficult it is)", answer: "lo", options: null, explanation: "Lo + adj + que emphasizes degree: lo difícil que = how difficult." },
+      { type: "mc", question: "'Las que compraste son bonitas.' 'Las que' refers to:", answer: "The ones (feminine) that", options: ["The women who","The ones (feminine) that","What you bought","Those pretty things"], explanation: "Las que = the ones (fem.) that — replaces a feminine plural noun." }
+    ]
+  },
+  {
+    id: "gram-47", title: "Cláusulas relativas avanzadas", titleEn: "Advanced Relative Clauses", level: "C1", order: 47,
+    content: `<h3>Advanced Relative Clauses</h3>
+<p><strong>Cuyo/a/os/as</strong> = "whose" (agrees with the possessed noun):<br>
+<em>El autor cuya novela leímos es colombiano.</em> (The author whose novel we read is Colombian.)</p>
+<p><strong>El cual / la cual / los cuales / las cuales</strong> — formal, used after prepositions:<br>
+<em>La empresa para la cual trabajo es internacional.</em></p>
+<p><strong>Donde</strong> = "where" (replaces en que/en el que):<br>
+<em>La ciudad donde nací es pequeña.</em></p>
+<p><strong>Indicative vs. subjunctive in relative clauses:</strong><br>
+Indicative for known referents: <em>Busco al profesor que habla francés.</em> (I'm looking for the specific teacher who speaks French.)<br>
+Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable francés.</em> (I'm looking for any teacher who speaks French.)</p>`,
+    quiz: [
+      { type: "mc", question: "'El escritor cuya obra es famosa...' 'Cuya' agrees with:", answer: "obra (feminine singular)", options: ["el escritor","cuya","obra (feminine singular)","famosa"], explanation: "Cuyo agrees with the possessed noun, not the possessor." },
+      { type: "fib", question: "La empresa para la _____ trabajo es grande. (which, formal)", answer: "cual", options: null, explanation: "El/la cual is the formal relative pronoun used after prepositions." },
+      { type: "mc", question: "'Busco un apartamento que tenga balcón.' Why subjunctive?", answer: "The apartment is unspecified/hypothetical", options: ["It's a command","The apartment is unspecified/hypothetical","It's in the past","It expresses certainty"], explanation: "Subjunctive in relative clauses when the antecedent is unknown or nonexistent." },
+      { type: "fib", question: "La ciudad _____ nací es pequeña. (where)", answer: "donde", options: null, explanation: "Donde replaces en que / en la que for places." },
+      { type: "mc", question: "'Los estudiantes cuyos exámenes aprobé...' 'Cuyos' is:", answer: "Masculine plural, agreeing with 'exámenes'", options: ["Masculine plural, agreeing with 'exámenes'","Masculine plural, agreeing with 'estudiantes'","A verb form","An adverb"], explanation: "Cuyos agrees with the possessed noun (exámenes), not the possessor (estudiantes)." }
+    ]
+  },
+  {
+    id: "gram-48", title: "Perífrasis verbales", titleEn: "Verbal Periphrasis", level: "C1", order: 48,
+    content: `<h3>Verbal Periphrasis</h3>
+<p>Verb combinations where the first verb modifies the meaning of the second.</p>
+<p><strong>Aspectual (beginning):</strong> <em>empezar a + inf, ponerse a + inf, echarse a + inf</em><br>
+<em>Se puso a llorar.</em> (She started to cry.)</p>
+<p><strong>Aspectual (ongoing):</strong> <em>seguir/continuar + gerund, llevar + time + gerund, andar + gerund</em><br>
+<em>Llevo dos horas esperando.</em> (I've been waiting for two hours.)</p>
+<p><strong>Aspectual (completion):</strong> <em>acabar de + inf, dejar de + inf, terminar de + inf</em><br>
+<em>Acabo de llegar.</em> (I just arrived.)</p>
+<p><strong>Modal:</strong> <em>tener que + inf, deber + inf, haber de + inf, poder + inf, soler + inf</em><br>
+<em>Suelo desayunar a las ocho.</em> (I usually have breakfast at eight.)</p>
+<p><strong>Other:</strong> <em>volver a + inf</em> (to do again), <em>ir a + inf</em> (going to), <em>quedar(se) + gerund/participle</em></p>`,
+    quiz: [
+      { type: "mc", question: "'Llevo tres años viviendo aquí.' This expresses:", answer: "Duration of an ongoing action", options: ["A completed action","Duration of an ongoing action","A future plan","A habitual past action"], explanation: "Llevar + time + gerund = have been doing something for [time]." },
+      { type: "fib", question: "_____ de llegar a casa. (I just [arrived])", answer: "Acabo", options: null, explanation: "Acabar de + infinitive = to have just done something." },
+      { type: "mc", question: "'Se puso a llorar' means:", answer: "She started to cry", options: ["She stopped crying","She started to cry","She kept crying","She was about to cry"], explanation: "Ponerse a + infinitive = to start doing something (suddenly)." },
+      { type: "fib", question: "_____ desayunar a las siete. (I usually, soler)", answer: "Suelo", options: null, explanation: "Soler + infinitive = to usually/tend to do something." },
+      { type: "mc", question: "'Volvió a llamar' means:", answer: "He called again", options: ["He returned the call","He called again","He stopped calling","He was calling"], explanation: "Volver a + infinitive = to do something again." }
+    ]
+  },
+  {
+    id: "gram-49", title: "Usos avanzados del infinitivo y gerundio", titleEn: "Advanced Infinitive and Gerund Uses", level: "C1", order: 49,
+    content: `<h3>Advanced Infinitive and Gerund Uses</h3>
+<p><strong>Infinitive as subject:</strong> <em>Viajar es aprender.</em> (To travel is to learn.)</p>
+<p><strong>Al + infinitive</strong> = "upon/when doing":<br>
+<em>Al salir de casa, empezó a llover.</em> (Upon leaving the house, it started to rain.)</p>
+<p><strong>De + infinitive</strong> = conditional meaning:<br>
+<em>De haberlo sabido, habría venido.</em> (Had I known, I would have come.)</p>
+<p><strong>Gerund restrictions:</strong></p>
+<ul>
+<li>Cannot modify nouns like adjectives: ✗ <em>*una carta conteniendo información</em> → ✓ <em>una carta que contiene información</em></li>
+<li>Exceptions: <em>agua hirviendo</em> (boiling water), <em>ardiendo</em> (burning)</li>
+</ul>
+<p><strong>Gerund with perception verbs:</strong> <em>La vi saliendo del cine.</em> (I saw her leaving the cinema.)</p>`,
+    quiz: [
+      { type: "mc", question: "'Al llegar a Madrid, llamó a su madre.' 'Al + infinitive' means:", answer: "Upon/When arriving", options: ["Before arriving","Upon/When arriving","After arriving","Instead of arriving"], explanation: "Al + infinitive = upon/when doing something." },
+      { type: "fib", question: "_____ haberlo sabido, no habría venido. (Had I known — de + inf.)", answer: "De", options: null, explanation: "De + compound infinitive = conditional meaning (if I had...)." },
+      { type: "mc", question: "Which is INCORRECT use of the gerund in Spanish?", answer: "Una caja conteniendo libros", options: ["Sigo estudiando","La vi saliendo","Una caja conteniendo libros","Llevo horas trabajando"], explanation: "Gerunds cannot modify nouns like adjectives in Spanish (unlike English)." },
+      { type: "fib", question: "_____ es vivir. (To dream — infinitive as subject)", answer: "Soñar", options: null, explanation: "Infinitives function as nouns/subjects in Spanish." },
+      { type: "mc", question: "'Lo oí cantando.' The gerund here describes:", answer: "The action perceived (him singing)", options: ["The subject's action","The action perceived (him singing)","A noun","A future event"], explanation: "Gerund with perception verbs describes the action being perceived." }
+    ]
+  },
+  {
+    id: "gram-50", title: "Diminutivos, aumentativos y peyorativos", titleEn: "Diminutives, Augmentatives, and Pejoratives", level: "C1", order: 50,
+    content: `<h3>Diminutives, Augmentatives, and Pejoratives</h3>
+<p><strong>Diminutives</strong> (-ito/a, -illo/a, -ico/a): smallness, affection, or softening:<br>
+<em>casita</em> (little house), <em>momentito</em> (just a moment), <em>pobrecito</em> (poor little thing)</p>
+<p><strong>Regional variations:</strong> -ito (most common), -ico (Aragón, Colombia, Costa Rica), -ín (Asturias)</p>
+<p><strong>Augmentatives</strong> (-ón/ona, -azo/a, -ote/a): largeness or intensity:<br>
+<em>hombrón</em> (big man), <em>cochazo</em> (great car), <em>grandote</em> (really big)</p>
+<p><strong>Pejoratives</strong> (-ucho/a, -ejo/a, -astro/a): negative connotation:<br>
+<em>casucha</em> (run-down house), <em>palabreja</em> (strange/ugly word), <em>poetastro</em> (bad poet)</p>
+<p><strong>Note:</strong> Some have lexicalized: <em>bolsillo</em> (pocket, from bolsa), <em>sillón</em> (armchair, from silla).</p>`,
+    quiz: [
+      { type: "mc", question: "'Casita' uses which type of suffix?", answer: "Diminutive", options: ["Diminutive","Augmentative","Pejorative","Superlative"], explanation: "-ita is a diminutive suffix expressing smallness or affection." },
+      { type: "fib", question: "Un coche muy impresionante → un coch_____ (augmentative with -azo)", answer: "cochazo", options: null, explanation: "-azo augmentative: cochazo = great/impressive car." },
+      { type: "mc", question: "'Casucha' conveys:", answer: "A negative opinion of the house", options: ["A tiny, cute house","A big house","A negative opinion of the house","A formal house"], explanation: "-ucha is a pejorative suffix expressing negative quality." },
+      { type: "fib", question: "Espera un moment_____. (just a moment, diminutive)", answer: "momentito", options: null, explanation: "Momentito = just a moment — diminutive softens the request." },
+      { type: "mc", question: "'Sillón' (armchair) comes from 'silla' (chair) with suffix -ón. This is:", answer: "A lexicalized augmentative", options: ["A regular augmentative","A lexicalized augmentative","A diminutive","A pejorative"], explanation: "Some augmentatives have become independent words (lexicalized)." }
+    ]
+  },
+  {
+    id: "gram-51", title: "El subjuntivo en cláusulas independientes", titleEn: "Subjunctive in Independent Clauses", level: "C1", order: 51,
+    content: `<h3>Subjunctive in Independent Clauses</h3>
+<p>The subjunctive can appear in main clauses (not just subordinate):</p>
+<p><strong>Wishes:</strong> <em>¡Ojalá llueva!</em> (I hope it rains!) / <em>¡Ojalá hubiera llovido!</em> (I wish it had rained!)</p>
+<p><strong>Doubt/possibility:</strong> <em>Quizás venga mañana.</em> (Maybe he'll come tomorrow.) / <em>Tal vez sea cierto.</em> (Maybe it's true.)</p>
+<p><strong>Exclamatory wishes:</strong> <em>¡Que tengas buen viaje!</em> (Have a good trip!) / <em>¡Que descanses!</em> (Rest well!)</p>
+<p><strong>Concessive:</strong> <em>Sea lo que sea…</em> (Whatever it may be…) / <em>Digan lo que digan…</em> (Whatever they say…)</p>
+<p><strong>Note on quizás/tal vez:</strong> Indicative can also be used to express greater certainty: <em>Quizás viene mañana.</em> (higher confidence).</p>`,
+    quiz: [
+      { type: "mc", question: "'¡Ojalá pudiera volar!' expresses:", answer: "An unreal wish about the present", options: ["A command","An unreal wish about the present","A certainty","A past event"], explanation: "Ojalá + imperfect subjunctive = wish about something unlikely/unreal." },
+      { type: "fib", question: "¡Que _____ buen viaje! (tener, tú — exclamatory wish)", answer: "tengas", options: null, explanation: "¡Que + subjunctive! for exclamatory wishes." },
+      { type: "mc", question: "'Quizás venga mañana' vs. 'Quizás viene mañana.' The subjunctive version expresses:", answer: "More doubt/uncertainty", options: ["More certainty","More doubt/uncertainty","Past tense","A command"], explanation: "Subjunctive after quizás/tal vez expresses greater uncertainty." },
+      { type: "fib", question: "_____ lo que _____, no me rindo. (ser, concessive: whatever it may be)", answer: "Sea", options: null, explanation: "Sea lo que sea = whatever it may be — concessive subjunctive." },
+      { type: "mc", question: "'Digan lo que digan, seguiré adelante.' This structure is:", answer: "A concessive subjunctive construction", options: ["A conditional","A concessive subjunctive construction","A relative clause","Reported speech"], explanation: "Verb (subj.) + lo que + verb (subj.) = whatever/no matter what." }
+    ]
+  },
+  {
+    id: "gram-52", title: "Registro y formalidad", titleEn: "Register and Formality", level: "C1", order: 52,
+    content: `<h3>Register and Formality</h3>
+<p><strong>Forms of address:</strong></p>
+<ul>
+<li><strong>Tú</strong> — informal singular (Spain & Latin America)</li>
+<li><strong>Usted</strong> — formal singular (verb in 3rd person)</li>
+<li><strong>Vos</strong> — informal singular in Argentina, Uruguay, Central America (special conjugations)</li>
+<li><strong>Vosotros</strong> — informal plural (Spain only)</li>
+<li><strong>Ustedes</strong> — plural in Latin America (all contexts) and formal plural in Spain</li>
+</ul>
+<p><strong>Voseo conjugations (present):</strong> <em>vos hablás, vos tenés, vos vivís</em></p>
+<p><strong>Formal writing markers:</strong> passive voice, subjunctive, longer sentences, discourse connectors.</p>
+<p><strong>Informal speech markers:</strong> diminutives, colloquialisms, filler words (<em>pues, bueno, o sea, es que</em>).</p>`,
+    quiz: [
+      { type: "mc", question: "In Argentina, 'tú tienes' becomes:", answer: "vos tenés", options: ["vos tenés","vos tienes","usted tiene","tú tenéis"], explanation: "Voseo: vos + stressed final syllable (tenés, hablás, vivís)." },
+      { type: "fib", question: "In Spain, 'ustedes' is used for _____ plural contexts. (formal/informal)", answer: "formal", options: null, explanation: "In Spain, ustedes is formal plural; vosotros is informal plural." },
+      { type: "mc", question: "Which is a marker of informal spoken Spanish?", answer: "Using diminutives and filler words", options: ["Using passive voice","Using diminutives and filler words","Using subjunctive extensively","Using long complex sentences"], explanation: "Informal speech uses diminutives, fillers (bueno, o sea, pues), and colloquialisms." },
+      { type: "fib", question: "'Vos _____ muy bien.' (hablar, voseo present)", answer: "hablás", options: null, explanation: "Voseo present: -ás (ar), -és (er), -ís (ir)." },
+      { type: "mc", question: "'Vosotros' is used only in:", answer: "Spain", options: ["Argentina","Spain","Mexico","All Spanish-speaking countries"], explanation: "Vosotros is exclusive to Spain for informal plural address." }
+    ]
+  },
+  // ===== C2 =====
+  {
+    id: "gram-53", title: "El pretérito anterior", titleEn: "Preterite Perfect (Literary Tense)", level: "C2", order: 53,
+    content: `<h3>Preterite Perfect (Pretérito Anterior)</h3>
+<p>Formed with the <strong>preterite of haber</strong> + past participle: <em>hube hablado, hubiste comido</em>.</p>
+<p><strong>Use:</strong> Expresses an action completed immediately before another past action. Found almost exclusively in <strong>literary and formal written</strong> Spanish.</p>
+<p><em>Apenas hubo terminado de hablar, se marchó.</em> (As soon as he had finished speaking, he left.)</p>
+<p><strong>Trigger words:</strong> <em>apenas, en cuanto, tan pronto como, después de que, cuando</em></p>
+<p><strong>In modern Spanish:</strong> This tense is virtually extinct in speech and rare even in writing. It is replaced by the simple preterite or pluperfect: <em>Apenas terminó de hablar, se marchó.</em></p>`,
+    quiz: [
+      { type: "mc", question: "The pretérito anterior is formed with:", answer: "Preterite of haber + past participle", options: ["Preterite of haber + past participle","Imperfect of haber + past participle","Present of haber + past participle","Preterite of ser + past participle"], explanation: "Hube, hubiste, hubo, hubimos, hubisteis, hubieron + participle." },
+      { type: "fib", question: "Apenas _____ terminado, se fue. (haber, él, pretérito anterior)", answer: "hubo", options: null, explanation: "Hubo terminado = he had (just) finished — preterite of haber." },
+      { type: "mc", question: "Where is the pretérito anterior primarily found today?", answer: "Literary and formal texts", options: ["Everyday speech","Literary and formal texts","Informal writing","News broadcasts"], explanation: "This tense is virtually extinct in speech, found only in literature." },
+      { type: "fib", question: "En cuanto _____ _____ la noticia, salió corriendo. (haber + recibir, ella)", answer: "hubo recibido", options: null, explanation: "Hubo recibido = as soon as she had received." },
+      { type: "mc", question: "In modern spoken Spanish, the pretérito anterior is typically replaced by:", answer: "The simple preterite or pluperfect", options: ["The present perfect","The simple preterite or pluperfect","The future perfect","The conditional perfect"], explanation: "Modern Spanish uses preterite or pluperfect instead of this literary tense." }
+    ]
+  },
+  {
+    id: "gram-54", title: "El futuro de subjuntivo", titleEn: "Future Subjunctive (Literary/Legal)", level: "C2", order: 54,
+    content: `<h3>Future Subjunctive</h3>
+<p>An archaic tense surviving in <strong>legal texts, proverbs, and set phrases</strong>.</p>
+<p><strong>Formation:</strong> Same stem as imperfect subjunctive (-ra form), but with endings: <em>-re, -res, -re, -remos, -reis, -ren</em>.</p>
+<p><em>hablar → hablare, hablares, hablare, habláremos, hablareis, hablaren</em></p>
+<p><strong>Legal usage:</strong> <em>Si el acusado no compareciere ante el tribunal…</em> (If the defendant does not appear before the court…)</p>
+<p><strong>Proverbs:</strong> <em>Donde fueres, haz lo que vieres.</em> (When in Rome, do as the Romans do. — lit. "Wherever you go, do what you see.")</p>
+<p><strong>Set phrases:</strong> <em>sea lo que fuere</em> (be that as it may), <em>venga lo que viniere</em> (come what may).</p>`,
+    quiz: [
+      { type: "mc", question: "The future subjunctive is primarily found in:", answer: "Legal texts and proverbs", options: ["Everyday conversation","Legal texts and proverbs","News articles","Informal writing"], explanation: "This archaic tense survives mainly in legal language and fixed expressions." },
+      { type: "fib", question: "Donde _____, haz lo que vieres. (ir, future subj., tú)", answer: "fueres", options: null, explanation: "Fueres = future subjunctive of ir (wherever you may go)." },
+      { type: "mc", question: "The future subjunctive shares its stem with:", answer: "The imperfect subjunctive (-ra form)", options: ["The present subjunctive","The imperfect subjunctive (-ra form)","The future indicative","The conditional"], explanation: "Same stem as -ra form but with -re/-res/-re/-remos/-reis/-ren endings." },
+      { type: "fib", question: "Si el contrato no se _____ en el plazo establecido… (cumplir, future subj.)", answer: "cumpliere", options: null, explanation: "Legal language: cumpliere = future subjunctive of cumplir." },
+      { type: "mc", question: "'Sea lo que fuere' means:", answer: "Be that as it may", options: ["Whatever happens","Be that as it may","As long as it lasts","If it were so"], explanation: "A set phrase using future subjunctive: sea lo que fuere = be that as it may." }
+    ]
+  },
+  {
+    id: "gram-55", title: "Colocación avanzada de clíticos", titleEn: "Advanced Clitic Placement and Climbing", level: "C2", order: 55,
+    content: `<h3>Advanced Clitic Placement and Climbing</h3>
+<p><strong>Basic rule:</strong> Clitics (me, te, lo, la, le, nos, os, los, las, les, se) attach to conjugated verbs before the verb, and after infinitives, gerunds, and affirmative commands.</p>
+<p><strong>Clitic climbing:</strong> With verb chains, clitics can "climb" from the infinitive/gerund to the conjugated verb:<br>
+<em>Quiero verlo</em> = <em>Lo quiero ver</em> (I want to see it)</p>
+<p><strong>Double clitics order:</strong> se > te/os > me/nos > lo/la/los/las<br>
+<em>Se lo dije.</em> (I told it to him.) — le → se before lo/la.</p>
+<p><strong>With compound tenses:</strong> Clitics go before haber, never between haber and participle:<br>
+<em>Se lo he dicho.</em> ✓ / <em>*He se lo dicho.</em> ✗</p>
+<p><strong>Emphasis through clitic doubling:</strong> <em>A María le regalé un libro.</em> (To María, I gave her a book.)</p>`,
+    quiz: [
+      { type: "mc", question: "'Quiero decírtelo' can also be written as:", answer: "Te lo quiero decir", options: ["Te lo quiero decir","Quiero te lo decir","Lo te quiero decir","Quiero decir te lo"], explanation: "Clitic climbing: clitics move before the conjugated verb, maintaining order." },
+      { type: "fib", question: "_____ _____ he explicado muchas veces. (it to you, masc.)", answer: "Te lo", options: null, explanation: "Te (indirect) + lo (direct) before the conjugated verb (he)." },
+      { type: "mc", question: "Why does 'le lo' become 'se lo'?", answer: "Le changes to se before lo/la/los/las", options: ["It's a spelling rule","Le changes to se before lo/la/los/las","Se is always used for third person","It's optional"], explanation: "When le/les precedes lo/la/los/las, le/les → se to avoid cacophony." },
+      { type: "fib", question: "A María _____ regalé un libro. (clitic doubling, indirect)", answer: "le", options: null, explanation: "Clitic doubling: A + noun requires the redundant indirect object pronoun." },
+      { type: "mc", question: "Where do clitics go in compound tenses?", answer: "Before the auxiliary (haber)", options: ["After the participle","Between haber and participle","Before the auxiliary (haber)","After the entire verb phrase"], explanation: "Clitics always precede haber: Se lo he dicho, not *He se lo dicho." }
+    ]
+  },
+  {
+    id: "gram-56", title: "Leísmo, laísmo, loísmo", titleEn: "Pronoun Dialectal Variation", level: "C2", order: 56,
+    content: `<h3>Leísmo, Laísmo, Loísmo</h3>
+<p><strong>Standard system:</strong></p>
+<ul>
+<li>Direct object: <em>lo/la/los/las</em> — <em>Lo vi.</em> (I saw him/it.)</li>
+<li>Indirect object: <em>le/les</em> — <em>Le dije la verdad.</em> (I told him the truth.)</li>
+</ul>
+<p><strong>Leísmo:</strong> Using <em>le</em> as direct object for masculine persons: <em>Le vi ayer.</em> (I saw him yesterday.) — Accepted by RAE for singular masculine persons. Common in central/northern Spain.</p>
+<p><strong>Laísmo:</strong> Using <em>la</em> as indirect object for feminine: <em>*La dije que viniera.</em> (I told her to come.) — Not accepted by RAE. Common in Madrid and Castile.</p>
+<p><strong>Loísmo:</strong> Using <em>lo</em> as indirect object: <em>*Lo dije que viniera.</em> — Not accepted by RAE. Rare and stigmatized.</p>
+<p><strong>Latin American standard:</strong> Generally follows the etymological (standard) system consistently.</p>`,
+    quiz: [
+      { type: "mc", question: "'Le vi en la calle' (referring to a man) is an example of:", answer: "Leísmo", options: ["Leísmo","Laísmo","Loísmo","Standard usage"], explanation: "Using le as direct object (instead of lo) for a masculine person = leísmo." },
+      { type: "fib", question: "The RAE accepts leísmo for _____ masculine persons only. (singular/plural)", answer: "singular", options: null, explanation: "Leísmo de persona singular masculino is the only tolerated form." },
+      { type: "mc", question: "'*La dije la verdad' (to a woman) is an example of:", answer: "Laísmo", options: ["Leísmo","Laísmo","Loísmo","Standard usage"], explanation: "Using la as indirect object = laísmo (not accepted by RAE)." },
+      { type: "fib", question: "The standard direct object pronoun for 'him' is _____. (lo/le)", answer: "lo", options: null, explanation: "Standard (etymological) system: lo = direct object masculine." },
+      { type: "mc", question: "Which region generally follows the standard pronoun system?", answer: "Latin America", options: ["Central Spain","Madrid","Latin America","Castile"], explanation: "Latin America generally maintains the etymological distinction consistently." }
+    ]
+  },
+  {
+    id: "gram-57", title: "Cohesión del discurso", titleEn: "Discourse Cohesion and Analysis", level: "C2", order: 57,
+    content: `<h3>Discourse Cohesion and Analysis</h3>
+<p><strong>Anáfora</strong> — referring back to something already mentioned:<br>
+<em>María llegó tarde. <u>Ella</u> no encontraba las llaves.</em></p>
+<p><strong>Catáfora</strong> — referring forward to something not yet mentioned:<br>
+<em><u>Lo</u> que te voy a decir es importante.</em></p>
+<p><strong>Elipsis</strong> — omitting elements recoverable from context:<br>
+<em>Juan compró manzanas y Pedro [compró] naranjas.</em></p>
+<p><strong>Thematic progression:</strong></p>
+<ul>
+<li><strong>Linear:</strong> The rheme of one sentence becomes the theme of the next.</li>
+<li><strong>Constant:</strong> The same theme is maintained across sentences.</li>
+<li><strong>Derived:</strong> Multiple themes derive from a general hyper-theme.</li>
+</ul>
+<p><strong>Coherence markers:</strong> <em>en primer lugar, por otro lado, en definitiva, dicho de otro modo, es decir</em></p>`,
+    quiz: [
+      { type: "mc", question: "'Lo que te voy a decir es importante.' The 'lo' here is an example of:", answer: "Catáfora", options: ["Anáfora","Catáfora","Elipsis","Deixis"], explanation: "Catáfora points forward to information that follows." },
+      { type: "fib", question: "Juan come manzanas y Pedro _____ naranjas. (omitted verb — what device?)", answer: "elipsis", options: null, explanation: "Elipsis: the verb 'come' is omitted because it's recoverable from context." },
+      { type: "mc", question: "'María llegó tarde. Ella no encontraba las llaves.' 'Ella' is:", answer: "An anaphoric reference", options: ["An anaphoric reference","A cataphoric reference","An ellipsis","A connector"], explanation: "Anáfora refers back to a previously mentioned element (María)." },
+      { type: "fib", question: "'_____ _____, quiero agradecer a todos.' (In the first place — discourse marker)", answer: "En primer lugar", options: null, explanation: "En primer lugar = in the first place — a sequencing discourse marker." },
+      { type: "mc", question: "'Es decir' is used to:", answer: "Reformulate or clarify", options: ["Contrast ideas","Reformulate or clarify","Add information","Conclude"], explanation: "Es decir = that is to say / in other words — reformulation marker." }
+    ]
+  },
+  {
+    id: "gram-58", title: "Matices del subjuntivo", titleEn: "Subjunctive Nuance: Pluperfect vs Imperfect", level: "C2", order: 58,
+    content: `<h3>Subjunctive Nuance</h3>
+<p><strong>Imperfect subjunctive -ra as conditional:</strong> In formal/literary style, the -ra form can replace the conditional:<br>
+<em>Quisiera hablar con usted.</em> = <em>Querría hablar con usted.</em> (I would like to speak with you.)</p>
+<p><strong>Imperfect vs. pluperfect subjunctive in si-clauses:</strong></p>
+<ul>
+<li><em>Si tuviera dinero, viajaría.</em> (present/future unreal — imperfect subj.)</li>
+<li><em>Si hubiera tenido dinero, habría viajado.</em> (past unreal — pluperfect subj.)</li>
+</ul>
+<p><strong>-ra form as pluperfect indicative (literary):</strong><br>
+<em>El castillo que construyera Alfonso X…</em> = <em>que había construido</em> (that Alfonso X had built)</p>
+<p><strong>Subjunctive in polite requests:</strong><br>
+<em>Quisiera un café.</em> (softer than <em>Quiero</em>)<br>
+<em>¿Pudiera usted ayudarme?</em> (more formal than <em>podría</em>)</p>`,
+    quiz: [
+      { type: "mc", question: "'Quisiera hablar con usted' uses the -ra form as:", answer: "A softened conditional / polite request", options: ["Past tense","A softened conditional / polite request","Present subjunctive","Future tense"], explanation: "The -ra form of querer functions as a polite conditional: quisiera = querría." },
+      { type: "fib", question: "El castillo que _____ Alfonso X era impresionante. (construir, -ra as pluperfect indicative)", answer: "construyera", options: null, explanation: "Literary use: -ra form as pluperfect indicative (= había construido)." },
+      { type: "mc", question: "'Si tuviera' refers to:", answer: "A present/future unreal condition", options: ["A past completed action","A present/future unreal condition","A certain future event","A past unreal condition"], explanation: "Imperfect subjunctive in si-clauses = present or future counterfactual." },
+      { type: "fib", question: "Si _____ _____ más tiempo, habría terminado. (haber + tener, pluperfect subj.)", answer: "hubiera tenido", options: null, explanation: "Past unreal condition requires pluperfect subjunctive." },
+      { type: "mc", question: "The -ra form replacing the conditional is most common with:", answer: "Querer, poder, deber", options: ["Ser, estar, ir","Querer, poder, deber","Hablar, comer, vivir","Tener, hacer, decir"], explanation: "Quisiera, pudiera, debiera are the most common polite -ra conditional uses." }
+    ]
+  },
+  {
+    id: "gram-59", title: "Inversión estilística y estructuras enfáticas", titleEn: "Stylistic Inversion and Emphatic Structures", level: "C2", order: 59,
+    content: `<h3>Stylistic Inversion and Emphatic Structures</h3>
+<p><strong>Fronting for emphasis:</strong><br>
+<em>Cansado estoy de esperar.</em> (Tired I am of waiting.) — adjective fronted for emphasis.</p>
+<p><strong>Cleft sentences (perífrasis de relieve):</strong><br>
+<em>Fue María quien lo hizo.</em> (It was María who did it.)<br>
+<em>Lo que quiero es descansar.</em> (What I want is to rest.)</p>
+<p><strong>Topicalization:</strong><br>
+<em>A Juan, no lo he visto.</em> (Juan, I haven't seen him.) — topic fronted with redundant pronoun.</p>
+<p><strong>Right dislocation:</strong><br>
+<em>No lo he visto, a Juan.</em> (I haven't seen him, Juan.) — clarification after the main clause.</p>
+<p><strong>Exclamatory inversion:</strong><br>
+<em>¡Bien lo sé yo!</em> (Well do I know it!) / <em>¡Mucho me temo que…!</em> (I very much fear that…!)</p>`,
+    quiz: [
+      { type: "mc", question: "'Fue María quien lo hizo.' This is:", answer: "A cleft sentence for emphasis", options: ["A passive construction","A cleft sentence for emphasis","A relative clause","Reported speech"], explanation: "Fue + noun + quien = cleft sentence emphasizing the agent." },
+      { type: "fib", question: "_____ _____ quiero es paz. (What I want — cleft)", answer: "Lo que", options: null, explanation: "Lo que + verb + es = pseudo-cleft for emphasis on the object." },
+      { type: "mc", question: "'A Juan, no lo he visto.' The fronted 'A Juan' is an example of:", answer: "Topicalization", options: ["Topicalization","Right dislocation","Cleft sentence","Passive voice"], explanation: "Topicalization: the topic is moved to the front with a redundant pronoun." },
+      { type: "fib", question: "Cansado _____ de tanto trabajar. (estar, yo — fronted adjective)", answer: "estoy", options: null, explanation: "Adjective fronting: Cansado estoy = emphatic version of Estoy cansado." },
+      { type: "mc", question: "'No lo he visto, a Juan.' Moving 'a Juan' to the end is:", answer: "Right dislocation", options: ["Topicalization","Right dislocation","Fronting","Cleft sentence"], explanation: "Right dislocation clarifies the pronoun reference after the main clause." }
+    ]
+  },
+  {
+    id: "gram-60", title: "Construcciones idiomáticas avanzadas", titleEn: "Advanced Idiomatic Constructions", level: "C2", order: 60,
+    content: `<h3>Advanced Idiomatic Constructions</h3>
+<p><strong>Dar + noun constructions:</strong><br>
+<em>dar por hecho</em> (to take for granted), <em>dar a entender</em> (to imply), <em>dar con</em> (to find/come across), <em>dar de sí</em> (to stretch/give)</p>
+<p><strong>Hacerse / quedar / quedar(se) constructions:</strong><br>
+<em>hacerse con</em> (to get hold of), <em>hacerse el tonto</em> (to play dumb), <em>quedar en</em> (to agree to), <em>quedarse en blanco</em> (to go blank)</p>
+<p><strong>Verb + preposition idioms:</strong><br>
+<em>contar con</em> (to count on), <em>meterse en</em> (to get involved in), <em>tirar de</em> (to pull / rely on), <em>pasar de</em> (to not care about)</p>
+<p><strong>Complex set phrases:</strong><br>
+<em>a fin de cuentas</em> (at the end of the day), <em>a raíz de</em> (as a result of), <em>en vista de que</em> (given that), <em>no cabe duda</em> (there is no doubt)</p>`,
+    quiz: [
+      { type: "mc", question: "'Dar por hecho' means:", answer: "To take for granted", options: ["To finish","To take for granted","To give up","To do a favor"], explanation: "Dar por hecho = to assume / take for granted." },
+      { type: "fib", question: "Se hizo _____ el tonto para no responder. (play dumb — hacerse)", answer: "Se hizo", options: null, explanation: "Hacerse el tonto = to play dumb / pretend not to understand." },
+      { type: "mc", question: "'Quedar en' means:", answer: "To agree to / arrange", options: ["To stay in","To agree to / arrange","To remain","To be left over"], explanation: "Quedar en = to agree on / arrange (Quedamos en vernos a las cinco)." },
+      { type: "fib", question: "A _____ de cuentas, todos somos responsables. (at the end of the day)", answer: "fin", options: null, explanation: "A fin de cuentas = at the end of the day / all things considered." },
+      { type: "mc", question: "'No cabe duda de que es cierto.' 'No cabe duda' means:", answer: "There is no doubt", options: ["It doesn't fit","There is no doubt","I don't care","It's not worth it"], explanation: "No cabe duda = there is no doubt / it's unquestionable." }
+    ]
+  },
+  {
+    id: "gram-61", title: "Registro académico y literario", titleEn: "Academic and Literary Register", level: "C2", order: 61,
+    content: `<h3>Academic and Literary Register</h3>
+<p><strong>Formal essay connectors:</strong></p>
+<ul>
+<li><em>Cabe señalar que…</em> (It is worth noting that…)</li>
+<li><em>En lo que respecta a…</em> (With regard to…)</li>
+<li><em>A modo de conclusión…</em> (By way of conclusion…)</li>
+<li><em>Conviene subrayar que…</em> (It is important to emphasize that…)</li>
+<li><em>De lo anteriormente expuesto se deduce que…</em> (From the above it follows that…)</li>
+</ul>
+<p><strong>Rhetorical devices:</strong></p>
+<ul>
+<li><strong>Anáfora retórica:</strong> Repetition at the start: <em>Si tú supieras… si tú pudieras… si tú quisieras…</em></li>
+<li><strong>Quiasmo:</strong> Inverted parallelism: <em>No vivo para comer, sino como para vivir.</em></li>
+<li><strong>Hipérbaton:</strong> Altered word order: <em>Del salón en el ángulo oscuro…</em> (Bécquer)</li>
+</ul>
+<p><strong>Hedging in academic writing:</strong> <em>parece ser que, podría afirmarse que, cabe la posibilidad de que</em></p>`,
+    quiz: [
+      { type: "mc", question: "'Cabe señalar que' is used in:", answer: "Formal/academic writing", options: ["Informal conversation","Formal/academic writing","Text messages","Children's books"], explanation: "Cabe señalar que = it is worth noting that — formal register." },
+      { type: "fib", question: "En lo que _____ a la economía, los datos son positivos. (with regard to)", answer: "respecta", options: null, explanation: "En lo que respecta a = with regard to / as far as ... is concerned." },
+      { type: "mc", question: "'Del salón en el ángulo oscuro' (Bécquer) uses:", answer: "Hipérbaton (altered word order)", options: ["Normal word order","Hipérbaton (altered word order)","Anáfora","Quiasmo"], explanation: "Hipérbaton: standard order would be 'En el ángulo oscuro del salón'." },
+      { type: "fib", question: "A modo de _____, podemos afirmar que… (by way of conclusion)", answer: "conclusión", options: null, explanation: "A modo de conclusión = by way of conclusion — formal closing." },
+      { type: "mc", question: "'Podría afirmarse que' is an example of:", answer: "Hedging", options: ["A command","Hedging","Emphasis","Narration"], explanation: "Academic hedging softens claims: podría afirmarse = it could be said." }
+    ]
+  },
+  {
+    id: "gram-62", title: "Variación dialectal del español", titleEn: "Dialectal Variation Across the Spanish-Speaking World", level: "C2", order: 62,
+    content: `<h3>Dialectal Variation</h3>
+<p><strong>Phonological variation:</strong></p>
+<ul>
+<li><strong>Seseo:</strong> /s/ for both <em>s</em> and <em>c/z</em> (Latin America, southern Spain, Canaries)</li>
+<li><strong>Ceceo:</strong> /θ/ for both (parts of Andalusia)</li>
+<li><strong>Distinción:</strong> /s/ vs. /θ/ (northern/central Spain)</li>
+<li><strong>Yeísmo:</strong> Merging <em>ll</em> and <em>y</em> as /ʝ/ (most Spanish speakers today)</li>
+<li><strong>Aspiration of /s/:</strong> <em>estos → ehtoh</em> (Caribbean, Andalusia, Chile)</li>
+</ul>
+<p><strong>Grammatical variation:</strong></p>
+<ul>
+<li><strong>Voseo</strong> (Río de la Plata, Central America) vs. <strong>tuteo</strong></li>
+<li><strong>Ustedes</strong> replacing <strong>vosotros</strong> (Latin America, western Andalusia, Canaries)</li>
+<li><strong>Pretérito perfecto</strong> vs. <strong>pretérito indefinido</strong> usage varies by region</li>
+</ul>
+<p><strong>Lexical variation:</strong> <em>coche/carro/auto</em> (car), <em>ordenador/computadora/computador</em> (computer), <em>apartamento/departamento/piso</em> (apartment)</p>`,
+    quiz: [
+      { type: "mc", question: "Seseo means pronouncing c/z as:", answer: "/s/ (like 's')", options: ["/θ/ (like 'th')","/s/ (like 's')","/ʃ/ (like 'sh')","/x/ (like 'j')"], explanation: "Seseo: c(e,i) and z are pronounced as /s/, typical of Latin America." },
+      { type: "fib", question: "In Argentina, the word for 'car' is typically _____. (coche/carro/auto)", answer: "auto", options: null, explanation: "Auto is the common term in Argentina; coche in Spain; carro in Mexico/Central America." },
+      { type: "mc", question: "Yeísmo is the merger of:", answer: "ll and y sounds", options: ["s and z sounds","ll and y sounds","b and v sounds","r and rr sounds"], explanation: "Yeísmo: ll and y both pronounced as /ʝ/ — the most common pattern today." },
+      { type: "fib", question: "In Spain, 'apartment' is typically called a _____. (apartamento/piso/departamento)", answer: "piso", options: null, explanation: "Piso (Spain), apartamento/departamento (Latin America)." },
+      { type: "mc", question: "Aspiration of /s/ (e.g., 'estos' → 'ehtoh') is common in:", answer: "Caribbean, Andalusia, and Chile", options: ["Northern Spain only","Caribbean, Andalusia, and Chile","All Spanish-speaking countries","Mexico only"], explanation: "S-aspiration is widespread in Caribbean, southern Spain, Chile, and other lowland areas." }
     ]
   }
 ];

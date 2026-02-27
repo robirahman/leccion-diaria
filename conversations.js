@@ -1,5 +1,5 @@
 // conversations.js - Spanish Dialogue Practice Database
-// 15 role-play conversation scenarios for Spanish learners (A1-B1)
+// 21 role-play conversation scenarios for Spanish learners (A1-C2)
 
 const CONVERSATIONS_DATA = [
 
@@ -664,6 +664,290 @@ const CONVERSATIONS_DATA = [
       { prompt: 'How do you say "It doesn\u2019t work anymore"?', options: ['No trabaja m\u00E1s', 'Ya no funciona', 'Est\u00E1 roto siempre', 'No sirve nunca'], correct: 1 },
       { prompt: 'What does "garant\u00EDa" mean?', options: ['Guarantee / warranty', 'Insurance', 'Receipt', 'Protection plan'], correct: 0 },
       { prompt: 'What are "d\u00EDas h\u00E1biles"?', options: ['Holidays', 'Calendar days', 'Business days', 'Weekends'], correct: 2 },
+    ],
+  },
+
+  // ============================================================
+  // 16. LA ENTREVISTA DE TRABAJO (C1)
+  // ============================================================
+  {
+    id: 'entrevista-c1',
+    title: 'La Entrevista de Trabajo',
+    titleEn: 'The Job Interview',
+    icon: '\uD83D\uDCBC',
+    desc: 'Navigate a professional job interview with confidence',
+    level: 'C1',
+    speakers: [
+      { name: 'Entrevistadora', nameEn: 'Interviewer', role: 'npc' },
+      { name: 'Candidato/a', nameEn: 'Candidate', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Buenos d\u00EDas. Tome asiento, por favor. Hemos revisado su curr\u00EDculum y nos ha parecido muy interesante su trayectoria.', english: 'Good morning. Please have a seat. We have reviewed your CV and found your career path very interesting.' },
+      { speaker: 1, spanish: 'Muchas gracias. Es un placer estar aqu\u00ED. Llevo varios a\u00F1os desarroll\u00E1ndome en este sector y creo que puedo aportar mucho a su equipo.', english: 'Thank you very much. It is a pleasure to be here. I have been developing in this sector for several years and I believe I can contribute a great deal to your team.' },
+      { speaker: 0, spanish: '\u00BFPodr\u00EDa describirnos cu\u00E1les considera que son sus principales fortalezas profesionales?', english: 'Could you describe what you consider to be your main professional strengths?' },
+      { speaker: 1, spanish: 'Destaco por mi capacidad de liderazgo y mi habilidad para gestionar equipos multidisciplinares bajo presi\u00F3n.', english: 'I stand out for my leadership capacity and my ability to manage multidisciplinary teams under pressure.' },
+      { speaker: 0, spanish: '\u00BFY en cuanto a \u00E1reas de mejora? \u00BFQu\u00E9 aspectos considera que podr\u00EDa perfeccionar?', english: 'And regarding areas for improvement? What aspects do you think you could refine?' },
+      { speaker: 1, spanish: 'A veces tiendo a ser demasiado exigente conmigo mismo, lo cual me lleva a dedicar m\u00E1s horas de las necesarias a cada proyecto.', english: 'Sometimes I tend to be too demanding of myself, which leads me to dedicate more hours than necessary to each project.' },
+      { speaker: 0, spanish: 'El puesto requiere disponibilidad para viajar y dominio de ingl\u00E9s y portugu\u00E9s. \u00BFCumple con esos requisitos?', english: 'The position requires availability to travel and fluency in English and Portuguese. Do you meet those requirements?' },
+      { speaker: 1, spanish: 'Por supuesto. Tengo amplia experiencia internacional y manejo ambos idiomas con fluidez. He trabajado dos a\u00F1os en Brasil.', english: 'Of course. I have extensive international experience and I handle both languages fluently. I worked two years in Brazil.' },
+      { speaker: 0, spanish: '\u00BFQu\u00E9 expectativas salariales tiene para este puesto?', english: 'What salary expectations do you have for this position?' },
+      { speaker: 1, spanish: 'Teniendo en cuenta mi experiencia y las responsabilidades del puesto, considero que una banda salarial de entre cincuenta y sesenta mil euros anuales ser\u00EDa adecuada.', english: 'Taking into account my experience and the responsibilities of the position, I consider a salary range between fifty and sixty thousand euros per year to be appropriate.' },
+      { speaker: 0, spanish: '\u00BFPor qu\u00E9 quiere dejar su puesto actual? Entendemos que lleva cinco a\u00F1os en su empresa.', english: 'Why do you want to leave your current position? We understand you have been at your company for five years.' },
+      { speaker: 1, spanish: 'Busco un nuevo reto profesional que me permita crecer. He alcanzado el techo de desarrollo en mi empresa actual y necesito nuevos est\u00EDmulos.', english: 'I am looking for a new professional challenge that allows me to grow. I have reached the development ceiling at my current company and need new stimuli.' },
+      { speaker: 0, spanish: 'Muy bien. Le comunicaremos nuestra decisi\u00F3n en un plazo m\u00E1ximo de diez d\u00EDas h\u00E1biles. \u00BFTiene alguna pregunta?', english: 'Very well. We will communicate our decision within a maximum period of ten business days. Do you have any questions?' },
+      { speaker: 1, spanish: 'S\u00ED. \u00BFPodr\u00EDa indicarme cu\u00E1les son las posibilidades de promoci\u00F3n interna y el plan de formaci\u00F3n continua?', english: 'Yes. Could you tell me what the internal promotion opportunities and the continuing education plan are?' },
+    ],
+    vocab: [
+      { word: 'trayectoria', english: 'career path / trajectory' },
+      { word: 'curr\u00EDculum', english: 'CV / resume' },
+      { word: 'fortalezas', english: 'strengths' },
+      { word: 'expectativas salariales', english: 'salary expectations' },
+      { word: 'banda salarial', english: 'salary range' },
+      { word: 'promoci\u00F3n interna', english: 'internal promotion' },
+      { word: 'formaci\u00F3n continua', english: 'continuing education' },
+      { word: 'equipo multidisciplinar', english: 'multidisciplinary team' },
+    ],
+    quiz: [
+      { prompt: 'What does "trayectoria profesional" mean?', options: ['Job title', 'Professional career path', 'Work schedule', 'Business trip'], correct: 1 },
+      { prompt: 'How do you say "salary expectations" in Spanish?', options: ['Salario esperado', 'Expectativas salariales', 'Sueldo previsto', 'Pago anticipado'], correct: 1 },
+      { prompt: 'What does "He alcanzado el techo de desarrollo" mean?', options: ['I have reached the top floor', 'I have hit the development ceiling', 'I have finished development', 'I have built the roof'], correct: 1 },
+    ],
+  },
+
+  // ============================================================
+  // 17. DEBATE EN CLASE UNIVERSITARIA (C1)
+  // ============================================================
+  {
+    id: 'debate-universitario-c1',
+    title: 'Debate en Clase Universitaria',
+    titleEn: 'University Class Debate',
+    icon: '\uD83C\uDF93',
+    desc: 'Participate in a structured academic debate on social media',
+    level: 'C1',
+    speakers: [
+      { name: 'Profesora', nameEn: 'Professor', role: 'npc' },
+      { name: 'Estudiante 1', nameEn: 'Student 1', role: 'player' },
+      { name: 'Estudiante 2', nameEn: 'Student 2', role: 'npc' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Hoy debatiremos sobre el impacto de las redes sociales en la democracia. \u00BFQui\u00E9n quiere abrir el debate?', english: 'Today we will debate the impact of social media on democracy. Who wants to open the debate?' },
+      { speaker: 1, spanish: 'Yo quisiera empezar. A mi modo de ver, las redes sociales han democratizado el acceso a la informaci\u00F3n de manera sin precedentes.', english: 'I would like to start. In my view, social media has democratized access to information in an unprecedented way.' },
+      { speaker: 2, spanish: 'Discrepo respetuosamente. Si bien han ampliado el acceso, tambi\u00E9n han facilitado la propagaci\u00F3n de desinformaci\u00F3n a gran escala.', english: 'I respectfully disagree. While they have broadened access, they have also facilitated the spread of disinformation on a large scale.' },
+      { speaker: 1, spanish: 'Reconozco que la desinformaci\u00F3n es un problema, pero eso no invalida el hecho de que millones de personas ahora tienen voz.', english: 'I acknowledge that disinformation is a problem, but that does not invalidate the fact that millions of people now have a voice.' },
+      { speaker: 2, spanish: 'Habr\u00EDa que matizar qu\u00E9 entendemos por "tener voz". \u00BFDe qu\u00E9 sirve tener voz si los algoritmos deciden qu\u00E9 se escucha?', english: 'We should clarify what we mean by "having a voice." What good is having a voice if algorithms decide what gets heard?' },
+      { speaker: 0, spanish: 'Excelente punto. Estamos tocando la cuesti\u00F3n de los filtros burbuja. \u00BFPodr\u00EDan desarrollar esa idea?', english: 'Excellent point. We are touching on the issue of filter bubbles. Could you develop that idea?' },
+      { speaker: 1, spanish: 'Es cierto que los algoritmos crean c\u00E1maras de eco, pero el usuario tiene la responsabilidad de diversificar sus fuentes.', english: 'It is true that algorithms create echo chambers, but the user has the responsibility to diversify their sources.' },
+      { speaker: 2, spanish: 'Eso es trasladar la responsabilidad al individuo cuando el problema es estructural. Las plataformas priorizan el contenido polarizante porque genera m\u00E1s interacci\u00F3n.', english: 'That is shifting the responsibility to the individual when the problem is structural. Platforms prioritize polarizing content because it generates more engagement.' },
+      { speaker: 1, spanish: 'Dicho esto, cabe se\u00F1alar que tambi\u00E9n han surgido movimientos sociales leg\u00EDtimos gracias a estas plataformas, como la Primavera \u00C1rabe.', english: 'That said, it should be noted that legitimate social movements have also emerged thanks to these platforms, such as the Arab Spring.' },
+      { speaker: 2, spanish: 'No niego eso, pero son casos excepcionales. El uso cotidiano de las redes tiende m\u00E1s a la trivializaci\u00F3n del discurso p\u00FAblico.', english: 'I do not deny that, but those are exceptional cases. The everyday use of social media tends more toward the trivialization of public discourse.' },
+      { speaker: 0, spanish: 'Estamos llegando al quid de la cuesti\u00F3n: \u00BFes la tecnolog\u00EDa neutral o inherentemente sesgada?', english: 'We are getting to the crux of the matter: is technology neutral or inherently biased?' },
+      { speaker: 1, spanish: 'La tecnolog\u00EDa en s\u00ED es neutral; son los modelos de negocio los que generan los incentivos perversos.', english: 'Technology itself is neutral; it is the business models that create the perverse incentives.' },
+      { speaker: 2, spanish: 'Ah\u00ED s\u00ED coincidimos. El problema no es la herramienta, sino qui\u00E9n la controla y con qu\u00E9 fines.', english: 'There we do agree. The problem is not the tool, but who controls it and for what purposes.' },
+      { speaker: 0, spanish: 'Muy bien. En resumidas cuentas, ambos coinciden en que se necesita regulaci\u00F3n, aunque difieren en el grado. Excelente debate.', english: 'Very well. In short, you both agree that regulation is needed, although you differ on the degree. Excellent debate.' },
+    ],
+    vocab: [
+      { word: 'redes sociales', english: 'social media / social networks' },
+      { word: 'desinformaci\u00F3n', english: 'disinformation / misinformation' },
+      { word: 'c\u00E1mara de eco', english: 'echo chamber' },
+      { word: 'filtro burbuja', english: 'filter bubble' },
+      { word: 'polarizante', english: 'polarizing' },
+      { word: 'discurso p\u00FAblico', english: 'public discourse' },
+      { word: 'incentivos perversos', english: 'perverse incentives' },
+    ],
+    quiz: [
+      { prompt: 'What does "c\u00E1mara de eco" mean?', options: ['Sound studio', 'Echo chamber', 'Music room', 'Loud speaker'], correct: 1 },
+      { prompt: 'How do you say "I respectfully disagree" in Spanish?', options: ['No estoy de acuerdo', 'Discrepo respetuosamente', 'Me opongo totalmente', 'No me gusta su idea'], correct: 1 },
+      { prompt: 'What does "El quid de la cuesti\u00F3n" mean?', options: ['The end of the question', 'The crux of the matter', 'A difficult question', 'The first question'], correct: 1 },
+    ],
+  },
+
+  // ============================================================
+  // 18. DEBATE POL\u00CDTICO (C1)
+  // ============================================================
+  {
+    id: 'debate-politico-c1',
+    title: 'Debate Pol\u00EDtico',
+    titleEn: 'Political Debate',
+    icon: '\uD83C\uDFDB\uFE0F',
+    desc: 'Follow a political debate between two candidates',
+    level: 'C1',
+    speakers: [
+      { name: 'Moderadora', nameEn: 'Moderator', role: 'npc' },
+      { name: 'Candidato A', nameEn: 'Candidate A', role: 'player' },
+      { name: 'Candidato B', nameEn: 'Candidate B', role: 'npc' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Buenas noches. Bienvenidos al debate electoral. El primer tema es la pol\u00EDtica econ\u00F3mica. Candidato A, tiene la palabra.', english: 'Good evening. Welcome to the electoral debate. The first topic is economic policy. Candidate A, you have the floor.' },
+      { speaker: 1, spanish: 'Gracias. Nuestra propuesta se centra en la reducci\u00F3n de la presi\u00F3n fiscal sobre las pymes para impulsar el empleo.', english: 'Thank you. Our proposal focuses on reducing the tax burden on small businesses to boost employment.' },
+      { speaker: 2, spanish: 'Con todo respeto, esa pol\u00EDtica ya se implement\u00F3 en la legislatura anterior y los resultados fueron decepcionantes.', english: 'With all due respect, that policy was already implemented in the previous term and the results were disappointing.' },
+      { speaker: 1, spanish: 'Perm\u00EDtame puntualizar que las circunstancias econ\u00F3micas eran completamente distintas. Estamos ante un contexto diferente.', english: 'Allow me to clarify that the economic circumstances were completely different. We are facing a different context.' },
+      { speaker: 2, spanish: 'Lo que los ciudadanos necesitan es una inversi\u00F3n decidida en servicios p\u00FAblicos, no m\u00E1s recortes fiscales que beneficien a unos pocos.', english: 'What citizens need is a decisive investment in public services, not more tax cuts that benefit a few.' },
+      { speaker: 1, spanish: 'No comparto esa visi\u00F3n simplista. Las pymes representan el setenta por ciento del empleo. Apoyarlas es apoyar a toda la sociedad.', english: 'I do not share that simplistic view. Small businesses represent seventy percent of employment. Supporting them is supporting all of society.' },
+      { speaker: 0, spanish: 'Pasemos al segundo tema: la transici\u00F3n energ\u00E9tica. Candidato B, su turno.', english: 'Let us move to the second topic: the energy transition. Candidate B, your turn.' },
+      { speaker: 2, spanish: 'Proponemos alcanzar la neutralidad de carbono para 2040 mediante una transformaci\u00F3n profunda del modelo productivo.', english: 'We propose achieving carbon neutrality by 2040 through a profound transformation of the production model.' },
+      { speaker: 1, spanish: 'Es un objetivo loable, pero irrealizable sin un plan de financiaci\u00F3n concreto. \u00BFDe d\u00F3nde saldr\u00E1n los recursos?', english: 'It is a commendable goal, but unrealizable without a concrete financing plan. Where will the resources come from?' },
+      { speaker: 2, spanish: 'De una reforma fiscal progresiva y de fondos europeos. Los n\u00FAmeros est\u00E1n en nuestro programa electoral.', english: 'From a progressive tax reform and European funds. The numbers are in our electoral program.' },
+      { speaker: 1, spanish: 'A mi modo de ver, la transici\u00F3n debe ser gradual para no destruir empleo en sectores tradicionales.', english: 'In my view, the transition must be gradual so as not to destroy employment in traditional sectors.' },
+      { speaker: 2, spanish: 'La gradualidad es una excusa para la inacci\u00F3n. El cambio clim\u00E1tico no espera a nuestros plazos pol\u00EDticos.', english: 'Gradualism is an excuse for inaction. Climate change does not wait for our political timelines.' },
+      { speaker: 0, spanish: 'Tiempo agotado. Cada candidato tiene treinta segundos para un mensaje final.', english: 'Time is up. Each candidate has thirty seconds for a closing message.' },
+      { speaker: 1, spanish: 'En resumidas cuentas, proponemos un modelo equilibrado que combine crecimiento econ\u00F3mico con responsabilidad social.', english: 'In short, we propose a balanced model that combines economic growth with social responsibility.' },
+    ],
+    vocab: [
+      { word: 'presi\u00F3n fiscal', english: 'tax burden / tax pressure' },
+      { word: 'pymes', english: 'small and medium businesses (SMEs)' },
+      { word: 'legislatura', english: 'legislative term / administration' },
+      { word: 'neutralidad de carbono', english: 'carbon neutrality' },
+      { word: 'reforma fiscal', english: 'tax reform' },
+      { word: 'transici\u00F3n energ\u00E9tica', english: 'energy transition' },
+      { word: 'programa electoral', english: 'electoral program / platform' },
+    ],
+    quiz: [
+      { prompt: 'What does "presi\u00F3n fiscal" mean?', options: ['Fiscal pressure / tax burden', 'Financial crisis', 'Government spending', 'Budget deficit'], correct: 0 },
+      { prompt: 'What are "pymes" in English?', options: ['Large corporations', 'Government agencies', 'Small and medium enterprises', 'Non-profit organizations'], correct: 2 },
+      { prompt: 'How do you say "Allow me to clarify" in formal Spanish?', options: ['D\u00E9jeme hablar', 'Perm\u00EDtame puntualizar', 'Quiero decir algo', 'Escuche por favor'], correct: 1 },
+    ],
+  },
+
+  // ============================================================
+  // 19. TERTULIA FILOS\u00D3FICA (C2)
+  // ============================================================
+  {
+    id: 'tertulia-filosofica-c2',
+    title: 'Tertulia Filos\u00F3fica',
+    titleEn: 'Philosophical Discussion',
+    icon: '\uD83E\uDD14',
+    desc: 'Engage in a sophisticated philosophical discussion',
+    level: 'C2',
+    speakers: [
+      { name: 'Fil\u00F3sofa', nameEn: 'Philosopher', role: 'npc' },
+      { name: 'T\u00FA', nameEn: 'You', role: 'player' },
+      { name: 'Colega', nameEn: 'Colleague', role: 'npc' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Retomemos donde lo dejamos la semana pasada. \u00BFHasta qu\u00E9 punto la conciencia individual est\u00E1 condicionada por las estructuras sociales?', english: 'Let us pick up where we left off last week. To what extent is individual consciousness conditioned by social structures?' },
+      { speaker: 1, spanish: 'Desde una perspectiva fenomenol\u00F3gica, la conciencia siempre es conciencia de algo, y ese "algo" est\u00E1 inevitablemente mediado por lo social.', english: 'From a phenomenological perspective, consciousness is always consciousness of something, and that "something" is inevitably mediated by the social.' },
+      { speaker: 2, spanish: 'Sin embargo, reducir la conciencia a un mero reflejo de lo social ser\u00EDa caer en un determinismo que niega la agencia del sujeto.', english: 'However, reducing consciousness to a mere reflection of the social would be falling into a determinism that denies the agency of the subject.' },
+      { speaker: 1, spanish: 'No estoy planteando un determinismo estricto. M\u00E1s bien sugiero que la libertad del sujeto se ejerce dentro de un marco de posibilidades socialmente constituido.', english: 'I am not proposing a strict determinism. Rather, I am suggesting that the freedom of the subject is exercised within a framework of socially constituted possibilities.' },
+      { speaker: 0, spanish: 'Ah\u00ED entronca con la noci\u00F3n sartreana de que estamos "condenados a ser libres", pero dentro de una situaci\u00F3n concreta.', english: 'That connects with the Sartrean notion that we are "condemned to be free," but within a concrete situation.' },
+      { speaker: 2, spanish: 'El problema es que Sartre subestim\u00F3 el peso de las estructuras inconscientes. Ah\u00ED es donde Bourdieu resulta m\u00E1s esclarecedor con su concepto de habitus.', english: 'The problem is that Sartre underestimated the weight of unconscious structures. That is where Bourdieu is more illuminating with his concept of habitus.' },
+      { speaker: 1, spanish: 'El habitus es un concepto valios\u00EDsimo, pero \u00BFno corremos el riesgo de reificar las estructuras y anular al sujeto en el proceso?', english: 'Habitus is a most valuable concept, but do we not run the risk of reifying structures and nullifying the subject in the process?' },
+      { speaker: 0, spanish: 'Esa tensi\u00F3n entre estructura y agencia es, quiz\u00E1s, irresoluble. Pero su irresolubilidad es precisamente lo que la hace filos\u00F3ficamente productiva.', english: 'That tension between structure and agency is, perhaps, irresolvable. But its irresolvability is precisely what makes it philosophically productive.' },
+      { speaker: 2, spanish: 'Convendr\u00EDa tambi\u00E9n incorporar la dimensi\u00F3n temporal. La conciencia no es est\u00E1tica; se constituye en un devenir hist\u00F3rico.', english: 'It would also be worth incorporating the temporal dimension. Consciousness is not static; it is constituted in a historical becoming.' },
+      { speaker: 1, spanish: 'Exacto. Y ah\u00ED la hermen\u00E9utica gadameriana nos ofrece herramientas: comprendemos siempre desde un horizonte hist\u00F3ricamente situado.', english: 'Exactly. And there Gadamerian hermeneutics offers us tools: we always understand from a historically situated horizon.' },
+      { speaker: 0, spanish: 'Lo cual nos lleva a cuestionar la posibilidad misma de un conocimiento objetivo desvinculado del sujeto cognoscente.', english: 'Which leads us to question the very possibility of objective knowledge detached from the knowing subject.' },
+      { speaker: 2, spanish: 'Eso ser\u00EDa abrazar un relativismo epistemol\u00F3gico radical, y no estoy seguro de que sea deseable.', english: 'That would be embracing a radical epistemological relativism, and I am not sure that is desirable.' },
+      { speaker: 1, spanish: 'No necesariamente relativismo. Podemos sostener que el conocimiento es perspectivista sin renunciar a criterios de validez intersubjetiva.', english: 'Not necessarily relativism. We can maintain that knowledge is perspectival without renouncing criteria of intersubjective validity.' },
+      { speaker: 0, spanish: 'Brillante. Dejemos aqu\u00ED esta apor\u00EDa para retomarla la pr\u00F3xima semana con textos de Habermas sobre la raz\u00F3n comunicativa.', english: 'Brilliant. Let us leave this aporia here and revisit it next week with texts by Habermas on communicative reason.' },
+    ],
+    vocab: [
+      { word: 'fenomenol\u00F3gica', english: 'phenomenological' },
+      { word: 'agencia del sujeto', english: 'agency of the subject' },
+      { word: 'habitus', english: 'habitus (Bourdieu\u2019s concept of ingrained habits)' },
+      { word: 'reificar', english: 'to reify (treat abstraction as concrete)' },
+      { word: 'hermen\u00E9utica', english: 'hermeneutics (theory of interpretation)' },
+      { word: 'relativismo epistemol\u00F3gico', english: 'epistemological relativism' },
+      { word: 'apor\u00EDa', english: 'aporia (philosophical impasse)' },
+      { word: 'intersubjetiva', english: 'intersubjective' },
+    ],
+    quiz: [
+      { prompt: 'What does "agencia del sujeto" mean?', options: ['Travel agency', 'Government agency', 'Agency of the subject', 'Subject matter'], correct: 2 },
+      { prompt: 'What is "habitus" in Bourdieu\u2019s philosophy?', options: ['A bad habit', 'Ingrained dispositions shaped by social structures', 'A type of habitat', 'A religious practice'], correct: 1 },
+      { prompt: 'What does "apor\u00EDa" mean?', options: ['An opening', 'A philosophical impasse or puzzle', 'A type of argument', 'A conclusion'], correct: 1 },
+    ],
+  },
+
+  // ============================================================
+  // 20. NEGOCIACI\u00D3N LEGAL (C2)
+  // ============================================================
+  {
+    id: 'negociacion-legal-c2',
+    title: 'Negociaci\u00F3n Legal',
+    titleEn: 'Legal Negotiation',
+    icon: '\u2696\uFE0F',
+    desc: 'Navigate a sophisticated legal negotiation between firms',
+    level: 'C2',
+    speakers: [
+      { name: 'Abogada Parte A', nameEn: 'Lawyer Party A', role: 'npc' },
+      { name: 'Abogado Parte B', nameEn: 'Lawyer Party B', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Buenos d\u00EDas. Agradecemos que hayan accedido a esta reuni\u00F3n de mediaci\u00F3n antes de recurrir a la v\u00EDa judicial.', english: 'Good morning. We appreciate that you have agreed to this mediation meeting before resorting to legal proceedings.' },
+      { speaker: 1, spanish: 'Nuestro cliente siempre ha estado dispuesto al di\u00E1logo, siempre y cuando se respeten sus derechos contractuales.', english: 'Our client has always been open to dialogue, as long as their contractual rights are respected.' },
+      { speaker: 0, spanish: 'Entendemos su postura. Sin embargo, la cl\u00E1usula de indemnizaci\u00F3n que invocan admite una interpretaci\u00F3n distinta seg\u00FAn la jurisprudencia reciente.', english: 'We understand your position. However, the indemnification clause you invoke admits a different interpretation according to recent case law.' },
+      { speaker: 1, spanish: 'Con el debido respeto, la jurisprudencia que citan es de un tribunal inferior y ha sido recurrida. No sienta precedente firme.', english: 'With due respect, the case law you cite is from a lower court and has been appealed. It does not set firm precedent.' },
+      { speaker: 0, spanish: 'Sea como fuere, un litigio prolongado no beneficia a ninguna de las partes. Le planteo la siguiente alternativa: una compensaci\u00F3n parcial.', english: 'Be that as it may, prolonged litigation benefits neither party. I present the following alternative: partial compensation.' },
+      { speaker: 1, spanish: '\u00BFDe qu\u00E9 cuant\u00EDa estamos hablando? Necesitar\u00EDamos ciertas garant\u00EDas de que se ejecutar\u00E1 en plazo.', english: 'What amount are we talking about? We would need certain guarantees that it will be executed on time.' },
+      { speaker: 0, spanish: 'Proponemos el sesenta por ciento de la indemnizaci\u00F3n reclamada, pagadero en tres plazos trimestrales.', english: 'We propose sixty percent of the claimed indemnification, payable in three quarterly installments.' },
+      { speaker: 1, spanish: 'Es insuficiente. Nuestro cliente sufri\u00F3 un lucro cesante considerable. No aceptar\u00EDamos menos del ochenta por ciento.', english: 'That is insufficient. Our client suffered considerable lost profits. We would not accept less than eighty percent.' },
+      { speaker: 0, spanish: 'El lucro cesante que alegan no est\u00E1 plenamente documentado. Estamos siendo generosos con esa oferta.', english: 'The lost profits you allege are not fully documented. We are being generous with that offer.' },
+      { speaker: 1, spanish: 'Tenemos informes periciales que lo acreditan. Nos reservamos el derecho de presentarlos ante el tribunal si no hay acuerdo.', english: 'We have expert reports that substantiate it. We reserve the right to present them before the court if there is no agreement.' },
+      { speaker: 0, spanish: 'Hagamos una contrapropuesta: setenta y cinco por ciento, a cambio de una cl\u00E1usula de confidencialidad y renuncia a futuras reclamaciones.', english: 'Let us make a counterproposal: seventy-five percent, in exchange for a confidentiality clause and waiver of future claims.' },
+      { speaker: 1, spanish: 'La confidencialidad es aceptable. La renuncia a futuras reclamaciones, solo si se circunscribe a los hechos objeto de esta mediaci\u00F3n.', english: 'Confidentiality is acceptable. The waiver of future claims, only if it is limited to the facts that are the subject of this mediation.' },
+      { speaker: 0, spanish: 'De acuerdo. Bajo estas premisas, creo que podemos redactar un acuerdo satisfactorio para ambas partes.', english: 'Agreed. Under these premises, I believe we can draft an agreement satisfactory to both parties.' },
+      { speaker: 1, spanish: 'Nuestro departamento jur\u00EDdico revisar\u00E1 el borrador. Si todo est\u00E1 en orden, procederemos a la firma en un plazo de setenta y dos horas.', english: 'Our legal department will review the draft. If everything is in order, we will proceed to sign within seventy-two hours.' },
+    ],
+    vocab: [
+      { word: 'mediaci\u00F3n', english: 'mediation' },
+      { word: 'cl\u00E1usula de indemnizaci\u00F3n', english: 'indemnification clause' },
+      { word: 'jurisprudencia', english: 'case law / jurisprudence' },
+      { word: 'lucro cesante', english: 'lost profits / loss of earnings' },
+      { word: 'informes periciales', english: 'expert reports' },
+      { word: 'cl\u00E1usula de confidencialidad', english: 'confidentiality clause / NDA' },
+      { word: 'renuncia a reclamaciones', english: 'waiver of claims' },
+      { word: 'borrador', english: 'draft (document)' },
+    ],
+    quiz: [
+      { prompt: 'What does "lucro cesante" mean?', options: ['Profit margin', 'Lost profits / loss of earnings', 'Net income', 'Tax deduction'], correct: 1 },
+      { prompt: 'What is "jurisprudencia"?', options: ['Legal advice', 'Case law / jurisprudence', 'A jury', 'Legal fees'], correct: 1 },
+      { prompt: 'What does "Nos reservamos el derecho de..." mean?', options: ['We give up the right to...', 'We reserve the right to...', 'We demand the right to...', 'We share the right to...'], correct: 1 },
+    ],
+  },
+
+  // ============================================================
+  // 21. SEMINARIO DE AN\u00C1LISIS LITERARIO (C2)
+  // ============================================================
+  {
+    id: 'seminario-literario-c2',
+    title: 'Seminario de An\u00E1lisis Literario',
+    titleEn: 'Literary Analysis Seminar',
+    icon: '\uD83D\uDCDA',
+    desc: 'Discuss a novel in a graduate-level literary seminar',
+    level: 'C2',
+    speakers: [
+      { name: 'Catedr\u00E1tico', nameEn: 'Professor', role: 'npc' },
+      { name: 'T\u00FA', nameEn: 'You', role: 'player' },
+      { name: 'Compa\u00F1era', nameEn: 'Classmate', role: 'npc' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Hoy analizaremos "Pedro P\u00E1ramo" de Juan Rulfo. Es una obra que trasciende su \u00E9poca. \u00BFQu\u00E9 les pareci\u00F3 la estructura narrativa?', english: 'Today we will analyze "Pedro P\u00E1ramo" by Juan Rulfo. It is a work that transcends its era. What did you think of the narrative structure?' },
+      { speaker: 1, spanish: 'Lo que m\u00E1s me impact\u00F3 fue la fragmentaci\u00F3n temporal. El autor emplea un recurso narrativo innovador al disolver las fronteras entre vivos y muertos.', english: 'What struck me most was the temporal fragmentation. The author employs an innovative narrative device by dissolving the boundaries between the living and the dead.' },
+      { speaker: 2, spanish: 'Coincido. Adem\u00E1s, el narrador no es del todo fiable. Juan Preciado llega a Comala buscando a su padre, pero lo que encuentra es un pueblo de fantasmas y ecos.', english: 'I agree. Furthermore, the narrator is not entirely reliable. Juan Preciado arrives in Comala looking for his father, but what he finds is a town of ghosts and echoes.' },
+      { speaker: 0, spanish: 'Excelente observaci\u00F3n. \u00BFY qu\u00E9 papel desempe\u00F1a el paisaje en la construcci\u00F3n del sentido?', english: 'Excellent observation. And what role does the landscape play in the construction of meaning?' },
+      { speaker: 1, spanish: 'El paisaje \u00E1rido y desolado funciona como met\u00E1fora central de la muerte y el abandono. Comala es a la vez un lugar f\u00EDsico y un estado del alma.', english: 'The arid, desolate landscape functions as a central metaphor for death and abandonment. Comala is both a physical place and a state of the soul.' },
+      { speaker: 2, spanish: 'Subyace tambi\u00E9n una cr\u00EDtica social en el texto. Pedro P\u00E1ramo encarna el caciquismo que devast\u00F3 el M\u00E9xico rural.', english: 'There is also an underlying social critique in the text. Pedro P\u00E1ramo embodies the political bossism that devastated rural Mexico.' },
+      { speaker: 0, spanish: '\u00BFDir\u00EDan que se percibe una influencia del realismo m\u00E1gico, o es algo distinto?', english: 'Would you say that an influence of magical realism is perceived, or is it something different?' },
+      { speaker: 1, spanish: 'Yo dir\u00EDa que Rulfo precede al realismo m\u00E1gico y lo trasciende. Su prosa destaca por una austeridad l\u00E9xica que contrasta con la exuberancia de Garc\u00EDa M\u00E1rquez.', english: 'I would say that Rulfo precedes magical realism and transcends it. His prose stands out for a lexical austerity that contrasts with the exuberance of Garc\u00EDa M\u00E1rquez.' },
+      { speaker: 2, spanish: 'El estilo oscila entre lo l\u00EDrico y lo prosaico. Hay pasajes de una belleza desgarradora junto a di\u00E1logos de una crudeza absoluta.', english: 'The style oscillates between the lyrical and the prosaic. There are passages of heartbreaking beauty alongside dialogues of absolute rawness.' },
+      { speaker: 0, spanish: 'Hablemos del desenlace. \u00BFPor qu\u00E9 resulta tan ambiguo?', english: 'Let us talk about the ending. Why is it so ambiguous?' },
+      { speaker: 1, spanish: 'Porque la muerte de Pedro P\u00E1ramo no es un cierre sino una disoluci\u00F3n. Se desmorona "como si fuera un mont\u00F3n de piedras". El simbolismo de ese pasaje es notable.', english: 'Because Pedro P\u00E1ramo\u2019s death is not a closure but a dissolution. He crumbles "as if he were a pile of stones." The symbolism of that passage is notable.' },
+      { speaker: 2, spanish: 'La intertextualidad tambi\u00E9n enriquece la lectura. Hay ecos de la "Divina Comedia" en el descenso de Juan Preciado a ese infierno mexicano.', english: 'Intertextuality also enriches the reading. There are echoes of the "Divine Comedy" in Juan Preciado\u2019s descent into that Mexican inferno.' },
+      { speaker: 0, spanish: 'Hay una tensi\u00F3n constante entre lo individual y lo colectivo. \u00BFEs Pedro P\u00E1ramo un individuo o la encarnaci\u00F3n de un sistema?', english: 'There is a constant tension between the individual and the collective. Is Pedro P\u00E1ramo an individual or the embodiment of a system?' },
+      { speaker: 1, spanish: 'Ambas cosas a la vez, y ah\u00ED radica la grandeza de la obra. El personaje experimenta una transformaci\u00F3n profunda que espeja la del pa\u00EDs entero.', english: 'Both at the same time, and therein lies the greatness of the work. The character undergoes a profound transformation that mirrors that of the entire country.' },
+      { speaker: 0, spanish: 'Magistral an\u00E1lisis. Quedan abiertas varias l\u00EDneas de investigaci\u00F3n. Para la pr\u00F3xima sesi\u00F3n, lean "El llano en llamas" y comparen la t\u00E9cnica narrativa.', english: 'Masterful analysis. Several lines of research remain open. For the next session, read "El llano en llamas" and compare the narrative technique.' },
+    ],
+    vocab: [
+      { word: 'fragmentaci\u00F3n temporal', english: 'temporal fragmentation' },
+      { word: 'caciquismo', english: 'political bossism / strongman rule' },
+      { word: 'austeridad l\u00E9xica', english: 'lexical austerity' },
+      { word: 'intertextualidad', english: 'intertextuality' },
+      { word: 'desenlace', english: 'ending / denouement' },
+      { word: 'met\u00E1fora central', english: 'central metaphor' },
+      { word: 'narrador no fiable', english: 'unreliable narrator' },
+    ],
+    quiz: [
+      { prompt: 'What does "caciquismo" refer to?', options: ['A literary genre', 'Political bossism / strongman rule', 'A type of dance', 'Agricultural practice'], correct: 1 },
+      { prompt: 'What is "intertextualidad"?', options: ['Translating between languages', 'References and connections between literary works', 'Writing in multiple genres', 'A type of footnote'], correct: 1 },
+      { prompt: 'What does "desenlace" mean in literary analysis?', options: ['Introduction', 'Climax', 'Ending / denouement', 'Setting'], correct: 2 },
     ],
   },
 

@@ -451,7 +451,10 @@ function renderVerbsHome() {
 // ── Verb Learn (Flashcards) ──
 function startVerbLearn() {
   if (typeof VERB_DATA === 'undefined') return;
-  const tenses = ['present', 'preterite', 'imperfect'];
+  // Use all simple tenses (no compound/progressive for flashcards)
+  const tenses = Object.keys(TENSE_META).filter(t =>
+    !TENSE_META[t].compound && !TENSE_META[t].progressive
+  );
   verbLearnQueue = [];
   const verbs = pickN(VERB_DATA, 10);
   verbs.forEach(v => {
@@ -509,13 +512,16 @@ function rateVerb(rating) {
 // ── Verb Drill (Typing) ──
 function startVerbDrill() {
   if (typeof VERB_DATA === 'undefined') return;
-  const tenses = ['present', 'preterite', 'imperfect', 'future'];
+  // All simple tenses + progressive for typing drill
+  const tenses = Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound);
   verbDrillQueue = [];
   for (let i = 0; i < 10; i++) {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    verbDrillQueue.push({ verb, tense, person, answer: conjugate(verb.infinitive, tense, person) });
+    const answer = conjugate(verb.infinitive, tense, person);
+    if (!answer || answer === '—' || answer === '?') { i--; continue; }
+    verbDrillQueue.push({ verb, tense, person, answer });
   }
   verbDrillIdx = 0;
   verbDrillScore = 0;
@@ -573,13 +579,15 @@ function nextVerbDrill() {
 // ── Verb Quiz (MC + FIB) ──
 function startVerbQuiz() {
   if (typeof VERB_DATA === 'undefined') return;
-  const tenses = ['present', 'preterite', 'imperfect'];
+  // All tenses including compound and progressive
+  const tenses = Object.keys(TENSE_META);
   verbQuizQueue = [];
   for (let i = 0; i < 10; i++) {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
     const correct = conjugate(verb.infinitive, tense, person);
+    if (!correct || correct === '—' || correct === '?') { i--; continue; }
     // Generate wrong options
     const wrongs = new Set();
     while (wrongs.size < 3) {
@@ -1400,8 +1408,8 @@ function showResults(score, total, module, label) {
 //  PLACEMENT TEST
 // ════════════════════════════════════════
 
-const PLACEMENT_LEVELS = ['A1', 'A2', 'B1', 'B2'];
-const LEVEL_ORDER = { A1: 0, A2: 1, B1: 2, B2: 3 };
+const PLACEMENT_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+const LEVEL_ORDER = { A1: 0, A2: 1, B1: 2, B2: 3, C1: 4, C2: 5 };
 
 function levelAtOrBelow(itemLevel, targetLevel) {
   return (LEVEL_ORDER[itemLevel] || 0) <= (LEVEL_ORDER[targetLevel] || 0);
@@ -1461,15 +1469,37 @@ function buildPlacementVerbQs(level, count) {
   const picked = pickN(verbs, count);
   return picked.map(v => {
     const tense = pick(useTenses);
-    const person = Math.floor(Math.random() * 6);
+    // For imperatives, skip yo (person 0) — it doesn't exist
+    const isImperative = tense === 'imperative_aff' || tense === 'imperative_neg';
+    const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
     const correct = conjugate(v.infinitive, tense, person);
     if (!correct || correct === '—' || correct === '?') return null;
+    // Build harder distractors: same verb in different persons/tenses
     const wrongs = new Set();
     let attempts = 0;
+    // First: same verb, same tense, different person
+    while (wrongs.size < 2 && attempts < 20) {
+      let wp = Math.floor(Math.random() * 6);
+      if (isImperative && wp === 0) wp = 1;
+      if (wp === person) { attempts++; continue; }
+      const w = conjugate(v.infinitive, tense, wp);
+      if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
+      attempts++;
+    }
+    // Then: same verb, different tense, same person
+    attempts = 0;
+    while (wrongs.size < 3 && attempts < 20) {
+      const wt = pick(Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound && t !== tense));
+      if (wt === 'imperative_aff' || wt === 'imperative_neg') { attempts++; continue; }
+      const w = conjugate(v.infinitive, wt, person);
+      if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
+      attempts++;
+    }
+    // Fallback: other verbs same tense if still needed
+    attempts = 0;
     while (wrongs.size < 3 && attempts < 20) {
       const wv = pick(VERB_DATA);
-      const wp = Math.floor(Math.random() * 6);
-      const w = conjugate(wv.infinitive, tense, wp);
+      const w = conjugate(wv.infinitive, tense, person);
       if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
       attempts++;
     }
@@ -1508,14 +1538,14 @@ function startPlacementTest() {
   placementCurrentLevel = 0;
   placementConsecutive = 0;
   placementLastCorrect = null;
-  placementLevelScores = { A1: 0, A2: 0, B1: 0, B2: 0 };
-  placementLevelTotals = { A1: 0, A2: 0, B1: 0, B2: 0 };
+  placementLevelScores = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
+  placementLevelTotals = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
   showScreen('placement');
   renderPlacementQuestion();
 }
 
 function renderPlacementQuestion() {
-  if (placementIdx >= 30) { finishPlacementTest(); return; }
+  if (placementIdx >= 40) { finishPlacementTest(); return; }
 
   // Find next question from current level's pool
   const level = PLACEMENT_LEVELS[placementCurrentLevel];
@@ -1524,10 +1554,10 @@ function renderPlacementQuestion() {
     q = placementPool[level].shift();
   } else {
     // Try adjacent levels
-    for (let d = 1; d < 4; d++) {
+    for (let d = 1; d < PLACEMENT_LEVELS.length; d++) {
       for (const dir of [1, -1]) {
         const idx = placementCurrentLevel + d * dir;
-        if (idx >= 0 && idx < 4) {
+        if (idx >= 0 && idx < PLACEMENT_LEVELS.length) {
           const lv = PLACEMENT_LEVELS[idx];
           if (placementPool[lv] && placementPool[lv].length > 0) {
             q = placementPool[lv].shift();
@@ -1544,8 +1574,8 @@ function renderPlacementQuestion() {
   placementPool._current = q;
 
   // Update UI
-  document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 30`;
-  const pct = Math.round(((placementIdx) / 30) * 100);
+  document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 40`;
+  const pct = Math.round(((placementIdx) / 40) * 100);
   document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
   document.getElementById('pt-level-badge').textContent = `Testing: ${level}`;
   document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[level]?.color || 'var(--accent)';
