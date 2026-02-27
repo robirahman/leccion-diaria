@@ -22,11 +22,11 @@ const GRAMMAR_DATA = [
 </ul>
 <p><strong>Common exceptions:</strong> <em>la mano</em> (the hand) is feminine despite ending in -o. <em>El día</em> (the day) is masculine despite ending in -a.</p>`,
     quiz: [
-      { type: "mc", question: "What gender is 'la mesa'?", answer: "Feminine", options: ["Masculine","Feminine","Neuter","Both"], explanation: "'Mesa' ends in -a and uses 'la', so it's feminine." },
-      { type: "mc", question: "What gender is 'el problema'?", answer: "Masculine", options: ["Masculine","Feminine","Neuter","It depends"], explanation: "Despite ending in -a, 'problema' is masculine (Greek origin -ma words)." },
+      { type: "mc", question: "What gender is 'mesa'?", answer: "Feminine", options: ["Masculine","Feminine","Neuter","Both"], explanation: "'Mesa' ends in -a, so it's feminine: la mesa." },
+      { type: "mc", question: "What gender is 'problema'?", answer: "Masculine", options: ["Masculine","Feminine","Neuter","It depends"], explanation: "Despite ending in -a, 'problema' is masculine (Greek origin -ma words): el problema." },
       { type: "mc", question: "Which ending typically indicates a feminine noun?", answer: "-ción", options: ["-or","-ción","-ma","-aje"], explanation: "Nouns ending in -ción are feminine: la nación, la educación." },
       { type: "fib", question: "Complete: ___ mano (the hand)", answer: "la", options: null, explanation: "'Mano' is feminine despite ending in -o: la mano." },
-      { type: "mc", question: "Which is an exception to the -o = masculine rule?", answer: "la mano", options: ["el libro","la mano","el gato","el vaso"], explanation: "'La mano' is feminine despite ending in -o." }
+      { type: "mc", question: "Which noun is an exception to the -o = masculine rule?", answer: "mano", options: ["libro","mano","gato","vaso"], explanation: "'Mano' is feminine despite ending in -o: la mano." }
     ]
   },
   {

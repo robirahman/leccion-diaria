@@ -155,6 +155,7 @@ function selectProfile(name) {
   updateNavStats();
   document.getElementById('tab-bar').style.display = 'flex';
   switchTab('today');
+  try { sessionStorage.setItem('ld_active_profile', name); } catch (e) { /* ignore */ }
 }
 
 function createProfile() {
@@ -1530,6 +1531,54 @@ function buildPlacementPool() {
   return pool;
 }
 
+function savePlacementState() {
+  try {
+    const state = {
+      pool: placementPool,
+      idx: placementIdx,
+      score: placementScore,
+      currentLevel: placementCurrentLevel,
+      consecutive: placementConsecutive,
+      lastCorrect: placementLastCorrect,
+      levelScores: placementLevelScores,
+      levelTotals: placementLevelTotals,
+      profile: currentProfile,
+    };
+    sessionStorage.setItem('ld_placement_state', JSON.stringify(state));
+  } catch (e) { /* ignore quota errors */ }
+}
+
+function clearPlacementState() {
+  sessionStorage.removeItem('ld_placement_state');
+}
+
+function restorePlacementTest() {
+  try {
+    const raw = sessionStorage.getItem('ld_placement_state');
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    // Only restore if same profile and test was in progress
+    if (state.profile !== currentProfile || state.idx >= 40) {
+      clearPlacementState();
+      return false;
+    }
+    placementPool = state.pool;
+    placementIdx = state.idx;
+    placementScore = state.score;
+    placementCurrentLevel = state.currentLevel;
+    placementConsecutive = state.consecutive;
+    placementLastCorrect = state.lastCorrect;
+    placementLevelScores = state.levelScores;
+    placementLevelTotals = state.levelTotals;
+    showScreen('placement');
+    renderPlacementQuestion();
+    return true;
+  } catch (e) {
+    clearPlacementState();
+    return false;
+  }
+}
+
 function startPlacementTest() {
   closeModal();
   placementPool = buildPlacementPool();
@@ -1540,6 +1589,7 @@ function startPlacementTest() {
   placementLastCorrect = null;
   placementLevelScores = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
   placementLevelTotals = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
+  savePlacementState();
   showScreen('placement');
   renderPlacementQuestion();
 }
@@ -1676,11 +1726,12 @@ function recordPlacementAnswer(q, isCorrect) {
   } else {
     placementConsecutive = placementConsecutive <= 0 ? placementConsecutive - 1 : -1;
   }
+  savePlacementState();
 }
 
 function nextPlacementQuestion() {
   // Adaptive level adjustment
-  if (placementConsecutive >= 2 && placementCurrentLevel < 3) {
+  if (placementConsecutive >= 2 && placementCurrentLevel < PLACEMENT_LEVELS.length - 1) {
     placementCurrentLevel++;
     placementConsecutive = 0;
   } else if (placementConsecutive <= -2 && placementCurrentLevel > 0) {
@@ -1689,6 +1740,7 @@ function nextPlacementQuestion() {
   }
 
   placementIdx++;
+  savePlacementState();
   renderPlacementQuestion();
 }
 
@@ -1749,6 +1801,7 @@ function applyPlacementResults(level) {
 }
 
 function finishPlacementTest() {
+  clearPlacementState();
   const level = determinePlacementLevel();
   applyPlacementResults(level);
 
@@ -2093,6 +2146,15 @@ function init() {
     window.speechSynthesis.getVoices();
     window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
   }
+  // Restore session if the page was discarded (e.g. tab switch on mobile/PWA)
+  try {
+    const savedProfile = sessionStorage.getItem('ld_active_profile');
+    if (savedProfile && getProfiles().includes(savedProfile)) {
+      selectProfile(savedProfile);
+      // Restore placement test if it was in progress
+      restorePlacementTest();
+    }
+  } catch (e) { /* ignore */ }
 }
 
 // Register service worker
