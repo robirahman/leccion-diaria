@@ -358,6 +358,16 @@ function checkAnswer(input, correct) {
 // ════════════════════════════════════════
 
 function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+// Generic MC option selection helper
+function selectMCOption(containerSelector, idx) {
+  const btns = document.querySelectorAll(`${containerSelector} .quiz-option`);
+  if (btns[0]?.classList.contains('disabled')) return;
+  btns.forEach(btn => btn.classList.remove('selected'));
+  if (btns[idx]) btns[idx].classList.add('selected');
+  const submitBtn = document.querySelector(`${containerSelector} .mc-submit`);
+  if (submitBtn) submitBtn.style.display = 'block';
+}
 function todayStr() { return dateStr(new Date()); }
 function dateStr(d) { return d.toISOString().slice(0, 10); }
 function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -630,6 +640,7 @@ function renderVerbQuizQuestion() {
           `<button class="quiz-option" data-action="answer-verb-quiz" data-idx="${i}">${esc(opt)}</button>`
         ).join('')}
       </div>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-verb-quiz-mc" style="display:none">Submit</button>
     `;
   } else {
     container.innerHTML = `
@@ -653,6 +664,13 @@ function renderVerbQuizQuestion() {
 }
 
 function answerVerbQuizMC(idx) {
+  selectMCOption('#vq-container', idx);
+}
+
+function submitVerbQuizMC() {
+  const selectedBtn = document.querySelector('#vq-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
   const item = verbQuizQueue[verbQuizIdx];
   const selected = item.options[idx];
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
@@ -671,6 +689,8 @@ function answerVerbQuizMC(idx) {
     addXP(1);
   }
   speak(item.correct);
+  const submitBtn = document.querySelector('#vq-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
   document.getElementById('vq-next').style.display = 'flex';
 }
 
@@ -906,11 +926,19 @@ function renderVocabQuizQuestion() {
         `<button class="quiz-option" data-action="answer-vocab-quiz" data-idx="${i}">${esc(opt)}</button>`
       ).join('')}
     </div>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">Submit</button>
   `;
   speak(item.word.word);
 }
 
 function answerVocabQuizMC(idx) {
+  selectMCOption('#vocq-container', idx);
+}
+
+function submitVocabQuizMC() {
+  const selectedBtn = document.querySelector('#vocq-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
   const item = vocabQuizQueue[vocabQuizIdx];
   const selected = item.options[idx];
   const btns = document.querySelectorAll('#vocq-container .quiz-option');
@@ -927,6 +955,26 @@ function answerVocabQuizMC(idx) {
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_AGAIN);
     addXP(1);
   }
+  const submitBtn = document.querySelector('#vocq-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
+  document.getElementById('vocq-next').style.display = 'flex';
+}
+
+function submitGenderQuizMC() {
+  const selectedBtn = document.querySelector('#vocq-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
+  const item = vocabQuizQueue[vocabQuizIdx];
+  const correctIdx = item.correct === 'el (masculine)' ? 0 : 1;
+  const btns = document.querySelectorAll('#vocq-container .quiz-option');
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === correctIdx) btn.classList.add('correct');
+    if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
+  });
+  if (idx === correctIdx) { vocabQuizScore++; addXP(5); } else { addXP(1); }
+  const submitBtn = document.querySelector('#vocq-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
   document.getElementById('vocq-next').style.display = 'flex';
 }
 
@@ -971,6 +1019,7 @@ function renderVocabQuizQuestion_Gender() {
       <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="0">el (masculine)</button>
       <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="1">la (feminine)</button>
     </div>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">Submit</button>
   `;
 }
 
@@ -984,14 +1033,14 @@ let grammarQuizScore = 0;
 let currentLesson = null;
 
 function renderGrammarHome() {
-  if (typeof GRAMMAR_LESSONS === 'undefined') {
+  if (typeof GRAMMAR_DATA === 'undefined') {
     document.getElementById('grammar-levels').innerHTML = '<p class="text-muted">Grammar data loading...</p>';
     return;
   }
-  const levels = ['A1', 'A2', 'B1', 'B2'];
+  const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   let html = '';
   levels.forEach(level => {
-    const lessons = GRAMMAR_LESSONS.filter(l => l.level === level);
+    const lessons = GRAMMAR_DATA.filter(l => l.level === level);
     if (!lessons.length) return;
     html += `<h3 class="text-sm text-muted mt-2 mb-1">${level}</h3>`;
     lessons.forEach(l => {
@@ -999,7 +1048,7 @@ function renderGrammarHome() {
       html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}" style="cursor:pointer">
         <div class="flex justify-between items-center">
           <div>
-            <div class="card-title">${l.number}. ${esc(l.titleEn || l.title)}</div>
+            <div class="card-title">${l.order}. ${esc(l.titleEn || l.title)}</div>
             <div class="card-subtitle">${esc(l.shortDesc || '')}</div>
           </div>
           ${done ? '<span class="mastery-badge mastery-4">Done</span>' : ''}
@@ -1011,20 +1060,16 @@ function renderGrammarHome() {
 }
 
 function openGrammarLesson(id) {
-  if (typeof GRAMMAR_LESSONS === 'undefined') return;
-  const lesson = GRAMMAR_LESSONS.find(l => l.id === id);
+  if (typeof GRAMMAR_DATA === 'undefined') return;
+  const lesson = GRAMMAR_DATA.find(l => l.id === id);
   if (!lesson) return;
   currentLesson = lesson;
   showScreen('grammar-lesson');
-  document.getElementById('gl-level').textContent = `${lesson.level} — Lesson ${lesson.number}`;
+  document.getElementById('gl-level').textContent = `${lesson.level} — Lesson ${lesson.order}`;
   document.getElementById('gl-title').textContent = lesson.titleEn || lesson.title;
 
-  // Render explanation with markdown-like bold
-  let explanation = esc(lesson.explanation || '');
-  explanation = explanation.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  explanation = explanation.replace(/\n\n/g, '</p><p>');
-  explanation = explanation.replace(/\n/g, '<br>');
-  document.getElementById('gl-content').innerHTML = `<p>${explanation}</p>`;
+  // Render lesson content (already HTML)
+  document.getElementById('gl-content').innerHTML = lesson.content || '';
 
   // Examples
   const exHtml = (lesson.examples || []).map(ex => `
@@ -1059,16 +1104,17 @@ function renderGrammarQuizQuestion() {
 
   if (q.type === 'mc') {
     container.innerHTML = `
-      <div class="quiz-question">${esc(q.prompt)}</div>
+      <div class="quiz-question">${esc(q.question)}</div>
       <div class="quiz-options">
         ${q.options.map((opt, i) =>
           `<button class="quiz-option" data-action="answer-grammar-quiz" data-idx="${i}">${esc(opt)}</button>`
         ).join('')}
       </div>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-grammar-quiz-mc" style="display:none">Submit</button>
     `;
   } else if (q.type === 'fib') {
     container.innerHTML = `
-      <div class="quiz-question">${esc(q.prompt)}</div>
+      <div class="quiz-question">${esc(q.question)}</div>
       <div class="quiz-input-row">
         <input type="text" id="gq-fib-input" placeholder="Your answer..." autocomplete="off" autocapitalize="off">
         <button class="btn btn-primary" data-action="submit-grammar-fib">Check</button>
@@ -1086,7 +1132,7 @@ function renderGrammarQuizQuestion() {
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   } else if (q.type === 'translate') {
     container.innerHTML = `
-      <div class="quiz-question">Translate: <strong>${esc(q.prompt)}</strong></div>
+      <div class="quiz-question">Translate: <strong>${esc(q.question)}</strong></div>
       <div class="quiz-input-row">
         <input type="text" id="gq-fib-input" placeholder="Your translation..." autocomplete="off" autocapitalize="off">
         <button class="btn btn-primary" data-action="submit-grammar-fib">Check</button>
@@ -1106,19 +1152,29 @@ function renderGrammarQuizQuestion() {
 }
 
 function answerGrammarQuizMC(idx) {
+  selectMCOption('#gq-container', idx);
+}
+
+function submitGrammarQuizMC() {
+  const selectedBtn = document.querySelector('#gq-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
   const q = grammarQuizQueue[grammarQuizIdx];
+  const correctIdx = q.options ? q.options.indexOf(q.answer) : -1;
   const btns = document.querySelectorAll('#gq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
-    if (i === q.correct) btn.classList.add('correct');
-    if (i === idx && idx !== q.correct) btn.classList.add('incorrect');
+    if (i === correctIdx) btn.classList.add('correct');
+    if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });
-  if (idx === q.correct) {
+  if (idx === correctIdx) {
     grammarQuizScore++;
     addXP(5);
   } else {
     addXP(1);
   }
+  const submitBtn = document.querySelector('#gq-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
   document.getElementById('gq-next').style.display = 'flex';
 }
 
@@ -1365,10 +1421,18 @@ function renderCultureQuizQuestion() {
         `<button class="quiz-option" data-action="answer-culture-quiz" data-idx="${i}">${esc(opt)}</button>`
       ).join('')}
     </div>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-culture-quiz-mc" style="display:none">Submit</button>
   `;
 }
 
 function answerCultureQuizMC(idx) {
+  selectMCOption('#cq-container', idx);
+}
+
+function submitCultureQuizMC() {
+  const selectedBtn = document.querySelector('#cq-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
   const q = cultureQuizQueue[cultureQuizIdx];
   const btns = document.querySelectorAll('#cq-container .quiz-option');
   btns.forEach((btn, i) => {
@@ -1378,6 +1442,8 @@ function answerCultureQuizMC(idx) {
   });
   if (idx === q.correct) { cultureQuizScore++; addXP(5); }
   else { addXP(1); }
+  const submitBtn = document.querySelector('#cq-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
   document.getElementById('cq-next').style.display = 'flex';
 }
 
@@ -1460,16 +1526,32 @@ function buildPlacementVocabQs(level, count) {
   });
 }
 
+// Determine the effective difficulty of a verb conjugation question.
+// Regular verbs: difficulty is based on the tense alone (conjugation patterns are trivial).
+// Irregular/stem-changing verbs: difficulty is the higher of tense level and verb level.
+function getVerbQuestionLevel(verb, tense) {
+  const tenseLevel = TENSE_META[tense].level;
+  if (verb.type === 'regular') return tenseLevel;
+  return LEVEL_ORDER[verb.level] >= LEVEL_ORDER[tenseLevel] ? verb.level : tenseLevel;
+}
+
 function buildPlacementVerbQs(level, count) {
   if (typeof VERB_DATA === 'undefined' || typeof conjugate === 'undefined') return [];
-  const verbs = VERB_DATA.filter(v => v.level === level);
-  const tenses = Object.keys(TENSE_META).filter(t => TENSE_META[t].level === level && !TENSE_META[t].compound);
-  if (verbs.length === 0) return [];
-  // Fallback to present tense if no tenses at this level
-  const useTenses = tenses.length > 0 ? tenses : ['present'];
-  const picked = pickN(verbs, count);
-  return picked.map(v => {
-    const tense = pick(useTenses);
+  const simpleTenses = Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound);
+
+  // Build candidates where the effective difficulty matches the requested level
+  const candidates = [];
+  for (const v of VERB_DATA) {
+    for (const t of simpleTenses) {
+      if (getVerbQuestionLevel(v, t) === level) {
+        candidates.push({ verb: v, tense: t });
+      }
+    }
+  }
+  if (candidates.length === 0) return [];
+
+  const picked = pickN(candidates, count);
+  return picked.map(({ verb: v, tense }) => {
     // For imperatives, skip yo (person 0) — it doesn't exist
     const isImperative = tense === 'imperative_aff' || tense === 'imperative_neg';
     const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
@@ -1490,7 +1572,7 @@ function buildPlacementVerbQs(level, count) {
     // Then: same verb, different tense, same person
     attempts = 0;
     while (wrongs.size < 3 && attempts < 20) {
-      const wt = pick(Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound && t !== tense));
+      const wt = pick(simpleTenses.filter(t => t !== tense));
       if (wt === 'imperative_aff' || wt === 'imperative_neg') { attempts++; continue; }
       const w = conjugate(v.infinitive, wt, person);
       if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
@@ -1643,6 +1725,7 @@ function renderPlacementQuestion() {
           `<button class="quiz-option" data-action="answer-placement" data-idx="${i}">${esc(opt)}</button>`
         ).join('')}
       </div>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-placement-mc" style="display:none">Submit</button>
     `;
   } else {
     container.innerHTML = `
@@ -1667,6 +1750,13 @@ function renderPlacementQuestion() {
 }
 
 function answerPlacementMC(idx) {
+  selectMCOption('#pt-container', idx);
+}
+
+function submitPlacementMC() {
+  const selectedBtn = document.querySelector('#pt-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
   const q = placementPool._current;
   if (!q) return;
   const selected = q.options[idx];
@@ -1680,6 +1770,8 @@ function answerPlacementMC(idx) {
     if (i === idx && !isCorrect) btn.classList.add('incorrect');
   });
 
+  const submitBtn = document.querySelector('#pt-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
   recordPlacementAnswer(q, isCorrect);
   document.getElementById('pt-next').style.display = 'flex';
 }
@@ -1949,6 +2041,7 @@ document.addEventListener('click', e => {
     case 'check-verb-drill': checkVerbDrill(); break;
     case 'next-verb-drill': nextVerbDrill(); break;
     case 'answer-verb-quiz': answerVerbQuizMC(parseInt(target.dataset.idx)); break;
+    case 'submit-verb-quiz-mc': submitVerbQuizMC(); break;
     case 'submit-verb-quiz-fib': submitVerbQuizFIB(); break;
     case 'next-verb-quiz': nextVerbQuiz(); break;
     case 'show-verb-detail': showVerbDetail(target.dataset.verb); break;
@@ -1963,21 +2056,14 @@ document.addEventListener('click', e => {
     case 'flip-vocab-card': flipVocabCard(); break;
     case 'rate-vocab': rateVocab(parseInt(target.dataset.rating)); break;
     case 'answer-vocab-quiz': {
-      // Check if this is a gender quiz
+      answerVocabQuizMC(parseInt(target.dataset.idx));
+      break;
+    }
+    case 'submit-vocab-quiz-mc': {
       if (vocabQuizQueue[vocabQuizIdx]?.type === 'gender') {
-        const idx = parseInt(target.dataset.idx);
-        const item = vocabQuizQueue[vocabQuizIdx];
-        const btns = document.querySelectorAll('#vocq-container .quiz-option');
-        const correctIdx = item.correct === 'el (masculine)' ? 0 : 1;
-        btns.forEach((btn, i) => {
-          btn.classList.add('disabled');
-          if (i === correctIdx) btn.classList.add('correct');
-          if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
-        });
-        if (idx === correctIdx) { vocabQuizScore++; addXP(5); } else { addXP(1); }
-        document.getElementById('vocq-next').style.display = 'flex';
+        submitGenderQuizMC();
       } else {
-        answerVocabQuizMC(parseInt(target.dataset.idx));
+        submitVocabQuizMC();
       }
       break;
     }
@@ -1992,6 +2078,7 @@ document.addEventListener('click', e => {
     case 'open-grammar-lesson': openGrammarLesson(target.dataset.lesson); break;
     case 'start-grammar-quiz': startGrammarQuiz(); break;
     case 'answer-grammar-quiz': answerGrammarQuizMC(parseInt(target.dataset.idx)); break;
+    case 'submit-grammar-quiz-mc': submitGrammarQuizMC(); break;
     case 'submit-grammar-fib': submitGrammarFIB(); break;
     case 'next-grammar-quiz': nextGrammarQuiz(); break;
 
@@ -2007,6 +2094,7 @@ document.addEventListener('click', e => {
     case 'open-culture-item': openCultureItem(target.dataset.id); break;
     case 'start-culture-quiz': startCultureQuiz(); break;
     case 'answer-culture-quiz': answerCultureQuizMC(parseInt(target.dataset.idx)); break;
+    case 'submit-culture-quiz-mc': submitCultureQuizMC(); break;
     case 'next-culture-quiz': nextCultureQuiz(); break;
 
     // Results
@@ -2019,6 +2107,7 @@ document.addEventListener('click', e => {
     // Placement Test
     case 'start-placement': startPlacementTest(); break;
     case 'answer-placement': answerPlacementMC(parseInt(target.dataset.idx)); break;
+    case 'submit-placement-mc': submitPlacementMC(); break;
     case 'submit-placement-fib': submitPlacementFIB(); break;
     case 'next-placement': nextPlacementQuestion(); break;
     case 'placement-done': switchTab('today'); break;
