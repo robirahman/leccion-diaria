@@ -402,6 +402,7 @@ input:focus, select:focus, textarea:focus {
 .quiz-option:hover:not(.disabled) { border-color: var(--accent); background: var(--accent-bg); }
 .quiz-option.correct { border-color: var(--green); background: var(--green-bg); }
 .quiz-option.incorrect { border-color: var(--red); background: var(--red-bg); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-bg); }
 .quiz-option.disabled { cursor: default; opacity: 0.7; }
 
 .quiz-input-row {
@@ -524,12 +525,14 @@ input:focus, select:focus, textarea:focus {
 
 /* ── Profile Screen ── */
 .profile-screen {
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 80dvh;
   text-align: center;
+}
+.profile-screen.active {
+  display: flex;
 }
 .profile-screen h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
 .profile-screen .subtitle { color: var(--text2); margin-bottom: 2rem; }

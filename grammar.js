@@ -785,7 +785,7 @@ const GRAMMAR_DATA = [
 <p><strong>Con:</strong> accompaniment (<em>Voy <strong>con</strong> María</em>), instrument (<em>cortar <strong>con</strong> tijeras</em>). Special: <em>conmigo, contigo, consigo</em>.</p>
 <p><strong>Personal a:</strong> Required before direct objects that are specific people: <em>Conozco <strong>a</strong> tu hermano.</em></p>`,
     quiz: [
-      { type: "fib", question: "Voy _____ la escuela. (to)", answer: "a", options: null, explanation: "Direction/destination: a la escuela." },
+      { type: "fib", question: "Conozco _____ tu hermano. (personal a)", answer: "a", options: null, explanation: "Personal a is required before specific people as direct objects: Conozco a tu hermano." },
       { type: "mc", question: "Why do we say 'Veo a María' but 'Veo la mesa'?", answer: "Personal a is required before people as direct objects", options: ["María is a proper noun","Personal a is required before people as direct objects","'A' means 'the' here","It's optional"], explanation: "Personal a is used before specific people as direct objects." },
       { type: "fib", question: "El reloj es _____ oro. (made of)", answer: "de", options: null, explanation: "Material: de oro (made of gold)." },
       { type: "mc", question: "'Voy contigo' means:", answer: "I'm going with you", options: ["I'm going with me","I'm going with you","I'm going with him","I'm going alone"], explanation: "Con + ti = contigo (with you)." },
@@ -1163,7 +1163,7 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
 <em>a fin de cuentas</em> (at the end of the day), <em>a raíz de</em> (as a result of), <em>en vista de que</em> (given that), <em>no cabe duda</em> (there is no doubt)</p>`,
     quiz: [
       { type: "mc", question: "'Dar por hecho' means:", answer: "To take for granted", options: ["To finish","To take for granted","To give up","To do a favor"], explanation: "Dar por hecho = to assume / take for granted." },
-      { type: "fib", question: "Se hizo _____ el tonto para no responder. (play dumb — hacerse)", answer: "Se hizo", options: null, explanation: "Hacerse el tonto = to play dumb / pretend not to understand." },
+      { type: "fib", question: "Para no responder, Pedro _____ el tonto. (play dumb — hacerse)", answer: "se hizo", options: null, explanation: "Hacerse el tonto = to play dumb / pretend not to understand." },
       { type: "mc", question: "'Quedar en' means:", answer: "To agree to / arrange", options: ["To stay in","To agree to / arrange","To remain","To be left over"], explanation: "Quedar en = to agree on / arrange (Quedamos en vernos a las cinco)." },
       { type: "fib", question: "A _____ de cuentas, todos somos responsables. (at the end of the day)", answer: "fin", options: null, explanation: "A fin de cuentas = at the end of the day / all things considered." },
       { type: "mc", question: "'No cabe duda de que es cierto.' 'No cabe duda' means:", answer: "There is no doubt", options: ["It doesn't fit","There is no doubt","I don't care","It's not worth it"], explanation: "No cabe duda = there is no doubt / it's unquestionable." }
