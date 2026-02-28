@@ -2209,14 +2209,18 @@ function buildPlacementVocabQs(level, count) {
   return picked.map(w => {
     const reverse = Math.random() < 0.5;
     const pool = words.filter(x => x.word !== w.word);
+    // Prefer distractors matching part of speech so e.g. adjective answers
+    // don't get verb distractors (obvious giveaway)
+    const samePos = w.pos ? pool.filter(x => x.pos === w.pos) : pool;
+    const posPool = samePos.length >= 3 ? samePos : pool;
     // Prefer distractors with similar word count so multi-word answers
     // don't stand out against single-word distractors (and vice versa)
     const answerWordCount = (reverse ? w.word : w.english).split(/\s+/).length;
-    const sameLength = pool.filter(x => {
+    const sameLength = posPool.filter(x => {
       const xWords = (reverse ? x.word : x.english).split(/\s+/).length;
       return xWords === answerWordCount;
     });
-    const distPool = sameLength.length >= 3 ? sameLength : pool;
+    const distPool = sameLength.length >= 3 ? sameLength : posPool;
     const wrongs = pickN(distPool, 3);
     if (reverse) {
       return {
