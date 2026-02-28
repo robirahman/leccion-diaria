@@ -21,16 +21,226 @@ let placementCurrentLevel = 0;
 let placementConsecutive = 0;
 let placementLastCorrect = null;
 
-// ── UI Strings for Immersion Mode ──
-const UI_ES = {
-  today: 'Hoy', verbs: 'Verbos', numbers: 'Números', vocab: 'Vocabulario',
-  grammar: 'Gramática', phrases: 'Frases', culture: 'Cultura', explore: 'Explorar',
-  learn: 'Aprender', quiz: 'Prueba', drill: 'Ejercicio', search: 'Buscar...',
-  next: 'Siguiente', check: 'Comprobar', correct: '¡Correcto!', incorrect: 'Incorrecto',
-  again: 'Otra vez', hard: 'Difícil', good: 'Bien', easy: 'Fácil',
-  settings: 'Configuración', stats: 'Estadísticas', streak: 'Racha',
-  tapToReveal: 'Toca para ver', tryAgain: 'Intentar de nuevo', done: 'Listo',
+// ── UI Strings for Display Modes (standard / immersion / hints) ──
+const UI_STRINGS = {
+  // Tab bar
+  today: ['Today', 'Hoy'], verbs: ['Verbs', 'Verbos'], numbers: ['Numbers', 'Números'],
+  vocab: ['Vocab', 'Vocabulario'], grammar: ['Grammar', 'Gramática'],
+  phrases: ['Phrases', 'Frases'], culture: ['Culture', 'Cultura'], explore: ['Explore', 'Explorar'],
+
+  // Rating buttons
+  again: ['Again', 'Otra vez'], hard: ['Hard', 'Difícil'],
+  good: ['Good', 'Bien'], easy: ['Easy', 'Fácil'],
+
+  // Quiz interaction
+  next: ['Next', 'Siguiente'], check: ['Check', 'Comprobar'],
+  submit: ['Submit', 'Enviar'], correct: ['Correct!', '¡Correcto!'],
+  incorrect: ['Incorrect', 'Incorrecto'],
+
+  // General buttons
+  learn: ['Learn', 'Aprender'], quiz: ['Quiz', 'Prueba'],
+  tryAgain: ['Try Again', 'Intentar de nuevo'], done: ['Done', 'Listo'],
+  takeQuiz: ['Take Quiz', 'Hacer prueba'], back: ['Back', 'Atrás'],
+  cancel: ['Cancel', 'Cancelar'], create: ['Create', 'Crear'],
+  ok: ['OK', 'OK'], skip: ['Skip', 'Omitir'],
+  startLearning: ['Start Learning', 'Empezar a aprender'],
+  retakeTest: ['Retake Test', 'Repetir prueba'],
+
+  // Flashcards
+  tapToReveal: ['Tap to reveal', 'Toca para ver'],
+
+  // Section headers
+  continueLearning: ['Continue Learning', 'Continuar aprendiendo'],
+  dueForReview: ['Due for Review', 'Pendiente de repaso'],
+  dailyPractice: ['Daily Practice', 'Práctica diaria'],
+  yourSpanishLevel: ['Your Spanish Level', 'Tu nivel de español'],
+
+  // Screen headings
+  verbConjugation: ['Verb Conjugation', 'Conjugación verbal'],
+  vocabulary: ['Vocabulary', 'Vocabulario'],
+  settings: ['Settings', 'Configuración'],
+  statistics: ['Statistics', 'Estadísticas'],
+
+  // Verb screen cards
+  learnNewVerbs: ['Learn New Verbs', 'Aprender verbos nuevos'],
+  flashcardsDesc: ['Flashcards with conjugation tables', 'Tarjetas con tablas de conjugación'],
+  conjugationDrill: ['Conjugation Drill', 'Ejercicio de conjugación'],
+  typeCorrectConj: ['Type the correct conjugation', 'Escribe la conjugación correcta'],
+  verbQuiz: ['Verb Quiz', 'Prueba de verbos'],
+  mcAndFib: ['Multiple choice & fill-in-blank', 'Opción múltiple y completar'],
+  verbBrowser: ['Verb Browser', 'Explorar verbos'],
+  browseVerbs: ['Browse all verbs and conjugation tables', 'Ver todos los verbos y tablas de conjugación'],
+
+  // Numbers screen
+  learnNumbers: ['Learn Numbers', 'Aprender números'],
+  learnNumbersDesc: ['Cardinal and ordinal numbers in Spanish', 'Números cardinales y ordinales en español'],
+  numberQuiz: ['Number Quiz', 'Prueba de números'],
+  numberQuizDesc: ['Practice writing numbers in Spanish', 'Practica escribiendo números en español'],
+  tellingTime: ['Telling Time', 'Decir la hora'],
+  tellingTimeDesc: ['Practice telling time in Spanish', 'Practica diciendo la hora en español'],
+
+  // Stat labels
+  totalXP: ['Total XP', 'XP total'], dayStreak: ['Day Streak', 'Racha de días'],
+  formsPracticed: ['Forms Practiced', 'Formas practicadas'],
+  totalVerbs: ['Total Verbs', 'Total de verbos'],
+  wordsLearned: ['Words Learned', 'Palabras aprendidas'],
+  totalWords: ['Total Words', 'Total de palabras'],
+  lessonsCompleted: ['lessons completed', 'lecciones completadas'],
+  formsPracticedLC: ['forms practiced', 'formas practicadas'],
+  wordsLearnedLC: ['words learned', 'palabras aprendidas'],
+  correctLabel: ['Correct', 'Correcto'], incorrectLabel: ['Incorrect', 'Incorrecto'],
+  xpEarned: ['XP Earned', 'XP ganado'],
+
+  // Today screen
+  itemsDue: ['items due for review', 'elementos para repasar'],
+  verbsLC: ['verbs', 'verbos'], vocabularyLC: ['vocabulary', 'vocabulario'],
+  allCaughtUp: ['All caught up! No reviews due.', '¡Todo al día! No hay repasos pendientes.'],
+  quickDrill: ['Quick Conjugation Drill', 'Ejercicio rápido de conjugación'],
+  quickDrillDesc: ['10 random conjugation questions', '10 preguntas aleatorias de conjugación'],
+  words: ['words', 'palabras'],
+
+  // Quiz prompts
+  typeConjugation: ['Type the conjugation...', 'Escribe la conjugación...'],
+  typeAnswer: ['Type your answer...', 'Escribe tu respuesta...'],
+  typeTranslation: ['Your translation...', 'Tu traducción...'],
+  whatDoesMean: ['What does', '¿Qué significa'],
+  mean: ['mean?', '?'],
+  conjugatePrompt: ['Conjugate', 'Conjuga'],
+  inThe: ['in the', 'en el/la'],
+  forPerson: ['for', 'para'],
+  elOrLa: ['¿El o La?', '¿El o La?'],
+
+  // Quiz feedback
+  correctAccent: ['Correct! But watch your accents:', '¡Correcto! Pero cuidado con los acentos:'],
+  incorrectAccent: ['Incorrect — accent matters! The answer is:', 'Incorrecto — ¡los acentos importan! La respuesta es:'],
+  incorrectAnswer: ['Incorrect. The answer is:', 'Incorrecto. La respuesta es:'],
+
+  // Verb detail
+  compoundTenses: ['Compound Tenses', 'Tiempos compuestos'],
+
+  // Search
+  searchVerbs: ['Search verbs...', 'Buscar verbos...'],
+  searchVocab: ['Search vocabulary...', 'Buscar vocabulario...'],
+  noResults: ['No results.', 'Sin resultados.'],
+
+  // Filter buttons
+  all: ['All', 'Todos'], regular: ['Regular', 'Regular'],
+  irregular: ['Irregular', 'Irregular'], stem: ['Stem', 'Raíz'],
+  reflexive: ['Reflexive', 'Reflexivo'],
+
+  // Vocab/Gender
+  genderDrill: ['Gender Drill', 'Ejercicio de género'],
+  elMasc: ['el (masculine)', 'el (masculino)'],
+  laFem: ['la (feminine)', 'la (femenino)'],
+  vocabQuizLabel: ['Vocabulary Quiz', 'Prueba de vocabulario'],
+  genderQuizLabel: ['Gender Quiz', 'Prueba de género'],
+  conjDrill: ['Conjugation Drill', 'Ejercicio de conjugación'],
+
+  // Grammar
+  grammarLoading: ['Grammar data loading...', 'Cargando datos de gramática...'],
+  vocabLoading: ['Vocabulary data loading...', 'Cargando datos de vocabulario...'],
+  lesson: ['Lesson', 'Lección'],
+  translate: ['Translate:', 'Traduce:'],
+
+  // Phrases
+  phrasesLoading: ['Phrases data loading...', 'Cargando datos de frases...'],
+
+  // Culture
+  keyVocab: ['Key Vocabulary', 'Vocabulario clave'],
+  cultureQuizLabel: ['Culture Quiz', 'Prueba de cultura'],
+  contentSoon: ['Content coming soon...', 'Contenido próximamente...'],
+
+  // Dropdown modules
+  music: ['Music', 'Música'], movies: ['Movies', 'Películas'],
+  poetry: ['Poetry', 'Poesía'], proverbs: ['Proverbs', 'Refranes'],
+  folkTales: ['Folk Tales', 'Cuentos'], conversations: ['Conversations', 'Conversaciones'],
+  recipes: ['Recipes', 'Recetas'], sports: ['Sports', 'Deportes'],
+  festivals: ['Festivals', 'Fiestas'], history: ['History', 'Historia'],
+  travel: ['Travel', 'Viajes'], trivia: ['Trivia', 'Trivia'],
+  idioms: ['Idioms', 'Modismos'],
+
+  // Settings
+  display: ['Display', 'Pantalla'], displayMode: ['Display Mode', 'Modo de pantalla'],
+  howTextShown: ['How text is shown', 'Cómo se muestra el texto'],
+  standard: ['Standard', 'Estándar'], immersion: ['Immersion', 'Inmersión'],
+  hints: ['Hints', 'Pistas'], theme: ['Theme', 'Tema'],
+  dark: ['Dark', 'Oscuro'], light: ['Light', 'Claro'],
+  colorPalette: ['Color Palette', 'Paleta de colores'],
+  learning: ['Learning', 'Aprendizaje'], region: ['Region', 'Región'],
+  regionDesc: ['Affects verb forms and vocabulary', 'Afecta las formas verbales y vocabulario'],
+  latinAmerica: ['Latin America', 'Latinoamérica'], spain: ['Spain', 'España'],
+  accentStrict: ['Accent Strictness', 'Rigor de acentos'],
+  accentDesc: ['How strictly to check accents', 'Cuán estricto al revisar acentos'],
+  strict: ['Strict', 'Estricto'], warn: ['Warn', 'Avisar'], lenient: ['Lenient', 'Flexible'],
+  ttsSpeed: ['TTS Voice Speed', 'Velocidad de voz'],
+  slow: ['Slow', 'Lento'], normal: ['Normal', 'Normal'], fast: ['Fast', 'Rápido'],
+  placementTest: ['Placement Test', 'Prueba de nivel'],
+  placementDesc: ['Assess your level and unlock content', 'Evalúa tu nivel y desbloquea contenido'],
+  takeTest: ['Take Test', 'Hacer prueba'],
+  data: ['Data', 'Datos'],
+  exportProgress: ['Export Progress', 'Exportar progreso'],
+  importProgress: ['Import Progress', 'Importar progreso'],
+  resetProgress: ['Reset All Progress', 'Reiniciar todo el progreso'],
+
+  // Placement
+  testingLevel: ['Testing:', 'Evaluando:'],
+  grammarDomain: ['Grammar', 'Gramática'],
+  vocabDomain: ['Vocabulary', 'Vocabulario'],
+  conjDomain: ['Conjugation', 'Conjugación'],
+
+  // Profile
+  dailySubtitle: ['Your daily Spanish lesson', 'Tu lección diaria de español'],
+  newProfile: ['+ New Profile', '+ Nuevo perfil'],
+  newProfileTitle: ['New Profile', 'Nuevo perfil'],
+  yourName: ['Your name', 'Tu nombre'],
+
+  // Mastery
+  masteryBreakdown: ['Mastery Breakdown', 'Desglose de dominio'],
+  practiceCalendar: ['Practice Calendar', 'Calendario de práctica'],
+
+  // Misc labels
+  reply: ['Reply:', 'Respuesta:'],
+  literal: ['Literal:', 'Literal:'],
+
+  // Modal dialogs
+  importTitle: ['Import', 'Importar'],
+  importSuccess: ['Progress imported successfully!', '¡Progreso importado exitosamente!'],
+  errorTitle: ['Error', 'Error'],
+  invalidFile: ['Invalid file format.', 'Formato de archivo inválido.'],
+  resetTitle: ['Reset Progress', 'Reiniciar progreso'],
+  resetConfirm: ['Are you sure? This cannot be undone.', '¿Estás seguro? Esto no se puede deshacer.'],
+  reset: ['Reset', 'Reiniciar'],
+
+  // Placement quiz prompts
+  howDoYouSay: ['How do you say', '¿Cómo se dice'],
+  inSpanish: ['in Spanish?', 'en español?'],
+
+  // Placement results
+  placementResultMsg: [
+    'Based on your results, <strong>%g grammar lessons</strong> and <strong>%v vocabulary words</strong> have been marked as known. You can start learning at the <strong>%l</strong> level!',
+    'Según tus resultados, <strong>%g lecciones de gramática</strong> y <strong>%v palabras de vocabulario</strong> se marcaron como conocidas. ¡Puedes empezar a aprender desde el nivel <strong>%l</strong>!'
+  ],
 };
+
+// Translation helper — returns appropriate text for the current display mode
+function t(key) {
+  const s = UI_STRINGS[key];
+  if (!s) return key;
+  const mode = progress?.settings?.display || 'standard';
+  if (mode === 'standard') return s[0];
+  if (mode === 'immersion') return s[1];
+  // hints: Spanish with English in parentheses
+  return s[1] + ' (' + s[0] + ')';
+}
+
+// Short translation helper for buttons — hints mode shows just Spanish (no parenthetical)
+function tBtn(key) {
+  const s = UI_STRINGS[key];
+  if (!s) return key;
+  const mode = progress?.settings?.display || 'standard';
+  if (mode === 'standard') return s[0];
+  return s[1];
+}
 
 // ── Default Progress State ──
 function newProgress() {
@@ -159,11 +369,11 @@ function selectProfile(name) {
 }
 
 function createProfile() {
-  showModal('New Profile', `
-    <input type="text" id="new-profile-name" placeholder="Your name" maxlength="20" style="width:100%">
+  showModal(t('newProfileTitle'), `
+    <input type="text" id="new-profile-name" placeholder="${t('yourName')}" maxlength="20" style="width:100%">
   `, [
-    { label: 'Cancel', action: 'close-modal', cls: 'btn-secondary' },
-    { label: 'Create', action: 'confirm-create-profile', cls: 'btn-primary' },
+    { label: tBtn('cancel'), action: 'close-modal', cls: 'btn-secondary' },
+    { label: tBtn('create'), action: 'confirm-create-profile', cls: 'btn-primary' },
   ]);
   setTimeout(() => document.getElementById('new-profile-name')?.focus(), 100);
 }
@@ -180,12 +390,12 @@ function confirmCreateProfile() {
   selectProfile(name);
   // Offer placement test for new profiles
   setTimeout(() => {
-    showModal('Placement Test', `
+    showModal(t('placementTest'), `
       <p>Want to take a quick placement test to skip content you already know?</p>
       <p class="text-muted">~5 minutes, 30 questions covering grammar, vocabulary, and verbs.</p>
     `, [
-      { label: 'Skip', action: 'close-modal', cls: 'btn-secondary' },
-      { label: 'Take Test', action: 'start-placement', cls: 'btn-primary' },
+      { label: tBtn('skip'), action: 'close-modal', cls: 'btn-secondary' },
+      { label: tBtn('takeTest'), action: 'start-placement', cls: 'btn-primary' },
     ]);
   }, 300);
 }
@@ -229,6 +439,204 @@ function applySettings() {
       pill.classList.toggle('active', val === current);
     }
   });
+  applyDisplayMode();
+}
+
+// Translate all static HTML elements based on display mode
+function applyDisplayMode() {
+  // Tab bar labels
+  const tabs = { today: 'today', verbs: 'verbs', numbers: 'numbers', vocab: 'vocab',
+    grammar: 'grammar', phrases: 'phrases', culture: 'culture', explore: 'explore' };
+  for (const [tab, key] of Object.entries(tabs)) {
+    const el = document.querySelector(`.tab[data-tab="${tab}"] span:last-child`);
+    if (el) el.textContent = tBtn(key);
+  }
+
+  // Dropdown items
+  const dropdowns = { music: 'music', movies: 'movies', poetry: 'poetry', proverbs: 'proverbs',
+    folktales: 'folkTales', conversations: 'conversations', recipes: 'recipes', sports: 'sports',
+    festivals: 'festivals', history: 'history', travel: 'travel', trivia: 'trivia', idioms: 'idioms' };
+  for (const [mod, key] of Object.entries(dropdowns)) {
+    const el = document.querySelector(`.dropdown-item[data-module="${mod}"]`);
+    if (el) el.textContent = tBtn(key);
+  }
+
+  // Rating buttons (all 3 sets: verb, vocab, phrase)
+  const ratings = { 1: 'again', 2: 'hard', 3: 'good', 4: 'easy' };
+  document.querySelectorAll('.rating-btn').forEach(btn => {
+    const r = btn.dataset.rating;
+    if (ratings[r]) btn.textContent = tBtn(ratings[r]);
+  });
+
+  // Screen headings (h2 in static HTML)
+  const headings = [
+    ['#screen-verbs > h2', 'verbConjugation'],
+    ['#screen-numbers > h2', 'numbers'],
+    ['#screen-vocab > h2', 'vocabulary'],
+    ['#screen-grammar > h2', 'grammar'],
+    ['#screen-phrases > h2', 'phrases'],
+    ['#screen-settings > h2', 'settings'],
+    ['#screen-stats > h2', 'statistics'],
+  ];
+  for (const [sel, key] of headings) {
+    const el = document.querySelector(sel);
+    if (el) el.textContent = t(key);
+  }
+
+  // Verb screen cards
+  const cards = [
+    ['[data-action="start-verb-learn"] .card-title', 'learnNewVerbs'],
+    ['[data-action="start-verb-learn"] .card-subtitle', 'flashcardsDesc'],
+    ['[data-action="start-verb-drill"] .card-title', 'conjugationDrill'],
+    ['[data-action="start-verb-drill"] .card-subtitle', 'typeCorrectConj'],
+    ['[data-action="start-verb-quiz"] .card-title', 'verbQuiz'],
+    ['[data-action="start-verb-quiz"] .card-subtitle', 'mcAndFib'],
+    ['[data-action="open-verb-browser"] .card-title', 'verbBrowser'],
+    ['[data-action="open-verb-browser"] .card-subtitle', 'browseVerbs'],
+    ['[data-action="start-number-learn"] .card-title', 'learnNumbers'],
+    ['[data-action="start-number-learn"] .card-subtitle', 'learnNumbersDesc'],
+    ['[data-action="start-number-quiz"] .card-title', 'numberQuiz'],
+    ['[data-action="start-number-quiz"] .card-subtitle', 'numberQuizDesc'],
+    ['[data-action="start-time-quiz"] .card-title', 'tellingTime'],
+    ['[data-action="start-time-quiz"] .card-subtitle', 'tellingTimeDesc'],
+  ];
+  for (const [sel, key] of cards) {
+    const el = document.querySelector(sel);
+    if (el) el.textContent = t(key);
+  }
+
+  // Vocab category buttons
+  const vocBtns = [
+    ['[data-action="start-vocab-learn"]', 'learn'],
+    ['[data-action="start-vocab-quiz"]', 'quiz'],
+    ['[data-action="start-gender-quiz"]', 'genderDrill'],
+    ['[data-action="start-phrase-learn"]', 'learn'],
+  ];
+  for (const [sel, key] of vocBtns) {
+    document.querySelectorAll(sel).forEach(el => { el.textContent = tBtn(key); });
+  }
+
+  // Take Quiz buttons
+  document.querySelectorAll('[data-action="start-grammar-quiz"], [data-action="start-culture-quiz"]').forEach(el => {
+    el.textContent = tBtn('takeQuiz');
+  });
+
+  // Flashcard "Tap to reveal"
+  document.querySelectorAll('.flashcard .front .text-muted.text-sm').forEach(el => {
+    if (el.textContent.trim() === 'Tap to reveal' || el.textContent.trim() === 'Toca para ver')
+      el.textContent = t('tapToReveal');
+  });
+
+  // Profile screen
+  const subtitle = document.querySelector('.profile-screen .subtitle');
+  if (subtitle) subtitle.textContent = t('dailySubtitle');
+  const newProfBtn = document.querySelector('[data-action="create-profile"]');
+  if (newProfBtn) newProfBtn.textContent = tBtn('newProfile');
+
+  // Results screen buttons
+  const retryBtn = document.querySelector('[data-action="results-retry"]');
+  if (retryBtn) retryBtn.textContent = tBtn('tryAgain');
+  const homeBtn = document.querySelector('[data-action="results-home"]');
+  if (homeBtn) homeBtn.textContent = tBtn('done');
+
+  // Placement results buttons
+  const placeDoneBtn = document.querySelector('[data-action="placement-done"]');
+  if (placeDoneBtn) placeDoneBtn.textContent = tBtn('startLearning');
+  const retakeBtn = document.querySelector('[data-action="retake-placement"]');
+  if (retakeBtn) retakeBtn.textContent = tBtn('retakeTest');
+  const placeTitleEl = document.querySelector('#screen-placement-results h2');
+  if (placeTitleEl) placeTitleEl.textContent = t('yourSpanishLevel');
+
+  // Next buttons
+  document.querySelectorAll('#vq-next, #vocq-next, #gq-next, #cq-next').forEach(el => {
+    el.textContent = tBtn('next');
+  });
+
+  // Settings labels
+  const settingsMap = [
+    ['#screen-settings .settings-group:nth-child(1) > h3', 'display'],
+    ['#screen-settings .settings-group:nth-child(2) > h3', 'learning'],
+    ['#screen-settings .settings-group:nth-child(3) > h3', 'data'],
+  ];
+  for (const [sel, key] of settingsMap) {
+    const el = document.querySelector(sel);
+    if (el) el.textContent = t(key);
+  }
+
+  // Settings row labels
+  const settingLabels = document.querySelectorAll('#screen-settings .setting-label');
+  const labelMap = { 'Display Mode': 'displayMode', 'Theme': 'theme', 'Color Palette': 'colorPalette',
+    'Region': 'region', 'Accent Strictness': 'accentStrict', 'TTS Voice Speed': 'ttsSpeed',
+    'Placement Test': 'placementTest' };
+  const descMap = { 'How text is shown': 'howTextShown', 'Affects verb forms and vocabulary': 'regionDesc',
+    'How strictly to check accents': 'accentDesc', 'Assess your level and unlock content': 'placementDesc' };
+  settingLabels.forEach(el => {
+    const origText = el.getAttribute('data-orig') || el.textContent.trim();
+    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', origText);
+    if (labelMap[origText]) el.textContent = t(labelMap[origText]);
+  });
+  document.querySelectorAll('#screen-settings .setting-desc').forEach(el => {
+    const origText = el.getAttribute('data-orig') || el.textContent.trim();
+    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', origText);
+    if (descMap[origText]) el.textContent = t(descMap[origText]);
+  });
+
+  // Settings pill buttons
+  const pillMap = {
+    'Standard': 'standard', 'Immersion': 'immersion', 'Hints': 'hints',
+    'Dark': 'dark', 'Light': 'light',
+    'Latin America': 'latinAmerica', 'Spain': 'spain',
+    'Strict': 'strict', 'Warn': 'warn', 'Lenient': 'lenient',
+    'Slow': 'slow', 'Normal': 'normal', 'Fast': 'fast',
+  };
+  document.querySelectorAll('#screen-settings .pill').forEach(pill => {
+    const origText = pill.getAttribute('data-orig') || pill.textContent.trim();
+    if (!pill.getAttribute('data-orig')) pill.setAttribute('data-orig', origText);
+    if (pillMap[origText]) pill.textContent = tBtn(pillMap[origText]);
+  });
+
+  // Settings action buttons
+  const actionBtnMap = {
+    'start-placement': 'takeTest', 'export-progress': 'exportProgress',
+    'import-progress': 'importProgress', 'reset-progress': 'resetProgress',
+  };
+  for (const [action, key] of Object.entries(actionBtnMap)) {
+    const el = document.querySelector(`#screen-settings [data-action="${action}"]`);
+    if (el) el.textContent = tBtn(key);
+  }
+
+  // Search placeholders
+  const verbSearch = document.getElementById('verb-search');
+  if (verbSearch) verbSearch.placeholder = t('searchVerbs');
+  const vocabSearch = document.getElementById('vocab-search');
+  if (vocabSearch) vocabSearch.placeholder = t('searchVocab');
+
+  // Verb drill static elements
+  const vdInput = document.getElementById('vd-input');
+  if (vdInput) vdInput.placeholder = t('typeConjugation');
+  const vdCheckBtn = document.querySelector('[data-action="check-verb-drill"]');
+  if (vdCheckBtn) vdCheckBtn.textContent = tBtn('check');
+
+  // Placement next button
+  const ptNextBtn = document.querySelector('[data-action="next-placement"]');
+  if (ptNextBtn) ptNextBtn.textContent = tBtn('next');
+
+  // Verb browser filter buttons
+  const filterMap = { all: 'all', regular: 'regular', irregular: 'irregular', 'stem-changing': 'stem', reflexive: 'reflexive' };
+  document.querySelectorAll('[data-action="filter-verbs"]').forEach(btn => {
+    const filter = btn.dataset.filter;
+    if (filterMap[filter]) btn.textContent = tBtn(filterMap[filter]);
+  });
+
+  // Stats screen
+  const masteryTitle = document.querySelector('#screen-stats .card:nth-child(2) .card-title');
+  if (masteryTitle) masteryTitle.textContent = t('masteryBreakdown');
+  const calTitle = document.querySelector('#screen-stats .card:nth-child(3) .card-title');
+  if (calTitle) calTitle.textContent = t('practiceCalendar');
+
+  // Nav title
+  const navTitle = document.querySelector('.nav-title');
+  if (navTitle) navTitle.textContent = 'Lección Diaria';
 }
 
 function setSetting(key, val) {
@@ -384,31 +792,36 @@ function renderToday() {
   document.getElementById('today-greeting').textContent = greet;
   document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
+  // Section headers
+  document.querySelector('#screen-today .today-section:nth-child(3) h2').textContent = t('continueLearning');
+  document.querySelector('#screen-today .today-section:nth-child(4) h2').textContent = t('dueForReview');
+  document.querySelector('#screen-today .today-section:nth-child(5) h2').textContent = t('dailyPractice');
+
   // Stats cards
   const verbsLearned = Object.keys(progress.verbMastery).length;
   const vocabLearned = Object.keys(progress.vocabMastery).length;
   const grammarDone = Object.values(progress.grammarDone).filter(Boolean).length;
   document.getElementById('today-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${progress.xp}</div><div class="stat-desc">Total XP</div></div>
-    <div class="stat-card"><div class="stat-num">${progress.streak}</div><div class="stat-desc">Day Streak</div></div>
-    <div class="stat-card"><div class="stat-num">${verbsLearned}</div><div class="stat-desc">Verbs</div></div>
-    <div class="stat-card"><div class="stat-num">${vocabLearned}</div><div class="stat-desc">Words</div></div>
+    <div class="stat-card"><div class="stat-num">${progress.xp}</div><div class="stat-desc">${t('totalXP')}</div></div>
+    <div class="stat-card"><div class="stat-num">${progress.streak}</div><div class="stat-desc">${t('dayStreak')}</div></div>
+    <div class="stat-card"><div class="stat-num">${verbsLearned}</div><div class="stat-desc">${tBtn('verbs')}</div></div>
+    <div class="stat-card"><div class="stat-num">${vocabLearned}</div><div class="stat-desc">${t('words')}</div></div>
   `;
 
   // Continue learning
   const cont = document.getElementById('today-continue');
   cont.innerHTML = `
     <div class="card" data-action="switch-tab" data-tab="verbs" style="cursor:pointer">
-      <div class="card-title">Verb Conjugation</div>
-      <div class="card-subtitle">${verbsLearned} forms practiced</div>
+      <div class="card-title">${t('verbConjugation')}</div>
+      <div class="card-subtitle">${verbsLearned} ${t('formsPracticedLC')}</div>
     </div>
     <div class="card" data-action="switch-tab" data-tab="vocab" style="cursor:pointer">
-      <div class="card-title">Vocabulary</div>
-      <div class="card-subtitle">${vocabLearned} words learned</div>
+      <div class="card-title">${t('vocabulary')}</div>
+      <div class="card-subtitle">${vocabLearned} ${t('wordsLearnedLC')}</div>
     </div>
     <div class="card" data-action="switch-tab" data-tab="grammar" style="cursor:pointer">
-      <div class="card-title">Grammar</div>
-      <div class="card-subtitle">${grammarDone} lessons completed</div>
+      <div class="card-title">${tBtn('grammar')}</div>
+      <div class="card-subtitle">${grammarDone} ${t('lessonsCompleted')}</div>
     </div>
   `;
 
@@ -420,19 +833,19 @@ function renderToday() {
   if (totalDue > 0) {
     reviewDiv.innerHTML = `
       <div class="card" style="cursor:pointer" data-action="start-review">
-        <div class="card-title">${totalDue} items due for review</div>
-        <div class="card-subtitle">${dueVerbs.length} verbs, ${dueVocab.length} vocabulary</div>
+        <div class="card-title">${totalDue} ${t('itemsDue')}</div>
+        <div class="card-subtitle">${dueVerbs.length} ${t('verbsLC')}, ${dueVocab.length} ${t('vocabularyLC')}</div>
       </div>
     `;
   } else {
-    reviewDiv.innerHTML = '<p class="text-muted text-sm">All caught up! No reviews due.</p>';
+    reviewDiv.innerHTML = `<p class="text-muted text-sm">${t('allCaughtUp')}</p>`;
   }
 
   // Daily practice
   document.getElementById('today-practice').innerHTML = `
     <div class="card" data-action="start-verb-drill" style="cursor:pointer">
-      <div class="card-title">Quick Conjugation Drill</div>
-      <div class="card-subtitle">10 random conjugation questions</div>
+      <div class="card-title">${t('quickDrill')}</div>
+      <div class="card-subtitle">${t('quickDrillDesc')}</div>
     </div>
   `;
 }
@@ -454,8 +867,8 @@ function renderVerbsHome() {
   const learned = Object.keys(progress.verbMastery).length;
   const total = typeof VERB_DATA !== 'undefined' ? VERB_DATA.length * 6 : 0; // 6 persons
   document.getElementById('verbs-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${learned}</div><div class="stat-desc">Forms Practiced</div></div>
-    <div class="stat-card"><div class="stat-num">${typeof VERB_DATA !== 'undefined' ? VERB_DATA.length : 0}</div><div class="stat-desc">Total Verbs</div></div>
+    <div class="stat-card"><div class="stat-num">${learned}</div><div class="stat-desc">${t('formsPracticed')}</div></div>
+    <div class="stat-card"><div class="stat-num">${typeof VERB_DATA !== 'undefined' ? VERB_DATA.length : 0}</div><div class="stat-desc">${t('totalVerbs')}</div></div>
   `;
 }
 
@@ -542,13 +955,13 @@ function startVerbDrill() {
 
 function renderVerbDrillQuestion() {
   if (verbDrillIdx >= verbDrillQueue.length) {
-    showResults(verbDrillScore, verbDrillQueue.length, 'verb-drill', 'Conjugation Drill');
+    showResults(verbDrillScore, verbDrillQueue.length, 'verb-drill', t('conjDrill'));
     return;
   }
   const item = verbDrillQueue[verbDrillIdx];
   document.getElementById('verb-drill-progress').textContent = `${verbDrillIdx + 1} / ${verbDrillQueue.length}`;
   document.getElementById('vd-question').textContent =
-    `Conjugate "${item.verb.infinitive}" (${item.verb.english}) in the ${TENSE_META[item.tense]?.labelEn || item.tense} for ${PERSON_LABELS[PERSONS[item.person]]}`;
+    `${t('conjugatePrompt')} "${item.verb.infinitive}" (${item.verb.english}) ${t('inThe')} ${TENSE_META[item.tense]?.labelEn || item.tense} ${t('forPerson')} ${PERSON_LABELS[PERSONS[item.person]]}`;
   document.getElementById('vd-input').value = '';
   document.getElementById('vd-input').focus();
   document.getElementById('vd-feedback').style.display = 'none';
@@ -566,15 +979,15 @@ function checkVerbDrill() {
 
   if (result.correct) {
     fb.className = 'quiz-feedback correct';
-    fb.textContent = result.accentWarn ? `Correct! But watch your accents: ${item.answer}` : 'Correct!';
+    fb.textContent = result.accentWarn ? `${t('correctAccent')} ${item.answer}` : t('correct');
     verbDrillScore++;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
     addXP(5);
   } else {
     fb.className = 'quiz-feedback incorrect';
     fb.textContent = result.accentWarn
-      ? `Incorrect — accent matters! The answer is: ${item.answer}`
-      : `Incorrect. The answer is: ${item.answer}`;
+      ? `${t('incorrectAccent')} ${item.answer}`
+      : `${t('incorrectAnswer')} ${item.answer}`;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
@@ -621,7 +1034,7 @@ function startVerbQuiz() {
 
 function renderVerbQuizQuestion() {
   if (verbQuizIdx >= verbQuizQueue.length) {
-    showResults(verbQuizScore, verbQuizQueue.length, 'verb-quiz', 'Verb Quiz');
+    showResults(verbQuizScore, verbQuizQueue.length, 'verb-quiz', t('verbQuiz'));
     return;
   }
   const item = verbQuizQueue[verbQuizIdx];
@@ -629,7 +1042,7 @@ function renderVerbQuizQuestion() {
   const container = document.getElementById('vq-container');
   document.getElementById('vq-next').style.display = 'none';
 
-  const prompt = `Conjugate "${item.verb.infinitive}" (${item.verb.english})<br>
+  const prompt = `${t('conjugatePrompt')} "${item.verb.infinitive}" (${item.verb.english})<br>
     <span class="text-muted">${TENSE_META[item.tense]?.labelEn || item.tense} — ${PERSON_LABELS[PERSONS[item.person]]}</span>`;
 
   if (item.type === 'mc') {
@@ -640,14 +1053,14 @@ function renderVerbQuizQuestion() {
           `<button class="quiz-option" data-action="answer-verb-quiz" data-idx="${i}">${esc(opt)}</button>`
         ).join('')}
       </div>
-      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-verb-quiz-mc" style="display:none">Submit</button>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-verb-quiz-mc" style="display:none">${tBtn('submit')}</button>
     `;
   } else {
     container.innerHTML = `
       <div class="quiz-question">${prompt}</div>
       <div class="quiz-input-row">
-        <input type="text" id="vq-fib-input" placeholder="Type your answer..." autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-verb-quiz-fib">Check</button>
+        <input type="text" id="vq-fib-input" placeholder="${t('typeConjugation')}" autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="submit-verb-quiz-fib">${tBtn('check')}</button>
       </div>
       <div class="accent-bar">
         <button class="accent-btn" data-action="insert-accent-vq" data-char="á">á</button>
@@ -703,13 +1116,13 @@ function submitVerbQuizFIB() {
   fb.style.display = 'block';
   if (result.correct) {
     fb.className = 'quiz-feedback correct';
-    fb.textContent = result.accentWarn ? `Correct! But watch your accents: ${item.correct}` : 'Correct!';
+    fb.textContent = result.accentWarn ? `${t('correctAccent')} ${item.correct}` : t('correct');
     verbQuizScore++;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
     addXP(5);
   } else {
     fb.className = 'quiz-feedback incorrect';
-    fb.textContent = `Incorrect. The answer is: ${item.correct}`;
+    fb.textContent = result.accentWarn ? `${t('incorrectAccent')} ${item.correct}` : `${t('incorrectAnswer')} ${item.correct}`;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
@@ -766,7 +1179,7 @@ function showVerbDetail(infinitive) {
   });
 
   // Compound tenses
-  html += '<h3 class="mt-2 mb-1 text-sm text-muted">Compound Tenses</h3>';
+  html += `<h3 class="mt-2 mb-1 text-sm text-muted">${t('compoundTenses')}</h3>`;
   ['present_perfect', 'pluperfect', 'future_perfect', 'conditional_perfect'].forEach(tense => {
     const meta = TENSE_META[tense];
     if (!meta) return;
@@ -795,13 +1208,13 @@ let currentVocabCategory = null;
 
 function renderVocabHome() {
   if (typeof VOCAB_DATA === 'undefined' || typeof VOCAB_CATEGORIES === 'undefined') {
-    document.getElementById('vocab-categories').innerHTML = '<p class="text-muted">Vocabulary data loading...</p>';
+    document.getElementById('vocab-categories').innerHTML = `<p class="text-muted">${t('vocabLoading')}</p>`;
     return;
   }
   const learned = Object.keys(progress.vocabMastery).length;
   document.getElementById('vocab-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${learned}</div><div class="stat-desc">Words Learned</div></div>
-    <div class="stat-card"><div class="stat-num">${VOCAB_DATA.length}</div><div class="stat-desc">Total Words</div></div>
+    <div class="stat-card"><div class="stat-num">${learned}</div><div class="stat-desc">${t('wordsLearned')}</div></div>
+    <div class="stat-card"><div class="stat-num">${VOCAB_DATA.length}</div><div class="stat-desc">${t('totalWords')}</div></div>
   `;
 
   const grid = document.getElementById('vocab-categories');
@@ -810,7 +1223,7 @@ function renderVocabHome() {
     return `<div class="card" data-action="open-vocab-cat" data-cat="${key}" style="cursor:pointer">
       <div class="card-icon">${cat.icon || ''}</div>
       <div class="card-title text-sm">${esc(cat.title)}</div>
-      <div class="card-subtitle text-xs">${count} words</div>
+      <div class="card-subtitle text-xs">${count} ${t('words')}</div>
     </div>`;
   }).join('');
 }
@@ -862,7 +1275,7 @@ function renderVocabLearnCard() {
 
   const genderEl = document.getElementById('vocl-gender');
   if (w.gender) {
-    genderEl.textContent = w.gender === 'f' ? 'la (feminine)' : 'el (masculine)';
+    genderEl.textContent = w.gender === 'f' ? t('laFem') : t('elMasc');
     genderEl.className = `word-gender ${w.gender}`;
     genderEl.style.display = 'inline-block';
   } else {
@@ -911,7 +1324,7 @@ function startVocabQuiz() {
 
 function renderVocabQuizQuestion() {
   if (vocabQuizIdx >= vocabQuizQueue.length) {
-    showResults(vocabQuizScore, vocabQuizQueue.length, 'vocab-quiz', 'Vocabulary Quiz');
+    showResults(vocabQuizScore, vocabQuizQueue.length, 'vocab-quiz', t('vocabQuizLabel'));
     return;
   }
   const item = vocabQuizQueue[vocabQuizIdx];
@@ -920,13 +1333,13 @@ function renderVocabQuizQuestion() {
   document.getElementById('vocq-next').style.display = 'none';
 
   container.innerHTML = `
-    <div class="quiz-question">What does <strong>${esc(item.word.word)}</strong> mean?</div>
+    <div class="quiz-question">${t('whatDoesMean')} <strong>${esc(item.word.word)}</strong> ${t('mean')}</div>
     <div class="quiz-options">
       ${item.options.map((opt, i) =>
         `<button class="quiz-option" data-action="answer-vocab-quiz" data-idx="${i}">${esc(opt)}</button>`
       ).join('')}
     </div>
-    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">Submit</button>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">${tBtn('submit')}</button>
   `;
   speak(item.word.word);
 }
@@ -1005,7 +1418,7 @@ function startGenderQuiz() {
 
 function renderVocabQuizQuestion_Gender() {
   if (vocabQuizIdx >= vocabQuizQueue.length) {
-    showResults(vocabQuizScore, vocabQuizQueue.length, 'gender-quiz', 'Gender Quiz');
+    showResults(vocabQuizScore, vocabQuizQueue.length, 'gender-quiz', t('genderQuizLabel'));
     return;
   }
   const item = vocabQuizQueue[vocabQuizIdx];
@@ -1014,12 +1427,12 @@ function renderVocabQuizQuestion_Gender() {
   document.getElementById('vocq-next').style.display = 'none';
 
   container.innerHTML = `
-    <div class="quiz-question">¿El o La? <strong>_____ ${esc(item.word.word)}</strong></div>
+    <div class="quiz-question">${t('elOrLa')} <strong>_____ ${esc(item.word.word)}</strong></div>
     <div class="quiz-options">
-      <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="0">el (masculine)</button>
-      <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="1">la (feminine)</button>
+      <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="0">${t('elMasc')}</button>
+      <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="1">${t('laFem')}</button>
     </div>
-    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">Submit</button>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">${tBtn('submit')}</button>
   `;
 }
 
@@ -1034,7 +1447,7 @@ let currentLesson = null;
 
 function renderGrammarHome() {
   if (typeof GRAMMAR_DATA === 'undefined') {
-    document.getElementById('grammar-levels').innerHTML = '<p class="text-muted">Grammar data loading...</p>';
+    document.getElementById('grammar-levels').innerHTML = `<p class="text-muted">${t('grammarLoading')}</p>`;
     return;
   }
   const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -1051,7 +1464,7 @@ function renderGrammarHome() {
             <div class="card-title">${l.order}. ${esc(l.titleEn || l.title)}</div>
             <div class="card-subtitle">${esc(l.shortDesc || '')}</div>
           </div>
-          ${done ? '<span class="mastery-badge mastery-4">Done</span>' : ''}
+          ${done ? `<span class="mastery-badge mastery-4">${tBtn('done')}</span>` : ''}
         </div>
       </div>`;
     });
@@ -1065,7 +1478,7 @@ function openGrammarLesson(id) {
   if (!lesson) return;
   currentLesson = lesson;
   showScreen('grammar-lesson');
-  document.getElementById('gl-level').textContent = `${lesson.level} — Lesson ${lesson.order}`;
+  document.getElementById('gl-level').textContent = `${lesson.level} — ${t('lesson')} ${lesson.order}`;
   document.getElementById('gl-title').textContent = lesson.titleEn || lesson.title;
 
   // Render lesson content (already HTML)
@@ -1094,7 +1507,7 @@ function renderGrammarQuizQuestion() {
   if (grammarQuizIdx >= grammarQuizQueue.length) {
     progress.grammarDone[currentLesson.id] = true;
     saveProgress();
-    showResults(grammarQuizScore, grammarQuizQueue.length, 'grammar-quiz', `Grammar: ${currentLesson.titleEn || currentLesson.title}`);
+    showResults(grammarQuizScore, grammarQuizQueue.length, 'grammar-quiz', `${tBtn('grammar')}: ${currentLesson.titleEn || currentLesson.title}`);
     return;
   }
   const q = grammarQuizQueue[grammarQuizIdx];
@@ -1110,14 +1523,14 @@ function renderGrammarQuizQuestion() {
           `<button class="quiz-option" data-action="answer-grammar-quiz" data-idx="${i}">${esc(opt)}</button>`
         ).join('')}
       </div>
-      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-grammar-quiz-mc" style="display:none">Submit</button>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-grammar-quiz-mc" style="display:none">${tBtn('submit')}</button>
     `;
   } else if (q.type === 'fib') {
     container.innerHTML = `
       <div class="quiz-question">${esc(q.question)}</div>
       <div class="quiz-input-row">
-        <input type="text" id="gq-fib-input" placeholder="Your answer..." autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-grammar-fib">Check</button>
+        <input type="text" id="gq-fib-input" placeholder="${t('typeAnswer')}" autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
       </div>
       <div class="accent-bar">
         <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
@@ -1132,10 +1545,10 @@ function renderGrammarQuizQuestion() {
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   } else if (q.type === 'translate') {
     container.innerHTML = `
-      <div class="quiz-question">Translate: <strong>${esc(q.question)}</strong></div>
+      <div class="quiz-question">${t('translate')} <strong>${esc(q.question)}</strong></div>
       <div class="quiz-input-row">
-        <input type="text" id="gq-fib-input" placeholder="Your translation..." autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-grammar-fib">Check</button>
+        <input type="text" id="gq-fib-input" placeholder="${t('typeTranslation')}" autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
       </div>
       <div class="accent-bar">
         <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
@@ -1196,12 +1609,12 @@ function submitGrammarFIB() {
   fb.style.display = 'block';
   if (isCorrect) {
     fb.className = 'quiz-feedback correct';
-    fb.textContent = accentWarn ? `Correct! But watch your accents: ${answer}` : 'Correct!';
+    fb.textContent = accentWarn ? `${t('correctAccent')} ${answer}` : t('correct');
     grammarQuizScore++;
     addXP(5);
   } else {
     fb.className = 'quiz-feedback incorrect';
-    fb.textContent = `Incorrect. The answer is: ${answer}`;
+    fb.textContent = `${t('incorrectAnswer')} ${answer}`;
     addXP(1);
   }
   document.getElementById('gq-next').style.display = 'flex';
@@ -1222,7 +1635,7 @@ let currentSituation = null;
 
 function renderPhrasesHome() {
   if (typeof PHRASES_SITUATIONS === 'undefined') {
-    document.getElementById('phrases-situations').innerHTML = '<p class="text-muted">Phrases data loading...</p>';
+    document.getElementById('phrases-situations').innerHTML = `<p class="text-muted">${t('phrasesLoading')}</p>`;
     return;
   }
   const grid = document.getElementById('phrases-situations');
@@ -1248,7 +1661,7 @@ function openPhraseSituation(slug) {
       <div class="phrase-es">${esc(p.spanish)}</div>
       <div class="phrase-en">${esc(p.english)}</div>
       ${p.reply ? `<div class="phrase-reply">
-        <div class="label">Reply:</div>
+        <div class="label">${t('reply')}</div>
         <div><strong>${esc(p.reply.spanish)}</strong></div>
         <div class="text-muted text-sm">${esc(p.reply.english)}</div>
       </div>` : ''}
@@ -1349,10 +1762,11 @@ function openCultureModule(module) {
   currentCultureModule = module;
   const items = mod.data();
   showScreen('culture-list');
-  document.getElementById('culture-title').textContent = mod.title;
+  const mode = progress?.settings?.display || 'standard';
+  document.getElementById('culture-title').textContent = mode === 'standard' ? mod.title : mod.titleEs;
 
   if (!items.length) {
-    document.getElementById('culture-items').innerHTML = '<p class="text-muted">Content coming soon...</p>';
+    document.getElementById('culture-items').innerHTML = `<p class="text-muted">${t('contentSoon')}</p>`;
     return;
   }
 
@@ -1382,13 +1796,13 @@ function openCultureItem(id) {
   if (item.story) content += `<p>${esc(item.story)}</p>`;
   if (item.storyEn) content += `<p class="text-muted">${esc(item.storyEn)}</p>`;
   if (item.example) content += `<div class="example-box"><div class="es">${esc(item.example)}</div>${item.exampleEn ? `<div class="en">${esc(item.exampleEn)}</div>` : ''}</div>`;
-  if (item.literal) content += `<p class="text-sm text-muted">Literal: ${esc(item.literal)}</p>`;
+  if (item.literal) content += `<p class="text-sm text-muted">${t('literal')} ${esc(item.literal)}</p>`;
   document.getElementById('cd-content').innerHTML = content;
 
   // Vocab section
   const vocabItems = item.vocab || [];
   document.getElementById('cd-vocab').innerHTML = vocabItems.length ? `
-    <h3 class="text-sm text-muted mb-1">Key Vocabulary</h3>
+    <h3 class="text-sm text-muted mb-1">${t('keyVocab')}</h3>
     ${vocabItems.map(v => `<div class="flex justify-between" style="padding:0.25rem 0;border-bottom:1px solid var(--border)">
       <strong>${esc(v.word || v.spanish)}</strong><span class="text-muted">${esc(v.english)}</span>
     </div>`).join('')}
@@ -1406,7 +1820,7 @@ function startCultureQuiz() {
 
 function renderCultureQuizQuestion() {
   if (cultureQuizIdx >= cultureQuizQueue.length) {
-    showResults(cultureQuizScore, cultureQuizQueue.length, 'culture-quiz', 'Culture Quiz');
+    showResults(cultureQuizScore, cultureQuizQueue.length, 'culture-quiz', t('cultureQuizLabel'));
     return;
   }
   const q = cultureQuizQueue[cultureQuizIdx];
@@ -1421,7 +1835,7 @@ function renderCultureQuizQuestion() {
         `<button class="quiz-option" data-action="answer-culture-quiz" data-idx="${i}">${esc(opt)}</button>`
       ).join('')}
     </div>
-    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-culture-quiz-mc" style="display:none">Submit</button>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-culture-quiz-mc" style="display:none">${tBtn('submit')}</button>
   `;
 }
 
@@ -1463,11 +1877,11 @@ function showResults(score, total, module, label) {
   showScreen('results');
   const pct = Math.round((score / total) * 100);
   document.getElementById('res-score').textContent = `${pct}%`;
-  document.getElementById('res-label').textContent = `${score} / ${total} correct — ${label}`;
+  document.getElementById('res-label').textContent = `${score} / ${total} ${t('correctLabel').toLowerCase()} — ${label}`;
   document.getElementById('res-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${score}</div><div class="stat-desc">Correct</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--red)">${total - score}</div><div class="stat-desc">Incorrect</div></div>
-    <div class="stat-card"><div class="stat-num">+${score * 5 + (total - score)}</div><div class="stat-desc">XP Earned</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${score}</div><div class="stat-desc">${t('correctLabel')}</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--red)">${total - score}</div><div class="stat-desc">${t('incorrectLabel')}</div></div>
+    <div class="stat-card"><div class="stat-num">+${score * 5 + (total - score)}</div><div class="stat-desc">${t('xpEarned')}</div></div>
   `;
 }
 
@@ -1509,7 +1923,7 @@ function buildPlacementVocabQs(level, count) {
     if (reverse) {
       return {
         domain: 'vocab', level, type: 'mc',
-        prompt: `How do you say "${w.english}" in Spanish?`,
+        prompt: `${t('howDoYouSay')} "${w.english}" ${t('inSpanish')}`,
         answer: w.word,
         options: shuffle([w.word, ...wrongs.map(x => x.word)]),
         explanation: `${w.word} = ${w.english}`,
@@ -1517,7 +1931,7 @@ function buildPlacementVocabQs(level, count) {
     } else {
       return {
         domain: 'vocab', level, type: 'mc',
-        prompt: `What does "${w.word}" mean?`,
+        prompt: `${t('whatDoesMean')} "${w.word}" ${t('mean')}`,
         answer: w.english,
         options: shuffle([w.english, ...wrongs.map(x => x.english)]),
         explanation: `${w.word} = ${w.english}`,
@@ -1589,7 +2003,7 @@ function buildPlacementVerbQs(level, count) {
     if (wrongs.size < 3) return null;
     return {
       domain: 'verb', level, type: 'mc',
-      prompt: `Conjugate "<strong>${esc(v.infinitive)}</strong>" (${esc(v.english)})<br><span class="text-muted">${TENSE_META[tense]?.labelEn || tense} — ${PERSON_LABELS[PERSONS[person]]}</span>`,
+      prompt: `${t('conjugatePrompt')} "<strong>${esc(v.infinitive)}</strong>" (${esc(v.english)})<br><span class="text-muted">${TENSE_META[tense]?.labelEn || tense} — ${PERSON_LABELS[PERSONS[person]]}</span>`,
       answer: correct,
       options: shuffle([correct, ...wrongs]),
       explanation: `${v.infinitive} → ${correct}`,
@@ -1709,12 +2123,12 @@ function renderPlacementQuestion() {
   document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 40`;
   const pct = Math.round(((placementIdx) / 40) * 100);
   document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
-  document.getElementById('pt-level-badge').textContent = `Testing: ${level}`;
+  document.getElementById('pt-level-badge').textContent = `${t('testingLevel')} ${level}`;
   document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[level]?.color || 'var(--accent)';
   document.getElementById('pt-next').style.display = 'none';
 
   const container = document.getElementById('pt-container');
-  const domainLabel = q.domain === 'grammar' ? 'Grammar' : q.domain === 'vocab' ? 'Vocabulary' : 'Conjugation';
+  const domainLabel = q.domain === 'grammar' ? t('grammarDomain') : q.domain === 'vocab' ? t('vocabDomain') : t('conjDomain');
 
   if (q.type === 'mc' && q.options) {
     container.innerHTML = `
@@ -1725,15 +2139,15 @@ function renderPlacementQuestion() {
           `<button class="quiz-option" data-action="answer-placement" data-idx="${i}">${esc(opt)}</button>`
         ).join('')}
       </div>
-      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-placement-mc" style="display:none">Submit</button>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-placement-mc" style="display:none">${tBtn('submit')}</button>
     `;
   } else {
     container.innerHTML = `
       <div class="text-muted mb-1" style="font-size:0.75rem">${domainLabel} — ${q.level}</div>
       <div class="quiz-question">${q.prompt}</div>
       <div class="quiz-input-row">
-        <input type="text" id="pt-fib-input" placeholder="Type your answer..." autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-placement-fib">Check</button>
+        <input type="text" id="pt-fib-input" placeholder="${t('typeAnswer')}" autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="submit-placement-fib">${tBtn('check')}</button>
       </div>
       <div class="accent-bar">
         <button class="accent-btn" data-action="insert-accent-pt" data-char="á">á</button>
@@ -1792,12 +2206,12 @@ function submitPlacementFIB() {
   if (result.correct) {
     fb.className = 'quiz-feedback correct';
     fb.innerHTML = result.accentWarn
-      ? `Correct! <span class="text-muted">(Watch your accents: ${esc(q.answer)})</span>`
-      : `Correct! <strong>${esc(q.answer)}</strong>`;
+      ? `${t('correctAccent')} <span class="text-muted">${esc(q.answer)}</span>`
+      : `${t('correct')} <strong>${esc(q.answer)}</strong>`;
     recordPlacementAnswer(q, true);
   } else {
     fb.className = 'quiz-feedback incorrect';
-    fb.innerHTML = `Incorrect. The answer is: <strong>${esc(q.answer)}</strong>`;
+    fb.innerHTML = `${t('incorrectAnswer')} <strong>${esc(q.answer)}</strong>`;
     if (q.explanation) fb.innerHTML += `<br><span class="text-muted">${esc(q.explanation)}</span>`;
     recordPlacementAnswer(q, false);
   }
@@ -1906,10 +2320,10 @@ function finishPlacementTest() {
   // Breakdown
   let breakdownHtml = '';
   for (const lv of PLACEMENT_LEVELS) {
-    const s = placementLevelScores[lv] || 0;
-    const t = placementLevelTotals[lv] || 0;
-    const pct = t > 0 ? Math.round((s / t) * 100) : 0;
-    const passed = t >= 2 && s / t >= 0.6;
+    const sc = placementLevelScores[lv] || 0;
+    const tot = placementLevelTotals[lv] || 0;
+    const pct = tot > 0 ? Math.round((sc / tot) * 100) : 0;
+    const passed = tot >= 2 && sc / tot >= 0.6;
     const lvInfo = (typeof GRAMMAR_LEVELS !== 'undefined' ? GRAMMAR_LEVELS[lv] : null) || { color: '#888' };
     breakdownHtml += `
       <div class="placement-breakdown-row">
@@ -1917,7 +2331,7 @@ function finishPlacementTest() {
         <div class="placement-breakdown-bar">
           <div class="placement-breakdown-fill" style="width:${pct}%;background:${lvInfo.color}"></div>
         </div>
-        <span class="placement-breakdown-score">${s}/${t}${passed ? ' ✓' : ''}</span>
+        <span class="placement-breakdown-score">${sc}/${tot}${passed ? ' ✓' : ''}</span>
       </div>
     `;
   }
@@ -1927,7 +2341,7 @@ function finishPlacementTest() {
   const grammarCount = typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.filter(l => levelAtOrBelow(l.level, level)).length : 0;
   const vocabCount = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.filter(w => levelAtOrBelow(w.level, level)).length : 0;
   document.getElementById('ptr-message').innerHTML =
-    `Based on your results, <strong>${grammarCount} grammar lessons</strong> and <strong>${vocabCount} vocabulary words</strong> have been marked as known. You can start learning at the <strong>${level}</strong> level!`;
+    t('placementResultMsg').replace('%g', grammarCount).replace('%v', vocabCount).replace('%l', level);
 }
 
 // ════════════════════════════════════════
@@ -1961,12 +2375,12 @@ function importProgress() {
         saveProgress();
         applySettings();
         updateNavStats();
-        showModal('Import', '<p>Progress imported successfully!</p>', [
-          { label: 'OK', action: 'close-modal', cls: 'btn-primary' },
+        showModal(t('importTitle'), `<p>${t('importSuccess')}</p>`, [
+          { label: tBtn('ok'), action: 'close-modal', cls: 'btn-primary' },
         ]);
       } catch {
-        showModal('Error', '<p>Invalid file format.</p>', [
-          { label: 'OK', action: 'close-modal', cls: 'btn-primary' },
+        showModal(t('errorTitle'), `<p>${t('invalidFile')}</p>`, [
+          { label: tBtn('ok'), action: 'close-modal', cls: 'btn-primary' },
         ]);
       }
     };
@@ -2016,9 +2430,9 @@ document.addEventListener('click', e => {
     case 'export-progress': exportProgress(); break;
     case 'import-progress': importProgress(); break;
     case 'reset-progress': {
-      showModal('Reset Progress', '<p>Are you sure? This cannot be undone.</p>', [
-        { label: 'Cancel', action: 'close-modal', cls: 'btn-secondary' },
-        { label: 'Reset', action: 'confirm-reset', cls: 'btn-primary' },
+      showModal(t('resetTitle'), `<p>${t('resetConfirm')}</p>`, [
+        { label: tBtn('cancel'), action: 'close-modal', cls: 'btn-secondary' },
+        { label: tBtn('reset'), action: 'confirm-reset', cls: 'btn-primary' },
       ]);
       break;
     }
@@ -2212,7 +2626,7 @@ document.getElementById('vocab-search')?.addEventListener('input', e => {
       <strong>${esc(w.word)}</strong>
       <span class="text-muted text-sm"> — ${esc(w.english)}</span>
     </div>
-  `).join('') || '<p class="text-muted">No results.</p>';
+  `).join('') || `<p class="text-muted">${t('noResults')}</p>`;
 });
 
 function insertCharAtCursor(input, char) {
