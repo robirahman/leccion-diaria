@@ -185,6 +185,7 @@ const FULL_IRREGULARS = {
   haber: {
     present: ['he', 'has', 'ha', 'hemos', 'habéis', 'han'],
     preterite: ['hube', 'hubiste', 'hubo', 'hubimos', 'hubisteis', 'hubieron'],
+    imperfect: ['había', 'habías', 'había', 'habíamos', 'habíais', 'habían'],
     subjunctive_present: ['haya', 'hayas', 'haya', 'hayamos', 'hayáis', 'hayan'],
     subjunctive_imperfect: ['hubiera', 'hubieras', 'hubiera', 'hubiéramos', 'hubierais', 'hubieran'],
   },
@@ -239,12 +240,15 @@ const FULL_IRREGULARS = {
     preterite: ['vi', 'viste', 'vio', 'vimos', 'visteis', 'vieron'],
     imperfect: ['veía', 'veías', 'veía', 'veíamos', 'veíais', 'veían'],
     subjunctive_present: ['vea', 'veas', 'vea', 'veamos', 'veáis', 'vean'],
+    subjunctive_imperfect: ['viera', 'vieras', 'viera', 'viéramos', 'vierais', 'vieran'],
+    imperative_aff: ['—', 've', 'vea', 'veamos', 'ved', 'vean'],
   },
   saber: {
     present: ['sé', 'sabes', 'sabe', 'sabemos', 'sabéis', 'saben'],
     preterite: ['supe', 'supiste', 'supo', 'supimos', 'supisteis', 'supieron'],
     subjunctive_present: ['sepa', 'sepas', 'sepa', 'sepamos', 'sepáis', 'sepan'],
     subjunctive_imperfect: ['supiera', 'supieras', 'supiera', 'supiéramos', 'supierais', 'supieran'],
+    imperative_aff: ['—', 'sabe', 'sepa', 'sepamos', 'sabed', 'sepan'],
   },
   poner: {
     present: ['pongo', 'pones', 'pone', 'ponemos', 'ponéis', 'ponen'],
