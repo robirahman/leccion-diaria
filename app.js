@@ -20,6 +20,13 @@ let placementSEs = { grammar: 2.0, vocab: 2.0 };     // per-domain standard erro
 let placementUsedIds = new Set();
 let placementLastDomains = []; // track recent domains for variety
 
+// Practice exercise state
+let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
+let sbQueue = [], sbIdx = 0, sbScore = 0;
+let clozeQueue = [], clozeIdx = 0, clozeScore = 0;
+let trQueue = [], trIdx = 0, trScore = 0;
+let dictQueue = [], dictIdx = 0, dictScore = 0;
+
 // Map question domains to scoring groups
 const DOMAIN_GROUP = { grammar: 'grammar', usage: 'grammar', reading: 'grammar', verb: 'grammar', vocab: 'vocab' };
 function scoringGroup(domain) { return DOMAIN_GROUP[domain] || 'grammar'; }
@@ -74,6 +81,9 @@ const UI_STRINGS = {
   verbBrowser: ['Verb Browser', 'Explorar verbos'],
   irregularPatterns: ['Irregular Patterns', 'Patrones irregulares'],
   practiceByPattern: ['Practice verbs grouped by pattern', 'Practica verbos agrupados por patrón'],
+  // Practice exercises
+  practice: ['Practice', 'Práctica'],
+  arrangeWords: ['Arrange the words:', 'Ordena las palabras:'],
   browseVerbs: ['Browse all verbs and conjugation tables', 'Ver todos los verbos y tablas de conjugación'],
 
   // Numbers screen
@@ -277,6 +287,11 @@ function newProgress() {
     numberMastery: {},
     cultureDone: {},
     practiceLog: {},
+    mpFsrs: {}, mpMastery: {},
+    sentenceFsrs: {}, sentenceMastery: {},
+    clozeFsrs: {}, clozeMastery: {},
+    translationFsrs: {}, translationMastery: {},
+    dictFsrs: {}, dictMastery: {},
     placementLevel: null,
     placementDate: null,
     settings: {
@@ -2806,6 +2821,466 @@ function importProgress() {
 }
 
 // ════════════════════════════════════════
+//  PRACTICE EXERCISES
+// ════════════════════════════════════════
+
+// Levenshtein distance for dictation fuzzy matching
+function levenshtein(a, b) {
+  const dp = Array.from({ length: a.length + 1 }, (_, i) => { const r = new Array(b.length + 1); r[0] = i; return r; });
+  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+  return dp[a.length][b.length];
+}
+
+// ── Minimal Pairs ──
+
+function renderMinimalPairCategories() {
+  const container = document.getElementById('mp-categories');
+  if (!container || typeof MINIMAL_PAIR_CATEGORIES === 'undefined') return;
+  container.innerHTML = Object.entries(MINIMAL_PAIR_CATEGORIES).map(([key, cat]) => `
+    <div class="card" data-action="start-mp" data-cat="${key}" style="cursor:pointer">
+      <div class="card-title">${esc(cat.titleEn || cat.title)}</div>
+      <div class="card-subtitle">${esc(cat.options?.join(' vs ') || '')}</div>
+    </div>
+  `).join('');
+}
+
+function startMinimalPairs(category) {
+  if (typeof MINIMAL_PAIRS === 'undefined') return;
+  const userLevel = progress?.placementLevel || 'B1';
+  let items = MINIMAL_PAIRS.filter(p => p.category === category);
+  items = shuffle(items).slice(0, 10);
+  if (items.length === 0) return;
+  mpQueue = items; mpIdx = 0; mpScore = 0; mpAnswered = false;
+  showScreen('mp-drill');
+  renderMPQuestion();
+}
+
+function renderMPQuestion() {
+  if (mpIdx >= mpQueue.length) { showResults(mpScore, mpQueue.length, 'mp', 'Minimal Pairs'); return; }
+  const item = mpQueue[mpIdx];
+  mpAnswered = false;
+  document.getElementById('mp-progress').textContent = `${mpIdx + 1} / ${mpQueue.length}`;
+  document.getElementById('mp-sentence').innerHTML = esc(item.sentence).replace('___', '<strong>______</strong>');
+  document.getElementById('mp-options').innerHTML = item.options.map((opt, i) =>
+    `<button class="quiz-option" data-action="answer-mp" data-idx="${i}">${esc(opt)}</button>`
+  ).join('');
+  document.getElementById('mp-feedback').style.display = 'none';
+  document.getElementById('mp-contrast').style.display = 'none';
+  document.getElementById('mp-next').style.display = 'none';
+}
+
+function answerMP(idx) {
+  if (mpAnswered) return;
+  const btns = document.querySelectorAll('#mp-options .quiz-option');
+  btns.forEach(b => b.classList.remove('selected'));
+  btns[idx]?.classList.add('selected');
+  // Auto-submit on selection (binary choice, no need for separate submit)
+  submitMP();
+}
+
+function submitMP() {
+  if (mpAnswered) return;
+  const selectedBtn = document.querySelector('#mp-options .quiz-option.selected');
+  if (!selectedBtn) return;
+  mpAnswered = true;
+  const item = mpQueue[mpIdx];
+  const chosen = selectedBtn.textContent.trim();
+  const correct = chosen.toLowerCase() === item.answer.toLowerCase() ||
+    stripAccents(chosen.toLowerCase()) === stripAccents(item.answer.toLowerCase());
+
+  const btns = document.querySelectorAll('#mp-options .quiz-option');
+  btns.forEach(b => {
+    b.classList.add('disabled');
+    const btnText = b.textContent.trim().toLowerCase();
+    if (btnText === item.answer.toLowerCase() || stripAccents(btnText) === stripAccents(item.answer.toLowerCase())) {
+      b.classList.add('correct');
+    } else if (b.classList.contains('selected')) {
+      b.classList.add('incorrect');
+    }
+  });
+
+  if (correct) { mpScore++; addXP(5); }
+  else { addXP(1); }
+
+  const displayMode = progress?.settings?.display || 'standard';
+  const explanation = (displayMode === 'immersion' && item.explanationEs) ? item.explanationEs : item.explanation;
+
+  const fb = document.getElementById('mp-feedback');
+  fb.innerHTML = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '✓' : '✗'} ${esc(explanation)}</div>`;
+  fb.style.display = 'block';
+
+  const contrast = document.getElementById('mp-contrast');
+  if (item.contrast) {
+    contrast.innerHTML = esc(item.contrast);
+    contrast.style.display = 'block';
+  }
+
+  document.getElementById('mp-next').style.display = 'flex';
+  reviewItem(progress.mpFsrs, progress.mpMastery, item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextMP() { mpIdx++; renderMPQuestion(); }
+
+// ── Sentence Construction ──
+
+function startSentenceBuild() {
+  if (typeof SENTENCE_CONSTRUCTION === 'undefined') return;
+  let items = shuffle([...SENTENCE_CONSTRUCTION]).slice(0, 10);
+  if (items.length === 0) return;
+  sbQueue = items; sbIdx = 0; sbScore = 0;
+  showScreen('sentence-build');
+  renderSBQuestion();
+}
+
+function renderSBQuestion() {
+  if (sbIdx >= sbQueue.length) { showResults(sbScore, sbQueue.length, 'sb', 'Sentence Construction'); return; }
+  const item = sbQueue[sbIdx];
+  document.getElementById('sb-progress').textContent = `${sbIdx + 1} / ${sbQueue.length}`;
+  document.getElementById('sb-prompt').innerHTML = `${t('arrangeWords') || 'Arrange the words:'} <strong>${esc(item.english)}</strong>`;
+  const bank = document.getElementById('sb-word-bank');
+  const allWords = [...item.words, ...(item.distractors || [])];
+  bank.innerHTML = shuffle(allWords).map(w =>
+    `<button class="sb-word-tile" data-action="tap-sb-word">${esc(w)}</button>`
+  ).join('');
+  document.getElementById('sb-answer-row').innerHTML = '';
+  document.getElementById('sb-feedback').style.display = 'none';
+  document.getElementById('sb-check').style.display = 'flex';
+  document.getElementById('sb-next').style.display = 'none';
+}
+
+function tapSBWord(target) {
+  if (!target.classList.contains('sb-word-tile')) return;
+  const answerRow = document.getElementById('sb-answer-row');
+  const bank = document.getElementById('sb-word-bank');
+  if (target.parentElement === bank) {
+    answerRow.appendChild(target);
+  } else {
+    bank.appendChild(target);
+  }
+}
+
+function checkSentenceBuild() {
+  const item = sbQueue[sbIdx];
+  const tiles = Array.from(document.getElementById('sb-answer-row').children);
+  const answer = tiles.map(t => t.textContent).join(' ');
+  const allAcceptable = [item.sentence, ...(item.acceptable || [])];
+  let correct = false;
+  for (const acc of allAcceptable) {
+    if (checkAnswer(answer, acc).correct) { correct = true; break; }
+  }
+  // Also check normalized
+  if (!correct) {
+    const norm = s => stripAccents(s.toLowerCase().replace(/[¿¡.,;:!?]/g, '').trim());
+    for (const acc of allAcceptable) {
+      if (norm(answer) === norm(acc)) { correct = true; break; }
+    }
+  }
+
+  const fb = document.getElementById('sb-feedback');
+  if (correct) {
+    sbScore++; addXP(5);
+    fb.innerHTML = `<div class="text-correct">✓ ${esc(item.sentence)}</div>`;
+    if (item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
+  } else {
+    addXP(1);
+    // Mark distractor tiles
+    const distractors = new Set(item.distractors || []);
+    tiles.forEach(t => { if (distractors.has(t.textContent)) t.classList.add('distractor-wrong'); });
+    fb.innerHTML = `<div class="text-incorrect">✗ ${esc(item.sentence)}</div>`;
+    if (item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
+  }
+  fb.style.display = 'block';
+  document.getElementById('sb-check').style.display = 'none';
+  document.getElementById('sb-next').style.display = 'flex';
+  document.querySelectorAll('.sb-word-tile').forEach(t => t.style.pointerEvents = 'none');
+  reviewItem(progress.sentenceFsrs, progress.sentenceMastery, item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextSentenceBuild() { sbIdx++; renderSBQuestion(); }
+
+// ── Cloze Passages ──
+
+function renderClozeTopics() {
+  if (typeof CLOZE_PASSAGES === 'undefined') return;
+  const topics = [...new Set(CLOZE_PASSAGES.map(p => p.topic))];
+  const container = document.getElementById('cloze-topic-cards');
+  if (!container) return;
+  const topicLabels = {
+    ser_estar: 'Ser vs Estar', preterite_imperfect: 'Preterite vs Imperfect',
+    subjunctive: 'Subjunctive', pronouns: 'Pronouns',
+    prepositions: 'Prepositions', mixed: 'Mixed Grammar',
+  };
+  container.innerHTML = topics.map(t => `
+    <div class="card" data-action="start-cloze" data-topic="${t}" style="cursor:pointer">
+      <div class="card-title">${esc(topicLabels[t] || t)}</div>
+    </div>
+  `).join('') + `
+    <div class="card" data-action="start-cloze" data-topic="all" style="cursor:pointer">
+      <div class="card-title">All Topics</div>
+    </div>
+  `;
+}
+
+function startCloze(topic) {
+  if (typeof CLOZE_PASSAGES === 'undefined') return;
+  let items = topic === 'all' ? [...CLOZE_PASSAGES] : CLOZE_PASSAGES.filter(p => p.topic === topic);
+  items = shuffle(items).slice(0, 8);
+  if (items.length === 0) return;
+  clozeQueue = items; clozeIdx = 0; clozeScore = 0;
+  showScreen('cloze');
+  renderClozePassage();
+}
+
+function renderClozePassage() {
+  if (clozeIdx >= clozeQueue.length) { showResults(clozeScore, clozeQueue.length, 'cloze', 'Cloze Passages'); return; }
+  const item = clozeQueue[clozeIdx];
+  document.getElementById('cloze-progress').textContent = `${clozeIdx + 1} / ${clozeQueue.length}`;
+  const displayMode = progress?.settings?.display || 'standard';
+  document.getElementById('cloze-title').textContent = displayMode === 'immersion' ? item.title : (item.titleEn || item.title);
+  // Replace {N} tokens with input fields
+  let html = esc(item.passage).replace(/\{(\d+)\}/g, (_, n) =>
+    `<input class="cloze-blank" data-blank="${n}" size="10" autocomplete="off" autocapitalize="off">`
+  );
+  document.getElementById('cloze-container').innerHTML = html;
+  document.getElementById('cloze-feedback').style.display = 'none';
+  document.getElementById('cloze-feedback').innerHTML = '';
+  document.getElementById('cloze-check').style.display = 'flex';
+  document.getElementById('cloze-next').style.display = 'none';
+  // Focus first blank
+  setTimeout(() => document.querySelector('.cloze-blank')?.focus(), 50);
+}
+
+function checkCloze() {
+  const item = clozeQueue[clozeIdx];
+  const blanks = document.querySelectorAll('.cloze-blank');
+  let allCorrect = true;
+  const explanations = [];
+
+  blanks.forEach(input => {
+    const n = parseInt(input.dataset.blank);
+    const blankDef = item.blanks.find(b => b.id === n);
+    if (!blankDef) return;
+    const userVal = input.value.trim();
+    let correct = checkAnswer(userVal, blankDef.answer).correct;
+    if (!correct && blankDef.acceptable) {
+      for (const alt of blankDef.acceptable) {
+        if (checkAnswer(userVal, alt).correct) { correct = true; break; }
+      }
+    }
+    input.classList.add(correct ? 'correct' : 'incorrect');
+    input.readOnly = true;
+    if (!correct) {
+      allCorrect = false;
+      input.value = blankDef.answer;
+    }
+    explanations.push(`<div class="cloze-explanation">{${n}} <strong>${esc(blankDef.answer)}</strong> — ${esc(blankDef.explanation)}</div>`);
+  });
+
+  if (allCorrect) { clozeScore++; addXP(5); }
+  else { addXP(1); }
+
+  const fb = document.getElementById('cloze-feedback');
+  fb.innerHTML = `<div class="${allCorrect ? 'text-correct' : 'text-incorrect'}">${allCorrect ? '✓ All correct!' : '✗ Some blanks were incorrect.'}</div>` + explanations.join('');
+  fb.style.display = 'block';
+  document.getElementById('cloze-check').style.display = 'none';
+  document.getElementById('cloze-next').style.display = 'flex';
+  reviewItem(progress.clozeFsrs, progress.clozeMastery, item.id, allCorrect ? FSRS_GOOD : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextCloze() { clozeIdx++; renderClozePassage(); }
+
+// ── Translation Drills ──
+
+function startTranslation() {
+  if (typeof TRANSLATION_DRILLS === 'undefined') return;
+  let items = shuffle([...TRANSLATION_DRILLS]).slice(0, 10);
+  if (items.length === 0) return;
+  trQueue = items; trIdx = 0; trScore = 0;
+  showScreen('translation');
+  renderTranslationQuestion();
+}
+
+function renderTranslationQuestion() {
+  if (trIdx >= trQueue.length) { showResults(trScore, trQueue.length, 'tr', 'Translation Drills'); return; }
+  const item = trQueue[trIdx];
+  document.getElementById('tr-progress').textContent = `${trIdx + 1} / ${trQueue.length}`;
+  document.getElementById('tr-prompt').innerHTML = `Translate to Spanish: <strong>${esc(item.english)}</strong>`;
+  document.getElementById('tr-input').value = '';
+  document.getElementById('tr-feedback').style.display = 'none';
+  document.getElementById('tr-next').style.display = 'none';
+  setTimeout(() => document.getElementById('tr-input')?.focus(), 50);
+}
+
+function checkTranslation() {
+  const item = trQueue[trIdx];
+  const input = document.getElementById('tr-input').value.trim();
+  if (!input) return;
+  const allCorrect = [item.primary, ...(item.acceptable || [])];
+
+  // Tier 1: exact match with accent tolerance
+  let correct = false, accentWarn = false;
+  for (const ans of allCorrect) {
+    const result = checkAnswer(input, ans);
+    if (result.correct) { correct = true; accentWarn = result.accentWarn; break; }
+  }
+
+  // Tier 2: normalized comparison (strip punctuation)
+  if (!correct) {
+    const norm = s => stripAccents(s.toLowerCase().replace(/[¿¡.,;:!?"""'']/g, '').trim());
+    for (const ans of allCorrect) {
+      if (norm(input) === norm(ans)) { correct = true; accentWarn = true; break; }
+    }
+  }
+
+  // Tier 3: key word analysis for partial credit feedback
+  let keyHits = [], keyMisses = [];
+  if (!correct && item.keyWords) {
+    const inputLower = stripAccents(input.toLowerCase());
+    keyHits = item.keyWords.filter(kw => inputLower.includes(stripAccents(kw.toLowerCase())));
+    keyMisses = item.keyWords.filter(kw => !inputLower.includes(stripAccents(kw.toLowerCase())));
+  }
+
+  if (correct) { trScore++; addXP(accentWarn ? 3 : 5); }
+  else { addXP(1); }
+
+  const fb = document.getElementById('tr-feedback');
+  let html = '';
+  if (correct) {
+    html = `<div class="text-correct">✓ Correct!</div>`;
+    if (accentWarn) html += `<div class="text-muted text-sm">Watch your accents: ${esc(item.primary)}</div>`;
+  } else {
+    html = `<div class="text-incorrect">✗ Model answer: <strong>${esc(item.primary)}</strong></div>`;
+    if (item.acceptable?.length) {
+      html += `<div class="text-muted text-sm">Also accepted: ${item.acceptable.map(a => esc(a)).join(', ')}</div>`;
+    }
+    if (keyHits.length > 0) {
+      html += `<div class="text-muted text-sm">You got: ${keyHits.map(k => '<strong>' + esc(k) + '</strong>').join(', ')}</div>`;
+    }
+  }
+  if (item.explanation) html += `<div class="text-muted text-sm mt-1">${esc(item.explanation)}</div>`;
+  fb.innerHTML = html;
+  fb.style.display = 'block';
+  document.getElementById('tr-next').style.display = 'flex';
+  document.getElementById('tr-input').readOnly = true;
+  reviewItem(progress.translationFsrs, progress.translationMastery, item.id,
+    correct ? (accentWarn ? FSRS_HARD : FSRS_GOOD) : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextTranslation() { trIdx++; renderTranslationQuestion(); }
+
+// ── Dictation ──
+
+function startDictation() {
+  let items = [];
+  if (typeof DICTATION_DATA !== 'undefined') items = [...DICTATION_DATA];
+  // Supplement with phrases
+  if (typeof PHRASE_DATA !== 'undefined') {
+    const extras = PHRASE_DATA.flatMap(sit =>
+      (sit.phrases || []).filter(p => p.spanish && p.spanish.length > 5 && p.spanish.length < 80)
+        .map(p => ({ id: 'dict-p-' + p.id, level: 'A2', topic: sit.situation, sentence: p.spanish, english: p.english, notes: '' }))
+    );
+    items = items.concat(shuffle(extras).slice(0, 10));
+  }
+  items = shuffle(items).slice(0, 10);
+  if (items.length === 0) return;
+  dictQueue = items; dictIdx = 0; dictScore = 0;
+  showScreen('dictation');
+  renderDictationQuestion();
+}
+
+function renderDictationQuestion() {
+  if (dictIdx >= dictQueue.length) { showResults(dictScore, dictQueue.length, 'dict', 'Dictation'); return; }
+  document.getElementById('dict-progress').textContent = `${dictIdx + 1} / ${dictQueue.length}`;
+  document.getElementById('dict-input').value = '';
+  document.getElementById('dict-input').readOnly = false;
+  document.getElementById('dict-feedback').style.display = 'none';
+  document.getElementById('dict-next').style.display = 'none';
+  setTimeout(() => {
+    dictPlayNormal();
+    document.getElementById('dict-input')?.focus();
+  }, 200);
+}
+
+function dictPlayNormal() {
+  const item = dictQueue[dictIdx];
+  if (item) speak(item.sentence);
+}
+
+function dictPlaySlow() {
+  const item = dictQueue[dictIdx];
+  if (!item) return;
+  const rate = (progress?.settings?.ttsRate || 1) * 0.55;
+  const orig = progress?.settings?.ttsRate;
+  if (progress?.settings) progress.settings.ttsRate = rate;
+  speak(item.sentence);
+  if (progress?.settings) progress.settings.ttsRate = orig;
+}
+
+function checkDictation() {
+  const item = dictQueue[dictIdx];
+  const input = document.getElementById('dict-input').value.trim();
+  if (!input) return;
+
+  const norm = s => s.toLowerCase().replace(/[¿¡.,;:!?"""''—–\-()]/g, '').trim();
+  const inputWords = norm(input).split(/\s+/).filter(Boolean);
+  const correctWords = norm(item.sentence).split(/\s+/).filter(Boolean);
+
+  let matches = 0;
+  const results = [];
+  for (let i = 0; i < correctWords.length; i++) {
+    const cw = correctWords[i];
+    const iw = inputWords[i] || '';
+    const chk = checkAnswer(iw, cw);
+    if (chk.correct) {
+      matches++;
+      results.push({ word: cw, status: chk.accentWarn ? 'accent' : 'correct' });
+    } else if (iw && levenshtein(stripAccents(iw), stripAccents(cw)) <= 1) {
+      matches += 0.5;
+      results.push({ word: cw, status: 'typo', typed: iw });
+    } else {
+      results.push({ word: cw, status: iw ? 'wrong' : 'missing', typed: iw });
+    }
+  }
+  const extra = Math.max(0, inputWords.length - correctWords.length);
+  const score = Math.max(0, matches - extra * 0.5) / correctWords.length;
+
+  if (score >= 0.9) { dictScore++; addXP(5); }
+  else if (score >= 0.7) { addXP(3); }
+  else { addXP(1); }
+
+  // Build word-by-word feedback
+  const wordHtml = results.map(r => {
+    if (r.status === 'correct') return `<span class="dict-word correct">${esc(r.word)}</span>`;
+    if (r.status === 'accent') return `<span class="dict-word accent">${esc(r.word)}</span>`;
+    if (r.status === 'typo') return `<span class="dict-word typo" title="You typed: ${esc(r.typed)}">${esc(r.word)}</span>`;
+    if (r.status === 'missing') return `<span class="dict-word missing">${esc(r.word)}</span>`;
+    return `<span class="dict-word wrong" title="You typed: ${esc(r.typed)}">${esc(r.word)}</span>`;
+  }).join(' ');
+
+  const fb = document.getElementById('dict-feedback');
+  const pct = Math.round(score * 100);
+  fb.innerHTML = `<div class="${score >= 0.9 ? 'text-correct' : score >= 0.7 ? '' : 'text-incorrect'}">${pct}% correct</div>` +
+    `<div class="mt-1">${wordHtml}</div>` +
+    `<div class="text-muted text-sm mt-1">${esc(item.english)}</div>` +
+    (item.notes ? `<div class="text-muted text-sm">${esc(item.notes)}</div>` : '');
+  fb.style.display = 'block';
+  document.getElementById('dict-input').readOnly = true;
+  document.getElementById('dict-next').style.display = 'flex';
+  const rating = score >= 0.9 ? FSRS_GOOD : score >= 0.7 ? FSRS_HARD : FSRS_AGAIN;
+  reviewItem(progress.dictFsrs, progress.dictMastery, item.id, rating);
+  saveProgress();
+}
+
+function nextDictation() { dictIdx++; renderDictationQuestion(); }
+
+// ════════════════════════════════════════
 //  EVENT DELEGATION
 // ════════════════════════════════════════
 
@@ -2945,6 +3420,29 @@ document.addEventListener('click', e => {
     case 'placement-done': switchTab('today'); break;
     case 'retake-placement': startPlacementTest(); break;
 
+    // Practice exercises
+    case 'open-minimal-pairs': showScreen('minimal-pairs'); renderMinimalPairCategories(); break;
+    case 'start-mp': startMinimalPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
+    case 'answer-mp': answerMP(parseInt(target.dataset.idx)); break;
+    case 'submit-mp': submitMP(); break;
+    case 'next-mp': nextMP(); break;
+    case 'open-sentence-build-topics': startSentenceBuild(); break;
+    case 'tap-sb-word': tapSBWord(target); break;
+    case 'check-sentence-build': checkSentenceBuild(); break;
+    case 'next-sentence-build': nextSentenceBuild(); break;
+    case 'open-cloze-topics': showScreen('cloze-topics'); renderClozeTopics(); break;
+    case 'start-cloze': startCloze(target.dataset.topic || target.closest('[data-topic]')?.dataset.topic); break;
+    case 'check-cloze': checkCloze(); break;
+    case 'next-cloze': nextCloze(); break;
+    case 'open-translation-topics': startTranslation(); break;
+    case 'check-translation': checkTranslation(); break;
+    case 'next-translation': nextTranslation(); break;
+    case 'open-dictation': startDictation(); break;
+    case 'dict-play': dictPlayNormal(); break;
+    case 'dict-play-slow': dictPlaySlow(); break;
+    case 'check-dictation': checkDictation(); break;
+    case 'next-dictation': nextDictation(); break;
+
     // TTS
     case 'speak': speak(target.dataset.text); break;
 
@@ -2969,6 +3467,21 @@ document.addEventListener('click', e => {
       if (input) insertCharAtCursor(input, target.dataset.char);
       break;
     }
+    case 'insert-accent-cloze': {
+      const focused = document.activeElement;
+      if (focused?.classList.contains('cloze-blank')) insertCharAtCursor(focused, target.dataset.char);
+      break;
+    }
+    case 'insert-accent-tr': {
+      const input = document.getElementById('tr-input');
+      if (input) insertCharAtCursor(input, target.dataset.char);
+      break;
+    }
+    case 'insert-accent-dict': {
+      const input = document.getElementById('dict-input');
+      if (input) insertCharAtCursor(input, target.dataset.char);
+      break;
+    }
   }
 });
 
@@ -2988,6 +3501,11 @@ document.addEventListener('keydown', e => {
       { screen: 'grammar-quiz', next: 'gq-next', fib: 'gq-fib-input', submitFn: submitGrammarFIB, nextFn: nextGrammarQuiz },
       { screen: 'culture-quiz', next: 'cq-next', fib: null, submitFn: null, nextFn: nextCultureQuiz },
       { screen: 'placement', next: 'pt-next', fib: 'pt-fib-input', submitFn: submitPlacementFIB, nextFn: nextPlacementQuestion },
+      { screen: 'mp-drill', next: 'mp-next', fib: null, submitFn: submitMP, nextFn: nextMP },
+      { screen: 'sentence-build', next: 'sb-next', fib: null, submitFn: checkSentenceBuild, nextFn: nextSentenceBuild },
+      { screen: 'cloze', next: 'cloze-next', fib: null, submitFn: checkCloze, nextFn: nextCloze },
+      { screen: 'translation', next: 'tr-next', fib: 'tr-input', submitFn: checkTranslation, nextFn: nextTranslation },
+      { screen: 'dictation', next: 'dict-next', fib: 'dict-input', submitFn: checkDictation, nextFn: nextDictation },
     ];
     for (const qs of quizScreens) {
       if (!document.getElementById('screen-' + qs.screen)?.classList.contains('active')) continue;
