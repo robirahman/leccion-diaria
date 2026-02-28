@@ -1,11 +1,12 @@
-const CACHE_NAME = 'leccion-diaria-v1';
+const CACHE_NAME = 'leccion-diaria-v2';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './fsrs.js',
   './conjugation.js', './verbs.js', './vocab.js', './grammar.js',
   './phrases.js', './conversations.js', './recipes.js', './music.js',
   './movies.js', './poetry.js', './sports.js', './proverbs.js',
   './folktales.js', './festivals.js', './history.js', './travel.js',
-  './trivia.js', './idioms.js', './manifest.json',
+  './trivia.js', './idioms.js', './freq_vocab.js', './placement_questions.js',
+  './manifest.json',
 ];
 
 self.addEventListener('install', e => {

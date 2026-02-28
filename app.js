@@ -11,15 +11,14 @@ let progress = null;
 let screenStack = [];
 let activeDropdown = null;
 
-// Placement test state
-let placementPool = {};
+// Placement test state (IRT-based)
+let placementQuestions = [];   // flat array of all questions with difficulty
 let placementIdx = 0;
-let placementScore = 0;
-let placementLevelScores = {};
-let placementLevelTotals = {};
-let placementCurrentLevel = 0;
-let placementConsecutive = 0;
-let placementLastCorrect = null;
+let placementTheta = 3.0;     // ability estimate (Rasch model), starts ~B1
+let placementHistory = [];     // [{difficulty, correct, domain}]
+let placementSE = 2.0;        // standard error of theta
+let placementUsedIds = new Set();
+let placementLastDomains = []; // track recent domains for variety
 
 // ── UI Strings for Display Modes (standard / immersion / hints) ──
 const UI_STRINGS = {
@@ -392,7 +391,7 @@ function confirmCreateProfile() {
   setTimeout(() => {
     showModal(t('placementTest'), `
       <p>Want to take a quick placement test to skip content you already know?</p>
-      <p class="text-muted">~5 minutes, 30 questions covering grammar, vocabulary, and verbs.</p>
+      <p class="text-muted">~5 minutes, 40 adaptive questions covering grammar, vocabulary, and verbs.</p>
     `, [
       { label: tBtn('skip'), action: 'close-modal', cls: 'btn-secondary' },
       { label: tBtn('takeTest'), action: 'start-placement', cls: 'btn-primary' },
@@ -2011,33 +2010,102 @@ function buildPlacementVerbQs(level, count) {
   }).filter(Boolean);
 }
 
-function buildPlacementPool() {
-  const pool = {};
-  for (const level of PLACEMENT_LEVELS) {
-    const grammar = buildPlacementGrammarQs(level, 3);
-    const vocab = buildPlacementVocabQs(level, 3);
-    const verbs = buildPlacementVerbQs(level, 2);
-    pool[level] = shuffle([...grammar, ...vocab, ...verbs]);
-    // Ensure at least some questions; pad with grammar if available
-    if (pool[level].length < 4) {
-      const extra = buildPlacementGrammarQs(level, 8 - pool[level].length);
-      pool[level] = shuffle([...pool[level], ...extra]);
+// IRT difficulty midpoints per level
+const LEVEL_DIFFICULTY = { A1: 1.4, A2: 2.3, B1: 3.15, B2: 3.95, C1: 4.8, C2: 5.9 };
+
+function buildPlacementIRTPool() {
+  const pool = [];
+
+  // 1. Add dedicated placement questions (placement_questions.js)
+  if (typeof PLACEMENT_QUESTIONS !== 'undefined') {
+    for (const q of PLACEMENT_QUESTIONS) {
+      pool.push({ ...q, source: 'dedicated' });
     }
   }
+
+  // 2. Add generated questions from existing content (grammar, vocab, verbs)
+  for (const level of PLACEMENT_LEVELS) {
+    const diff = LEVEL_DIFFICULTY[level];
+    const grammar = buildPlacementGrammarQs(level, 5);
+    grammar.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-g-${pool.length}`, source: 'generated' }));
+    const vocab = buildPlacementVocabQs(level, 5);
+    vocab.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-v-${pool.length}`, source: 'generated' }));
+    const verbs = buildPlacementVerbQs(level, 4);
+    verbs.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-vb-${pool.length}`, source: 'generated' }));
+  }
+
+  // 3. Add freq-vocab recognition questions
+  if (typeof FREQ_VOCAB !== 'undefined') {
+    pool.push(...buildFreqVocabQuestions(20));
+  }
+
   return pool;
+}
+
+function buildFreqVocabQuestions(count) {
+  // Generate vocab questions by matching FREQ_VOCAB words against VOCAB_DATA (which has translations)
+  if (typeof VOCAB_DATA === 'undefined') return [];
+  const questions = [];
+
+  // Build lookup of freq words that also have translations in VOCAB_DATA
+  const vocabByWord = {};
+  for (const v of VOCAB_DATA) vocabByWord[v.word.toLowerCase()] = v;
+
+  // Find freq_vocab entries that have corresponding VOCAB_DATA entries
+  const matchable = FREQ_VOCAB.filter(fw => vocabByWord[fw.w.toLowerCase()]);
+  if (matchable.length < 10) return [];
+
+  // Sample across difficulty levels
+  const levelSamples = { A1: 2, A2: 3, B1: 3, B2: 4, C1: 4, C2: 4 };
+
+  for (const [level, n] of Object.entries(levelSamples)) {
+    const wordsAtLevel = matchable.filter(w => w.l === level);
+    if (wordsAtLevel.length < 4) continue;
+    const picked = pickN(wordsAtLevel, Math.min(n, wordsAtLevel.length));
+    for (const fw of picked) {
+      const vocabEntry = vocabByWord[fw.w.toLowerCase()];
+      const diff = LEVEL_DIFFICULTY[level] + (Math.random() - 0.5) * 0.3;
+      // Get distractors from same level in VOCAB_DATA
+      const sameLevel = VOCAB_DATA.filter(v => v.level === level && v.word.toLowerCase() !== fw.w.toLowerCase());
+      if (sameLevel.length < 3) continue;
+      const wrongs = pickN(sameLevel, 3);
+      const reverse = Math.random() < 0.5;
+      if (reverse) {
+        questions.push({
+          id: `fv-${fw.r}`,
+          level, difficulty: diff, domain: 'vocab', type: 'mc',
+          prompt: `${t('howDoYouSay')} "${esc(vocabEntry.english)}" ${t('inSpanish')}`,
+          answer: vocabEntry.word,
+          options: shuffle([vocabEntry.word, ...wrongs.map(w => w.word)]),
+          explanation: `${vocabEntry.word} = ${vocabEntry.english}`,
+          source: 'freq',
+        });
+      } else {
+        questions.push({
+          id: `fv-${fw.r}`,
+          level, difficulty: diff, domain: 'vocab', type: 'mc',
+          prompt: `${t('whatDoesMean')} "${esc(vocabEntry.word)}" ${t('mean')}`,
+          answer: vocabEntry.english,
+          options: shuffle([vocabEntry.english, ...wrongs.map(w => w.english)]),
+          explanation: `${vocabEntry.word} = ${vocabEntry.english}`,
+          source: 'freq',
+        });
+      }
+    }
+  }
+  return questions;
 }
 
 function savePlacementState() {
   try {
     const state = {
-      pool: placementPool,
+      questions: placementQuestions,
       idx: placementIdx,
-      score: placementScore,
-      currentLevel: placementCurrentLevel,
-      consecutive: placementConsecutive,
-      lastCorrect: placementLastCorrect,
-      levelScores: placementLevelScores,
-      levelTotals: placementLevelTotals,
+      theta: placementTheta,
+      history: placementHistory,
+      se: placementSE,
+      usedIds: [...placementUsedIds],
+      lastDomains: placementLastDomains,
       profile: currentProfile,
     };
     sessionStorage.setItem('ld_placement_state', JSON.stringify(state));
@@ -2053,19 +2121,17 @@ function restorePlacementTest() {
     const raw = sessionStorage.getItem('ld_placement_state');
     if (!raw) return false;
     const state = JSON.parse(raw);
-    // Only restore if same profile and test was in progress
     if (state.profile !== currentProfile || state.idx >= 40) {
       clearPlacementState();
       return false;
     }
-    placementPool = state.pool;
+    placementQuestions = state.questions;
     placementIdx = state.idx;
-    placementScore = state.score;
-    placementCurrentLevel = state.currentLevel;
-    placementConsecutive = state.consecutive;
-    placementLastCorrect = state.lastCorrect;
-    placementLevelScores = state.levelScores;
-    placementLevelTotals = state.levelTotals;
+    placementTheta = state.theta;
+    placementHistory = state.history;
+    placementSE = state.se;
+    placementUsedIds = new Set(state.usedIds);
+    placementLastDomains = state.lastDomains;
     showScreen('placement');
     renderPlacementQuestion();
     return true;
@@ -2077,54 +2143,61 @@ function restorePlacementTest() {
 
 function startPlacementTest() {
   closeModal();
-  placementPool = buildPlacementPool();
+  placementQuestions = buildPlacementIRTPool();
   placementIdx = 0;
-  placementScore = 0;
-  placementCurrentLevel = 0;
-  placementConsecutive = 0;
-  placementLastCorrect = null;
-  placementLevelScores = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
-  placementLevelTotals = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
+  placementTheta = 3.0;  // start at ~B1
+  placementHistory = [];
+  placementSE = 2.0;
+  placementUsedIds = new Set();
+  placementLastDomains = [];
   savePlacementState();
   showScreen('placement');
   renderPlacementQuestion();
 }
 
+// IRT: Select next question with difficulty closest to current theta
+function selectNextIRTQuestion() {
+  const available = placementQuestions.filter(q => !placementUsedIds.has(q.id));
+  if (available.length === 0) return null;
+
+  // Prefer questions near theta for maximum information
+  // But also enforce domain variety (don't repeat same domain 3x in a row)
+  const lastTwo = placementLastDomains.slice(-2);
+  const allSame = lastTwo.length === 2 && lastTwo[0] === lastTwo[1];
+
+  // Score each question: primary = closeness to theta, secondary = domain variety
+  let best = null;
+  let bestScore = Infinity;
+  for (const q of available) {
+    const dist = Math.abs(q.difficulty - placementTheta);
+    // Penalize if this would be 3rd consecutive same domain
+    const domainPenalty = (allSame && q.domain === lastTwo[0]) ? 2.0 : 0;
+    const score = dist + domainPenalty;
+    if (score < bestScore) {
+      bestScore = score;
+      best = q;
+    }
+  }
+  return best;
+}
+
 function renderPlacementQuestion() {
   if (placementIdx >= 40) { finishPlacementTest(); return; }
 
-  // Find next question from current level's pool
-  const level = PLACEMENT_LEVELS[placementCurrentLevel];
-  let q = null;
-  if (placementPool[level] && placementPool[level].length > 0) {
-    q = placementPool[level].shift();
-  } else {
-    // Try adjacent levels
-    for (let d = 1; d < PLACEMENT_LEVELS.length; d++) {
-      for (const dir of [1, -1]) {
-        const idx = placementCurrentLevel + d * dir;
-        if (idx >= 0 && idx < PLACEMENT_LEVELS.length) {
-          const lv = PLACEMENT_LEVELS[idx];
-          if (placementPool[lv] && placementPool[lv].length > 0) {
-            q = placementPool[lv].shift();
-            break;
-          }
-        }
-      }
-      if (q) break;
-    }
-  }
+  const q = selectNextIRTQuestion();
   if (!q) { finishPlacementTest(); return; }
 
+  placementUsedIds.add(q.id);
   // Store current question for answer checking
-  placementPool._current = q;
+  placementQuestions._current = q;
 
   // Update UI
+  const estimatedLevel = thetaToLevel(placementTheta);
   document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 40`;
   const pct = Math.round(((placementIdx) / 40) * 100);
   document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
-  document.getElementById('pt-level-badge').textContent = `${t('testingLevel')} ${level}`;
-  document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[level]?.color || 'var(--accent)';
+  document.getElementById('pt-level-badge').textContent = `${t('testingLevel')} ${estimatedLevel}`;
+  document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[estimatedLevel]?.color || 'var(--accent)';
   document.getElementById('pt-next').style.display = 'none';
 
   const container = document.getElementById('pt-container');
@@ -2171,7 +2244,7 @@ function submitPlacementMC() {
   const selectedBtn = document.querySelector('#pt-container .quiz-option.selected');
   if (!selectedBtn) return;
   const idx = parseInt(selectedBtn.dataset.idx);
-  const q = placementPool._current;
+  const q = placementQuestions._current;
   if (!q) return;
   const selected = q.options[idx];
   const isCorrect = selected === q.answer;
@@ -2191,7 +2264,7 @@ function submitPlacementMC() {
 }
 
 function submitPlacementFIB() {
-  const q = placementPool._current;
+  const q = placementQuestions._current;
   if (!q) return;
   const input = document.getElementById('pt-fib-input');
   if (!input) return;
@@ -2218,48 +2291,76 @@ function submitPlacementFIB() {
   document.getElementById('pt-next').style.display = 'flex';
 }
 
-function recordPlacementAnswer(q, isCorrect) {
-  placementLevelTotals[q.level]++;
-  if (isCorrect) {
-    placementScore++;
-    placementLevelScores[q.level]++;
-  }
-  placementLastCorrect = isCorrect;
+// Rasch model probability: P(correct | theta, difficulty)
+function irtProb(theta, difficulty) {
+  return 1 / (1 + Math.exp(-(theta - difficulty)));
+}
 
-  // Adaptive: track consecutive correct/wrong
-  if (isCorrect) {
-    placementConsecutive = placementConsecutive >= 0 ? placementConsecutive + 1 : 1;
-  } else {
-    placementConsecutive = placementConsecutive <= 0 ? placementConsecutive - 1 : -1;
+// Convert theta to CEFR level
+function thetaToLevel(theta) {
+  if (theta < 1.8) return 'A1';
+  if (theta < 2.7) return 'A2';
+  if (theta < 3.5) return 'B1';
+  if (theta < 4.3) return 'B2';
+  if (theta < 5.2) return 'C1';
+  return 'C2';
+}
+
+// Newton-Raphson MLE update for theta after each answer
+function updateTheta() {
+  if (placementHistory.length === 0) return;
+
+  let theta = placementTheta;
+  // Run a few iterations of Newton-Raphson
+  for (let iter = 0; iter < 10; iter++) {
+    let num = 0;   // sum of (x_i - P_i)
+    let den = 0;   // sum of P_i * (1 - P_i)
+    for (const h of placementHistory) {
+      const p = irtProb(theta, h.difficulty);
+      num += (h.correct ? 1 : 0) - p;
+      den += p * (1 - p);
+    }
+    if (den < 0.001) break;  // avoid division by near-zero
+    const step = num / den;
+    theta += step;
+    // Clamp theta to reasonable range
+    theta = Math.max(0.5, Math.min(7.0, theta));
+    if (Math.abs(step) < 0.01) break;  // converged
   }
+
+  placementTheta = theta;
+
+  // Update standard error: SE = 1 / sqrt(sum of P_i * (1 - P_i))
+  let info = 0;
+  for (const h of placementHistory) {
+    const p = irtProb(placementTheta, h.difficulty);
+    info += p * (1 - p);
+  }
+  placementSE = info > 0 ? 1 / Math.sqrt(info) : 2.0;
+}
+
+function recordPlacementAnswer(q, isCorrect) {
+  placementHistory.push({
+    difficulty: q.difficulty || LEVEL_DIFFICULTY[q.level] || 3.0,
+    correct: isCorrect,
+    domain: q.domain,
+    level: q.level,
+  });
+  placementLastDomains.push(q.domain);
+
+  // Update theta estimate
+  updateTheta();
   savePlacementState();
 }
 
 function nextPlacementQuestion() {
-  // Adaptive level adjustment
-  if (placementConsecutive >= 2 && placementCurrentLevel < PLACEMENT_LEVELS.length - 1) {
-    placementCurrentLevel++;
-    placementConsecutive = 0;
-  } else if (placementConsecutive <= -2 && placementCurrentLevel > 0) {
-    placementCurrentLevel--;
-    placementConsecutive = 0;
-  }
-
   placementIdx++;
   savePlacementState();
   renderPlacementQuestion();
 }
 
 function determinePlacementLevel() {
-  let level = 'A1';
-  for (const lv of PLACEMENT_LEVELS) {
-    if (placementLevelTotals[lv] >= 2 && placementLevelScores[lv] / placementLevelTotals[lv] >= 0.6) {
-      level = lv;
-    } else {
-      break;
-    }
-  }
-  return level;
+  return thetaToLevel(placementTheta);
 }
 
 function seedMatureFsrs(store, key) {
@@ -2317,13 +2418,32 @@ function finishPlacementTest() {
   document.getElementById('ptr-level').style.background = info.color;
   document.getElementById('ptr-level-name').textContent = info.name;
 
-  // Breakdown
+  // IRT-based breakdown: show per-level accuracy from history
+  const levelStats = {};
+  for (const lv of PLACEMENT_LEVELS) levelStats[lv] = { correct: 0, total: 0 };
+  for (const h of placementHistory) {
+    if (levelStats[h.level]) {
+      levelStats[h.level].total++;
+      if (h.correct) levelStats[h.level].correct++;
+    }
+  }
+
   let breakdownHtml = '';
+  // Show ability estimate and confidence
+  const thetaRounded = Math.round(placementTheta * 100) / 100;
+  const seRounded = Math.round(placementSE * 100) / 100;
+  const totalCorrect = placementHistory.filter(h => h.correct).length;
+  breakdownHtml += `
+    <div style="text-align:center;margin-bottom:0.75rem;font-size:0.85rem;color:var(--text-muted)">
+      Ability: <strong>${thetaRounded}</strong> ± ${seRounded}
+      &nbsp;|&nbsp; ${totalCorrect}/${placementHistory.length} correct
+    </div>
+  `;
+
   for (const lv of PLACEMENT_LEVELS) {
-    const sc = placementLevelScores[lv] || 0;
-    const tot = placementLevelTotals[lv] || 0;
+    const sc = levelStats[lv].correct;
+    const tot = levelStats[lv].total;
     const pct = tot > 0 ? Math.round((sc / tot) * 100) : 0;
-    const passed = tot >= 2 && sc / tot >= 0.6;
     const lvInfo = (typeof GRAMMAR_LEVELS !== 'undefined' ? GRAMMAR_LEVELS[lv] : null) || { color: '#888' };
     breakdownHtml += `
       <div class="placement-breakdown-row">
@@ -2331,7 +2451,7 @@ function finishPlacementTest() {
         <div class="placement-breakdown-bar">
           <div class="placement-breakdown-fill" style="width:${pct}%;background:${lvInfo.color}"></div>
         </div>
-        <span class="placement-breakdown-score">${sc}/${tot}${passed ? ' ✓' : ''}</span>
+        <span class="placement-breakdown-score">${tot > 0 ? sc + '/' + tot : '—'}</span>
       </div>
     `;
   }
