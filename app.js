@@ -2563,26 +2563,28 @@ document.addEventListener('keydown', e => {
       else checkVerbDrill();
       e.preventDefault();
     }
-    if (document.getElementById('screen-verb-quiz')?.classList.contains('active')) {
-      const fibInput = document.getElementById('vq-fib-input');
-      if (fibInput && document.activeElement === fibInput) {
-        submitVerbQuizFIB();
+    // Enter to advance or submit on quiz screens
+    const quizScreens = [
+      { screen: 'verb-quiz', next: 'vq-next', fib: 'vq-fib-input', submitFn: submitVerbQuizFIB, nextFn: nextVerbQuiz },
+      { screen: 'vocab-quiz', next: 'vocq-next', fib: null, submitFn: null, nextFn: () => { vocabQuizIdx++; renderVocabQuiz(); } },
+      { screen: 'grammar-quiz', next: 'gq-next', fib: 'gq-fib-input', submitFn: submitGrammarFIB, nextFn: nextGrammarQuiz },
+      { screen: 'culture-quiz', next: 'cq-next', fib: null, submitFn: null, nextFn: nextCultureQuiz },
+      { screen: 'placement', next: 'pt-next', fib: 'pt-fib-input', submitFn: submitPlacementFIB, nextFn: nextPlacementQuestion },
+    ];
+    for (const qs of quizScreens) {
+      if (!document.getElementById('screen-' + qs.screen)?.classList.contains('active')) continue;
+      const nextBtn = document.getElementById(qs.next);
+      if (nextBtn && nextBtn.style.display !== 'none') {
+        qs.nextFn();
         e.preventDefault();
+      } else if (qs.fib && qs.submitFn) {
+        const fibInput = document.getElementById(qs.fib);
+        if (fibInput && document.activeElement === fibInput) {
+          qs.submitFn();
+          e.preventDefault();
+        }
       }
-    }
-    if (document.getElementById('screen-grammar-quiz')?.classList.contains('active')) {
-      const fibInput = document.getElementById('gq-fib-input');
-      if (fibInput && document.activeElement === fibInput) {
-        submitGrammarFIB();
-        e.preventDefault();
-      }
-    }
-    if (document.getElementById('screen-placement')?.classList.contains('active')) {
-      const fibInput = document.getElementById('pt-fib-input');
-      if (fibInput && document.activeElement === fibInput) {
-        submitPlacementFIB();
-        e.preventDefault();
-      }
+      break;
     }
     // Enter to create profile
     if (document.getElementById('modal-overlay').classList.contains('open')) {

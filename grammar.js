@@ -308,7 +308,7 @@ const GRAMMAR_DATA = [
 <p>Placement: <strong>before</strong> conjugated verbs, or <strong>attached</strong> to infinitives/gerunds: <em>Quiero <strong>verlo</strong></em> = <em><strong>Lo</strong> quiero ver</em>.</p>`,
     quiz: [
       { type: "fib", question: "¿El libro? ___ leo cada noche. (I read it)", answer: "Lo", options: null, explanation: "El libro (masculine) → lo: Lo leo." },
-      { type: "mc", question: "Where do DOPs go with conjugated verbs?", answer: "Before the verb", options: ["After the verb","Before the verb","Either position","Attached to the verb"], explanation: "DOPs go before conjugated verbs: Lo compro." },
+      { type: "mc", question: "Where do direct object pronouns (lo, la, los, las) go with conjugated verbs?", answer: "Before the verb", options: ["After the verb","Before the verb","Either position","Attached to the verb"], explanation: "Direct object pronouns go before conjugated verbs: Lo compro." },
       { type: "fib", question: "¿Las flores? ___ compré ayer.", answer: "Las", options: null, explanation: "Las flores (feminine plural) → las." },
       { type: "mc", question: "'Quiero verla' — where is the pronoun?", answer: "Attached to the infinitive", options: ["Before quiero","Attached to the infinitive","Between the verbs","After both verbs"], explanation: "Pronouns can attach to infinitives: ver + la = verla." },
       { type: "fib", question: "Ella ___ llama todos los días. (me)", answer: "me", options: null, explanation: "She calls me → Ella me llama." }
@@ -317,16 +317,16 @@ const GRAMMAR_DATA = [
   {
     id: "gram-17", title: "Pronombres de objeto indirecto", titleEn: "Indirect Object Pronouns", level: "A2", order: 17,
     content: `<h3>Indirect Object Pronouns</h3>
-<table><tr><th>Person</th><th>IOP</th><th>Example</th></tr>
+<table><tr><th>Person</th><th>Pronoun</th><th>Example</th></tr>
 <tr><td>to me</td><td><strong>me</strong></td><td>Me da el libro. (He gives me the book.)</td></tr>
 <tr><td>to you (tú)</td><td><strong>te</strong></td><td>Te digo la verdad. (I tell you the truth.)</td></tr>
 <tr><td>to him/her/you</td><td><strong>le</strong></td><td>Le escribo una carta. (I write him/her a letter.)</td></tr>
 <tr><td>to us</td><td><strong>nos</strong></td><td>Nos enseña español. (She teaches us Spanish.)</td></tr>
 <tr><td>to them/you all</td><td><strong>les</strong></td><td>Les compro regalos. (I buy them gifts.)</td></tr></table>
-<p>IOPs indicate to/for whom an action is done. Use <em>a + name/pronoun</em> for clarity: <em><strong>Le</strong> doy el libro <strong>a María</strong></em>.</p>`,
+<p>These pronouns indicate <strong>to/for whom</strong> an action is done. Use <em>a + name/pronoun</em> for clarity: <em><strong>Le</strong> doy el libro <strong>a María</strong></em>.</p>`,
     quiz: [
       { type: "fib", question: "___ doy un regalo a mi mamá.", answer: "Le", options: null, explanation: "To her (a mi mamá) → le." },
-      { type: "mc", question: "IOPs answer which question?", answer: "To/for whom?", options: ["What?","To/for whom?","Where?","How?"], explanation: "Indirect objects answer 'to whom' or 'for whom'." },
+      { type: "mc", question: "In 'Le doy un libro', what does 'le' tell us?", answer: "To/for whom the action is done", options: ["What is given","To/for whom the action is done","Where it happens","How it is done"], explanation: "Indirect object pronouns tell us to whom or for whom: le = to him/her." },
       { type: "fib", question: "El profesor ___ explica la lección. (to us)", answer: "nos", options: null, explanation: "To us → nos." },
       { type: "mc", question: "Why add 'a María' if we already have 'le'?", answer: "To clarify who 'le' refers to", options: ["It's required grammar","To clarify who 'le' refers to","For emphasis only","It's optional decoration"], explanation: "'Le' is ambiguous (him/her/you), so 'a + person' clarifies." },
       { type: "fib", question: "¿___ puedes prestar tu carro? (to me)", answer: "Me", options: null, explanation: "To me → me: ¿Me puedes prestar?" }
@@ -571,17 +571,17 @@ const GRAMMAR_DATA = [
   {
     id: "gram-30", title: "Pronombres de doble objeto", titleEn: "Double Object Pronouns", level: "B1", order: 30,
     content: `<h3>Double Object Pronouns</h3>
-<p>When both indirect (IOP) and direct (DOP) object pronouns appear, IOP comes first:</p>
-<p><strong>Order: IOP + DOP + verb</strong></p>
-<p><em>Me lo da.</em> (He gives it to me.) — me (IOP) + lo (DOP)</p>
+<p>When both an indirect and direct object pronoun appear, the indirect comes first:</p>
+<p><strong>Order: indirect + direct + verb</strong></p>
+<p><em>Me lo da.</em> (He gives it to me.) — me (indirect) + lo (direct)</p>
 <p><strong>Important rule:</strong> When both pronouns start with "l" (le/les + lo/la/los/las), change le/les to <strong>se</strong>:</p>
 <p><em>Le lo doy</em> → <strong>Se lo doy.</strong> (I give it to him/her.)</p>
 <p>With infinitives and gerunds, pronouns can attach: <em>Quiero dárselo</em> or <em>Se lo quiero dar</em>.</p>`,
     quiz: [
       { type: "mc", question: "'I give it (m.) to her' = ", answer: "Se lo doy", options: ["Le lo doy","Se lo doy","La lo doy","Lo se doy"], explanation: "Le + lo → se lo: Se lo doy." },
-      { type: "fib", question: "¿La tarea? ___ ___ entrego mañana. (to you, it)", answer: "Te la", options: null, explanation: "IOP (te) + DOP (la) = Te la entrego." },
-      { type: "mc", question: "Why does 'le lo' become 'se lo'?", answer: "Two L-pronouns together are hard to pronounce", options: ["It's a grammar error","Two L-pronouns together are hard to pronounce","'Le' doesn't exist","Only in formal speech"], explanation: "When IOP (le/les) meets DOP (lo/la/los/las), le/les → se for phonetic ease." },
-      { type: "mc", question: "What is the correct order?", answer: "IOP before DOP", options: ["DOP before IOP","IOP before DOP","Either order","Alphabetical"], explanation: "Always IOP + DOP: me lo, te la, se los." },
+      { type: "fib", question: "¿La tarea? ___ ___ entrego mañana. (to you, it)", answer: "Te la", options: null, explanation: "te (to you) + la (it, fem.) = Te la entrego." },
+      { type: "mc", question: "Why does 'le lo doy' become 'se lo doy'?", answer: "Two L-pronouns together are hard to pronounce", options: ["It's a grammar error","Two L-pronouns together are hard to pronounce","'Le' doesn't exist","Only in formal speech"], explanation: "When le/les meets lo/la/los/las, le/les changes to se for phonetic ease." },
+      { type: "mc", question: "In 'Te lo doy' (I give it to you), which pronoun comes first?", answer: "The indirect (te — to you)", options: ["The direct (lo — it)","The indirect (te — to you)","Either can come first","It depends on the verb"], explanation: "Indirect always comes before direct: me lo, te la, se los." },
       { type: "fib", question: "¿Los libros? ___ ___ presté ayer. (to them, them)", answer: "Se los", options: null, explanation: "Les + los → se los: Se los presté." }
     ]
   },

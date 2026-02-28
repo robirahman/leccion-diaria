@@ -400,10 +400,10 @@ input:focus, select:focus, textarea:focus {
   transition: all var(--transition);
 }
 .quiz-option:hover:not(.disabled) { border-color: var(--accent); background: var(--accent-bg); }
-.quiz-option.correct { border-color: var(--green); background: var(--green-bg); }
-.quiz-option.incorrect { border-color: var(--red); background: var(--red-bg); }
 .quiz-option.selected { border-color: var(--accent); background: var(--accent-bg); }
 .quiz-option.disabled { cursor: default; opacity: 0.7; }
+.quiz-option.correct { border-color: var(--green); background: var(--green-bg); }
+.quiz-option.incorrect { border-color: var(--red); background: var(--red-bg); }
 
 .quiz-input-row {
   display: flex;
