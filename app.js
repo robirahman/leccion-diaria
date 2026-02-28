@@ -72,6 +72,8 @@ const UI_STRINGS = {
   verbQuiz: ['Verb Quiz', 'Prueba de verbos'],
   mcAndFib: ['Multiple choice & fill-in-blank', 'Opción múltiple y completar'],
   verbBrowser: ['Verb Browser', 'Explorar verbos'],
+  irregularPatterns: ['Irregular Patterns', 'Patrones irregulares'],
+  practiceByPattern: ['Practice verbs grouped by pattern', 'Practica verbos agrupados por patrón'],
   browseVerbs: ['Browse all verbs and conjugation tables', 'Ver todos los verbos y tablas de conjugación'],
 
   // Numbers screen
@@ -513,6 +515,8 @@ function applyDisplayMode() {
     ['[data-action="start-verb-drill"] .card-subtitle', 'typeCorrectConj'],
     ['[data-action="start-verb-quiz"] .card-title', 'verbQuiz'],
     ['[data-action="start-verb-quiz"] .card-subtitle', 'mcAndFib'],
+    ['[data-action="open-verb-patterns"] .card-title', 'irregularPatterns'],
+    ['[data-action="open-verb-patterns"] .card-subtitle', 'practiceByPattern'],
     ['[data-action="open-verb-browser"] .card-title', 'verbBrowser'],
     ['[data-action="open-verb-browser"] .card-subtitle', 'browseVerbs'],
     ['[data-action="start-number-learn"] .card-title', 'learnNumbers'],
@@ -885,6 +889,91 @@ let verbQuizQueue = [];
 let verbQuizIdx = 0;
 let verbQuizScore = 0;
 
+// ── Verb Pattern Metadata ──
+const VERB_PATTERNS = {
+  'e-ie': {
+    label: 'e → ie', labelEs: 'e → ie',
+    desc: 'Stem-changing: e → ie in stressed syllables',
+    descEs: 'Cambio de raíz: e → ie en sílabas acentuadas',
+    filter: v => v.stemChange === 'e>ie',
+    tenses: ['present', 'subjunctive_present'],
+    hint: (v) => `${v.infinitive}: e→ie in stressed syllables. Nosotros/vosotros keep "e".`,
+  },
+  'o-ue': {
+    label: 'o → ue', labelEs: 'o → ue',
+    desc: 'Stem-changing: o → ue in stressed syllables',
+    descEs: 'Cambio de raíz: o → ue en sílabas acentuadas',
+    filter: v => v.stemChange === 'o>ue',
+    tenses: ['present', 'subjunctive_present'],
+    hint: (v) => `${v.infinitive}: o→ue in stressed syllables. Nosotros/vosotros keep "o".`,
+  },
+  'e-i': {
+    label: 'e → i', labelEs: 'e → i',
+    desc: 'Stem-changing: e → i (all -ir verbs)',
+    descEs: 'Cambio de raíz: e → i (verbos en -ir)',
+    filter: v => v.stemChange === 'e>i',
+    tenses: ['present', 'preterite', 'subjunctive_present'],
+    hint: (v) => `${v.infinitive}: e→i. Unlike e→ie, this also changes in preterite (3rd person).`,
+  },
+  'go-verbs': {
+    label: 'Yo "go"', labelEs: 'Yo "go"',
+    desc: 'Irregular yo form ending in -go',
+    descEs: 'Forma irregular de yo terminada en -go',
+    filter: v => ['tener','hacer','poner','salir','venir','decir','traer','caer','oír'].includes(v.infinitive),
+    tenses: ['present', 'subjunctive_present'],
+    hint: (v) => `${v.infinitive}: irregular yo form (-go). The "go" carries into all subjunctive forms.`,
+  },
+  'fully-irregular': {
+    label: 'Fully Irregular', labelEs: 'Completamente irregulares',
+    desc: 'ser, estar, ir, haber — unique conjugation patterns',
+    descEs: 'ser, estar, ir, haber — patrones únicos',
+    filter: v => ['ser','estar','ir','haber'].includes(v.infinitive),
+    tenses: ['present', 'preterite', 'imperfect', 'subjunctive_present'],
+    hint: (v) => `${v.infinitive}: fully irregular — must be memorized.`,
+  },
+  'irregular-stems': {
+    label: 'Irregular Future/Cond.', labelEs: 'Futuro/Cond. irregular',
+    desc: 'Irregular stems in future and conditional tenses',
+    descEs: 'Raíces irregulares en futuro y condicional',
+    filter: v => ['tener','poder','saber','hacer','decir','salir','venir','poner','querer','haber'].includes(v.infinitive),
+    tenses: ['future', 'conditional'],
+    hint: (v) => {
+      const stems = {tener:'tendr-',poder:'podr-',saber:'sabr-',hacer:'har-',decir:'dir-',salir:'saldr-',venir:'vendr-',poner:'pondr-',querer:'querr-',haber:'habr-'};
+      return `${v.infinitive}: irregular stem "${stems[v.infinitive] || '?'}" in future/conditional.`;
+    },
+  },
+};
+
+// Get a teaching hint for a verb/tense combination
+function getVerbHint(verb, tense) {
+  if (!verb) return '';
+  if (verb.type === 'regular') return `Regular -${verb.group} verb.`;
+  // Check stem change
+  if (verb.stemChange) {
+    const pattern = verb.stemChange.replace('>', '→');
+    if (['present', 'subjunctive_present'].includes(tense)) {
+      return `${verb.infinitive}: stem change ${pattern} in stressed syllables (boot pattern).`;
+    }
+    if (tense === 'preterite' && verb.stemChange === 'e>i') {
+      return `${verb.infinitive}: e→i also applies in 3rd person preterite.`;
+    }
+  }
+  // Check specific patterns
+  if (['future', 'conditional'].includes(tense)) {
+    const stems = {tener:'tendr-',poder:'podr-',saber:'sabr-',hacer:'har-',decir:'dir-',salir:'saldr-',venir:'vendr-',poner:'pondr-',querer:'querr-',haber:'habr-'};
+    if (stems[verb.infinitive]) return `Irregular stem: ${stems[verb.infinitive]}`;
+  }
+  if (tense === 'preterite' && verb.type === 'irregular') {
+    const pretStems = {tener:'tuv-',estar:'estuv-',hacer:'hic-/hiz-',poder:'pud-',poner:'pus-',saber:'sup-',venir:'vin-',querer:'quis-',decir:'dij-',traer:'traj-',conducir:'conduj-'};
+    if (pretStems[verb.infinitive]) return `Irregular preterite stem: ${pretStems[verb.infinitive]}`;
+  }
+  if (verb.type === 'irregular') return `${verb.infinitive}: irregular — forms must be memorized.`;
+  if (verb.type === 'reflexive') return `Reflexive verb: uses pronoun (me/te/se/nos/os/se).`;
+  return '';
+}
+
+let patternDrillPattern = null; // current pattern key for drill
+
 function renderVerbsHome() {
   const learned = Object.keys(progress.verbMastery).length;
   const total = typeof VERB_DATA !== 'undefined' ? VERB_DATA.length * 6 : 0; // 6 persons
@@ -1013,12 +1102,73 @@ function checkVerbDrill() {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
+  // Show pattern hint for irregular verbs
+  const hint = getVerbHint(item.verb, item.tense);
+  if (hint) {
+    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.8rem">${esc(hint)}</span>`;
+  }
   speak(item.answer);
   document.getElementById('vd-next').style.display = 'flex';
 }
 
 function nextVerbDrill() {
   verbDrillIdx++;
+  renderVerbDrillQuestion();
+}
+
+// ── Verb Pattern Drill ──
+function renderVerbPatterns() {
+  const container = document.getElementById('verb-pattern-cards');
+  if (!container || typeof VERB_DATA === 'undefined') return;
+  document.getElementById('verb-patterns-title').textContent = t('irregularPatterns');
+  document.getElementById('verb-patterns-desc').textContent = t('practiceByPattern');
+  const mode = progress?.settings?.display || 'standard';
+  let html = '';
+  for (const [key, pat] of Object.entries(VERB_PATTERNS)) {
+    const verbs = VERB_DATA.filter(pat.filter);
+    if (verbs.length === 0) continue;
+    const label = mode === 'immersion' ? pat.labelEs : pat.label;
+    const desc = mode === 'immersion' ? pat.descEs : pat.desc;
+    const examples = verbs.slice(0, 4).map(v => v.infinitive).join(', ');
+    html += `
+      <div class="card" data-action="start-pattern-drill" data-pattern="${key}" style="cursor:pointer">
+        <div class="card-title">${esc(label)}</div>
+        <div class="card-subtitle">${esc(desc)}</div>
+        <div class="text-muted text-sm" style="margin-top:0.25rem">${esc(examples)}${verbs.length > 4 ? '...' : ''} (${verbs.length} verbs)</div>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function startPatternDrill(patternKey) {
+  if (typeof VERB_DATA === 'undefined') return;
+  const pattern = VERB_PATTERNS[patternKey];
+  if (!pattern) return;
+  patternDrillPattern = patternKey;
+
+  const verbs = VERB_DATA.filter(pattern.filter);
+  if (verbs.length === 0) return;
+
+  const tenses = pattern.tenses.filter(t => !TENSE_META[t]?.compound);
+  verbDrillQueue = [];
+  const count = Math.min(10, verbs.length * tenses.length);
+  let attempts = 0;
+  while (verbDrillQueue.length < count && attempts < 50) {
+    const verb = pick(verbs);
+    const tense = pick(tenses);
+    const isImperative = tense === 'imperative_aff' || tense === 'imperative_neg';
+    const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
+    const answer = conjugate(verb.infinitive, tense, person);
+    if (!answer || answer === '—' || answer === '?') { attempts++; continue; }
+    verbDrillQueue.push({ verb, tense, person, answer });
+    attempts++;
+  }
+  if (verbDrillQueue.length === 0) return;
+
+  verbDrillIdx = 0;
+  verbDrillScore = 0;
+  showScreen('verb-drill');
   renderVerbDrillQuestion();
 }
 
@@ -1123,6 +1273,16 @@ function submitVerbQuizMC() {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
+  // Show pattern hint
+  const hint = getVerbHint(item.verb, item.tense);
+  if (hint) {
+    const hintDiv = document.createElement('div');
+    hintDiv.className = 'text-muted';
+    hintDiv.style.fontSize = '0.8rem';
+    hintDiv.style.marginTop = '0.5rem';
+    hintDiv.textContent = hint;
+    document.querySelector('#vq-container')?.appendChild(hintDiv);
+  }
   speak(item.correct);
   const submitBtn = document.querySelector('#vq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
@@ -1148,6 +1308,11 @@ function submitVerbQuizFIB() {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
+  // Show pattern hint
+  const hint = getVerbHint(item.verb, item.tense);
+  if (hint) {
+    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.8rem">${esc(hint)}</span>`;
+  }
   speak(item.correct);
   document.getElementById('vq-next').style.display = 'flex';
 }
@@ -1162,19 +1327,30 @@ function renderVerbBrowser(filter = 'all', search = '') {
   if (typeof VERB_DATA === 'undefined') return;
   showScreen('verb-browser');
   let verbs = VERB_DATA;
-  if (filter !== 'all') verbs = verbs.filter(v => v.type === filter);
+  // Support stem-change sub-filters: 'stem-e>ie', 'stem-o>ue', 'stem-e>i'
+  if (filter.startsWith('stem-')) {
+    const sc = filter.replace('stem-', '').replace('-', '>');
+    verbs = verbs.filter(v => v.stemChange === sc);
+  } else if (filter !== 'all') {
+    verbs = verbs.filter(v => v.type === filter);
+  }
   if (search) verbs = verbs.filter(v => v.infinitive.includes(search.toLowerCase()) || v.english.toLowerCase().includes(search.toLowerCase()));
 
   const container = document.getElementById('verb-list-container');
-  container.innerHTML = verbs.map(v => `
-    <div class="verb-item" data-action="show-verb-detail" data-verb="${esc(v.infinitive)}">
-      <div>
-        <span class="verb-name">${esc(v.infinitive)}</span>
-        <span class="verb-eng text-sm text-muted"> — ${esc(v.english)}</span>
+  container.innerHTML = verbs.map(v => {
+    const badge = v.stemChange
+      ? `<span class="verb-type-badge stem-changing">${v.stemChange.replace('>', '→')}</span>`
+      : `<span class="verb-type-badge ${v.type}">${v.type}</span>`;
+    return `
+      <div class="verb-item" data-action="show-verb-detail" data-verb="${esc(v.infinitive)}">
+        <div>
+          <span class="verb-name">${esc(v.infinitive)}</span>
+          <span class="verb-eng text-sm text-muted"> — ${esc(v.english)}</span>
+        </div>
+        ${badge}
       </div>
-      <span class="verb-type-badge ${v.type}">${v.type}</span>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function showVerbDetail(infinitive) {
@@ -2643,6 +2819,8 @@ document.addEventListener('click', e => {
     case 'start-verb-learn': startVerbLearn(); break;
     case 'start-verb-drill': startVerbDrill(); break;
     case 'start-verb-quiz': startVerbQuiz(); break;
+    case 'open-verb-patterns': showScreen('verb-patterns'); renderVerbPatterns(); break;
+    case 'start-pattern-drill': startPatternDrill(target.dataset.pattern || target.closest('[data-pattern]')?.dataset.pattern); break;
     case 'open-verb-browser': renderVerbBrowser(); break;
     case 'flip-verb-card': flipVerbCard(); break;
     case 'rate-verb': rateVerb(parseInt(target.dataset.rating)); break;

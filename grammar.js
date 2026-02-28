@@ -1220,5 +1220,174 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "In Spain, 'apartment' is typically called a _____. (apartamento/piso/departamento)", answer: "piso", options: null, explanation: "Piso (Spain), apartamento/departamento (Latin America)." },
       { type: "mc", question: "Aspiration of /s/ (e.g., 'estos' → 'ehtoh') is common in:", answer: "Caribbean, Andalusia, and Chile", options: ["Northern Spain only","Caribbean, Andalusia, and Chile","All Spanish-speaking countries","Mexico only"], explanation: "S-aspiration is widespread in Caribbean, southern Spain, Chile, and other lowland areas." }
     ]
+  },
+  // ===== Irregular Verbs =====
+  {
+    id: "gram-63", title: "Verbos irregulares en presente", titleEn: "Irregular Present Tense Verbs", level: "A1", order: 63,
+    content: `<h3>Irregular Present Tense Verbs</h3>
+<p>Many of the most common Spanish verbs are irregular in the present tense. Learning their forms is essential because these verbs appear in almost every conversation.</p>
+
+<h4>"Go" Verbs (yo form ends in -go)</h4>
+<p>These verbs are irregular only in the <strong>yo</strong> form — all other forms follow normal patterns (with some stem changes).</p>
+<table><tr><th></th><th>tener</th><th>hacer</th><th>decir</th><th>venir</th><th>poner</th></tr>
+<tr><td><strong>yo</strong></td><td>tengo</td><td>hago</td><td>digo</td><td>vengo</td><td>pongo</td></tr>
+<tr><td><strong>tú</strong></td><td>tienes</td><td>haces</td><td>dices</td><td>vienes</td><td>pones</td></tr>
+<tr><td><strong>él/ella</strong></td><td>tiene</td><td>hace</td><td>dice</td><td>viene</td><td>pone</td></tr>
+<tr><td><strong>nosotros</strong></td><td>tenemos</td><td>hacemos</td><td>decimos</td><td>venimos</td><td>ponemos</td></tr>
+<tr><td><strong>vosotros</strong></td><td>tenéis</td><td>hacéis</td><td>decís</td><td>venís</td><td>ponéis</td></tr>
+<tr><td><strong>ellos</strong></td><td>tienen</td><td>hacen</td><td>dicen</td><td>vienen</td><td>ponen</td></tr></table>
+
+<h4>"Oy" Verbs (yo form ends in -oy)</h4>
+<table><tr><th></th><th>ser</th><th>estar</th><th>ir</th><th>dar</th></tr>
+<tr><td><strong>yo</strong></td><td>soy</td><td>estoy</td><td>voy</td><td>doy</td></tr>
+<tr><td><strong>tú</strong></td><td>eres</td><td>estás</td><td>vas</td><td>das</td></tr>
+<tr><td><strong>él/ella</strong></td><td>es</td><td>está</td><td>va</td><td>da</td></tr>
+<tr><td><strong>nosotros</strong></td><td>somos</td><td>estamos</td><td>vamos</td><td>damos</td></tr>
+<tr><td><strong>vosotros</strong></td><td>sois</td><td>estáis</td><td>vais</td><td>dais</td></tr>
+<tr><td><strong>ellos</strong></td><td>son</td><td>están</td><td>van</td><td>dan</td></tr></table>
+
+<h4>Truly Unique Verbs</h4>
+<table><tr><th></th><th>ver</th><th>saber</th><th>conocer</th></tr>
+<tr><td><strong>yo</strong></td><td>veo</td><td>sé</td><td>conozco</td></tr>
+<tr><td><strong>tú</strong></td><td>ves</td><td>sabes</td><td>conoces</td></tr>
+<tr><td><strong>él/ella</strong></td><td>ve</td><td>sabe</td><td>conoce</td></tr>
+<tr><td><strong>nosotros</strong></td><td>vemos</td><td>sabemos</td><td>conocemos</td></tr>
+<tr><td><strong>vosotros</strong></td><td>veis</td><td>sabéis</td><td>conocéis</td></tr>
+<tr><td><strong>ellos</strong></td><td>ven</td><td>saben</td><td>conocen</td></tr></table>
+<p><strong>Note:</strong> <em>Conocer</em> represents a large group of <strong>-zco</strong> verbs (also: <em>parecer → parezco</em>, <em>traducir → traduzco</em>, <em>producir → produzco</em>).</p>`,
+    quiz: [
+      { type: "fib", question: "Yo ___ español. (ser)", answer: "soy", options: null, explanation: "Ser is an 'oy' verb: yo soy." },
+      { type: "mc", question: "Which is correct for 'I have'?", answer: "tengo", options: ["tiene","tener","tengo","tenemos"], explanation: "Tener is a 'go' verb: yo tengo." },
+      { type: "fib", question: "Ella ___ la verdad. (decir)", answer: "dice", options: null, explanation: "Decir: él/ella dice (stem change e→i plus irregular yo: digo)." },
+      { type: "mc", question: "What is the 'yo' form of hacer?", answer: "hago", options: ["haco","hago","hacio","hizo"], explanation: "Hacer is a 'go' verb: yo hago." },
+      { type: "fib", question: "Nosotros ___ al parque. (ir)", answer: "vamos", options: null, explanation: "Ir is completely irregular: nosotros vamos." }
+    ]
+  },
+  {
+    id: "gram-64", title: "Cambios ortográficos", titleEn: "Spelling-Change Verbs", level: "A2", order: 64,
+    content: `<h3>Spelling-Change Verbs</h3>
+<p>These verbs change their spelling to <strong>preserve the same pronunciation</strong>. They are not truly irregular — the sounds stay the same, but Spanish spelling rules require different letters before certain vowels.</p>
+
+<h4>Why Do Spelling Changes Happen?</h4>
+<p>In Spanish, certain letters change their sound depending on the vowel that follows:</p>
+<ul>
+<li><strong>c</strong> = /k/ before a, o, u — but /θ/ or /s/ before e, i</li>
+<li><strong>g</strong> = /g/ before a, o, u — but /x/ (like "j") before e, i</li>
+<li><strong>z</strong> is almost never written before e or i in Spanish</li>
+</ul>
+<p>So when a conjugation puts a different vowel after the consonant, the spelling must change to keep the original sound.</p>
+
+<h4>Common Spelling Changes</h4>
+<table><tr><th>Change</th><th>When</th><th>Example Verb</th><th>Example Form</th></tr>
+<tr><td><strong>c → qu</strong></td><td>before e</td><td>buscar</td><td>busqué (preterite), busque (subjunctive)</td></tr>
+<tr><td><strong>g → gu</strong></td><td>before e</td><td>pagar</td><td>pagué (preterite), pague (subjunctive)</td></tr>
+<tr><td><strong>z → c</strong></td><td>before e</td><td>empezar</td><td>empecé (preterite), empiece (subjunctive)</td></tr>
+<tr><td><strong>g → j</strong></td><td>before a, o</td><td>coger</td><td>cojo (present), coja (subjunctive)</td></tr>
+<tr><td><strong>gu → gü</strong></td><td>before e</td><td>averiguar</td><td>averigüé (preterite), averigüe (subjunctive)</td></tr>
+<tr><td><strong>i → y</strong></td><td>between vowels</td><td>leer</td><td>leyó, leyeron (preterite)</td></tr></table>
+
+<h4>Examples in Context</h4>
+<ul>
+<li><em>Buscar:</em> Yo busc<strong>o</strong> (present) → Yo bus<strong>qué</strong> (preterite) — keeps the /k/ sound</li>
+<li><em>Pagar:</em> Yo pag<strong>o</strong> (present) → Yo pa<strong>gué</strong> (preterite) — keeps the /g/ sound</li>
+<li><em>Empezar:</em> Yo empie<strong>zo</strong> (present) → Yo empe<strong>cé</strong> (preterite) — z cannot precede e</li>
+<li><em>Coger:</em> Él co<strong>ge</strong> (present) → Yo co<strong>jo</strong> (present) — keeps the /x/ sound before o</li>
+<li><em>Leer:</em> Él le<strong>e</strong> (present) → Él le<strong>yó</strong> (preterite) — unstressed i between vowels becomes y</li>
+</ul>`,
+    quiz: [
+      { type: "fib", question: "Yo ___ ayer. (buscar, preterite)", answer: "busqué", options: null, explanation: "Buscar changes c→qu before e to keep the /k/ sound: busqué." },
+      { type: "mc", question: "Yo ___ el paquete. (coger, present)", answer: "cojo", options: ["cogo","cojo","coja","cogen"], explanation: "Coger changes g→j before o to keep the /x/ sound: yo cojo." },
+      { type: "fib", question: "Ella ___ el libro. (leer, preterite)", answer: "leyó", options: null, explanation: "Leer changes i→y between vowels in the preterite: leyó." },
+      { type: "mc", question: "Why does buscar become 'busqué' and not 'buscé'?", answer: "To keep the hard 'k' sound before 'e'", options: ["It's a random exception","To keep the hard 'k' sound before 'e'","Because it's a stem-changing verb","To match the subjunctive"], explanation: "C before e would sound like /s/ or /θ/, so qu is used to preserve the /k/ sound." },
+      { type: "fib", question: "Yo ___ temprano. (empezar, preterite)", answer: "empecé", options: null, explanation: "Empezar changes z→c before e: empecé (z almost never appears before e in Spanish)." }
+    ]
+  },
+  {
+    id: "gram-65", title: "El imperativo irregular", titleEn: "Irregular Imperatives", level: "B2", order: 65,
+    content: `<h3>Irregular Imperatives</h3>
+<p>Most Spanish imperatives are formed regularly from the present tense, but <strong>eight verbs</strong> have irregular affirmative <strong>tú</strong> imperatives. These are among the most common verbs, so memorizing them is essential.</p>
+
+<h4>The 8 Irregular Affirmative Tú Imperatives</h4>
+<table><tr><th>Infinitive</th><th>Tú (affirmative)</th><th>Example</th></tr>
+<tr><td>decir</td><td><strong>di</strong></td><td>¡Di la verdad! (Tell the truth!)</td></tr>
+<tr><td>hacer</td><td><strong>haz</strong></td><td>¡Haz la tarea! (Do the homework!)</td></tr>
+<tr><td>ir</td><td><strong>ve</strong></td><td>¡Ve a casa! (Go home!)</td></tr>
+<tr><td>poner</td><td><strong>pon</strong></td><td>¡Pon la mesa! (Set the table!)</td></tr>
+<tr><td>salir</td><td><strong>sal</strong></td><td>¡Sal de aquí! (Get out of here!)</td></tr>
+<tr><td>ser</td><td><strong>sé</strong></td><td>¡Sé bueno! (Be good!)</td></tr>
+<tr><td>tener</td><td><strong>ten</strong></td><td>¡Ten cuidado! (Be careful!)</td></tr>
+<tr><td>venir</td><td><strong>ven</strong></td><td>¡Ven aquí! (Come here!)</td></tr></table>
+
+<p><strong>Mnemonic:</strong> "Vin Diesel has ten weapons: <em>sal, pon, ve, di, haz, sé, ten, ven</em>"</p>
+
+<h4>Negative Imperatives Use the Subjunctive</h4>
+<p>All negative tú imperatives use the <strong>present subjunctive</strong> — there are no exceptions:</p>
+<table><tr><th>Affirmative (tú)</th><th>Negative (tú)</th></tr>
+<tr><td>di</td><td>no <strong>digas</strong></td></tr>
+<tr><td>haz</td><td>no <strong>hagas</strong></td></tr>
+<tr><td>ve</td><td>no <strong>vayas</strong></td></tr>
+<tr><td>pon</td><td>no <strong>pongas</strong></td></tr>
+<tr><td>sal</td><td>no <strong>salgas</strong></td></tr>
+<tr><td>sé</td><td>no <strong>seas</strong></td></tr>
+<tr><td>ten</td><td>no <strong>tengas</strong></td></tr>
+<tr><td>ven</td><td>no <strong>vengas</strong></td></tr></table>
+
+<h4>Usted Imperatives</h4>
+<p><strong>Usted</strong> imperatives (both affirmative and negative) always use the subjunctive: <em>diga, haga, vaya, ponga, salga, sea, tenga, venga</em>.</p>`,
+    quiz: [
+      { type: "mc", question: "Tell a friend to come: ¡___!", answer: "Ven", options: ["Viene","Vienes","Ven","Venga"], explanation: "Venir has the irregular tú imperative 'ven'." },
+      { type: "fib", question: "___ la tarea ahora. (hacer, tú imperative)", answer: "Haz", options: null, explanation: "Hacer has the irregular tú imperative 'haz'." },
+      { type: "mc", question: "Tell a friend NOT to go: ¡No ___!", answer: "vayas", options: ["ve","va","vayas","ves"], explanation: "Negative imperatives always use the subjunctive: no vayas (from ir)." },
+      { type: "fib", question: "___ la verdad. (decir, tú imperative)", answer: "Di", options: null, explanation: "Decir has the irregular tú imperative 'di'." },
+      { type: "mc", question: "Which is the tú imperative of poner?", answer: "pon", options: ["pone","ponga","pon","pones"], explanation: "Poner has the irregular tú imperative 'pon'." }
+    ]
+  },
+  {
+    id: "gram-66", title: "Verbos compuestos irregulares", titleEn: "Compound Irregular Verbs", level: "C1", order: 66,
+    content: `<h3>Compound Irregular Verbs</h3>
+<p>When a prefix is added to an irregular verb, the compound verb <strong>inherits all the same irregularities</strong> as the base verb. This means that learning one irregular pattern gives you access to many verbs at once.</p>
+
+<h4>Poner → Compound Verbs</h4>
+<p><em>disponer, proponer, suponer, componer, imponer</em> — all conjugate like poner:</p>
+<table><tr><th>Tense</th><th>poner</th><th>proponer</th><th>disponer</th></tr>
+<tr><td>Present (yo)</td><td>pongo</td><td>propongo</td><td>dispongo</td></tr>
+<tr><td>Preterite (yo)</td><td>puse</td><td>propuse</td><td>dispuse</td></tr>
+<tr><td>Future (yo)</td><td>pondré</td><td>propondré</td><td>dispondré</td></tr></table>
+
+<h4>Venir → Compound Verbs</h4>
+<p><em>prevenir, convenir, intervenir</em></p>
+<table><tr><th>Tense</th><th>venir</th><th>prevenir</th><th>convenir</th></tr>
+<tr><td>Present (yo)</td><td>vengo</td><td>prevengo</td><td>convengo</td></tr>
+<tr><td>Preterite (yo)</td><td>vine</td><td>previne</td><td>convine</td></tr>
+<tr><td>Future (yo)</td><td>vendré</td><td>prevendré</td><td>convendré</td></tr></table>
+
+<h4>Tener → Compound Verbs</h4>
+<p><em>mantener, obtener, contener, sostener</em></p>
+<table><tr><th>Tense</th><th>tener</th><th>mantener</th><th>obtener</th></tr>
+<tr><td>Present (yo)</td><td>tengo</td><td>mantengo</td><td>obtengo</td></tr>
+<tr><td>Preterite (yo)</td><td>tuve</td><td>mantuve</td><td>obtuve</td></tr>
+<tr><td>Future (yo)</td><td>tendré</td><td>mantendré</td><td>obtendré</td></tr></table>
+
+<h4>Hacer → Compound Verbs</h4>
+<p><em>deshacer, rehacer, satisfacer</em></p>
+<table><tr><th>Tense</th><th>hacer</th><th>deshacer</th><th>rehacer</th></tr>
+<tr><td>Present (yo)</td><td>hago</td><td>deshago</td><td>rehago</td></tr>
+<tr><td>Preterite (yo)</td><td>hice</td><td>deshice</td><td>rehice</td></tr>
+<tr><td>Future (yo)</td><td>haré</td><td>desharé</td><td>reharé</td></tr></table>
+
+<h4>Decir → Compound Verbs (with an exception!)</h4>
+<p><em>predecir, contradecir</em></p>
+<table><tr><th>Tense</th><th>decir</th><th>predecir</th><th>contradecir</th></tr>
+<tr><td>Present (yo)</td><td>digo</td><td>predigo</td><td>contradigo</td></tr>
+<tr><td>Preterite (yo)</td><td>dije</td><td>predije</td><td>contradije</td></tr>
+<tr><td>Future (yo)</td><td><strong>diré</strong></td><td><strong>predeciré</strong></td><td><strong>contradeciré</strong></td></tr></table>
+<p><strong>Important exception:</strong> Unlike <em>decir</em> (diré), the compounds <em>predecir</em> and <em>contradecir</em> have a <strong>regular future</strong>: <em>predeciré</em> (NOT *prediré), <em>contradeciré</em> (NOT *contrediré). This is one of the few cases where a compound verb does NOT follow the base verb's pattern.</p>`,
+    quiz: [
+      { type: "fib", question: "Yo ___ una solución. (proponer, present)", answer: "propongo", options: null, explanation: "Proponer conjugates like poner: yo propongo." },
+      { type: "mc", question: "Preterite of mantener (yo):", answer: "mantuve", options: ["mantuvo","mantuve","mantení","mantenió"], explanation: "Mantener conjugates like tener: yo mantuve (like tuve)." },
+      { type: "fib", question: "Ellos ___ mañana. (prevenir, future)", answer: "prevendrán", options: null, explanation: "Prevenir conjugates like venir in the future: prevendré, prevendrás, prevendrá, prevendremos, prevendréis, prevendrán." },
+      { type: "mc", question: "Future of predecir (yo):", answer: "predeciré", options: ["prediré","predigiré","predeciré","predeceré"], explanation: "Unlike decir (diré), predecir has a REGULAR future: predeciré." },
+      { type: "fib", question: "Yo ___ el error. (deshacer, preterite)", answer: "deshice", options: null, explanation: "Deshacer conjugates like hacer: yo deshice (like hice)." }
+    ]
   }
 ];
