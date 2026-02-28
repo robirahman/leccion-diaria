@@ -11,14 +11,18 @@ let progress = null;
 let screenStack = [];
 let activeDropdown = null;
 
-// Placement test state (IRT-based)
+// Placement test state (IRT-based, per-domain)
 let placementQuestions = [];   // flat array of all questions with difficulty
 let placementIdx = 0;
-let placementTheta = 3.0;     // ability estimate (Rasch model), starts ~B1
+let placementThetas = { grammar: 3.0, vocab: 3.0 };  // per-domain ability
 let placementHistory = [];     // [{difficulty, correct, domain}]
-let placementSE = 2.0;        // standard error of theta
+let placementSEs = { grammar: 2.0, vocab: 2.0 };     // per-domain standard error
 let placementUsedIds = new Set();
 let placementLastDomains = []; // track recent domains for variety
+
+// Map question domains to scoring groups
+const DOMAIN_GROUP = { grammar: 'grammar', usage: 'grammar', reading: 'grammar', verb: 'grammar', vocab: 'vocab' };
+function scoringGroup(domain) { return DOMAIN_GROUP[domain] || 'grammar'; }
 
 // ── UI Strings for Display Modes (standard / immersion / hints) ──
 const UI_STRINGS = {
@@ -186,6 +190,11 @@ const UI_STRINGS = {
   grammarDomain: ['Grammar', 'Gramática'],
   vocabDomain: ['Vocabulary', 'Vocabulario'],
   conjDomain: ['Conjugation', 'Conjugación'],
+  usageDomain: ['Usage', 'Uso'],
+  readingDomain: ['Reading', 'Lectura'],
+  grammarLevel: ['Grammar', 'Gramática'],
+  vocabLevel: ['Vocabulary', 'Vocabulario'],
+  correctLabel: ['correct', 'correctas'],
 
   // Profile
   dailySubtitle: ['Your daily Spanish lesson', 'Tu lección diaria de español'],
@@ -219,6 +228,10 @@ const UI_STRINGS = {
     'Based on your results, <strong>%g grammar lessons</strong> and <strong>%v vocabulary words</strong> have been marked as known. You can start learning at the <strong>%l</strong> level!',
     'Según tus resultados, <strong>%g lecciones de gramática</strong> y <strong>%v palabras de vocabulario</strong> se marcaron como conocidas. ¡Puedes empezar a aprender desde el nivel <strong>%l</strong>!'
   ],
+  placementResultMsgDual: [
+    'Grammar through <strong>%gl</strong> (%g lessons) and vocabulary through <strong>%vl</strong> (%v words) have been marked as mastered.',
+    'Gramática hasta <strong>%gl</strong> (%g lecciones) y vocabulario hasta <strong>%vl</strong> (%v palabras) se marcaron como dominados.'
+  ],
 };
 
 // Translation helper — returns appropriate text for the current display mode
@@ -239,6 +252,16 @@ function tBtn(key) {
   const mode = progress?.settings?.display || 'standard';
   if (mode === 'standard') return s[0];
   return s[1];
+}
+
+// Tense label helper: adapts to display mode
+function tenseLabel(meta) {
+  if (!meta) return '';
+  const mode = progress?.settings?.display || 'standard';
+  if (mode === 'immersion') return meta.label;
+  if (mode === 'hints') return meta.label + ' (' + meta.labelEn + ')';
+  // standard: show both for learning
+  return meta.label + ' (' + meta.labelEn + ')';
 }
 
 // ── Default Progress State ──
@@ -960,7 +983,7 @@ function renderVerbDrillQuestion() {
   const item = verbDrillQueue[verbDrillIdx];
   document.getElementById('verb-drill-progress').textContent = `${verbDrillIdx + 1} / ${verbDrillQueue.length}`;
   document.getElementById('vd-question').textContent =
-    `${t('conjugatePrompt')} "${item.verb.infinitive}" (${item.verb.english}) ${t('inThe')} ${TENSE_META[item.tense]?.labelEn || item.tense} ${t('forPerson')} ${PERSON_LABELS[PERSONS[item.person]]}`;
+    `${t('conjugatePrompt')} "${item.verb.infinitive}" (${item.verb.english}) ${t('inThe')} ${tenseLabel(TENSE_META[item.tense]) || item.tense} ${t('forPerson')} ${PERSON_LABELS[PERSONS[item.person]]}`;
   document.getElementById('vd-input').value = '';
   document.getElementById('vd-input').focus();
   document.getElementById('vd-feedback').style.display = 'none';
@@ -1042,7 +1065,7 @@ function renderVerbQuizQuestion() {
   document.getElementById('vq-next').style.display = 'none';
 
   const prompt = `${t('conjugatePrompt')} "${item.verb.infinitive}" (${item.verb.english})<br>
-    <span class="text-muted">${TENSE_META[item.tense]?.labelEn || item.tense} — ${PERSON_LABELS[PERSONS[item.person]]}</span>`;
+    <span class="text-muted">${tenseLabel(TENSE_META[item.tense]) || item.tense} — ${PERSON_LABELS[PERSONS[item.person]]}</span>`;
 
   if (item.type === 'mc') {
     container.innerHTML = `
@@ -1170,7 +1193,7 @@ function showVerbDetail(infinitive) {
     if (!meta) return;
     const forms = conjugateAll(infinitive, tense);
     html += `<div class="card mb-1">
-      <div class="card-title text-sm">${meta.label} (${meta.labelEn})</div>
+      <div class="card-title text-sm">${tenseLabel(meta)}</div>
       <table class="conj-table mt-1">
         ${PERSONS.map((p, i) => `<tr><td style="width:40%">${PERSON_LABELS[p]}</td><td>${forms[i]}</td></tr>`).join('')}
       </table>
@@ -1184,7 +1207,7 @@ function showVerbDetail(infinitive) {
     if (!meta) return;
     const forms = conjugateAll(infinitive, tense);
     html += `<div class="card mb-1">
-      <div class="card-title text-sm">${meta.label} (${meta.labelEn})</div>
+      <div class="card-title text-sm">${tenseLabel(meta)}</div>
       <table class="conj-table mt-1">
         ${PERSONS.map((p, i) => `<tr><td style="width:40%">${PERSON_LABELS[p]}</td><td>${forms[i]}</td></tr>`).join('')}
       </table>
@@ -2002,7 +2025,7 @@ function buildPlacementVerbQs(level, count) {
     if (wrongs.size < 3) return null;
     return {
       domain: 'verb', level, type: 'mc',
-      prompt: `${t('conjugatePrompt')} "<strong>${esc(v.infinitive)}</strong>" (${esc(v.english)})<br><span class="text-muted">${TENSE_META[tense]?.labelEn || tense} — ${PERSON_LABELS[PERSONS[person]]}</span>`,
+      prompt: `${t('conjugatePrompt')} "<strong>${esc(v.infinitive)}</strong>" (${esc(v.english)})<br><span class="text-muted">${tenseLabel(TENSE_META[tense]) || tense} — ${PERSON_LABELS[PERSONS[person]]}</span>`,
       answer: correct,
       options: shuffle([correct, ...wrongs]),
       explanation: `${v.infinitive} → ${correct}`,
@@ -2101,9 +2124,9 @@ function savePlacementState() {
     const state = {
       questions: placementQuestions,
       idx: placementIdx,
-      theta: placementTheta,
+      thetas: placementThetas,
       history: placementHistory,
-      se: placementSE,
+      ses: placementSEs,
       usedIds: [...placementUsedIds],
       lastDomains: placementLastDomains,
       profile: currentProfile,
@@ -2127,9 +2150,15 @@ function restorePlacementTest() {
     }
     placementQuestions = state.questions;
     placementIdx = state.idx;
-    placementTheta = state.theta;
+    // Backward compat: old saved state with single theta
+    if (state.thetas) {
+      placementThetas = state.thetas;
+      placementSEs = state.ses;
+    } else {
+      placementThetas = { grammar: state.theta || 3.0, vocab: state.theta || 3.0 };
+      placementSEs = { grammar: state.se || 2.0, vocab: state.se || 2.0 };
+    }
     placementHistory = state.history;
-    placementSE = state.se;
     placementUsedIds = new Set(state.usedIds);
     placementLastDomains = state.lastDomains;
     showScreen('placement');
@@ -2145,9 +2174,9 @@ function startPlacementTest() {
   closeModal();
   placementQuestions = buildPlacementIRTPool();
   placementIdx = 0;
-  placementTheta = 3.0;  // start at ~B1
+  placementThetas = { grammar: 3.0, vocab: 3.0 };
   placementHistory = [];
-  placementSE = 2.0;
+  placementSEs = { grammar: 2.0, vocab: 2.0 };
   placementUsedIds = new Set();
   placementLastDomains = [];
   savePlacementState();
@@ -2160,19 +2189,34 @@ function selectNextIRTQuestion() {
   const available = placementQuestions.filter(q => !placementUsedIds.has(q.id));
   if (available.length === 0) return null;
 
-  // Prefer questions near theta for maximum information
-  // But also enforce domain variety (don't repeat same domain 3x in a row)
+  // Count questions asked per scoring group so far
+  const counts = { grammar: 0, vocab: 0 };
+  for (const h of placementHistory) counts[scoringGroup(h.domain)]++;
+  const total = placementHistory.length;
+  const remaining = 40 - total;
+
+  // Target ~60% grammar, ~40% vocab for balanced estimates
+  const grammarNeed = Math.max(0, 24 - counts.grammar);
+  const vocabNeed = Math.max(0, 16 - counts.vocab);
+  let preferredGroup = null;
+  if (remaining > 0) {
+    if (vocabNeed >= remaining) preferredGroup = 'vocab';
+    else if (grammarNeed >= remaining) preferredGroup = 'grammar';
+  }
+
+  // Consecutive-domain penalty
   const lastTwo = placementLastDomains.slice(-2);
   const allSame = lastTwo.length === 2 && lastTwo[0] === lastTwo[1];
 
-  // Score each question: primary = closeness to theta, secondary = domain variety
   let best = null;
   let bestScore = Infinity;
   for (const q of available) {
-    const dist = Math.abs(q.difficulty - placementTheta);
-    // Penalize if this would be 3rd consecutive same domain
+    const group = scoringGroup(q.domain);
+    const theta = placementThetas[group];
+    const dist = Math.abs(q.difficulty - theta);
     const domainPenalty = (allSame && q.domain === lastTwo[0]) ? 2.0 : 0;
-    const score = dist + domainPenalty;
+    const quotaPenalty = (preferredGroup && group !== preferredGroup) ? 1.5 : 0;
+    const score = dist + domainPenalty + quotaPenalty;
     if (score < bestScore) {
       bestScore = score;
       best = q;
@@ -2192,7 +2236,7 @@ function renderPlacementQuestion() {
   placementQuestions._current = q;
 
   // Update UI
-  const estimatedLevel = thetaToLevel(placementTheta);
+  const estimatedLevel = thetaToLevel((placementThetas.grammar + placementThetas.vocab) / 2);
   document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 40`;
   const pct = Math.round(((placementIdx) / 40) * 100);
   document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
@@ -2201,7 +2245,7 @@ function renderPlacementQuestion() {
   document.getElementById('pt-next').style.display = 'none';
 
   const container = document.getElementById('pt-container');
-  const domainLabel = q.domain === 'grammar' ? t('grammarDomain') : q.domain === 'vocab' ? t('vocabDomain') : t('conjDomain');
+  const domainLabel = q.domain === 'grammar' ? t('grammarDomain') : q.domain === 'vocab' ? t('vocabDomain') : q.domain === 'usage' ? t('usageDomain') : q.domain === 'reading' ? t('readingDomain') : t('conjDomain');
 
   if (q.type === 'mc' && q.options) {
     container.innerHTML = `
@@ -2310,33 +2354,34 @@ function thetaToLevel(theta) {
 function updateTheta() {
   if (placementHistory.length === 0) return;
 
-  let theta = placementTheta;
-  // Run a few iterations of Newton-Raphson
-  for (let iter = 0; iter < 10; iter++) {
-    let num = 0;   // sum of (x_i - P_i)
-    let den = 0;   // sum of P_i * (1 - P_i)
-    for (const h of placementHistory) {
-      const p = irtProb(theta, h.difficulty);
-      num += (h.correct ? 1 : 0) - p;
-      den += p * (1 - p);
+  // Run Newton-Raphson MLE separately for each scoring group
+  for (const group of ['grammar', 'vocab']) {
+    const items = placementHistory.filter(h => scoringGroup(h.domain) === group);
+    if (items.length === 0) continue;
+
+    let theta = placementThetas[group];
+    for (let iter = 0; iter < 10; iter++) {
+      let num = 0, den = 0;
+      for (const h of items) {
+        const p = irtProb(theta, h.difficulty);
+        num += (h.correct ? 1 : 0) - p;
+        den += p * (1 - p);
+      }
+      if (den < 0.001) break;
+      const step = num / den;
+      theta += step;
+      theta = Math.max(0.5, Math.min(7.0, theta));
+      if (Math.abs(step) < 0.01) break;
     }
-    if (den < 0.001) break;  // avoid division by near-zero
-    const step = num / den;
-    theta += step;
-    // Clamp theta to reasonable range
-    theta = Math.max(0.5, Math.min(7.0, theta));
-    if (Math.abs(step) < 0.01) break;  // converged
-  }
+    placementThetas[group] = theta;
 
-  placementTheta = theta;
-
-  // Update standard error: SE = 1 / sqrt(sum of P_i * (1 - P_i))
-  let info = 0;
-  for (const h of placementHistory) {
-    const p = irtProb(placementTheta, h.difficulty);
-    info += p * (1 - p);
+    let info = 0;
+    for (const h of items) {
+      const p = irtProb(theta, h.difficulty);
+      info += p * (1 - p);
+    }
+    placementSEs[group] = info > 0 ? 1 / Math.sqrt(info) : 2.0;
   }
-  placementSE = info > 0 ? 1 / Math.sqrt(info) : 2.0;
 }
 
 function recordPlacementAnswer(q, isCorrect) {
@@ -2360,39 +2405,46 @@ function nextPlacementQuestion() {
 }
 
 function determinePlacementLevel() {
-  return thetaToLevel(placementTheta);
+  return {
+    grammar: thetaToLevel(placementThetas.grammar),
+    vocab: thetaToLevel(placementThetas.vocab),
+    overall: thetaToLevel((placementThetas.grammar + placementThetas.vocab) / 2),
+  };
 }
 
 function seedMatureFsrs(store, key) {
   store[key] = { s: 30, d: 5, lastRev: Date.now() };
 }
 
-function applyPlacementResults(level) {
-  // Mark grammar lessons as done
+function applyPlacementResults(levels) {
+  const grammarLevel = levels.grammar;
+  const vocabLevel = levels.vocab;
+
+  // Mark grammar lessons as done (uses grammar level)
   if (typeof GRAMMAR_DATA !== 'undefined') {
     GRAMMAR_DATA.forEach(l => {
-      if (levelAtOrBelow(l.level, level)) {
+      if (levelAtOrBelow(l.level, grammarLevel)) {
         progress.grammarDone[l.id] = true;
       }
     });
   }
 
-  // Mark vocab as mastered
+  // Mark vocab as mastered (uses vocab level)
   if (typeof VOCAB_DATA !== 'undefined') {
     VOCAB_DATA.forEach(w => {
-      if (levelAtOrBelow(w.level, level)) {
+      if (levelAtOrBelow(w.level, vocabLevel)) {
         progress.vocabMastery[w.word] = 3;
         seedMatureFsrs(progress.vocabFsrs, w.word);
       }
     });
   }
 
-  // Mark verb forms as mastered
+  // Mark verb forms as mastered (uses grammar level — conjugation is structural)
   if (typeof VERB_DATA !== 'undefined' && typeof TENSE_META !== 'undefined') {
     VERB_DATA.forEach(v => {
-      if (!levelAtOrBelow(v.level, level)) return;
+      if (!levelAtOrBelow(v.level, grammarLevel)) return;
       Object.keys(TENSE_META).forEach(tense => {
-        if (!levelAtOrBelow(TENSE_META[tense].level, level)) return;
+        if (!levelAtOrBelow(TENSE_META[tense].level, grammarLevel)) return;
         for (let p = 0; p < 6; p++) {
           const key = `${v.infinitive}:${tense}:${p}`;
           progress.verbMastery[key] = 3;
@@ -2402,23 +2454,26 @@ function applyPlacementResults(level) {
     });
   }
 
-  progress.placementLevel = level;
+  progress.placementLevel = levels.overall;  // backward compat
+  progress.placementLevels = { grammar: grammarLevel, vocab: vocabLevel };
   progress.placementDate = todayStr();
   saveProgress();
 }
 
 function finishPlacementTest() {
   clearPlacementState();
-  const level = determinePlacementLevel();
-  applyPlacementResults(level);
+  const levels = determinePlacementLevel();
+  applyPlacementResults(levels);
 
   showScreen('placement-results');
-  const info = (typeof GRAMMAR_LEVELS !== 'undefined' ? GRAMMAR_LEVELS[level] : null) || { name: level, color: '#888' };
-  document.getElementById('ptr-level').textContent = level;
+
+  // Overall level badge
+  const info = GRAMMAR_LEVELS?.[levels.overall] || { name: levels.overall, color: '#888' };
+  document.getElementById('ptr-level').textContent = levels.overall;
   document.getElementById('ptr-level').style.background = info.color;
   document.getElementById('ptr-level-name').textContent = info.name;
 
-  // IRT-based breakdown: show per-level accuracy from history
+  // Per-level accuracy from history
   const levelStats = {};
   for (const lv of PLACEMENT_LEVELS) levelStats[lv] = { correct: 0, total: 0 };
   for (const h of placementHistory) {
@@ -2429,14 +2484,31 @@ function finishPlacementTest() {
   }
 
   let breakdownHtml = '';
-  // Show ability estimate and confidence
-  const thetaRounded = Math.round(placementTheta * 100) / 100;
-  const seRounded = Math.round(placementSE * 100) / 100;
+
+  // Per-domain level badges
+  const gInfo = GRAMMAR_LEVELS?.[levels.grammar] || { color: '#888' };
+  const vInfo = GRAMMAR_LEVELS?.[levels.vocab] || { color: '#888' };
+  const gTheta = Math.round(placementThetas.grammar * 100) / 100;
+  const vTheta = Math.round(placementThetas.vocab * 100) / 100;
+  const gSE = Math.round(placementSEs.grammar * 100) / 100;
+  const vSE = Math.round(placementSEs.vocab * 100) / 100;
   const totalCorrect = placementHistory.filter(h => h.correct).length;
+
   breakdownHtml += `
+    <div style="display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem">
+      <div style="text-align:center">
+        <div style="font-size:0.75rem;color:var(--text-muted)">${t('grammarLevel')}</div>
+        <div class="level-badge" style="background:${gInfo.color};display:inline-block;padding:0.25rem 0.75rem;border-radius:0.5rem;color:#fff;font-weight:700;font-size:1.1rem">${levels.grammar}</div>
+        <div style="font-size:0.7rem;color:var(--text-muted)">${gTheta} &plusmn; ${gSE}</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:0.75rem;color:var(--text-muted)">${t('vocabLevel')}</div>
+        <div class="level-badge" style="background:${vInfo.color};display:inline-block;padding:0.25rem 0.75rem;border-radius:0.5rem;color:#fff;font-weight:700;font-size:1.1rem">${levels.vocab}</div>
+        <div style="font-size:0.7rem;color:var(--text-muted)">${vTheta} &plusmn; ${vSE}</div>
+      </div>
+    </div>
     <div style="text-align:center;margin-bottom:0.75rem;font-size:0.85rem;color:var(--text-muted)">
-      Ability: <strong>${thetaRounded}</strong> ± ${seRounded}
-      &nbsp;|&nbsp; ${totalCorrect}/${placementHistory.length} correct
+      ${totalCorrect}/${placementHistory.length} ${t('correctLabel')}
     </div>
   `;
 
@@ -2444,7 +2516,7 @@ function finishPlacementTest() {
     const sc = levelStats[lv].correct;
     const tot = levelStats[lv].total;
     const pct = tot > 0 ? Math.round((sc / tot) * 100) : 0;
-    const lvInfo = (typeof GRAMMAR_LEVELS !== 'undefined' ? GRAMMAR_LEVELS[lv] : null) || { color: '#888' };
+    const lvInfo = GRAMMAR_LEVELS?.[lv] || { color: '#888' };
     breakdownHtml += `
       <div class="placement-breakdown-row">
         <span class="placement-breakdown-label">${lv}</span>
@@ -2457,11 +2529,13 @@ function finishPlacementTest() {
   }
   document.getElementById('ptr-breakdown').innerHTML = breakdownHtml;
 
-  // Message
-  const grammarCount = typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.filter(l => levelAtOrBelow(l.level, level)).length : 0;
-  const vocabCount = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.filter(w => levelAtOrBelow(w.level, level)).length : 0;
+  // Message showing per-domain results
+  const grammarCount = GRAMMAR_DATA?.filter(l => levelAtOrBelow(l.level, levels.grammar)).length || 0;
+  const vocabCount = VOCAB_DATA?.filter(w => levelAtOrBelow(w.level, levels.vocab)).length || 0;
   document.getElementById('ptr-message').innerHTML =
-    t('placementResultMsg').replace('%g', grammarCount).replace('%v', vocabCount).replace('%l', level);
+    t('placementResultMsgDual')
+      .replace('%gl', levels.grammar).replace('%g', grammarCount)
+      .replace('%vl', levels.vocab).replace('%v', vocabCount);
 }
 
 // ════════════════════════════════════════
