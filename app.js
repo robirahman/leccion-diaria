@@ -1961,6 +1961,7 @@ const CULTURE_MODULES = {
   trivia: { data: () => typeof TRIVIA_DATA !== 'undefined' ? TRIVIA_DATA : [], title: 'Trivia', titleEs: 'Trivia' },
   idioms: { data: () => typeof IDIOMS_DATA !== 'undefined' ? IDIOMS_DATA : [], title: 'Idioms', titleEs: 'Modismos' },
   conversations: { data: () => typeof CONVERSATIONS_DATA !== 'undefined' ? CONVERSATIONS_DATA : [], title: 'Conversations', titleEs: 'Conversaciones' },
+  jokes: { data: () => typeof JOKES_DATA !== 'undefined' ? JOKES_DATA : [], title: 'Jokes', titleEs: 'Bromas' },
 };
 
 let currentCultureModule = null;
