@@ -2109,9 +2109,36 @@ function buildPlacementGrammarQs(level, count) {
   });
 }
 
+// Detect English/Spanish cognates — words similar enough to guess without knowing Spanish.
+// Uses normalized Levenshtein distance: cognate if edit distance / max length < 0.35
+function isCognate(spanish, english) {
+  const s = spanish.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const e = english.toLowerCase();
+  if (s === e) return true;
+  const maxLen = Math.max(s.length, e.length);
+  if (maxLen <= 2) return s === e;
+  // Levenshtein distance
+  const dp = Array.from({ length: s.length + 1 }, (_, i) => {
+    const row = new Array(e.length + 1);
+    row[0] = i;
+    return row;
+  });
+  for (let j = 0; j <= e.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= s.length; i++) {
+    for (let j = 1; j <= e.length; j++) {
+      dp[i][j] = s[i-1] === e[j-1] ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    }
+  }
+  return dp[s.length][e.length] / maxLen < 0.35;
+}
+
 function buildPlacementVocabQs(level, count) {
   if (typeof VOCAB_DATA === 'undefined') return [];
-  const words = VOCAB_DATA.filter(w => w.level === level);
+  // Exclude cognates from B1+ — they're trivially guessable at higher levels
+  const levelIdx = LEVEL_ORDER[level] || 0;
+  const words = VOCAB_DATA.filter(w => w.level === level
+    && (levelIdx < 3 || !isCognate(w.word, w.english)));
   if (words.length < 4) return [];
   const picked = pickN(words, count);
   return picked.map(w => {
@@ -2251,7 +2278,13 @@ function buildFreqVocabQuestions(count) {
   for (const v of VOCAB_DATA) vocabByWord[v.word.toLowerCase()] = v;
 
   // Find freq_vocab entries that have corresponding VOCAB_DATA entries
-  const matchable = FREQ_VOCAB.filter(fw => vocabByWord[fw.w.toLowerCase()]);
+  // Exclude cognates from B1+ levels — they're trivially guessable
+  const matchable = FREQ_VOCAB.filter(fw => {
+    const v = vocabByWord[fw.w.toLowerCase()];
+    if (!v) return false;
+    const levelIdx = LEVEL_ORDER[fw.l] || 0;
+    return levelIdx < 3 || !isCognate(fw.w, v.english);
+  });
   if (matchable.length < 10) return [];
 
   // Sample across difficulty levels
@@ -2527,27 +2560,38 @@ function thetaToLevel(theta) {
 }
 
 // Newton-Raphson MLE update for theta after each answer
+// Uses a Bayesian prior (normal, mean=3.0, sd=1.5) to regularize estimates
+// and prevent wild jumps from lucky answers on hard questions.
 function updateTheta() {
   if (placementHistory.length === 0) return;
 
-  // Run Newton-Raphson MLE separately for each scoring group
+  const PRIOR_MEAN = 3.0;  // B1 center
+  const PRIOR_SD = 1.5;    // fairly broad prior
+  const PRIOR_VAR = PRIOR_SD * PRIOR_SD;
+
+  // Run regularized Newton-Raphson separately for each scoring group
   for (const group of ['grammar', 'vocab']) {
     const items = placementHistory.filter(h => scoringGroup(h.domain) === group);
     if (items.length === 0) continue;
 
     let theta = placementThetas[group];
-    for (let iter = 0; iter < 10; iter++) {
+    for (let iter = 0; iter < 20; iter++) {
       let num = 0, den = 0;
       for (const h of items) {
         const p = irtProb(theta, h.difficulty);
         num += (h.correct ? 1 : 0) - p;
         den += p * (1 - p);
       }
+      // Add Bayesian prior: pulls theta toward PRIOR_MEAN
+      num -= (theta - PRIOR_MEAN) / PRIOR_VAR;
+      den += 1 / PRIOR_VAR;
       if (den < 0.001) break;
       const step = num / den;
-      theta += step;
-      theta = Math.max(0.5, Math.min(7.0, theta));
-      if (Math.abs(step) < 0.01) break;
+      // Dampen step: limit to ±1.0 per iteration
+      const dampedStep = Math.max(-1.0, Math.min(1.0, step));
+      theta += dampedStep;
+      theta = Math.max(0.5, Math.min(6.5, theta));
+      if (Math.abs(dampedStep) < 0.005) break;
     }
     placementThetas[group] = theta;
 
@@ -2556,6 +2600,8 @@ function updateTheta() {
       const p = irtProb(theta, h.difficulty);
       info += p * (1 - p);
     }
+    // Include prior information in SE calculation
+    info += 1 / PRIOR_VAR;
     placementSEs[group] = info > 0 ? 1 / Math.sqrt(info) : 2.0;
   }
 }
