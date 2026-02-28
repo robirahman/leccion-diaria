@@ -1053,3 +1053,19 @@ input:focus, select:focus, textarea:focus {
 /* ── Themed Vocab ── */
 .tv-dialogue-line { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.9rem; }
 .tv-speaker { font-weight: 700; color: var(--accent); min-width: 5rem; flex-shrink: 0; }
+
+/* ── Curriculum Tracks ── */
+.track-card { margin-bottom: 0.75rem; transition: transform 0.1s; }
+.track-card:active { transform: scale(0.98); }
+.track-progress-wrap { height: 6px; border-radius: 3px; background: var(--bg3); overflow: hidden; }
+.track-progress-bar { height: 100%; border-radius: 3px; transition: width 0.3s; }
+
+.track-completion-ring { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; background: conic-gradient(var(--clr) calc(var(--pct) * 1%), var(--bg3) 0); position: relative; flex-shrink: 0; }
+.track-completion-ring > span { background: var(--surface); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
+
+.track-module-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-bottom: 1px solid var(--border); transition: background 0.1s; }
+.track-module-item:last-child { border-bottom: none; }
+.track-module-item:active { background: var(--bg3); }
+.track-module-item.completed { opacity: 0.7; }
+.track-module-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.module-type-badge { font-size: 0.65rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }

@@ -4158,6 +4158,139 @@ function submitThemedQuizMC() {
 function nextThemedQuiz() { themedQuizIdx++; renderThemedQuizQuestion(); }
 
 // ════════════════════════════════════════
+//  CURRICULUM TRACKS
+// ════════════════════════════════════════
+
+let currentTrack = null;
+
+function renderTrackList() {
+  if (typeof CURRICULUM_TRACKS === 'undefined') return;
+  const el = document.getElementById('track-list');
+  if (!el) return;
+  el.innerHTML = CURRICULUM_TRACKS.map(track => {
+    const comp = getTrackCompletion(track);
+    return `
+    <div class="card track-card" data-action="open-track-detail" data-id="${esc(track.id)}" style="border-left:4px solid ${track.color};cursor:pointer">
+      <div class="flex align-center gap-1 mb-1">
+        <span style="font-size:1.5rem">${track.icon}</span>
+        <div style="flex:1">
+          <div class="card-title">${esc(track.title)} <span class="text-muted" style="font-weight:400">— ${esc(track.titleEn)}</span></div>
+          <div class="card-subtitle text-xs">${esc(track.level)} · ${esc(track.grammarFocus)}</div>
+        </div>
+      </div>
+      <div class="text-sm text-muted mb-1">${esc(track.description)}</div>
+      <div class="track-progress-wrap">
+        <div class="track-progress-bar" style="width:${comp.percent}%;background:${track.color}"></div>
+      </div>
+      <div class="text-xs text-muted" style="margin-top:0.25rem">${comp.completed}/${comp.total} modules completed</div>
+    </div>`;
+  }).join('');
+}
+
+function openTrackDetail(trackId) {
+  if (typeof CURRICULUM_TRACKS === 'undefined') return;
+  const track = CURRICULUM_TRACKS.find(t => t.id === trackId);
+  if (!track) return;
+  currentTrack = track;
+  showScreen('track-detail');
+
+  const comp = getTrackCompletion(track);
+  document.getElementById('track-header').innerHTML = `
+    <div class="flex align-center gap-1 mb-1">
+      <span style="font-size:2rem">${track.icon}</span>
+      <div style="flex:1">
+        <h2 style="margin:0">${esc(track.title)}</h2>
+        <div class="text-muted text-sm">${esc(track.titleEn)} · ${esc(track.level)}</div>
+      </div>
+      <div class="track-completion-ring" style="--pct:${comp.percent};--clr:${track.color}">
+        <span>${comp.percent}%</span>
+      </div>
+    </div>
+    <div class="text-sm mb-1">${esc(track.description)}</div>
+    <div class="text-xs text-muted mb-2" style="font-style:italic">Grammar focus: ${esc(track.grammarFocus)}</div>
+  `;
+
+  const typeLabels = { vocab: 'Vocab', grammar: 'Grammar', themed: 'Scenario', culture: 'Culture', reading: 'Reading', conversation: 'Convo' };
+  const typeColors = { vocab: '#4CAF50', grammar: '#FF9800', themed: '#2196F3', culture: '#9C27B0', reading: '#795548', conversation: '#E91E63' };
+
+  document.getElementById('track-modules').innerHTML = track.modules.map((mod, i) => {
+    const done = isTrackModuleComplete(mod);
+    const label = typeLabels[mod.type] || mod.type;
+    const color = typeColors[mod.type] || '#666';
+    return `
+    <div class="track-module-item${done ? ' completed' : ''}" data-action="launch-track-module" data-track-id="${esc(track.id)}" data-module-id="${esc(mod.id)}" style="cursor:pointer">
+      <div class="track-module-num" style="background:${done ? track.color : 'var(--surface2)'};color:${done ? '#fff' : 'var(--text2)'}">${i + 1}</div>
+      <div style="flex:1">
+        <div class="text-sm" style="font-weight:500">${esc(mod.title)}</div>
+        <div class="text-xs text-muted">${esc(mod.titleEs)}</div>
+      </div>
+      <span class="module-type-badge" style="background:${color}20;color:${color}">${label}</span>
+      ${done ? '<span style="color:var(--correct);font-size:1.1rem">✓</span>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function isTrackModuleComplete(mod) {
+  if (!progress) return false;
+  switch (mod.type) {
+    case 'grammar':
+      return !!(progress.grammarDone && progress.grammarDone[mod.ref.grammarId]);
+    case 'themed':
+      return !!(progress.themedVocabDone && progress.themedVocabDone[mod.ref.themedId]);
+    case 'reading':
+      return !!(progress.readingMastery && progress.readingMastery[mod.ref.readingId]);
+    case 'culture':
+      return !!(progress.cultureDone && progress.cultureDone[mod.ref.itemId]);
+    case 'vocab': {
+      if (!progress.vocabMastery || typeof VOCAB_DATA === 'undefined') return false;
+      const cat = mod.ref.category;
+      const catWords = VOCAB_DATA.filter(v => v.category === cat);
+      const threshold = Math.min(10, catWords.length);
+      const learned = catWords.filter(v => progress.vocabMastery[v.word]).length;
+      return learned >= threshold;
+    }
+    case 'conversation':
+      return !!(progress.cultureDone && progress.cultureDone[mod.ref.itemId]);
+    default:
+      return false;
+  }
+}
+
+function getTrackCompletion(track) {
+  const total = track.modules.length;
+  const completed = track.modules.filter(m => isTrackModuleComplete(m)).length;
+  return { completed, total, percent: total ? Math.round(completed / total * 100) : 0 };
+}
+
+function launchTrackModule(trackId, moduleId) {
+  if (typeof CURRICULUM_TRACKS === 'undefined') return;
+  const track = CURRICULUM_TRACKS.find(t => t.id === trackId);
+  if (!track) return;
+  const mod = track.modules.find(m => m.id === moduleId);
+  if (!mod) return;
+
+  switch (mod.type) {
+    case 'grammar':
+      openGrammarLesson(mod.ref.grammarId);
+      break;
+    case 'vocab':
+      openVocabCategory(mod.ref.category);
+      break;
+    case 'themed':
+      openThemedDetail(mod.ref.themedId);
+      break;
+    case 'reading':
+      startReading(mod.ref.readingId);
+      break;
+    case 'culture':
+    case 'conversation':
+      currentCultureModule = mod.ref.module;
+      openCultureItem(mod.ref.itemId);
+      break;
+  }
+}
+
+// ════════════════════════════════════════
 //  EVENT DELEGATION
 // ════════════════════════════════════════
 
@@ -4358,6 +4491,15 @@ document.addEventListener('click', e => {
     case 'answer-themed-quiz': answerThemedQuizMC(parseInt(target.dataset.idx)); break;
     case 'submit-themed-quiz-mc': submitThemedQuizMC(); break;
     case 'next-themed-quiz': nextThemedQuiz(); break;
+
+    // Curriculum Tracks
+    case 'open-tracks': renderTrackList(); showScreen('tracks'); break;
+    case 'open-track-detail': openTrackDetail(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
+    case 'launch-track-module': {
+      const el = target.closest('[data-track-id]');
+      if (el) launchTrackModule(el.dataset.trackId, el.dataset.moduleId);
+      break;
+    }
 
     // TTS
     case 'speak': speak(target.dataset.text); break;

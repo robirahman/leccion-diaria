@@ -802,6 +802,7 @@
       <span>Explore</span>
     </button>
     <div class="tab-dropdown" id="explore-dropdown">
+      <button class="dropdown-item" data-action="open-tracks" style="font-weight:600;border-bottom:1px solid var(--border)">📚 Curriculum Tracks</button>
       <button class="dropdown-item" data-action="open-culture" data-module="conversations">Conversations</button>
       <button class="dropdown-item" data-action="open-culture" data-module="recipes">Recipes</button>
       <button class="dropdown-item" data-action="open-culture" data-module="sports">Sports</button>
@@ -813,6 +814,18 @@
       <button class="dropdown-item" data-action="open-culture" data-module="jokes">Jokes</button>
     </div>
   </div>
+</div>
+
+<!-- ════════ CURRICULUM TRACKS ════════ -->
+<div class="screen" id="screen-tracks">
+  <h2 class="mb-2">Curriculum Tracks</h2>
+  <p class="text-muted text-sm mb-2">Structured learning paths from beginner to advanced. Each track builds on the last.</p>
+  <div id="track-list"></div>
+</div>
+
+<div class="screen" id="screen-track-detail">
+  <div id="track-header"></div>
+  <div id="track-modules"></div>
 </div>
 
 <!-- ════════ MODAL ════════ -->
@@ -854,6 +867,7 @@
 <script src="jokes.js"></script>
 <script src="reading.js"></script>
 <script src="themed_vocab.js"></script>
+<script src="curriculum_tracks.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
