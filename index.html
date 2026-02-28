@@ -41,7 +41,7 @@
       <h1 id="today-greeting">¡Buenos días!</h1>
       <p class="date" id="today-date"></p>
     </div>
-    <div class="stat-cards" id="today-stats"></div>
+    <div class="stat-cards" id="today-stats" data-action="open-stats" style="cursor:pointer"></div>
 
     <div class="today-section">
       <h2>Continue Learning</h2>
@@ -83,6 +83,10 @@
     <div class="card" data-action="open-verb-browser" style="cursor:pointer">
       <div class="card-title">Verb Browser</div>
       <div class="card-subtitle">Browse all verbs and conjugation tables</div>
+    </div>
+    <div class="card" data-action="open-verb-reference" style="cursor:pointer">
+      <div class="card-title">Conjugation Reference</div>
+      <div class="card-subtitle">Full conjugation tables for any verb</div>
     </div>
   </div>
 
@@ -192,6 +196,10 @@
     <div class="search-box">
       <span class="search-icon">&#128269;</span>
       <input type="text" id="vocab-search" placeholder="Search vocabulary..." data-action="search-vocab">
+    </div>
+    <div class="card" data-action="open-themed-vocab" style="cursor:pointer;margin-bottom:0.75rem">
+      <div class="card-title">Themed Sets</div>
+      <div class="card-subtitle">Situational vocabulary for real-life scenarios</div>
     </div>
     <div class="card-grid" id="vocab-categories"></div>
   </div>
@@ -349,6 +357,14 @@
     <div class="card" data-action="open-dictation" style="cursor:pointer">
       <div class="card-title">Dictation</div>
       <div class="card-subtitle">Listen and type what you hear</div>
+    </div>
+    <div class="card" data-action="open-reading" style="cursor:pointer">
+      <div class="card-title">Reading Comprehension</div>
+      <div class="card-subtitle">Short passages with comprehension questions</div>
+    </div>
+    <div class="card" data-action="open-pronunciation" style="cursor:pointer">
+      <div class="card-title">Pronunciation Guide</div>
+      <div class="card-subtitle">Spanish sounds, stress rules, and regional variations</div>
     </div>
   </div>
 
@@ -596,13 +612,117 @@
     </div>
   </div>
 
+  <!-- ════════ UNIFIED REVIEW QUEUE ════════ -->
+  <div class="screen" id="screen-review">
+    <div class="quiz-progress" id="rev-progress"></div>
+    <div id="rev-container"></div>
+    <div class="accent-bar" id="rev-accents" style="display:none">
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="á">á</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="é">é</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="í">í</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ó">ó</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ú">ú</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ñ">ñ</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ü">ü</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="¿">¿</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="¡">¡</button>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-review" style="display:none" id="rev-next">Next</button>
+  </div>
+
+  <!-- ════════ VERB CONJUGATION REFERENCE ════════ -->
+  <div class="screen" id="screen-verb-reference">
+    <h2 class="mb-1">Conjugation Reference</h2>
+    <div class="search-box">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="vref-search" placeholder="Search verb...">
+    </div>
+    <div id="vref-suggestions"></div>
+    <div id="vref-content"></div>
+  </div>
+
+  <!-- ════════ READING COMPREHENSION LIST ════════ -->
+  <div class="screen" id="screen-reading-list">
+    <h2 class="mb-2">Reading Comprehension</h2>
+    <div class="flex gap-1 mb-2" id="reading-filters">
+      <button class="btn btn-sm btn-outline active" data-action="filter-reading" data-filter="all">All</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="A1">A1</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="A2">A2</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="B1">B1</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="B2">B2</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="C1">C1</button>
+    </div>
+    <div id="reading-passages"></div>
+  </div>
+
+  <!-- ════════ READING PASSAGE ════════ -->
+  <div class="screen" id="screen-reading">
+    <div class="quiz-progress" id="read-progress"></div>
+    <div class="card">
+      <div class="flex" style="justify-content:space-between;align-items:center">
+        <h3 id="read-title" class="mb-0"></h3>
+        <span class="text-muted text-sm" id="read-level"></span>
+      </div>
+      <div class="reading-passage mt-1" id="read-text"></div>
+      <button class="btn btn-outline btn-sm mt-1" data-action="speak" id="read-speak">&#9654; Listen</button>
+    </div>
+    <div id="read-vocab" class="mt-1"></div>
+    <div class="card mt-1" id="read-question-card">
+      <div class="quiz-question" id="read-question"></div>
+      <div class="quiz-options" id="read-options"></div>
+      <button class="btn btn-primary btn-block mt-1" data-action="submit-reading-mc" id="read-submit" style="display:none">Check</button>
+      <div class="quiz-feedback" id="read-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-reading" style="display:none" id="read-next">Next</button>
+  </div>
+
+  <!-- ════════ THEMED VOCABULARY LIST ════════ -->
+  <div class="screen" id="screen-themed-vocab">
+    <h2 class="mb-2">Themed Vocabulary</h2>
+    <div id="themed-vocab-list"></div>
+  </div>
+
+  <!-- ════════ THEMED VOCABULARY DETAIL ════════ -->
+  <div class="screen" id="screen-themed-detail">
+    <h2 id="tv-title" class="mb-1"></h2>
+    <p class="text-muted text-sm mb-2" id="tv-scenario"></p>
+    <div id="tv-dialogue" class="mb-2"></div>
+    <h3 class="text-sm text-muted mb-1" style="text-transform:uppercase;letter-spacing:0.05em">Key Phrases</h3>
+    <div id="tv-phrases" class="mb-2"></div>
+    <h3 class="text-sm text-muted mb-1" style="text-transform:uppercase;letter-spacing:0.05em">Vocabulary</h3>
+    <div id="tv-vocab" class="mb-2"></div>
+    <button class="btn btn-primary btn-block" data-action="start-themed-quiz">Take Quiz</button>
+  </div>
+
+  <!-- ════════ THEMED VOCABULARY QUIZ ════════ -->
+  <div class="screen" id="screen-themed-quiz">
+    <div class="quiz-progress" id="tvq-progress"></div>
+    <div id="tvq-container"></div>
+    <button class="btn btn-primary btn-block mt-1" data-action="submit-themed-quiz-mc" id="tvq-submit" style="display:none">Check</button>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-themed-quiz" style="display:none" id="tvq-next">Next</button>
+  </div>
+
+  <!-- ════════ PRONUNCIATION GUIDE ════════ -->
+  <div class="screen" id="screen-pronunciation">
+    <h2 class="mb-2">Pronunciation Guide</h2>
+    <div id="pron-content"></div>
+  </div>
+
   <!-- ════════ STATS SCREEN ════════ -->
   <div class="screen" id="screen-stats">
     <h2 class="mb-2">Statistics</h2>
     <div class="stat-cards" id="stats-overview"></div>
-    <div class="card mt-2">
+    <div class="card mt-1">
       <div class="card-title mb-1">Mastery Breakdown</div>
       <div id="stats-mastery"></div>
+    </div>
+    <div class="card mt-1">
+      <div class="card-title mb-1">Category Progress</div>
+      <div id="stats-categories"></div>
+    </div>
+    <div class="card mt-1">
+      <div class="card-title mb-1">Accuracy</div>
+      <div id="stats-accuracy"></div>
     </div>
     <div class="card mt-1">
       <div class="card-title mb-1">Practice Calendar</div>
@@ -711,6 +831,8 @@
 <script src="translation_drills.js"></script>
 <script src="dictation.js"></script>
 <script src="jokes.js"></script>
+<script src="reading.js"></script>
+<script src="themed_vocab.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

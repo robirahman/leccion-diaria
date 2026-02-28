@@ -31,6 +31,7 @@ const TENSE_META = {
   progressive_present: { label: 'Presente Progresivo',  labelEn: 'Present Progressive',  level: 'A2', compound: false, progressive: true, auxTense: 'present' },
   progressive_preterite: { label: 'Pretérito Progresivo', labelEn: 'Preterite Progressive', level: 'B1', compound: false, progressive: true, auxTense: 'preterite' },
   progressive_imperfect: { label: 'Imperfecto Progresivo', labelEn: 'Imperfect Progressive', level: 'B1', compound: false, progressive: true, auxTense: 'imperfect' },
+  future_subjunctive: { label: 'Futuro del Subjuntivo', labelEn: 'Future Subjunctive', level: 'C2', compound: false },
 };
 const TENSES = Object.keys(TENSE_META);
 const SIMPLE_TENSES = TENSES.filter(t => !TENSE_META[t].compound);
@@ -81,6 +82,11 @@ const REGULAR_ENDINGS = {
     ar: ['—', 'es', 'e', 'emos', 'éis', 'en'],
     er: ['—', 'as', 'a', 'amos', 'áis', 'an'],
     ir: ['—', 'as', 'a', 'amos', 'áis', 'an'],
+  },
+  future_subjunctive: {
+    ar: ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+    er: ['iere', 'ieres', 'iere', 'iéremos', 'iereis', 'ieren'],
+    ir: ['iere', 'ieres', 'iere', 'iéremos', 'iereis', 'ieren'],
   },
 };
 
@@ -165,6 +171,7 @@ const FULL_IRREGULARS = {
     imperfect: ['era', 'eras', 'era', 'éramos', 'erais', 'eran'],
     subjunctive_present: ['sea', 'seas', 'sea', 'seamos', 'seáis', 'sean'],
     subjunctive_imperfect: ['fuera', 'fueras', 'fuera', 'fuéramos', 'fuerais', 'fueran'],
+    future_subjunctive: ['fuere', 'fueres', 'fuere', 'fuéremos', 'fuereis', 'fueren'],
     imperative_aff: ['—', 'sé', 'sea', 'seamos', 'sed', 'sean'],
   },
   estar: {
@@ -180,6 +187,7 @@ const FULL_IRREGULARS = {
     imperfect: ['iba', 'ibas', 'iba', 'íbamos', 'ibais', 'iban'],
     subjunctive_present: ['vaya', 'vayas', 'vaya', 'vayamos', 'vayáis', 'vayan'],
     subjunctive_imperfect: ['fuera', 'fueras', 'fuera', 'fuéramos', 'fuerais', 'fueran'],
+    future_subjunctive: ['fuere', 'fueres', 'fuere', 'fuéremos', 'fuereis', 'fueren'],
     imperative_aff: ['—', 've', 'vaya', 'vayamos', 'id', 'vayan'],
   },
   haber: {
@@ -188,12 +196,14 @@ const FULL_IRREGULARS = {
     imperfect: ['había', 'habías', 'había', 'habíamos', 'habíais', 'habían'],
     subjunctive_present: ['haya', 'hayas', 'haya', 'hayamos', 'hayáis', 'hayan'],
     subjunctive_imperfect: ['hubiera', 'hubieras', 'hubiera', 'hubiéramos', 'hubierais', 'hubieran'],
+    future_subjunctive: ['hubiere', 'hubieres', 'hubiere', 'hubiéremos', 'hubiereis', 'hubieren'],
   },
   tener: {
     present: ['tengo', 'tienes', 'tiene', 'tenemos', 'tenéis', 'tienen'],
     preterite: ['tuve', 'tuviste', 'tuvo', 'tuvimos', 'tuvisteis', 'tuvieron'],
     subjunctive_present: ['tenga', 'tengas', 'tenga', 'tengamos', 'tengáis', 'tengan'],
     subjunctive_imperfect: ['tuviera', 'tuvieras', 'tuviera', 'tuviéramos', 'tuvierais', 'tuvieran'],
+    future_subjunctive: ['tuviere', 'tuvieres', 'tuviere', 'tuviéremos', 'tuviereis', 'tuvieren'],
     imperative_aff: ['—', 'ten', 'tenga', 'tengamos', 'tened', 'tengan'],
   },
   hacer: {
