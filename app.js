@@ -314,6 +314,7 @@ function newProgress() {
     settings: {
       display: 'standard', region: 'latam', theme: 'dark', palette: 'alhambra',
       accents: 'warn', ttsRate: 1,
+      hideFutureSubjunctive: true, subjunctiveForm: 'ra',
     },
   };
 }
@@ -490,8 +491,10 @@ function applySettings() {
     else if (act === 'set-region') key = 'region';
     else if (act === 'set-accents') key = 'accents';
     else if (act === 'set-tts-rate') key = 'ttsRate';
+    else if (act === 'set-hideFutureSubjunctive') key = 'hideFutureSubjunctive';
+    else if (act === 'set-subjunctiveForm') key = 'subjunctiveForm';
     if (key) {
-      const current = String(s[key] || '');
+      const current = String(s[key] ?? '');
       pill.classList.toggle('active', val === current);
     }
   });
@@ -703,6 +706,22 @@ function setSetting(key, val) {
   progress.settings[key] = val;
   saveProgress();
   applySettings();
+}
+
+// ── Tense filtering helpers ──
+function getActiveTenses(pool) {
+  let tenses = pool ? [...pool] : Object.keys(TENSE_META);
+  if (progress?.settings?.hideFutureSubjunctive) {
+    tenses = tenses.filter(t => t !== 'future_subjunctive');
+  }
+  return tenses;
+}
+
+function shouldUseSeForm() {
+  const pref = progress?.settings?.subjunctiveForm || 'ra';
+  if (pref === 'se') return true;
+  if (pref === 'both') return Math.random() < 0.5;
+  return false;
 }
 
 // ════════════════════════════════════════
@@ -1055,16 +1074,17 @@ function renderVerbsHome() {
 // ── Verb Learn (Flashcards) ──
 function startVerbLearn() {
   if (typeof VERB_DATA === 'undefined') return;
-  // Use all simple tenses (no compound/progressive for flashcards)
-  const tenses = Object.keys(TENSE_META).filter(t =>
+  // Use all simple tenses (no compound/progressive for flashcards), filtered by settings
+  const tenses = getActiveTenses(Object.keys(TENSE_META).filter(t =>
     !TENSE_META[t].compound && !TENSE_META[t].progressive
-  );
+  ));
   verbLearnQueue = [];
   const verbs = pickN(VERB_DATA, 10);
   verbs.forEach(v => {
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    verbLearnQueue.push({ verb: v, tense, person });
+    const useSeForm = (tense === 'subjunctive_imperfect') && shouldUseSeForm();
+    verbLearnQueue.push({ verb: v, tense, person, useSeForm });
   });
   verbLearnIdx = 0;
   showScreen('verb-learn');
@@ -1086,11 +1106,11 @@ function renderVerbLearnCard() {
   document.getElementById('vl-english').textContent = item.verb.english;
   document.getElementById('vl-prompt').textContent = `${TENSE_META[item.tense]?.label || item.tense} — ${PERSON_LABELS[PERSONS[item.person]]}`;
 
-  const answer = conjugate(item.verb.infinitive, item.tense, item.person);
+  const answer = conjugate(item.verb.infinitive, item.tense, item.person, item.useSeForm);
   document.getElementById('vl-answer').textContent = answer;
 
   // Build mini conjugation table for the back
-  const all = conjugateAll(item.verb.infinitive, item.tense);
+  const all = conjugateAll(item.verb.infinitive, item.tense, item.useSeForm);
   document.getElementById('vl-table').innerHTML = all.map((form, i) =>
     `<div class="${i === item.person ? 'highlight' : ''}" style="font-size:0.85rem">${PERSON_LABELS[PERSONS[i]]}: ${form}</div>`
   ).join('');
@@ -1116,16 +1136,17 @@ function rateVerb(rating) {
 // ── Verb Drill (Typing) ──
 function startVerbDrill() {
   if (typeof VERB_DATA === 'undefined') return;
-  // All simple tenses + progressive for typing drill
-  const tenses = Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound);
+  // All simple tenses + progressive for typing drill, filtered by settings
+  const tenses = getActiveTenses(Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound));
   verbDrillQueue = [];
   for (let i = 0; i < 10; i++) {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    const answer = conjugate(verb.infinitive, tense, person);
+    const useSeForm = (tense === 'subjunctive_imperfect') && shouldUseSeForm();
+    const answer = conjugate(verb.infinitive, tense, person, useSeForm);
     if (!answer || answer === '—' || answer === '?') { i--; continue; }
-    verbDrillQueue.push({ verb, tense, person, answer });
+    verbDrillQueue.push({ verb, tense, person, answer, useSeForm });
   }
   verbDrillIdx = 0;
   verbDrillScore = 0;
@@ -1243,26 +1264,27 @@ function startPatternDrill(patternKey) {
 // ── Verb Quiz (MC + FIB) ──
 function startVerbQuiz() {
   if (typeof VERB_DATA === 'undefined') return;
-  // All tenses including compound and progressive
-  const tenses = Object.keys(TENSE_META);
+  // All tenses including compound and progressive, filtered by settings
+  const tenses = getActiveTenses();
   verbQuizQueue = [];
   for (let i = 0; i < 10; i++) {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    const correct = conjugate(verb.infinitive, tense, person);
+    const useSeForm = (tense === 'subjunctive_imperfect' || (TENSE_META[tense]?.auxTense === 'subjunctive_imperfect')) && shouldUseSeForm();
+    const correct = conjugate(verb.infinitive, tense, person, useSeForm);
     if (!correct || correct === '—' || correct === '?') { i--; continue; }
     // Generate wrong options
     const wrongs = new Set();
     while (wrongs.size < 3) {
       const wv = pick(VERB_DATA);
       const wp = Math.floor(Math.random() * 6);
-      const w = conjugate(wv.infinitive, tense, wp);
+      const w = conjugate(wv.infinitive, tense, wp, useSeForm);
       if (w !== correct && w !== '—' && w !== '?') wrongs.add(w);
     }
     const options = shuffle([correct, ...wrongs]);
     verbQuizQueue.push({
-      verb, tense, person, correct, options,
+      verb, tense, person, correct, options, useSeForm,
       type: Math.random() < 0.5 ? 'mc' : 'fib',
     });
   }
@@ -2272,7 +2294,7 @@ function getVerbQuestionLevel(verb, tense) {
 
 function buildPlacementVerbQs(level, count) {
   if (typeof VERB_DATA === 'undefined' || typeof conjugate === 'undefined') return [];
-  const simpleTenses = Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound);
+  const simpleTenses = getActiveTenses(Object.keys(TENSE_META).filter(t => !TENSE_META[t].compound));
 
   // Build candidates where the effective difficulty matches the requested level
   const candidates = [];
@@ -3735,15 +3757,26 @@ function renderVerbReference(infinitive) {
   const indicative = ['present','preterite','imperfect','future','conditional',
     'present_perfect','pluperfect','future_perfect','conditional_perfect',
     'progressive_present','progressive_preterite','progressive_imperfect'];
-  const subjunctive = ['subjunctive_present','subjunctive_imperfect',
-    'subjunctive_perfect','subjunctive_pluperfect','future_subjunctive'];
+  const subjunctive = getActiveTenses(['subjunctive_present','subjunctive_imperfect',
+    'subjunctive_perfect','subjunctive_pluperfect','future_subjunctive']);
   const imperative = ['imperative_aff','imperative_neg'];
+
+  // Determine -se form preference for reference tables
+  const seFormPref = progress?.settings?.subjunctiveForm || 'ra';
 
   html += '<div class="mood-header mood-indicative">Indicative</div>';
   for (const t of indicative) html += renderRefTenseTable(base, t);
 
   html += '<div class="mood-header mood-subjunctive">Subjunctive</div>';
-  for (const t of subjunctive) html += renderRefTenseTable(base, t);
+  for (const t of subjunctive) {
+    const isSubjImpf = (t === 'subjunctive_imperfect' || t === 'subjunctive_pluperfect');
+    if (isSubjImpf && seFormPref === 'both') {
+      html += renderRefTenseTable(base, t, false);
+      html += renderRefTenseTable(base, t, true);
+    } else {
+      html += renderRefTenseTable(base, t, isSubjImpf && seFormPref === 'se');
+    }
+  }
 
   html += '<div class="mood-header mood-imperative">Imperative</div>';
   for (const t of imperative) html += renderRefTenseTable(base, t);
@@ -3751,14 +3784,15 @@ function renderVerbReference(infinitive) {
   document.getElementById('vref-content').innerHTML = html;
 }
 
-function renderRefTenseTable(infinitive, tense) {
+function renderRefTenseTable(infinitive, tense, useSeForm = false) {
   const meta = TENSE_META[tense];
   if (!meta) return '';
   let forms;
-  try { forms = conjugateAll(infinitive, tense); }
+  try { forms = conjugateAll(infinitive, tense, useSeForm); }
   catch { return ''; }
-  const isIrregular = !!(FULL_IRREGULARS[infinitive] && FULL_IRREGULARS[infinitive][tense]);
-  const label = tenseLabel(meta);
+  const lookupTense = useSeForm ? 'subjunctive_imperfect_se' : tense;
+  const isIrregular = !!(FULL_IRREGULARS[infinitive] && FULL_IRREGULARS[infinitive][lookupTense]);
+  const label = useSeForm ? (tenseLabel(meta) + ' (-se)') : tenseLabel(meta);
   return `<div class="card mb-1">
     <div class="flex" style="justify-content:space-between;align-items:center">
       <div class="card-title text-sm">${label}</div>
@@ -4161,6 +4195,8 @@ document.addEventListener('click', e => {
     case 'set-region': setSetting('region', target.dataset.val); break;
     case 'set-accents': setSetting('accents', target.dataset.val); break;
     case 'set-tts-rate': setSetting('ttsRate', target.dataset.val); break;
+    case 'set-hideFutureSubjunctive': setSetting('hideFutureSubjunctive', target.dataset.val === 'true'); break;
+    case 'set-subjunctiveForm': setSetting('subjunctiveForm', target.dataset.val); break;
     case 'export-progress': exportProgress(); break;
     case 'import-progress': importProgress(); break;
     case 'reset-progress': {

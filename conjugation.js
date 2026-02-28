@@ -12,6 +12,10 @@ const PERSON_LABELS_SHORT = {
   yo: 'yo', tu: 'tú', el: 'él', nosotros: 'nos.', vosotros: 'vos.', ellos: 'ellos'
 };
 
+// NOTE: The pretérito anterior (hube/hubiste/hubo/hubimos/hubisteis/hubieron + participle)
+// is intentionally omitted from this app. It is archaic and virtually unused in modern
+// Spanish, replaced by the pretérito indefinido or pluscuamperfecto in all contexts.
+
 const TENSE_META = {
   present:             { label: 'Presente',              labelEn: 'Present',              level: 'A1', compound: false },
   preterite:           { label: 'Pretérito Indefinido',   labelEn: 'Preterite',            level: 'A2', compound: false },
@@ -73,6 +77,11 @@ const REGULAR_ENDINGS = {
     er: ['iera', 'ieras', 'iera', 'iéramos', 'ierais', 'ieran'],
     ir: ['iera', 'ieras', 'iera', 'iéramos', 'ierais', 'ieran'],
   },
+  subjunctive_imperfect_se: {
+    ar: ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+    er: ['iese', 'ieses', 'iese', 'iésemos', 'ieseis', 'iesen'],
+    ir: ['iese', 'ieses', 'iese', 'iésemos', 'ieseis', 'iesen'],
+  },
   imperative_aff: {
     ar: ['—', 'a', 'e', 'emos', 'ad', 'en'],
     er: ['—', 'e', 'a', 'amos', 'ed', 'an'],
@@ -109,6 +118,7 @@ const HABER = {
   conditional: ['habría', 'habrías', 'habría', 'habríamos', 'habríais', 'habrían'],
   subjunctive_present: ['haya', 'hayas', 'haya', 'hayamos', 'hayáis', 'hayan'],
   subjunctive_imperfect: ['hubiera', 'hubieras', 'hubiera', 'hubiéramos', 'hubierais', 'hubieran'],
+  subjunctive_imperfect_se: ['hubiese', 'hubieses', 'hubiese', 'hubiésemos', 'hubieseis', 'hubiesen'],
 };
 
 const ESTAR = {
@@ -171,6 +181,7 @@ const FULL_IRREGULARS = {
     imperfect: ['era', 'eras', 'era', 'éramos', 'erais', 'eran'],
     subjunctive_present: ['sea', 'seas', 'sea', 'seamos', 'seáis', 'sean'],
     subjunctive_imperfect: ['fuera', 'fueras', 'fuera', 'fuéramos', 'fuerais', 'fueran'],
+    subjunctive_imperfect_se: ['fuese', 'fueses', 'fuese', 'fuésemos', 'fueseis', 'fuesen'],
     future_subjunctive: ['fuere', 'fueres', 'fuere', 'fuéremos', 'fuereis', 'fueren'],
     imperative_aff: ['—', 'sé', 'sea', 'seamos', 'sed', 'sean'],
   },
@@ -179,6 +190,7 @@ const FULL_IRREGULARS = {
     preterite: ['estuve', 'estuviste', 'estuvo', 'estuvimos', 'estuvisteis', 'estuvieron'],
     subjunctive_present: ['esté', 'estés', 'esté', 'estemos', 'estéis', 'estén'],
     subjunctive_imperfect: ['estuviera', 'estuvieras', 'estuviera', 'estuviéramos', 'estuvierais', 'estuvieran'],
+    subjunctive_imperfect_se: ['estuviese', 'estuvieses', 'estuviese', 'estuviésemos', 'estuvieseis', 'estuviesen'],
     imperative_aff: ['—', 'está', 'esté', 'estemos', 'estad', 'estén'],
   },
   ir: {
@@ -187,6 +199,7 @@ const FULL_IRREGULARS = {
     imperfect: ['iba', 'ibas', 'iba', 'íbamos', 'ibais', 'iban'],
     subjunctive_present: ['vaya', 'vayas', 'vaya', 'vayamos', 'vayáis', 'vayan'],
     subjunctive_imperfect: ['fuera', 'fueras', 'fuera', 'fuéramos', 'fuerais', 'fueran'],
+    subjunctive_imperfect_se: ['fuese', 'fueses', 'fuese', 'fuésemos', 'fueseis', 'fuesen'],
     future_subjunctive: ['fuere', 'fueres', 'fuere', 'fuéremos', 'fuereis', 'fueren'],
     imperative_aff: ['—', 've', 'vaya', 'vayamos', 'id', 'vayan'],
   },
@@ -196,6 +209,7 @@ const FULL_IRREGULARS = {
     imperfect: ['había', 'habías', 'había', 'habíamos', 'habíais', 'habían'],
     subjunctive_present: ['haya', 'hayas', 'haya', 'hayamos', 'hayáis', 'hayan'],
     subjunctive_imperfect: ['hubiera', 'hubieras', 'hubiera', 'hubiéramos', 'hubierais', 'hubieran'],
+    subjunctive_imperfect_se: ['hubiese', 'hubieses', 'hubiese', 'hubiésemos', 'hubieseis', 'hubiesen'],
     future_subjunctive: ['hubiere', 'hubieres', 'hubiere', 'hubiéremos', 'hubiereis', 'hubieren'],
   },
   tener: {
@@ -203,6 +217,7 @@ const FULL_IRREGULARS = {
     preterite: ['tuve', 'tuviste', 'tuvo', 'tuvimos', 'tuvisteis', 'tuvieron'],
     subjunctive_present: ['tenga', 'tengas', 'tenga', 'tengamos', 'tengáis', 'tengan'],
     subjunctive_imperfect: ['tuviera', 'tuvieras', 'tuviera', 'tuviéramos', 'tuvierais', 'tuvieran'],
+    subjunctive_imperfect_se: ['tuviese', 'tuvieses', 'tuviese', 'tuviésemos', 'tuvieseis', 'tuviesen'],
     future_subjunctive: ['tuviere', 'tuvieres', 'tuviere', 'tuviéremos', 'tuviereis', 'tuvieren'],
     imperative_aff: ['—', 'ten', 'tenga', 'tengamos', 'tened', 'tengan'],
   },
@@ -211,6 +226,7 @@ const FULL_IRREGULARS = {
     preterite: ['hice', 'hiciste', 'hizo', 'hicimos', 'hicisteis', 'hicieron'],
     subjunctive_present: ['haga', 'hagas', 'haga', 'hagamos', 'hagáis', 'hagan'],
     subjunctive_imperfect: ['hiciera', 'hicieras', 'hiciera', 'hiciéramos', 'hicierais', 'hicieran'],
+    subjunctive_imperfect_se: ['hiciese', 'hicieses', 'hiciese', 'hiciésemos', 'hicieseis', 'hiciesen'],
     imperative_aff: ['—', 'haz', 'haga', 'hagamos', 'haced', 'hagan'],
   },
   poder: {
@@ -218,12 +234,14 @@ const FULL_IRREGULARS = {
     preterite: ['pude', 'pudiste', 'pudo', 'pudimos', 'pudisteis', 'pudieron'],
     subjunctive_present: ['pueda', 'puedas', 'pueda', 'podamos', 'podáis', 'puedan'],
     subjunctive_imperfect: ['pudiera', 'pudieras', 'pudiera', 'pudiéramos', 'pudierais', 'pudieran'],
+    subjunctive_imperfect_se: ['pudiese', 'pudieses', 'pudiese', 'pudiésemos', 'pudieseis', 'pudiesen'],
   },
   decir: {
     present: ['digo', 'dices', 'dice', 'decimos', 'decís', 'dicen'],
     preterite: ['dije', 'dijiste', 'dijo', 'dijimos', 'dijisteis', 'dijeron'],
     subjunctive_present: ['diga', 'digas', 'diga', 'digamos', 'digáis', 'digan'],
     subjunctive_imperfect: ['dijera', 'dijeras', 'dijera', 'dijéramos', 'dijerais', 'dijeran'],
+    subjunctive_imperfect_se: ['dijese', 'dijeses', 'dijese', 'dijésemos', 'dijeseis', 'dijesen'],
     imperative_aff: ['—', 'di', 'diga', 'digamos', 'decid', 'digan'],
   },
   querer: {
@@ -231,12 +249,14 @@ const FULL_IRREGULARS = {
     preterite: ['quise', 'quisiste', 'quiso', 'quisimos', 'quisisteis', 'quisieron'],
     subjunctive_present: ['quiera', 'quieras', 'quiera', 'queramos', 'queráis', 'quieran'],
     subjunctive_imperfect: ['quisiera', 'quisieras', 'quisiera', 'quisiéramos', 'quisierais', 'quisieran'],
+    subjunctive_imperfect_se: ['quisiese', 'quisieses', 'quisiese', 'quisiésemos', 'quisieseis', 'quisiesen'],
   },
   venir: {
     present: ['vengo', 'vienes', 'viene', 'venimos', 'venís', 'vienen'],
     preterite: ['vine', 'viniste', 'vino', 'vinimos', 'vinisteis', 'vinieron'],
     subjunctive_present: ['venga', 'vengas', 'venga', 'vengamos', 'vengáis', 'vengan'],
     subjunctive_imperfect: ['viniera', 'vinieras', 'viniera', 'viniéramos', 'vinierais', 'vinieran'],
+    subjunctive_imperfect_se: ['viniese', 'vinieses', 'viniese', 'viniésemos', 'vinieseis', 'viniesen'],
     imperative_aff: ['—', 'ven', 'venga', 'vengamos', 'venid', 'vengan'],
   },
   dar: {
@@ -244,6 +264,7 @@ const FULL_IRREGULARS = {
     preterite: ['di', 'diste', 'dio', 'dimos', 'disteis', 'dieron'],
     subjunctive_present: ['dé', 'des', 'dé', 'demos', 'deis', 'den'],
     subjunctive_imperfect: ['diera', 'dieras', 'diera', 'diéramos', 'dierais', 'dieran'],
+    subjunctive_imperfect_se: ['diese', 'dieses', 'diese', 'diésemos', 'dieseis', 'diesen'],
   },
   ver: {
     present: ['veo', 'ves', 've', 'vemos', 'veis', 'ven'],
@@ -251,6 +272,7 @@ const FULL_IRREGULARS = {
     imperfect: ['veía', 'veías', 'veía', 'veíamos', 'veíais', 'veían'],
     subjunctive_present: ['vea', 'veas', 'vea', 'veamos', 'veáis', 'vean'],
     subjunctive_imperfect: ['viera', 'vieras', 'viera', 'viéramos', 'vierais', 'vieran'],
+    subjunctive_imperfect_se: ['viese', 'vieses', 'viese', 'viésemos', 'vieseis', 'viesen'],
     imperative_aff: ['—', 've', 'vea', 'veamos', 'ved', 'vean'],
   },
   saber: {
@@ -258,6 +280,7 @@ const FULL_IRREGULARS = {
     preterite: ['supe', 'supiste', 'supo', 'supimos', 'supisteis', 'supieron'],
     subjunctive_present: ['sepa', 'sepas', 'sepa', 'sepamos', 'sepáis', 'sepan'],
     subjunctive_imperfect: ['supiera', 'supieras', 'supiera', 'supiéramos', 'supierais', 'supieran'],
+    subjunctive_imperfect_se: ['supiese', 'supieses', 'supiese', 'supiésemos', 'supieseis', 'supiesen'],
     imperative_aff: ['—', 'sabe', 'sepa', 'sepamos', 'sabed', 'sepan'],
   },
   poner: {
@@ -265,6 +288,7 @@ const FULL_IRREGULARS = {
     preterite: ['puse', 'pusiste', 'puso', 'pusimos', 'pusisteis', 'pusieron'],
     subjunctive_present: ['ponga', 'pongas', 'ponga', 'pongamos', 'pongáis', 'pongan'],
     subjunctive_imperfect: ['pusiera', 'pusieras', 'pusiera', 'pusiéramos', 'pusierais', 'pusieran'],
+    subjunctive_imperfect_se: ['pusiese', 'pusieses', 'pusiese', 'pusiésemos', 'pusieseis', 'pusiesen'],
     imperative_aff: ['—', 'pon', 'ponga', 'pongamos', 'poned', 'pongan'],
   },
   salir: {
@@ -277,6 +301,7 @@ const FULL_IRREGULARS = {
     preterite: ['traje', 'trajiste', 'trajo', 'trajimos', 'trajisteis', 'trajeron'],
     subjunctive_present: ['traiga', 'traigas', 'traiga', 'traigamos', 'traigáis', 'traigan'],
     subjunctive_imperfect: ['trajera', 'trajeras', 'trajera', 'trajéramos', 'trajerais', 'trajeran'],
+    subjunctive_imperfect_se: ['trajese', 'trajeses', 'trajese', 'trajésemos', 'trajeseis', 'trajesen'],
   },
   caer: {
     present: ['caigo', 'caes', 'cae', 'caemos', 'caéis', 'caen'],
@@ -345,11 +370,17 @@ function getReflexivePronoun(personIdx) {
 }
 
 // ── Main conjugation function ──
-function conjugate(infinitive, tense, personIdx) {
+function conjugate(infinitive, tense, personIdx, useSeForm = false) {
   const isReflexive = infinitive.endsWith('se');
   const base = isReflexive ? infinitive.slice(0, -2) : infinitive;
   const group = base.slice(-2); // ar, er, ir
   const stem = base.slice(0, -2);
+
+  // Resolve -se form: remap subjunctive_imperfect to subjunctive_imperfect_se
+  let effectiveTense = tense;
+  if (useSeForm && tense === 'subjunctive_imperfect') {
+    effectiveTense = 'subjunctive_imperfect_se';
+  }
 
   // Find verb entry for metadata
   const verbEntry = typeof VERB_DATA !== 'undefined' ?
@@ -366,14 +397,16 @@ function conjugate(infinitive, tense, personIdx) {
   }
   // 2. Check compound tenses (haber + participle)
   else if (TENSE_META[tense] && TENSE_META[tense].compound) {
-    const auxTense = TENSE_META[tense].auxTense;
+    let auxTense = TENSE_META[tense].auxTense;
+    // For subjunctive_pluperfect with -se preference, use hubiese instead of hubiera
+    if (useSeForm && auxTense === 'subjunctive_imperfect') auxTense = 'subjunctive_imperfect_se';
     const aux = HABER[auxTense] ? HABER[auxTense][personIdx] : conjugate('haber', auxTense, personIdx);
     const participle = getParticiple(base);
     form = aux + ' ' + participle;
   }
   // 2. Check full irregular overrides
-  else if (FULL_IRREGULARS[base] && FULL_IRREGULARS[base][tense]) {
-    form = FULL_IRREGULARS[base][tense][personIdx];
+  else if (FULL_IRREGULARS[base] && FULL_IRREGULARS[base][effectiveTense]) {
+    form = FULL_IRREGULARS[base][effectiveTense][personIdx];
   }
   // 3. Future and conditional with irregular stems
   else if ((tense === 'future' || tense === 'conditional') && IRREGULAR_FUTURE_STEMS[base]) {
@@ -382,9 +415,9 @@ function conjugate(infinitive, tense, personIdx) {
     form = irrStem + endings[personIdx];
   }
   // 4. Regular conjugation (with possible stem change and spelling change)
-  else if (REGULAR_ENDINGS[tense] && REGULAR_ENDINGS[tense][group]) {
+  else if (REGULAR_ENDINGS[effectiveTense] && REGULAR_ENDINGS[effectiveTense][group]) {
     let conjStem = stem;
-    const ending = REGULAR_ENDINGS[tense][group][personIdx];
+    const ending = REGULAR_ENDINGS[effectiveTense][group][personIdx];
 
     // Apply stem change if applicable
     if (verbEntry && verbEntry.stemChange) {
@@ -433,6 +466,6 @@ function conjugate(infinitive, tense, personIdx) {
 }
 
 // Get full conjugation table for a verb in one tense
-function conjugateAll(infinitive, tense) {
-  return PERSONS.map((_, i) => conjugate(infinitive, tense, i));
+function conjugateAll(infinitive, tense, useSeForm = false) {
+  return PERSONS.map((_, i) => conjugate(infinitive, tense, i, useSeForm));
 }
