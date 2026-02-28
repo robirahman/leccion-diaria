@@ -2289,7 +2289,7 @@ function buildFreqVocabQuestions(count) {
   const questions = [];
 
   // Build lookup of freq words that also have translations in VOCAB_DATA
-  const vocabByWord = {};
+  const vocabByWord = Object.create(null);
   for (const v of VOCAB_DATA) vocabByWord[v.word.toLowerCase()] = v;
 
   // Find freq_vocab entries that have corresponding VOCAB_DATA entries
