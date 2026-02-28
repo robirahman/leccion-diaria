@@ -327,6 +327,142 @@
     <button class="btn btn-secondary btn-block mt-1" data-action="next-culture-quiz" style="display:none" id="cq-next">Next</button>
   </div>
 
+  <!-- ════════ PRACTICE HUB ════════ -->
+  <div class="screen" id="screen-practice">
+    <h2 class="mb-2">Practice</h2>
+    <div class="card" data-action="open-minimal-pairs" style="cursor:pointer">
+      <div class="card-title">Minimal Pairs</div>
+      <div class="card-subtitle">ser/estar, por/para, preterite/imperfect</div>
+    </div>
+    <div class="card" data-action="open-sentence-build-topics" style="cursor:pointer">
+      <div class="card-title">Sentence Construction</div>
+      <div class="card-subtitle">Arrange words in correct order</div>
+    </div>
+    <div class="card" data-action="open-cloze-topics" style="cursor:pointer">
+      <div class="card-title">Cloze Passages</div>
+      <div class="card-subtitle">Fill blanks in context paragraphs</div>
+    </div>
+    <div class="card" data-action="open-translation-topics" style="cursor:pointer">
+      <div class="card-title">Translation Drills</div>
+      <div class="card-subtitle">Translate English to Spanish</div>
+    </div>
+    <div class="card" data-action="open-dictation" style="cursor:pointer">
+      <div class="card-title">Dictation</div>
+      <div class="card-subtitle">Listen and type what you hear</div>
+    </div>
+  </div>
+
+  <!-- ════════ MINIMAL PAIRS CATEGORY SELECT ════════ -->
+  <div class="screen" id="screen-minimal-pairs">
+    <h2 class="mb-2" id="mp-title">Minimal Pairs</h2>
+    <p class="text-muted text-sm mb-2">Choose a distinction to practice:</p>
+    <div id="mp-categories"></div>
+  </div>
+
+  <!-- ════════ MINIMAL PAIRS DRILL ════════ -->
+  <div class="screen" id="screen-mp-drill">
+    <div class="quiz-progress" id="mp-progress"></div>
+    <div class="card">
+      <div class="quiz-question" id="mp-sentence"></div>
+      <div class="quiz-options" id="mp-options"></div>
+      <div class="quiz-feedback" id="mp-feedback" style="display:none"></div>
+      <div class="mp-contrast" id="mp-contrast" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-mp" style="display:none" id="mp-next">Next</button>
+  </div>
+
+  <!-- ════════ SENTENCE CONSTRUCTION ════════ -->
+  <div class="screen" id="screen-sentence-build">
+    <div class="quiz-progress" id="sb-progress"></div>
+    <div class="card">
+      <div class="quiz-question" id="sb-prompt"></div>
+      <div class="sb-answer-row" id="sb-answer-row"></div>
+      <div class="sb-divider"></div>
+      <div class="sb-word-bank" id="sb-word-bank"></div>
+      <div class="quiz-feedback" id="sb-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-primary btn-block mt-1" data-action="check-sentence-build" id="sb-check">Check</button>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-sentence-build" style="display:none" id="sb-next">Next</button>
+  </div>
+
+  <!-- ════════ CLOZE PASSAGES ════════ -->
+  <div class="screen" id="screen-cloze-topics">
+    <h2 class="mb-2">Cloze Passages</h2>
+    <p class="text-muted text-sm mb-2">Fill blanks in context paragraphs:</p>
+    <div id="cloze-topic-cards"></div>
+  </div>
+
+  <div class="screen" id="screen-cloze">
+    <div class="quiz-progress" id="cloze-progress"></div>
+    <div class="card">
+      <div class="text-muted text-sm mb-1" id="cloze-title"></div>
+      <div class="cloze-passage" id="cloze-container"></div>
+      <div class="accent-bar">
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="á">á</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="é">é</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="í">í</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ñ">ñ</button>
+      </div>
+      <div id="cloze-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-primary btn-block mt-1" data-action="check-cloze" id="cloze-check">Check</button>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-cloze" style="display:none" id="cloze-next">Next</button>
+  </div>
+
+  <!-- ════════ TRANSLATION DRILLS ════════ -->
+  <div class="screen" id="screen-translation">
+    <div class="quiz-progress" id="tr-progress"></div>
+    <div class="card">
+      <div class="quiz-question" id="tr-prompt"></div>
+      <div class="quiz-input-row">
+        <input type="text" id="tr-input" placeholder="Your translation..." autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="check-translation">Check</button>
+      </div>
+      <div class="accent-bar">
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="á">á</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="é">é</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="í">í</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="ñ">ñ</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="¿">¿</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="¡">¡</button>
+      </div>
+      <div class="quiz-feedback" id="tr-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-translation" style="display:none" id="tr-next">Next</button>
+  </div>
+
+  <!-- ════════ DICTATION ════════ -->
+  <div class="screen" id="screen-dictation">
+    <div class="quiz-progress" id="dict-progress"></div>
+    <div class="card">
+      <div class="quiz-question" id="dict-prompt">Listen and type what you hear:</div>
+      <div class="dict-audio-controls">
+        <button class="btn btn-outline" data-action="dict-play">&#9654; Play</button>
+        <button class="btn btn-outline" data-action="dict-play-slow">&#128034; Slow</button>
+      </div>
+      <div class="quiz-input-row">
+        <input type="text" id="dict-input" placeholder="Type what you hear..." autocomplete="off" autocapitalize="off">
+        <button class="btn btn-primary" data-action="check-dictation">Check</button>
+      </div>
+      <div class="accent-bar">
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="á">á</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="é">é</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="í">í</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="ñ">ñ</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="¿">¿</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="¡">¡</button>
+      </div>
+      <div class="quiz-feedback" id="dict-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-dictation" style="display:none" id="dict-next">Next</button>
+  </div>
+
   <!-- ════════ QUIZ RESULTS ════════ -->
   <div class="screen" id="screen-results">
     <div class="results-screen">
@@ -502,6 +638,10 @@
     <span class="tab-icon">&#128172;</span>
     <span>Phrases</span>
   </button>
+  <button class="tab" data-action="switch-tab" data-tab="practice">
+    <span class="tab-icon">&#9997;</span>
+    <span>Practice</span>
+  </button>
   <div class="tab-wrapper" style="position:relative">
     <button class="tab" data-action="switch-tab" data-tab="culture">
       <span class="tab-icon">&#127928;</span>
@@ -564,6 +704,11 @@
 <script src="idioms.js"></script>
 <script src="freq_vocab.js"></script>
 <script src="placement_questions.js"></script>
+<script src="minimal_pairs.js"></script>
+<script src="sentence_construction.js"></script>
+<script src="cloze_passages.js"></script>
+<script src="translation_drills.js"></script>
+<script src="dictation.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
