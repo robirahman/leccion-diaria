@@ -19,17 +19,20 @@ const POETRY_DATA = [
       {
         prompt: "¿De qué país era Pablo Neruda?",
         options: ["Argentina", "México", "Chile", "Colombia"],
-        correct: 2
+        correct: 2,
+        explanation: "Neruda was born in Parral, Chile in 1904. Chile has produced two Nobel Prize-winning poets: Neruda and Gabriela Mistral."
       },
       {
         prompt: "¿Cuál era el verdadero nombre de Pablo Neruda?",
         options: ["Pablo Reyes", "Neftalí Reyes", "Ricardo Neruda", "Pablo Mistral"],
-        correct: 1
+        correct: 1,
+        explanation: "He was born Neftalí Ricardo Reyes Basoalto and adopted the pen name Pablo Neruda as a teenager, possibly inspired by the Czech poet Jan Neruda."
       },
       {
         prompt: "¿En qué año ganó Neruda el Premio Nobel?",
         options: ["1965", "1968", "1971", "1975"],
-        correct: 2
+        correct: 2,
+        explanation: "Neruda received the Nobel Prize in Literature in 1971, recognized for 'a poetry that with the action of an elemental force brings alive a continent's destiny and dreams.'"
       }
     ]
   },
@@ -53,17 +56,20 @@ const POETRY_DATA = [
       {
         prompt: "¿De qué ciudad andaluza era Lorca?",
         options: ["Sevilla", "Córdoba", "Granada", "Málaga"],
-        correct: 2
+        correct: 2,
+        explanation: "Lorca was born in Fuente Vaqueros near Granada in 1898. The culture and landscapes of Granada and Andalusia deeply shaped his imagery and themes."
       },
       {
         prompt: "¿Qué color domina el 'Romance sonámbulo'?",
         options: ["Rojo", "Azul", "Verde", "Negro"],
-        correct: 2
+        correct: 2,
+        explanation: "The poem's famous opening line is 'Verde que te quiero verde' (Green, how I want you green). Green serves as a symbol of longing, death, and the Romani world throughout the poem."
       },
       {
         prompt: "¿A qué generación literaria pertenecía Lorca?",
         options: ["Generación del 98", "Generación del 14", "Generación del 27", "Generación del 36"],
-        correct: 2
+        correct: 2,
+        explanation: "The Generation of '27 was a group of avant-garde poets who came together around 1927 to commemorate the 300th anniversary of the death of Luis de Góngora. Other members included Rafael Alberti and Pedro Salinas."
       }
     ]
   },
@@ -87,17 +93,20 @@ const POETRY_DATA = [
       {
         prompt: "¿En qué siglo vivió Sor Juana Inés de la Cruz?",
         options: ["Siglo XV", "Siglo XVI", "Siglo XVII", "Siglo XVIII"],
-        correct: 2
+        correct: 2,
+        explanation: "Sor Juana lived from 1648 to 1695, placing her squarely in the 17th century during the height of the Spanish Baroque period in colonial Mexico (New Spain)."
       },
       {
         prompt: "¿Qué critica su famoso poema 'Hombres necios'?",
         options: ["La religión", "La hipocresía masculina", "La pobreza", "La guerra"],
-        correct: 1
+        correct: 1,
+        explanation: "The poem argues that men blame women for the very behavior men themselves provoke, exposing a double standard. This made Sor Juana a pioneering feminist voice centuries before the modern movement."
       },
       {
         prompt: "¿En qué billete mexicano aparece Sor Juana?",
         options: ["Cien pesos", "Doscientos pesos", "Quinientos pesos", "Mil pesos"],
-        correct: 1
+        correct: 1,
+        explanation: "Sor Juana's portrait on the 200-peso bill reflects her status as one of Mexico's greatest cultural figures. She is one of the most recognizable faces in Mexican currency."
       }
     ]
   },
@@ -121,17 +130,20 @@ const POETRY_DATA = [
       {
         prompt: "¿En qué año ganó Octavio Paz el Nobel de Literatura?",
         options: ["1982", "1987", "1990", "1995"],
-        correct: 2
+        correct: 2,
+        explanation: "Paz won the Nobel in 1990, becoming the first (and so far only) Mexican to receive the Nobel Prize in Literature. Gabriel García Márquez (Colombian) had won in 1982."
       },
       {
         prompt: "¿Cuántos versos tiene 'Piedra de sol'?",
         options: ["365", "500", "584", "1000"],
-        correct: 2
+        correct: 2,
+        explanation: "The 584 hendecasyllabic verses correspond to the 584-day synodic cycle of Venus in the Aztec calendar, linking the poem's circular structure to pre-Columbian cosmology."
       },
       {
         prompt: "¿Qué ensayo famoso escribió Paz sobre la identidad mexicana?",
         options: ["El arco y la lira", "El laberinto de la soledad", "Los hijos del limo", "Posdata"],
-        correct: 1
+        correct: 1,
+        explanation: "'El laberinto de la soledad' (1950) analyzes Mexican identity through history, myth, and psychology. It remains one of the most influential essays ever written about Latin American culture."
       }
     ]
   },
@@ -155,17 +167,20 @@ const POETRY_DATA = [
       {
         prompt: "¿De qué país era Jorge Luis Borges?",
         options: ["Uruguay", "Argentina", "Chile", "México"],
-        correct: 1
+        correct: 1,
+        explanation: "Borges was born in Buenos Aires in 1899. The city, its neighborhoods (especially the south side), and Argentine culture are recurring subjects throughout his poetry and prose."
       },
       {
         prompt: "¿Qué tema NO es recurrente en la obra de Borges?",
         options: ["Laberintos", "Espejos", "Naturaleza tropical", "El infinito"],
-        correct: 2
+        correct: 2,
+        explanation: "Borges was drawn to intellectual and metaphysical themes like labyrinths, mirrors, infinity, and time. Tropical nature is not part of his literary world, which tends toward the abstract and urban."
       },
       {
         prompt: "¿Qué condición física desarrolló Borges en su madurez?",
         options: ["Sordera", "Ceguera", "Parálisis", "Mudez"],
-        correct: 1
+        correct: 1,
+        explanation: "Borges inherited a progressive blindness that became total by his mid-fifties. Despite this, he continued to compose and dictate some of his greatest works, including poetry he crafted entirely in his mind."
       }
     ]
   },
@@ -189,17 +204,20 @@ const POETRY_DATA = [
       {
         prompt: "¿Qué distinción histórica tiene Gabriela Mistral?",
         options: ["Primera mujer Nobel", "Primera latinoamericana Nobel de Literatura", "Primera poeta chilena", "Primera educadora Nobel"],
-        correct: 1
+        correct: 1,
+        explanation: "In 1945, Mistral became the first Latin American author to receive the Nobel Prize in Literature, preceding her compatriot Pablo Neruda by 26 years."
       },
       {
         prompt: "¿Cuál era el verdadero nombre de Gabriela Mistral?",
         options: ["Gabriela Reyes", "Lucila Godoy Alcayaga", "María Mistral", "Gabriela Alcayaga"],
-        correct: 1
+        correct: 1,
+        explanation: "Born Lucila Godoy Alcayaga, she chose her pen name combining the archangel Gabriel and the mistral wind (a cold wind from southern France), reflecting her spiritual and natural sensibilities."
       },
       {
         prompt: "¿Cuál es uno de los temas principales de su poesía?",
         options: ["La guerra", "La tecnología", "La infancia y la maternidad", "La política"],
-        correct: 2
+        correct: 2,
+        explanation: "Mistral's work is deeply rooted in themes of childhood, motherhood, and tenderness, shaped by her career as a rural teacher and her profound empathy for vulnerable children across Latin America."
       }
     ]
   },
@@ -223,17 +241,20 @@ const POETRY_DATA = [
       {
         prompt: "¿De qué país era César Vallejo?",
         options: ["Chile", "Colombia", "Perú", "Ecuador"],
-        correct: 2
+        correct: 2,
+        explanation: "Vallejo was born in Santiago de Chuco, a small town in the Andes of Peru. His Andean heritage and experience of poverty profoundly influenced the raw emotional power of his poetry."
       },
       {
         prompt: "¿Cómo se llama su obra más experimental?",
         options: ["Trilce", "Altazor", "Residencia", "Canto"],
-        correct: 0
+        correct: 0,
+        explanation: "'Trilce' (1922) broke all conventions of Spanish-language poetry with invented words, fractured syntax, and radical typographic experimentation. 'Altazor' is by the Chilean poet Vicente Huidobro, not Vallejo."
       },
       {
         prompt: "¿En qué ciudad murió Vallejo?",
         options: ["Lima", "Madrid", "París", "Buenos Aires"],
-        correct: 2
+        correct: 2,
+        explanation: "Vallejo spent his final years in Paris, where he lived largely in poverty. He died there on April 15, 1938, having eerily predicted in a poem that he would die in Paris on a rainy day."
       }
     ]
   },
@@ -257,17 +278,20 @@ const POETRY_DATA = [
       {
         prompt: "¿De qué país era Rubén Darío?",
         options: ["Costa Rica", "Honduras", "Nicaragua", "Panamá"],
-        correct: 2
+        correct: 2,
+        explanation: "Darío was born in Metapa (now Ciudad Darío), Nicaragua in 1867. He is Nicaragua's most celebrated literary figure and is often called the 'Prince of Castilian Letters.'"
       },
       {
         prompt: "¿Qué movimiento literario fundó Rubén Darío?",
         options: ["Romanticismo", "Realismo", "Modernismo", "Surrealismo"],
-        correct: 2
+        correct: 2,
+        explanation: "Modernismo was the first literary movement to originate in Latin America and influence Spain, reversing centuries of cultural flow. It emphasized musicality, exotic imagery, and formal beauty."
       },
       {
         prompt: "¿En qué año se publicó 'Azul...'?",
         options: ["1878", "1888", "1898", "1908"],
-        correct: 1
+        correct: 1,
+        explanation: "'Azul...' was published in 1888 in Valparaíso, Chile, where Darío was living at the time. The book marked the birth of the Modernismo movement in Hispanic literature."
       }
     ]
   },
@@ -291,17 +315,20 @@ const POETRY_DATA = [
       {
         prompt: "¿A qué generación literaria pertenecía Antonio Machado?",
         options: ["Generación del 27", "Generación del 98", "Generación del 14", "Generación del 50"],
-        correct: 1
+        correct: 1,
+        explanation: "The Generation of '98 was a group of writers who responded to Spain's loss of its last colonies (Cuba, Philippines, Puerto Rico) in 1898. They focused on Spanish identity, landscape, and national renewal."
       },
       {
         prompt: "Según Machado, ¿cómo se hace el camino?",
         options: ["Pensando", "Leyendo", "Al andar", "Al soñar"],
-        correct: 2
+        correct: 2,
+        explanation: "'Se hace camino al andar' (the path is made by walking) conveys an existential philosophy: life has no predetermined path, and meaning is created through lived experience and action, not by following a map."
       },
       {
         prompt: "¿Qué región de España inspiró gran parte de su poesía?",
         options: ["Andalucía", "Galicia", "Castilla", "Cataluña"],
-        correct: 2
+        correct: 2,
+        explanation: "Machado lived and taught in Soria, in the heart of Castile, from 1907 to 1912. The austere, vast Castilian landscape became a central symbol in his poetry, representing both Spain's essence and spiritual solitude."
       }
     ]
   },
@@ -325,17 +352,20 @@ const POETRY_DATA = [
       {
         prompt: "¿Qué desafía el poema 'Tú me quieres blanca'?",
         options: ["La religión", "Las expectativas patriarcales", "La monarquía", "La educación"],
-        correct: 1
+        correct: 1,
+        explanation: "The poem challenges the impossible standard of purity men demand of women ('white as dawn, made of foam') while not holding themselves to the same standard. It was a bold feminist statement for early 20th-century Argentina."
       },
       {
         prompt: "¿Qué canción inmortalizó la historia de Alfonsina Storni?",
         options: ["Alfonsina y la luna", "Alfonsina y el mar", "Alfonsina y el viento", "Alfonsina y la noche"],
-        correct: 1
+        correct: 1,
+        explanation: "'Alfonsina y el mar,' composed by Ariel Ramírez and Félix Luna in 1969, is one of the most beloved songs in Argentine music. It poetically recounts Storni's final walk into the ocean at Mar del Plata."
       },
       {
         prompt: "¿En qué ciudad argentina murió Storni?",
         options: ["Buenos Aires", "Rosario", "Mar del Plata", "Córdoba"],
-        correct: 2
+        correct: 2,
+        explanation: "Storni walked into the sea at the beach of La Perla in Mar del Plata on October 25, 1938. The seaside city on the Atlantic coast of Argentina is forever linked with her tragic and iconic final act."
       }
     ]
   }

@@ -728,7 +728,7 @@ const GRAMMAR_DATA = [
 <p><em>Yo <strong>habría ido</strong>, pero no pude.</em> (I would have gone, but I couldn't.)</p>
 <p>Used in Type 3 si clauses: <em>Si hubiera sabido, <strong>habría llamado</strong>.</em></p>`,
     quiz: [
-      { type: "fib", question: "Para mañana, yo _____ _____ el proyecto. (terminar)", answer: "habré terminado", options: null, explanation: "Will have finished = habré terminado." },
+      { type: "fib", question: "\"For tomorrow, I will have finished the project.\" — Para mañana, yo _____ _____ el proyecto.", answer: "habré terminado", options: null, explanation: "Will have finished = habré terminado (future perfect)." },
       { type: "mc", question: "'Habría ido' means:", answer: "I would have gone", options: ["I will have gone","I would have gone","I had gone","I will go"], explanation: "Conditional perfect = would have: habría ido." },
       { type: "fib", question: "Si hubiera podido, _____ _____ contigo. (ir)", answer: "habría ido", options: null, explanation: "Would have gone = habría ido." },
       { type: "mc", question: "'Habrán llegado ya' expresses:", answer: "Probability (They've probably arrived)", options: ["Certainty","Probability (They've probably arrived)","A command","A wish"], explanation: "Future perfect for past probability: they've probably arrived." },

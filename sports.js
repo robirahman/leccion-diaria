@@ -19,17 +19,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿En qué año ganó España la Copa del Mundo?",
         options: ["2006", "2010", "2014", "2018"],
-        correct: 1
+        correct: 1,
+        explanation: "Spain won its first and only FIFA World Cup in 2010, held in South Africa, defeating the Netherlands 1-0 in the final with a goal by Andrés Iniesta."
       },
       {
         prompt: "¿Cómo se llama el enfrentamiento entre Real Madrid y Barcelona?",
         options: ["El Derbi", "El Superclásico", "El Clásico", "La Final"],
-        correct: 2
+        correct: 2,
+        explanation: "The match between Real Madrid and FC Barcelona is called 'El Clásico' because it is the classic rivalry of Spanish football. 'El Superclásico' refers to the Argentine rivalry between Boca Juniors and River Plate."
       },
       {
         prompt: "¿Qué significa 'hincha' en el contexto del fútbol?",
         options: ["Jugador", "Entrenador", "Aficionado/fan", "Árbitro"],
-        correct: 2
+        correct: 2,
+        explanation: "'Hincha' is the common Spanish word for a sports fan or supporter, originally from Río de la Plata Spanish. It comes from the verb 'hinchar' (to inflate), referring to the person who inflated footballs at early matches."
       }
     ]
   },
@@ -53,17 +56,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Cómo se llama el luchador más legendario de México?",
         options: ["Blue Demon", "El Santo", "Mil Máscaras", "El Hijo del Santo"],
-        correct: 1
+        correct: 1,
+        explanation: "El Santo (the Saint), known for his iconic silver mask, was the most famous luchador in Mexican history. He starred in over 50 films and became a folk hero symbolizing justice, never removing his mask publicly until shortly before his death in 1984."
       },
       {
         prompt: "¿Cómo se llaman los luchadores 'buenos' en la lucha libre?",
         options: ["Rudos", "Técnicos", "Santos", "Campeones"],
-        correct: 1
+        correct: 1,
+        explanation: "In lucha libre, the heroes are called 'técnicos' (technicians) because they traditionally rely on technical wrestling skill, while the villains ('rudos') use dirty tactics and rule-breaking to win."
       },
       {
         prompt: "¿Qué representa la máscara para un luchador?",
         options: ["Solo decoración", "Su identidad sagrada", "Su equipo", "Su país"],
-        correct: 1
+        correct: 1,
+        explanation: "A luchador's mask is considered sacred because it embodies their wrestling persona and identity. Losing it in a 'lucha de apuestas' (stakes match) is the ultimate humiliation, forcing the wrestler to reveal their true face permanently."
       }
     ]
   },
@@ -87,17 +93,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿De qué región es originario el jai alai?",
         options: ["Cataluña", "Andalucía", "País Vasco", "Galicia"],
-        correct: 2
+        correct: 2,
+        explanation: "Jai alai originated in the Basque Country (País Vasco), the region straddling northern Spain and southwestern France. The name itself comes from the Basque language (Euskera), not Spanish."
       },
       {
         prompt: "¿Qué significa 'jai alai' en euskera?",
         options: ["Pelota rápida", "Fiesta alegre", "Juego fuerte", "Mano dura"],
-        correct: 1
+        correct: 1,
+        explanation: "In Euskera (the Basque language), 'jai' means 'festival' or 'celebration' and 'alai' means 'happy' or 'merry,' so 'jai alai' translates to 'happy festival,' reflecting the festive nature of the sport's origins."
       },
       {
         prompt: "¿A qué velocidad puede llegar la pelota en jai alai?",
         options: ["100 km/h", "200 km/h", "300 km/h", "400 km/h"],
-        correct: 2
+        correct: 2,
+        explanation: "The pelota in jai alai can reach speeds up to 300 km/h (about 186 mph), making it one of the fastest ball sports in the world. The curved cesta-punta basket acts like a sling, amplifying the throwing force."
       }
     ]
   },
@@ -121,17 +130,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Cuál es la plaza de toros más importante del mundo?",
         options: ["La Maestranza", "Las Ventas", "La Monumental", "El Coliseo"],
-        correct: 1
+        correct: 1,
+        explanation: "Las Ventas in Madrid, officially the Plaza de Toros de Las Ventas, is considered the most important bullring in the world. Performing there is the highest honor for a matador, similar to playing at a sport's most prestigious venue."
       },
       {
         prompt: "¿Qué comunidad española prohibió las corridas de toros en 2010?",
         options: ["País Vasco", "Galicia", "Cataluña", "Canarias"],
-        correct: 2
+        correct: 2,
+        explanation: "Catalonia banned bullfighting in 2010 through a vote in its regional parliament, becoming the second Spanish region to do so (after the Canary Islands in 1991). The ban reflected both animal welfare concerns and Catalan cultural identity politics."
       },
       {
         prompt: "¿En qué siglo se formalizó la corrida de toros moderna?",
         options: ["Siglo XVI", "Siglo XVII", "Siglo XVIII", "Siglo XIX"],
-        correct: 2
+        correct: 2,
+        explanation: "The modern bullfight was formalized in the 18th century when Francisco Romero from Ronda introduced the use of the muleta (red cape) and established the rules for fighting on foot rather than on horseback, transforming it from a noble equestrian pursuit into the form known today."
       }
     ]
   },
@@ -155,17 +167,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Qué país caribeño ha producido más jugadores de Grandes Ligas per cápita?",
         options: ["Cuba", "Puerto Rico", "República Dominicana", "Venezuela"],
-        correct: 2
+        correct: 2,
+        explanation: "The Dominican Republic has produced more MLB players per capita than any other country, thanks to an extensive network of baseball academies run by MLB teams on the island. Towns like San Pedro de Macorís are famous for producing an extraordinary number of major leaguers."
       },
       {
         prompt: "¿Cómo se dice 'home run' en español?",
         options: ["Carrera", "Jonrón", "Gol", "Punto"],
-        correct: 1
+        correct: 1,
+        explanation: "'Jonrón' is a phonetic Spanish adaptation of the English 'home run.' This type of loanword adaptation is common in Caribbean baseball vocabulary, where the sport arrived from the United States in the 19th century."
       },
       {
         prompt: "¿Qué es la Serie del Caribe?",
         options: ["Un campeonato de fútbol", "Un torneo de béisbol entre campeones de ligas de invierno", "Una carrera de yates", "Un festival de música"],
-        correct: 1
+        correct: 1,
+        explanation: "The Caribbean Series (Serie del Caribe) is an annual baseball tournament that pits the winter league champions from countries like the Dominican Republic, Venezuela, Mexico, and Puerto Rico against each other. It has been held since 1949."
       }
     ]
   },
@@ -189,17 +204,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Cuántos títulos de Roland Garros ganó Rafael Nadal?",
         options: ["Diez", "Doce", "Catorce", "Dieciséis"],
-        correct: 2
+        correct: 2,
+        explanation: "Rafael Nadal won a record fourteen French Open (Roland Garros) titles, far more than any other player in history at a single Grand Slam. His dominance on clay courts earned him the nickname 'the King of Clay.'"
       },
       {
         prompt: "¿De qué isla española es originario Nadal?",
         options: ["Tenerife", "Ibiza", "Mallorca", "Gran Canaria"],
-        correct: 2
+        correct: 2,
+        explanation: "Nadal was born and raised in Manacor, a town on the island of Mallorca (Majorca) in the Balearic Islands. He trained there from childhood under his uncle Toni Nadal and has remained closely connected to the island throughout his career."
       },
       {
         prompt: "¿Cómo se le conoce a Nadal en el mundo del tenis?",
         options: ["El Matador", "El Rey de la Tierra Batida", "El Toro", "El Campeón"],
-        correct: 1
+        correct: 1,
+        explanation: "Nadal is known as 'El Rey de la Tierra Batida' (the King of Clay) because of his unmatched dominance on clay courts, where his heavy topspin and relentless physicality give him a particular advantage over other players."
       }
     ]
   },
@@ -223,17 +241,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Cuál fue el récord invicto de Julio César Chávez?",
         options: ["70-0", "80-0", "89-0", "95-0"],
-        correct: 2
+        correct: 2,
+        explanation: "Julio César Chávez went 89 fights without a loss (89-0) before his first defeat, one of the longest unbeaten streaks in boxing history. He held world titles in three weight classes and is widely regarded as Mexico's greatest boxer."
       },
       {
         prompt: "¿Cuál era el apodo de Roberto Durán?",
         options: ["Manos de Oro", "Manos de Piedra", "El Rayo", "El Terrible"],
-        correct: 1
+        correct: 1,
+        explanation: "Roberto Durán was nicknamed 'Manos de Piedra' (Hands of Stone) because of his devastating punching power. The Panamanian legend held world titles in four different weight classes across a career spanning five decades."
       },
       {
         prompt: "¿Qué país latinoamericano ha producido más campeones mundiales de boxeo?",
         options: ["Cuba", "Puerto Rico", "Panamá", "México"],
-        correct: 3
+        correct: 3,
+        explanation: "Mexico has produced more world boxing champions than almost any other country in the world. Boxing is deeply embedded in Mexican culture, with a tradition of tough, aggressive fighters across nearly every weight class."
       }
     ]
   },
@@ -257,17 +278,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Cuántos Tours de Francia ganó Miguel Induráin?",
         options: ["Tres", "Cuatro", "Cinco", "Seis"],
-        correct: 2
+        correct: 2,
+        explanation: "Miguel Induráin won five consecutive Tours de France from 1991 to 1995, a feat of remarkable consistency. His dominance was built on his exceptional time-trialing ability and his capacity to limit losses in the mountains."
       },
       {
         prompt: "¿Quién fue el primer colombiano en ganar el Tour de Francia?",
         options: ["Nairo Quintana", "Rigoberto Urán", "Egan Bernal", "Santiago Botero"],
-        correct: 2
+        correct: 2,
+        explanation: "Egan Bernal won the 2019 Tour de France at just 22 years old, becoming the first Colombian and the youngest winner in over a century. His climbing talent was honed growing up training at high altitude in the Colombian Andes."
       },
       {
         prompt: "¿Cómo se llama la vuelta ciclista de España?",
         options: ["Tour de España", "Gran Premio de España", "Vuelta a España", "Ronda de España"],
-        correct: 2
+        correct: 2,
+        explanation: "The Vuelta a España (Tour of Spain) is one of cycling's three Grand Tours, alongside the Tour de France and Giro d'Italia. First held in 1935, it typically takes place in late August and September."
       }
     ]
   },
@@ -291,17 +315,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿En qué ciudad se celebra el encierro de San Fermín?",
         options: ["Madrid", "Sevilla", "Pamplona", "Bilbao"],
-        correct: 2
+        correct: 2,
+        explanation: "The Running of the Bulls takes place in Pamplona, the capital of the Navarre region in northern Spain. The festival honors San Fermín, the patron saint of Navarre, and has been a tradition since at least the 14th century."
       },
       {
         prompt: "¿De qué color es la vestimenta tradicional de los corredores?",
         options: ["Todo rojo", "Blanco con pañuelo rojo", "Todo negro", "Azul y blanco"],
-        correct: 1
+        correct: 1,
+        explanation: "Runners wear all white clothing with a red scarf (pañuelo) around the neck and a red sash (faja) around the waist. The white represents San Fermín and the red symbolizes his martyrdom."
       },
       {
         prompt: "¿Qué escritor famoso popularizó las fiestas de San Fermín?",
         options: ["García Márquez", "Hemingway", "Cervantes", "Borges"],
-        correct: 1
+        correct: 1,
+        explanation: "Ernest Hemingway attended the San Fermín festival in 1923 and wrote about it in his 1926 novel 'The Sun Also Rises' (published in Spanish as 'Fiesta'), which brought the event to worldwide attention and made it a major tourist attraction."
       }
     ]
   },
@@ -325,17 +352,20 @@ const SPORTS_DATA = [
       {
         prompt: "¿Qué país domina el polo mundial?",
         options: ["Inglaterra", "Estados Unidos", "Argentina", "India"],
-        correct: 2
+        correct: 2,
+        explanation: "Argentina has dominated world polo for over a century, consistently producing the highest-rated players. This excellence stems from the country's deep gaucho equestrian tradition and the vast pampas grasslands ideal for raising horses."
       },
       {
         prompt: "¿Quién es considerado el mejor jugador de polo de todos los tiempos?",
         options: ["Carlos Gracida", "Adolfo Cambiaso", "Gonzalo Pieres", "Juan Carlos Harriott"],
-        correct: 1
+        correct: 1,
+        explanation: "Adolfo Cambiaso, an Argentine player, is widely regarded as the greatest polo player of all time. He has maintained a perfect 10-goal handicap for decades and has won the Argentine Open, the sport's most prestigious event, numerous times."
       },
       {
         prompt: "¿Cuál es el handicap máximo en polo?",
         options: ["5 goles", "8 goles", "10 goles", "12 goles"],
-        correct: 2
+        correct: 2,
+        explanation: "The maximum handicap in polo is 10 goals, and only a handful of players in the world hold this rating at any given time. The majority of these top-rated players are Argentine, reflecting the country's dominance of the sport."
       }
     ]
   }

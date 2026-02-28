@@ -771,7 +771,7 @@ const PLACEMENT_QUESTIONS = [
     difficulty: 3.9,
     domain: 'grammar',
     type: 'fib',
-    prompt: 'Ojalá ___ buen tiempo mañana. (hacer, present subjunctive)',
+    prompt: 'Ojalá ___ buen tiempo mañana. (hacer — él/ella, present subjunctive)',
     answer: 'haga',
     options: null,
     explanation: '"Ojalá" + present subjunctive for wishes about the future.',

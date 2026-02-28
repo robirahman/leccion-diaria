@@ -41,9 +41,9 @@ const CONVERSATIONS_DATA = [
       { word: 'beber', english: 'to drink' },
     ],
     quiz: [
-      { prompt: 'How do you say "table for two" in Spanish?', options: ['Mesa para dos', 'Dos mesas', 'Tabla para dos', 'Asiento para dos'], correct: 0 },
-      { prompt: 'What does "\u00BFY para beber?" mean?', options: ['And to eat?', 'And to drink?', 'And for dessert?', 'And for later?'], correct: 1 },
-      { prompt: 'How do you ask for the check?', options: ['La mesa, por favor', 'El men\u00FA, por favor', 'La cuenta, por favor', 'El dinero, por favor'], correct: 2 },
+      { prompt: 'How do you say "table for two" in Spanish?', options: ['Mesa para dos', 'Dos mesas', 'Tabla para dos', 'Asiento para dos'], correct: 0 , explanation: "\"Mesa\" means table (furniture), while \"tabla\" means board or plank. In restaurants, you always use \"mesa para\" followed by the number of guests to request seating." },
+      { prompt: 'What does "\u00BFY para beber?" mean?', options: ['And to eat?', 'And to drink?', 'And for dessert?', 'And for later?'], correct: 1 , explanation: "\"Beber\" is the Spanish verb meaning \"to drink.\" Waiters commonly ask this after taking your food order to find out what beverages you would like." },
+      { prompt: 'How do you ask for the check?', options: ['La mesa, por favor', 'El men\u00FA, por favor', 'La cuenta, por favor', 'El dinero, por favor'], correct: 2 , explanation: "\"La cuenta\" literally means \"the account\" and is the standard way to request the bill in Spanish-speaking restaurants. Saying \"el dinero\" (the money) would be too blunt and unnatural." },
     ],
   },
 
@@ -85,9 +85,9 @@ const CONVERSATIONS_DATA = [
       { word: 'contrase\u00F1a', english: 'password' },
     ],
     quiz: [
-      { prompt: 'How do you say "I have a reservation" in Spanish?', options: ['Quiero una habitaci\u00F3n', 'Tengo una reservaci\u00F3n', 'Necesito un hotel', 'Busco una cama'], correct: 1 },
-      { prompt: 'What does "habitaci\u00F3n doble" mean?', options: ['Single room', 'Double room', 'Suite', 'Shared room'], correct: 1 },
-      { prompt: 'How do you ask "What time is breakfast?"', options: ['\u00BFD\u00F3nde es el desayuno?', '\u00BFCu\u00E1nto cuesta el desayuno?', '\u00BFA qu\u00E9 hora es el desayuno?', '\u00BFQu\u00E9 hay de desayuno?'], correct: 2 },
+      { prompt: 'How do you say "I have a reservation" in Spanish?', options: ['Quiero una habitaci\u00F3n', 'Tengo una reservaci\u00F3n', 'Necesito un hotel', 'Busco una cama'], correct: 1 , explanation: "\"Tener una reservación\" uses the verb \"tener\" (to have) and is the standard phrase for confirming a booking at hotels, restaurants, or other venues." },
+      { prompt: 'What does "habitaci\u00F3n doble" mean?', options: ['Single room', 'Double room', 'Suite', 'Shared room'], correct: 1 , explanation: "\"Habitación\" means room and \"doble\" means double, referring to a room with a double bed or two single beds. A single room would be \"habitación individual.\"" },
+      { prompt: 'How do you ask "What time is breakfast?"', options: ['\u00BFD\u00F3nde es el desayuno?', '\u00BFCu\u00E1nto cuesta el desayuno?', '\u00BFA qu\u00E9 hora es el desayuno?', '\u00BFQu\u00E9 hay de desayuno?'], correct: 2 , explanation: "The construction \"¿A qué hora es...?\" is the standard way to ask about scheduled times in Spanish. \"¿Dónde\" asks where, and \"¿Cuánto cuesta\" asks about cost." },
     ],
   },
 
@@ -129,9 +129,9 @@ const CONVERSATIONS_DATA = [
       { word: 'tarjeta', english: 'card' },
     ],
     quiz: [
-      { prompt: 'How do you ask "Can I try this on?"', options: ['Puedo comprar esto', '\u00BFPuedo probarme esto?', '\u00BFPuedo ver esto?', '\u00BFPuedo tocar esto?'], correct: 1 },
-      { prompt: 'What does "Me queda bien" mean?', options: ['I like it', 'It fits me well', 'It looks good', 'I\u2019ll stay here'], correct: 1 },
-      { prompt: 'How do you say "How much does it cost?"', options: ['\u00BFCu\u00E1ntos hay?', '\u00BFCu\u00E1ndo cierra?', '\u00BFCu\u00E1nto cuesta?', '\u00BFCu\u00E1l quiere?'], correct: 2 },
+      { prompt: 'How do you ask "Can I try this on?"', options: ['Puedo comprar esto', '\u00BFPuedo probarme esto?', '\u00BFPuedo ver esto?', '\u00BFPuedo tocar esto?'], correct: 1 , explanation: "\"Probarse\" is the reflexive verb meaning to try on clothing. The reflexive \"me\" is essential because you are trying something on yourself, distinguishing it from \"probar\" (to try/taste)." },
+      { prompt: 'What does "Me queda bien" mean?', options: ['I like it', 'It fits me well', 'It looks good', 'I\u2019ll stay here'], correct: 1 , explanation: "\"Quedar\" when used with clothing means \"to fit.\" The indirect object pronoun \"me\" indicates it fits the speaker, making this a key phrase for clothes shopping in Spanish." },
+      { prompt: 'How do you say "How much does it cost?"', options: ['\u00BFCu\u00E1ntos hay?', '\u00BFCu\u00E1ndo cierra?', '\u00BFCu\u00E1nto cuesta?', '\u00BFCu\u00E1l quiere?'], correct: 2 , explanation: "\"¿Cuánto cuesta?\" uses the interrogative \"cuánto\" (how much) with \"costar\" (to cost). \"¿Cuántos?\" asks how many, \"¿Cuándo?\" asks when, and \"¿Cuál?\" asks which." },
     ],
   },
 
@@ -174,9 +174,9 @@ const CONVERSATIONS_DATA = [
       { word: 'equipaje de mano', english: 'carry-on luggage' },
     ],
     quiz: [
-      { prompt: 'What is "tarjeta de embarque" in English?', options: ['Credit card', 'Boarding pass', 'ID card', 'Travel card'], correct: 1 },
-      { prompt: 'How do you say "window seat"?', options: ['Asiento de pasillo', 'Asiento de ventanilla', 'Asiento de frente', 'Asiento de centro'], correct: 1 },
-      { prompt: 'What does "facturar" mean in an airport context?', options: ['To invoice', 'To fly', 'To check luggage', 'To board'], correct: 2 },
+      { prompt: 'What is "tarjeta de embarque" in English?', options: ['Credit card', 'Boarding pass', 'ID card', 'Travel card'], correct: 1 , explanation: "\"Tarjeta\" means card and \"embarque\" comes from \"embarcar\" (to board). Together they form the compound noun for the document you need to board a plane." },
+      { prompt: 'How do you say "window seat"?', options: ['Asiento de pasillo', 'Asiento de ventanilla', 'Asiento de frente', 'Asiento de centro'], correct: 1 , explanation: "\"Ventanilla\" is the diminutive of \"ventana\" (window) and specifically refers to small windows like those on planes. \"Pasillo\" means aisle, so \"asiento de pasillo\" is an aisle seat." },
+      { prompt: 'What does "facturar" mean in an airport context?', options: ['To invoice', 'To fly', 'To check luggage', 'To board'], correct: 2 , explanation: "While \"facturar\" can mean \"to invoice\" in business Spanish, at the airport it specifically means to check in luggage. Context changes the meaning of many Spanish verbs." },
     ],
   },
 
@@ -219,9 +219,9 @@ const CONVERSATIONS_DATA = [
       { word: 'descansar', english: 'to rest' },
     ],
     quiz: [
-      { prompt: 'How do you say "My head hurts"?', options: ['Tengo cabeza', 'Me duele la cabeza', 'Mi cabeza est\u00E1 mal', 'La cabeza me pasa'], correct: 1 },
-      { prompt: 'What does "recetar" mean?', options: ['To rest', 'To prescribe', 'To recover', 'To examine'], correct: 1 },
-      { prompt: 'How do you say "since three days ago"?', options: ['En tres d\u00EDas', 'Por tres d\u00EDas', 'Desde hace tres d\u00EDas', 'Hace de tres d\u00EDas'], correct: 2 },
+      { prompt: 'How do you say "My head hurts"?', options: ['Tengo cabeza', 'Me duele la cabeza', 'Mi cabeza est\u00E1 mal', 'La cabeza me pasa'], correct: 1 , explanation: "Spanish uses \"me duele + body part\" (literally \"it hurts to me\") with an indirect object pronoun, rather than the possessive construction English uses (\"my head hurts\")." },
+      { prompt: 'What does "recetar" mean?', options: ['To rest', 'To prescribe', 'To recover', 'To examine'], correct: 1 , explanation: "\"Recetar\" comes from \"receta\" (prescription) and means to prescribe medication. It is used exclusively in medical contexts, unlike \"descansar\" (to rest) or \"examinar\" (to examine)." },
+      { prompt: 'How do you say "since three days ago"?', options: ['En tres d\u00EDas', 'Por tres d\u00EDas', 'Desde hace tres d\u00EDas', 'Hace de tres d\u00EDas'], correct: 2 , explanation: "\"Desde hace + time period\" is a fixed Spanish construction expressing duration from a past point to the present. \"Desde\" means since, and \"hace\" indicates elapsed time." },
     ],
   },
 
@@ -263,9 +263,9 @@ const CONVERSATIONS_DATA = [
       { word: 'cerca / lejos', english: 'near / far' },
     ],
     quiz: [
-      { prompt: 'How do you say "turn left"?', options: ['Siga recto', 'Gire a la izquierda', 'Gire a la derecha', 'Vaya abajo'], correct: 1 },
-      { prompt: 'What does "cuadra" mean?', options: ['Square', 'Block', 'Corner', 'Street'], correct: 1 },
-      { prompt: 'How do you ask "Is it far from here?"', options: ['\u00BFEst\u00E1 cerca?', '\u00BFEst\u00E1 aqu\u00ED?', '\u00BFEst\u00E1 lejos de aqu\u00ED?', '\u00BFD\u00F3nde queda?'], correct: 2 },
+      { prompt: 'How do you say "turn left"?', options: ['Siga recto', 'Gire a la izquierda', 'Gire a la derecha', 'Vaya abajo'], correct: 1 , explanation: "\"Girar\" means to turn, and \"a la izquierda\" means to the left. In directions, Spanish uses \"a la\" before \"izquierda\" or \"derecha.\" \"Siga recto\" means go straight." },
+      { prompt: 'What does "cuadra" mean?', options: ['Square', 'Block', 'Corner', 'Street'], correct: 1 , explanation: "\"Cuadra\" means a city block and is commonly used in Latin America when giving directions. In Spain, \"manzana\" is more frequently used for the same meaning." },
+      { prompt: 'How do you ask "Is it far from here?"', options: ['\u00BFEst\u00E1 cerca?', '\u00BFEst\u00E1 aqu\u00ED?', '\u00BFEst\u00E1 lejos de aqu\u00ED?', '\u00BFD\u00F3nde queda?'], correct: 2 , explanation: "\"Lejos de aquí\" means \"far from here,\" combining the adverb \"lejos\" (far) with the preposition \"de\" and \"aquí\" (here). Its opposite is \"cerca de aquí\" (near here)." },
     ],
   },
 
@@ -307,9 +307,9 @@ const CONVERSATIONS_DATA = [
       { word: 'en total', english: 'in total' },
     ],
     quiz: [
-      { prompt: 'What does "\u00BFQu\u00E9 le pongo?" mean in a market context?', options: ['What are you wearing?', 'What can I get you?', 'What do you put?', 'Where do I put it?'], correct: 1 },
-      { prompt: 'How do you ask the price of strawberries?', options: ['\u00BFCu\u00E1ntas fresas hay?', '\u00BFD\u00F3nde est\u00E1n las fresas?', '\u00BFA cu\u00E1nto est\u00E1n las fresas?', '\u00BFQu\u00E9 son las fresas?'], correct: 2 },
-      { prompt: 'What does "medio kilo" mean?', options: ['One kilo', 'Half a kilo', 'Two kilos', 'A quarter kilo'], correct: 1 },
+      { prompt: 'What does "\u00BFQu\u00E9 le pongo?" mean in a market context?', options: ['What are you wearing?', 'What can I get you?', 'What do you put?', 'Where do I put it?'], correct: 1 , explanation: "\"Poner\" literally means \"to put,\" but at a market \"¿Qué le pongo?\" idiomatically means \"What can I get you?\" It refers to what the vendor will put in your bag." },
+      { prompt: 'How do you ask the price of strawberries?', options: ['\u00BFCu\u00E1ntas fresas hay?', '\u00BFD\u00F3nde est\u00E1n las fresas?', '\u00BFA cu\u00E1nto est\u00E1n las fresas?', '\u00BFQu\u00E9 son las fresas?'], correct: 2 , explanation: "\"¿A cuánto están?\" is the idiomatic way to ask prices at a market, using \"estar\" because prices are temporary states. \"¿Cuánto cuesta?\" also works but sounds more formal." },
+      { prompt: 'What does "medio kilo" mean?', options: ['One kilo', 'Half a kilo', 'Two kilos', 'A quarter kilo'], correct: 1 , explanation: "\"Medio\" means half in Spanish. Market quantities are typically measured in kilos, with \"medio kilo\" (500g) and \"un cuarto de kilo\" (250g) being common amounts to request." },
     ],
   },
 
@@ -351,9 +351,9 @@ const CONVERSATIONS_DATA = [
       { word: 'gestionar', english: 'to manage' },
     ],
     quiz: [
-      { prompt: 'How do you say "Tell me about yourself"?', options: ['D\u00EDgame su nombre', 'Cu\u00E9nteme sobre usted', 'Pres\u00E9nteme su trabajo', 'H\u00E1bleme de su familia'], correct: 1 },
-      { prompt: 'What does "expectativa salarial" mean?', options: ['Work schedule', 'Job title', 'Salary expectation', 'Work experience'], correct: 2 },
-      { prompt: 'How do you say "I learn quickly"?', options: ['Trabajo mucho', 'Estudio siempre', 'Aprendo r\u00E1pido', 'Entiendo bien'], correct: 2 },
+      { prompt: 'How do you say "Tell me about yourself"?', options: ['D\u00EDgame su nombre', 'Cu\u00E9nteme sobre usted', 'Pres\u00E9nteme su trabajo', 'H\u00E1bleme de su familia'], correct: 1 , explanation: "\"Contar\" means to tell or narrate, and \"cuénteme\" is its formal imperative (usted) form. \"Sobre usted\" means about you (formal). This is a standard opening question in Spanish job interviews." },
+      { prompt: 'What does "expectativa salarial" mean?', options: ['Work schedule', 'Job title', 'Salary expectation', 'Work experience'], correct: 2 , explanation: "\"Expectativa\" means expectation and \"salarial\" is the adjective form of \"salario\" (salary). This compound noun is standard HR vocabulary used in professional contexts across the Spanish-speaking world." },
+      { prompt: 'How do you say "I learn quickly"?', options: ['Trabajo mucho', 'Estudio siempre', 'Aprendo r\u00E1pido', 'Entiendo bien'], correct: 2 , explanation: "\"Aprender\" means to learn, and \"rápido\" serves as an adverb meaning quickly here. This is a concise, natural way to express a personal strength in a Spanish job interview." },
     ],
   },
 
@@ -395,9 +395,9 @@ const CONVERSATIONS_DATA = [
       { word: 'caer mal', english: 'to not agree with (food)' },
     ],
     quiz: [
-      { prompt: 'How do you say "stomachache"?', options: ['Dolor de garganta', 'Dolor de cabeza', 'Dolor de est\u00F3mago', 'Dolor de espalda'], correct: 2 },
-      { prompt: 'What are "efectos secundarios"?', options: ['Main effects', 'Side effects', 'Secondary goals', 'Extra costs'], correct: 1 },
-      { prompt: 'What does "tiritas" mean?', options: ['Vitamins', 'Tissues', 'Band-aids', 'Cotton balls'], correct: 2 },
+      { prompt: 'How do you say "stomachache"?', options: ['Dolor de garganta', 'Dolor de cabeza', 'Dolor de est\u00F3mago', 'Dolor de espalda'], correct: 2 , explanation: "\"Dolor de + body part\" is the standard Spanish construction for expressing pain. \"Estómago\" means stomach, \"cabeza\" means head, \"garganta\" means throat, and \"espalda\" means back." },
+      { prompt: 'What are "efectos secundarios"?', options: ['Main effects', 'Side effects', 'Secondary goals', 'Extra costs'], correct: 1 , explanation: "\"Secundario\" means secondary and \"efecto\" means effect. Together they form the medical term for side effects, an important concept when discussing medication with a pharmacist or doctor." },
+      { prompt: 'What does "tiritas" mean?', options: ['Vitamins', 'Tissues', 'Band-aids', 'Cotton balls'], correct: 2 , explanation: "\"Tiritas\" is the common Spanish word for adhesive bandages (band-aids). The word comes from the brand name Tirita, similar to how English speakers use \"Band-Aid\" as a generic term." },
     ],
   },
 
@@ -439,9 +439,9 @@ const CONVERSATIONS_DATA = [
       { word: 'hecho', english: 'done / deal' },
     ],
     quiz: [
-      { prompt: 'How do you say "this weekend"?', options: ['Esta semana', 'Este fin de semana', 'El pr\u00F3ximo d\u00EDa', 'Este s\u00E1bado'], correct: 1 },
-      { prompt: 'What does "\u00BFQu\u00E9 te parece si...?" mean?', options: ['What do you think about...?', 'How about if...?', 'Do you want to...?', 'Both A and B'], correct: 3 },
-      { prompt: 'How do you say "See you Saturday!"?', options: ['Vamos el s\u00E1bado', 'Es s\u00E1bado', '\u00A1Hasta el s\u00E1bado!', 'Quiero el s\u00E1bado'], correct: 2 },
+      { prompt: 'How do you say "this weekend"?', options: ['Esta semana', 'Este fin de semana', 'El pr\u00F3ximo d\u00EDa', 'Este s\u00E1bado'], correct: 1 , explanation: "\"Fin de semana\" literally means \"end of week\" and is the standard Spanish term for weekend. The demonstrative \"este\" (this) precedes it to indicate the upcoming weekend." },
+      { prompt: 'What does "\u00BFQu\u00E9 te parece si...?" mean?', options: ['What do you think about...?', 'How about if...?', 'Do you want to...?', 'Both A and B'], correct: 3 , explanation: "This expression can be translated as both \"What do you think about...?\" and \"How about if...?\" It is a versatile way to make suggestions in informal Spanish, so both A and B are correct." },
+      { prompt: 'How do you say "See you Saturday!"?', options: ['Vamos el s\u00E1bado', 'Es s\u00E1bado', '\u00A1Hasta el s\u00E1bado!', 'Quiero el s\u00E1bado'], correct: 2 , explanation: "\"Hasta\" means \"until\" and is used in farewell expressions. \"¡Hasta el sábado!\" literally means \"until Saturday\" and is the natural way to say goodbye when you plan to meet on that day." },
     ],
   },
 
@@ -483,9 +483,9 @@ const CONVERSATIONS_DATA = [
       { word: 'banca en l\u00EDnea', english: 'online banking' },
     ],
     quiz: [
-      { prompt: 'How do you say "I\u2019d like to open an account"?', options: ['Quiero cerrar una cuenta', 'Me gustar\u00EDa abrir una cuenta', 'Necesito ver mi cuenta', 'Voy a cambiar mi cuenta'], correct: 1 },
-      { prompt: 'What does "saldo m\u00EDnimo" mean?', options: ['Maximum balance', 'Minimum balance', 'Final balance', 'Monthly payment'], correct: 1 },
-      { prompt: 'What is "comisi\u00F3n" in English?', options: ['Commission only', 'Interest', 'Fee / commission', 'Deposit'], correct: 2 },
+      { prompt: 'How do you say "I\u2019d like to open an account"?', options: ['Quiero cerrar una cuenta', 'Me gustar\u00EDa abrir una cuenta', 'Necesito ver mi cuenta', 'Voy a cambiar mi cuenta'], correct: 1 , explanation: "\"Me gustaría\" (I would like) is the conditional form of \"gustar\" and is more polite than \"quiero\" (I want). \"Abrir\" means to open, and its opposite \"cerrar\" means to close." },
+      { prompt: 'What does "saldo m\u00EDnimo" mean?', options: ['Maximum balance', 'Minimum balance', 'Final balance', 'Monthly payment'], correct: 1 , explanation: "\"Saldo\" means balance (the amount of money in an account) and \"mínimo\" means minimum. Banks often require maintaining a minimum balance to waive monthly maintenance fees." },
+      { prompt: 'What is "comisi\u00F3n" in English?', options: ['Commission only', 'Interest', 'Fee / commission', 'Deposit'], correct: 2 , explanation: "\"Comisión\" has a broader meaning than just commission; in banking it commonly refers to any fee or service charge, including account maintenance fees, transfer fees, and ATM charges." },
     ],
   },
 
@@ -527,9 +527,9 @@ const CONVERSATIONS_DATA = [
       { word: 'acabo de llegar', english: 'I just arrived' },
     ],
     quiz: [
-      { prompt: 'How do you ask "What do you do for work?" informally?', options: ['\u00BFQu\u00E9 haces?', '\u00BFA qu\u00E9 te dedicas?', '\u00BFD\u00F3nde trabajas?', '\u00BFCu\u00E1nto ganas?'], correct: 1 },
-      { prompt: 'What does "acabo de llegar" mean?', options: ['I arrived early', 'I just arrived', 'I\u2019m about to arrive', 'I arrived late'], correct: 1 },
-      { prompt: 'How do you say "free time"?', options: ['Hora libre', 'D\u00EDa libre', 'Tiempo libre', 'Momento libre'], correct: 2 },
+      { prompt: 'How do you ask "What do you do for work?" informally?', options: ['\u00BFQu\u00E9 haces?', '\u00BFA qu\u00E9 te dedicas?', '\u00BFD\u00F3nde trabajas?', '\u00BFCu\u00E1nto ganas?'], correct: 1 , explanation: "\"Dedicarse a\" literally means \"to dedicate oneself to\" and is the most natural way to ask about someone's profession in Spanish. \"¿Dónde trabajas?\" asks where you work, not what you do." },
+      { prompt: 'What does "acabo de llegar" mean?', options: ['I arrived early', 'I just arrived', 'I\u2019m about to arrive', 'I arrived late'], correct: 1 , explanation: "\"Acabar de + infinitive\" is a fixed construction meaning \"to have just done something.\" It expresses the immediate past, making \"acabo de llegar\" mean \"I arrived just moments ago.\"" },
+      { prompt: 'How do you say "free time"?', options: ['Hora libre', 'D\u00EDa libre', 'Tiempo libre', 'Momento libre'], correct: 2 , explanation: "\"Tiempo libre\" is a fixed collocation in Spanish for leisure time. While \"hora libre\" exists (meaning a free period in a schedule), \"tiempo libre\" is the correct general term." },
     ],
   },
 
@@ -572,9 +572,9 @@ const CONVERSATIONS_DATA = [
       { word: 'metros cuadrados', english: 'square meters' },
     ],
     quiz: [
-      { prompt: 'How do you say "monthly rent"?', options: ['Precio mensual', 'Alquiler mensual', 'Pago del mes', 'Coste de casa'], correct: 1 },
-      { prompt: 'What does "mudarse" mean?', options: ['To change clothes', 'To change one\u2019s mind', 'To move house', 'To be quiet'], correct: 2 },
-      { prompt: 'What are "gastos de comunidad"?', options: ['Community events', 'Building / community fees', 'Neighborhood taxes', 'Shared groceries'], correct: 1 },
+      { prompt: 'How do you say "monthly rent"?', options: ['Precio mensual', 'Alquiler mensual', 'Pago del mes', 'Coste de casa'], correct: 1 , explanation: "\"Alquiler\" specifically means rent (the payment for using a property) and \"mensual\" means monthly. This is the standard real estate term used in rental agreements across Spanish-speaking countries." },
+      { prompt: 'What does "mudarse" mean?', options: ['To change clothes', 'To change one\u2019s mind', 'To move house', 'To be quiet'], correct: 2 , explanation: "\"Mudarse\" is a reflexive verb meaning to move house or relocate. Without the reflexive pronoun, \"mudar\" can mean to change or shed, so the reflexive form is essential for the housing meaning." },
+      { prompt: 'What are "gastos de comunidad"?', options: ['Community events', 'Building / community fees', 'Neighborhood taxes', 'Shared groceries'], correct: 1 , explanation: "\"Gastos de comunidad\" are shared building maintenance fees paid by apartment owners or tenants, covering things like elevator maintenance, stairway cleaning, and building insurance." },
     ],
   },
 
@@ -616,9 +616,9 @@ const CONVERSATIONS_DATA = [
       { word: 'asiento', english: 'seat' },
     ],
     quiz: [
-      { prompt: 'How do you say "round trip"?', options: ['Solo ida', 'Ida y vuelta', 'Viaje doble', 'Dos billetes'], correct: 1 },
-      { prompt: 'What does "and\u00E9n" mean?', options: ['Aisle', 'Platform', 'Terminal', 'Track'], correct: 1 },
-      { prompt: 'How do you ask "How long is the trip?"', options: ['\u00BFCu\u00E1nto cuesta el viaje?', '\u00BFCu\u00E1ndo es el viaje?', '\u00BFCu\u00E1nto dura el viaje?', '\u00BFC\u00F3mo es el viaje?'], correct: 2 },
+      { prompt: 'How do you say "round trip"?', options: ['Solo ida', 'Ida y vuelta', 'Viaje doble', 'Dos billetes'], correct: 1 , explanation: "\"Ida\" means going (one way) and \"vuelta\" means return. Together, \"ida y vuelta\" is the standard phrase for a round-trip ticket, while \"solo ida\" means one way only." },
+      { prompt: 'What does "and\u00E9n" mean?', options: ['Aisle', 'Platform', 'Terminal', 'Track'], correct: 1 , explanation: "\"Andén\" specifically refers to a train platform where passengers wait and board. It is distinct from \"vía\" (track) and \"terminal\" (terminal building)." },
+      { prompt: 'How do you ask "How long is the trip?"', options: ['\u00BFCu\u00E1nto cuesta el viaje?', '\u00BFCu\u00E1ndo es el viaje?', '\u00BFCu\u00E1nto dura el viaje?', '\u00BFC\u00F3mo es el viaje?'], correct: 2 , explanation: "\"Durar\" means to last or take (in terms of time), so \"¿Cuánto dura?\" asks about duration. \"¿Cuánto cuesta?\" asks about cost, and \"¿Cuándo?\" asks when." },
     ],
   },
 
@@ -661,9 +661,9 @@ const CONVERSATIONS_DATA = [
       { word: 'funcionar', english: 'to work / to function' },
     ],
     quiz: [
-      { prompt: 'How do you say "It doesn\u2019t work anymore"?', options: ['No trabaja m\u00E1s', 'Ya no funciona', 'Est\u00E1 roto siempre', 'No sirve nunca'], correct: 1 },
-      { prompt: 'What does "garant\u00EDa" mean?', options: ['Guarantee / warranty', 'Insurance', 'Receipt', 'Protection plan'], correct: 0 },
-      { prompt: 'What are "d\u00EDas h\u00E1biles"?', options: ['Holidays', 'Calendar days', 'Business days', 'Weekends'], correct: 2 },
+      { prompt: 'How do you say "It doesn\u2019t work anymore"?', options: ['No trabaja m\u00E1s', 'Ya no funciona', 'Est\u00E1 roto siempre', 'No sirve nunca'], correct: 1 , explanation: "\"Ya no funciona\" combines \"ya no\" (no longer) with \"funcionar\" (to function/work for devices and machines). Spanish distinguishes between \"funcionar\" for machines and \"trabajar\" for people." },
+      { prompt: 'What does "garant\u00EDa" mean?', options: ['Guarantee / warranty', 'Insurance', 'Receipt', 'Protection plan'], correct: 0 , explanation: "\"Garantía\" means warranty or guarantee, referring to a manufacturer's promise to repair or replace a defective product within a specified period. It comes from \"garantizar\" (to guarantee)." },
+      { prompt: 'What are "d\u00EDas h\u00E1biles"?', options: ['Holidays', 'Calendar days', 'Business days', 'Weekends'], correct: 2 , explanation: "\"Hábil\" means capable or working, and \"días hábiles\" specifically means business days (Monday through Friday, excluding holidays), as opposed to \"días naturales\" (calendar days)." },
     ],
   },
 
@@ -708,9 +708,9 @@ const CONVERSATIONS_DATA = [
       { word: 'equipo multidisciplinar', english: 'multidisciplinary team' },
     ],
     quiz: [
-      { prompt: 'What does "trayectoria profesional" mean?', options: ['Job title', 'Professional career path', 'Work schedule', 'Business trip'], correct: 1 },
-      { prompt: 'How do you say "salary expectations" in Spanish?', options: ['Salario esperado', 'Expectativas salariales', 'Sueldo previsto', 'Pago anticipado'], correct: 1 },
-      { prompt: 'What does "He alcanzado el techo de desarrollo" mean?', options: ['I have reached the top floor', 'I have hit the development ceiling', 'I have finished development', 'I have built the roof'], correct: 1 },
+      { prompt: 'What does "trayectoria profesional" mean?', options: ['Job title', 'Professional career path', 'Work schedule', 'Business trip'], correct: 1 , explanation: "\"Trayectoria\" comes from trajectory and refers to the path or progression of a career over time. It emphasizes the journey and professional development, not just a current job title." },
+      { prompt: 'How do you say "salary expectations" in Spanish?', options: ['Salario esperado', 'Expectativas salariales', 'Sueldo previsto', 'Pago anticipado'], correct: 1 , explanation: "\"Expectativas salariales\" uses the plural noun \"expectativas\" (expectations) with the adjective \"salariales\" (salary-related). This is formal HR vocabulary commonly used in professional interview settings." },
+      { prompt: 'What does "He alcanzado el techo de desarrollo" mean?', options: ['I have reached the top floor', 'I have hit the development ceiling', 'I have finished development', 'I have built the roof'], correct: 1 , explanation: "\"Techo\" literally means ceiling or roof and metaphorically represents an upper limit. \"Alcanzar el techo de desarrollo\" means reaching the point where no further professional growth is possible at one's current company." },
     ],
   },
 
@@ -755,9 +755,9 @@ const CONVERSATIONS_DATA = [
       { word: 'incentivos perversos', english: 'perverse incentives' },
     ],
     quiz: [
-      { prompt: 'What does "c\u00E1mara de eco" mean?', options: ['Sound studio', 'Echo chamber', 'Music room', 'Loud speaker'], correct: 1 },
-      { prompt: 'How do you say "I respectfully disagree" in Spanish?', options: ['No estoy de acuerdo', 'Discrepo respetuosamente', 'Me opongo totalmente', 'No me gusta su idea'], correct: 1 },
-      { prompt: 'What does "El quid de la cuesti\u00F3n" mean?', options: ['The end of the question', 'The crux of the matter', 'A difficult question', 'The first question'], correct: 1 },
+      { prompt: 'What does "c\u00E1mara de eco" mean?', options: ['Sound studio', 'Echo chamber', 'Music room', 'Loud speaker'], correct: 1 , explanation: "\"Cámara\" means chamber and \"eco\" means echo. An echo chamber describes an environment where people only encounter beliefs reinforcing their own, a key concept in media literacy and political discourse." },
+      { prompt: 'How do you say "I respectfully disagree" in Spanish?', options: ['No estoy de acuerdo', 'Discrepo respetuosamente', 'Me opongo totalmente', 'No me gusta su idea'], correct: 1 , explanation: "\"Discrepar\" is a formal verb meaning to disagree or dissent, more elevated than \"no estar de acuerdo.\" Adding \"respetuosamente\" (respectfully) makes it appropriate for academic or professional debate." },
+      { prompt: 'What does "El quid de la cuesti\u00F3n" mean?', options: ['The end of the question', 'The crux of the matter', 'A difficult question', 'The first question'], correct: 1 , explanation: "\"Quid\" comes from Latin meaning \"what\" or \"the essential point.\" This expression identifies the core or crux of a matter, similar to the English phrase \"the heart of the issue.\"" },
     ],
   },
 
@@ -802,9 +802,9 @@ const CONVERSATIONS_DATA = [
       { word: 'programa electoral', english: 'electoral program / platform' },
     ],
     quiz: [
-      { prompt: 'What does "presi\u00F3n fiscal" mean?', options: ['Fiscal pressure / tax burden', 'Financial crisis', 'Government spending', 'Budget deficit'], correct: 0 },
-      { prompt: 'What are "pymes" in English?', options: ['Large corporations', 'Government agencies', 'Small and medium enterprises', 'Non-profit organizations'], correct: 2 },
-      { prompt: 'How do you say "Allow me to clarify" in formal Spanish?', options: ['D\u00E9jeme hablar', 'Perm\u00EDtame puntualizar', 'Quiero decir algo', 'Escuche por favor'], correct: 1 },
+      { prompt: 'What does "presi\u00F3n fiscal" mean?', options: ['Fiscal pressure / tax burden', 'Financial crisis', 'Government spending', 'Budget deficit'], correct: 0 , explanation: "\"Presión\" means pressure and \"fiscal\" relates to taxes and the treasury. Together they describe the overall tax burden on individuals or businesses, a central concept in economic policy discussions." },
+      { prompt: 'What are "pymes" in English?', options: ['Large corporations', 'Government agencies', 'Small and medium enterprises', 'Non-profit organizations'], correct: 2 , explanation: "\"Pymes\" is an acronym for \"Pequeñas y Medianas Empresas\" (Small and Medium Enterprises). They form the backbone of employment in most Spanish-speaking economies." },
+      { prompt: 'How do you say "Allow me to clarify" in formal Spanish?', options: ['D\u00E9jeme hablar', 'Perm\u00EDtame puntualizar', 'Quiero decir algo', 'Escuche por favor'], correct: 1 , explanation: "\"Permitir\" means to allow, and \"puntualizar\" means to clarify or specify a point precisely. This polished expression is used in debates and professional settings to introduce a correction or nuance." },
     ],
   },
 
@@ -850,9 +850,9 @@ const CONVERSATIONS_DATA = [
       { word: 'intersubjetiva', english: 'intersubjective' },
     ],
     quiz: [
-      { prompt: 'What does "agencia del sujeto" mean?', options: ['Travel agency', 'Government agency', 'Agency of the subject', 'Subject matter'], correct: 2 },
-      { prompt: 'What is "habitus" in Bourdieu\u2019s philosophy?', options: ['A bad habit', 'Ingrained dispositions shaped by social structures', 'A type of habitat', 'A religious practice'], correct: 1 },
-      { prompt: 'What does "apor\u00EDa" mean?', options: ['An opening', 'A philosophical impasse or puzzle', 'A type of argument', 'A conclusion'], correct: 1 },
+      { prompt: 'What does "agencia del sujeto" mean?', options: ['Travel agency', 'Government agency', 'Agency of the subject', 'Subject matter'], correct: 2 , explanation: "In philosophy, \"agencia\" refers to the capacity of an individual (\"sujeto\") to act independently and make free choices. It is unrelated to the everyday meaning of agency as a business or organization." },
+      { prompt: 'What is "habitus" in Bourdieu\u2019s philosophy?', options: ['A bad habit', 'Ingrained dispositions shaped by social structures', 'A type of habitat', 'A religious practice'], correct: 1 , explanation: "In Pierre Bourdieu's sociology, \"habitus\" refers to deeply ingrained habits, skills, and dispositions that individuals acquire through their social environment, explaining how social structures shape behavior without strict determinism." },
+      { prompt: 'What does "apor\u00EDa" mean?', options: ['An opening', 'A philosophical impasse or puzzle', 'A type of argument', 'A conclusion'], correct: 1 , explanation: "\"Aporía\" comes from Greek meaning \"without passage.\" In philosophy, it refers to a state of puzzlement or an irresolvable internal contradiction that is nonetheless productive for critical thinking." },
     ],
   },
 
@@ -897,9 +897,9 @@ const CONVERSATIONS_DATA = [
       { word: 'borrador', english: 'draft (document)' },
     ],
     quiz: [
-      { prompt: 'What does "lucro cesante" mean?', options: ['Profit margin', 'Lost profits / loss of earnings', 'Net income', 'Tax deduction'], correct: 1 },
-      { prompt: 'What is "jurisprudencia"?', options: ['Legal advice', 'Case law / jurisprudence', 'A jury', 'Legal fees'], correct: 1 },
-      { prompt: 'What does "Nos reservamos el derecho de..." mean?', options: ['We give up the right to...', 'We reserve the right to...', 'We demand the right to...', 'We share the right to...'], correct: 1 },
+      { prompt: 'What does "lucro cesante" mean?', options: ['Profit margin', 'Lost profits / loss of earnings', 'Net income', 'Tax deduction'], correct: 1 , explanation: "\"Lucro\" means profit and \"cesante\" means ceasing. This legal term refers to income or profits lost due to another party's breach or wrongful action, and is a key concept in damages claims." },
+      { prompt: 'What is "jurisprudencia"?', options: ['Legal advice', 'Case law / jurisprudence', 'A jury', 'Legal fees'], correct: 1 , explanation: "\"Jurisprudencia\" refers to the body of court decisions that interpret law and serve as precedent for future cases. It is a cornerstone of legal argumentation in civil and common law systems." },
+      { prompt: 'What does "Nos reservamos el derecho de..." mean?', options: ['We give up the right to...', 'We reserve the right to...', 'We demand the right to...', 'We share the right to...'], correct: 1 , explanation: "\"Reservarse\" means to keep or retain for oneself, and \"derecho\" means right. This formal legal phrase indicates that a party is preserving their option to take future action without committing to it now." },
     ],
   },
 
@@ -945,9 +945,9 @@ const CONVERSATIONS_DATA = [
       { word: 'narrador no fiable', english: 'unreliable narrator' },
     ],
     quiz: [
-      { prompt: 'What does "caciquismo" refer to?', options: ['A literary genre', 'Political bossism / strongman rule', 'A type of dance', 'Agricultural practice'], correct: 1 },
-      { prompt: 'What is "intertextualidad"?', options: ['Translating between languages', 'References and connections between literary works', 'Writing in multiple genres', 'A type of footnote'], correct: 1 },
-      { prompt: 'What does "desenlace" mean in literary analysis?', options: ['Introduction', 'Climax', 'Ending / denouement', 'Setting'], correct: 2 },
+      { prompt: 'What does "caciquismo" refer to?', options: ['A literary genre', 'Political bossism / strongman rule', 'A type of dance', 'Agricultural practice'], correct: 1 , explanation: "\"Caciquismo\" derives from \"cacique\" (indigenous chief) and describes a system of political bossism where local strongmen wield disproportionate power, particularly associated with rural Latin America and 19th-century Spain." },
+      { prompt: 'What is "intertextualidad"?', options: ['Translating between languages', 'References and connections between literary works', 'Writing in multiple genres', 'A type of footnote'], correct: 1 , explanation: "\"Intertextualidad\" describes the relationship between texts where one work references, echoes, or builds upon another. It enriches literary meaning through cross-textual connections and allusions." },
+      { prompt: 'What does "desenlace" mean in literary analysis?', options: ['Introduction', 'Climax', 'Ending / denouement', 'Setting'], correct: 2 , explanation: "\"Desenlace\" comes from \"desenlazar\" (to untie) and refers to the resolution or denouement of a narrative, where plot threads are resolved and the story reaches its conclusion." },
     ],
   },
 

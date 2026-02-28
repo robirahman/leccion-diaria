@@ -19,17 +19,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Sobre qué ciudad antigua fue construida Ciudad de México?",
         options: ["Tula", "Tenochtitlán", "Palenque", "Cholula"],
-        correct: 1
+        correct: 1,
+        explanation: "The Spanish conquistadors built Mexico City directly on top of Tenochtitlán, the capital of the Aztec Empire, after conquering it in 1521. Remnants of Aztec structures are still found beneath the modern city."
       },
       {
         prompt: "¿Cómo se llama la plaza principal de Ciudad de México?",
         options: ["Plaza Mayor", "El Zócalo", "Plaza de la Constitución", "Plaza Central"],
-        correct: 1
+        correct: 1,
+        explanation: "El Zócalo (formally called Plaza de la Constitución) is the main square of Mexico City and one of the largest public plazas in the world. The name 'zócalo' originally referred to a base for a monument that was never completed."
       },
       {
         prompt: "¿Qué sitio Patrimonio de la Humanidad tiene trajineras coloridas?",
         options: ["Chapultepec", "Coyoacán", "Xochimilco", "Teotihuacán"],
-        correct: 2
+        correct: 2,
+        explanation: "Xochimilco is famous for its network of ancient canals and colorful flat-bottomed boats called trajineras, which are remnants of the Aztec agricultural system of floating gardens (chinampas)."
       }
     ]
   },
@@ -53,17 +56,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Quién diseñó la Sagrada Familia?",
         options: ["Pablo Picasso", "Antoni Gaudí", "Salvador Dalí", "Joan Miró"],
-        correct: 1
+        correct: 1,
+        explanation: "Antoni Gaudí dedicated the last 15 years of his life exclusively to designing the Sagrada Familia. His unique modernist style, inspired by organic forms found in nature, defines Barcelona's architectural identity."
       },
       {
         prompt: "¿Desde qué año está en construcción la Sagrada Familia?",
         options: ["1850", "1872", "1882", "1902"],
-        correct: 2
+        correct: 2,
+        explanation: "Construction began in 1882 under architect Francisco de Paula del Villar, and Gaudí took over a year later. Over 140 years later, the basilica remains under construction, making it one of the longest-running building projects in history."
       },
       {
         prompt: "¿Qué dos lenguas se hablan en Barcelona?",
         options: ["Español y portugués", "Catalán y castellano", "Gallego y castellano", "Vasco y castellano"],
-        correct: 1
+        correct: 1,
+        explanation: "Barcelona is the capital of Catalonia, an autonomous community with its own Romance language, Catalan. Most residents are bilingual, using both Catalan and Castilian Spanish in daily life, education, and government."
       }
     ]
   },
@@ -87,17 +93,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Cómo se conoce a Buenos Aires?",
         options: ["La Ciudad de la Furia", "El París de Sudamérica", "La Gran Manzana del Sur", "La Ciudad del Tango"],
-        correct: 1
+        correct: 1,
+        explanation: "Buenos Aires earned the nickname 'Paris of South America' because of the strong European (especially French and Italian) influence on its architecture, wide boulevards, and café culture brought by waves of immigration in the 19th and 20th centuries."
       },
       {
         prompt: "¿Qué barrio es famoso por sus casas coloridas?",
         options: ["San Telmo", "Palermo", "La Boca", "Recoleta"],
-        correct: 2
+        correct: 2,
+        explanation: "La Boca, particularly the street called Caminito, is famous for its brightly painted houses. The tradition originated from port workers who used leftover ship paint to decorate their corrugated-metal homes."
       },
       {
         prompt: "¿Quién está enterrada en el cementerio de Recoleta?",
         options: ["Gabriela Mistral", "Eva Perón", "Frida Kahlo", "Isabel Allende"],
-        correct: 1
+        correct: 1,
+        explanation: "Eva Perón (Evita), the iconic First Lady of Argentina, is buried in the Duarte family vault in Recoleta Cemetery. Her tomb remains one of the most visited graves in the world and a symbol of Argentine political history."
       }
     ]
   },
@@ -121,17 +130,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Qué emperador inca construyó Machu Picchu?",
         options: ["Atahualpa", "Huayna Cápac", "Pachacútec", "Túpac Inca"],
-        correct: 2
+        correct: 2,
+        explanation: "Pachacútec (meaning 'earth-shaker' in Quechua) was the ninth Inca ruler who transformed a small kingdom into the vast Inca Empire. He ordered Machu Picchu built around 1450 as a royal estate and ceremonial center."
       },
       {
         prompt: "¿En qué año fue dada a conocer internacionalmente?",
         options: ["1892", "1901", "1911", "1924"],
-        correct: 2
+        correct: 2,
+        explanation: "American explorer and Yale professor Hiram Bingham arrived at Machu Picchu in 1911, guided by a local farmer. While local Quechua-speaking people already knew of the site, Bingham's expedition brought it to worldwide attention."
       },
       {
         prompt: "¿Cuántos días dura la caminata del Camino Inca?",
         options: ["Dos", "Tres", "Cuatro", "Cinco"],
-        correct: 2
+        correct: 2,
+        explanation: "The classic Inca Trail trek covers approximately 43 kilometers over four days, following ancient stone pathways built by the Incas through cloud forests and mountain passes before arriving at the Sun Gate overlooking Machu Picchu."
       }
     ]
   },
@@ -155,17 +167,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿De qué década son los coches clásicos que circulan por La Habana?",
         options: ["Años cuarenta", "Años cincuenta", "Años sesenta", "Años setenta"],
-        correct: 1
+        correct: 1,
+        explanation: "After the Cuban Revolution in 1959, the U.S. trade embargo prevented new American cars from being imported. Cubans have maintained and repaired their 1950s-era Chevrolets, Fords, and Buicks for decades, creating Havana's iconic streetscape."
       },
       {
         prompt: "¿Cómo se llama el famoso paseo marítimo de La Habana?",
         options: ["La Rambla", "El Paseo", "El Malecón", "La Costanera"],
-        correct: 2
+        correct: 2,
+        explanation: "The Malecón is an 8-kilometer seawall and promenade stretching along Havana's coast. Built starting in 1901, it serves as a social gathering place where habaneros come to fish, socialize, and enjoy the sea breeze."
       },
       {
         prompt: "¿Qué parte de La Habana es Patrimonio de la Humanidad?",
         options: ["El Vedado", "Miramar", "La Habana Vieja", "Centro Habana"],
-        correct: 2
+        correct: 2,
+        explanation: "La Habana Vieja (Old Havana) was declared a UNESCO World Heritage Site in 1982 for its remarkably preserved collection of colonial-era Spanish baroque and neoclassical architecture dating back to the city's founding in 1519."
       }
     ]
   },
@@ -189,17 +204,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Qué escritor famoso vivió en Cartagena?",
         options: ["Pablo Neruda", "Mario Vargas Llosa", "Gabriel García Márquez", "Jorge Luis Borges"],
-        correct: 2
+        correct: 2,
+        explanation: "Nobel Prize-winning Colombian author Gabriel García Márquez lived in Cartagena and drew deep inspiration from the city. His novels, including 'Love in the Time of Cholera,' are set in a city closely modeled on Cartagena's streets and atmosphere."
       },
       {
         prompt: "¿Cómo se llama la fortaleza más grande de Cartagena?",
         options: ["El Morro", "San Felipe de Barajas", "San Cristóbal", "La Popa"],
-        correct: 1
+        correct: 1,
+        explanation: "The Castillo de San Felipe de Barajas was built by the Spanish starting in 1536 and expanded over two centuries. It is the largest and most complex military fortress built by Spain anywhere in the Americas, designed to protect against pirate and naval attacks."
       },
       {
         prompt: "¿Qué islas cercanas ofrecen playas paradisíacas?",
         options: ["Islas del Rosario", "Islas San Bernardo", "Islas Galápagos", "Islas Baleares"],
-        correct: 0
+        correct: 0,
+        explanation: "The Rosario Islands (Islas del Rosario) are an archipelago of about 27 small islands located roughly one hour by boat from Cartagena. They are a protected national park known for their coral reefs and crystal-clear Caribbean waters."
       }
     ]
   },
@@ -223,17 +241,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Qué significa 'Cusco' en quechua?",
         options: ["Ciudad sagrada", "Ombligo del mundo", "Tierra alta", "Hogar del sol"],
-        correct: 1
+        correct: 1,
+        explanation: "In Quechua, 'Qosqo' means 'navel of the world,' reflecting the Inca belief that Cusco was the center of their universe. As the capital of the Inca Empire, all roads and administrative regions radiated outward from this city."
       },
       {
         prompt: "¿Cuántos ángulos tiene la famosa piedra inca de Cusco?",
         options: ["Ocho", "Diez", "Doce", "Catorce"],
-        correct: 2
+        correct: 2,
+        explanation: "The Twelve-Angle Stone (Piedra de los Doce Ángulos) is a masterpiece of Inca stonemasonry, fitted perfectly without mortar into a wall on Hatun Rumiyoc street. Its twelve angles demonstrate the Incas' extraordinary ability to cut and fit irregular stones with precision."
       },
       {
         prompt: "¿A qué altitud se encuentra Cusco?",
         options: ["2.400 metros", "3.000 metros", "3.400 metros", "4.000 metros"],
-        correct: 2
+        correct: 2,
+        explanation: "Cusco sits at 3,400 meters (about 11,150 feet) above sea level in the Andes mountains. Visitors are often advised to spend a day or two acclimatizing to the high altitude before engaging in strenuous activity."
       }
     ]
   },
@@ -257,17 +278,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿A qué país pertenecen las Islas Galápagos?",
         options: ["Colombia", "Perú", "Ecuador", "Chile"],
-        correct: 2
+        correct: 2,
+        explanation: "The Galápagos Islands belong to Ecuador and lie about 1,000 kilometers off its Pacific coast. Ecuador annexed the archipelago in 1832, and the islands are now one of Ecuador's 24 provinces."
       },
       {
         prompt: "¿En qué año visitó Darwin las Galápagos?",
         options: ["1820", "1835", "1850", "1870"],
-        correct: 1
+        correct: 1,
+        explanation: "Charles Darwin visited the Galápagos in 1835 during his famous voyage on HMS Beagle. His observations of how finches and tortoises varied between islands became key evidence for his theory of natural selection, published in 'On the Origin of Species' in 1859."
       },
       {
         prompt: "¿Qué porcentaje del archipiélago es parque nacional?",
         options: ["50%", "75%", "90%", "97%"],
-        correct: 3
+        correct: 3,
+        explanation: "A remarkable 97% of the Galápagos land area is designated as national park, making it one of the most protected places on Earth. Only 3% is allocated for human settlement, reflecting Ecuador's commitment to preserving its unique biodiversity."
       }
     ]
   },
@@ -291,17 +315,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Qué era originalmente la Giralda de Sevilla?",
         options: ["Una torre de vigilancia", "Un minarete", "Un faro", "Una torre del reloj"],
-        correct: 1
+        correct: 1,
+        explanation: "The Giralda was originally built in the 12th century as the minaret of the Almohad mosque during Moorish rule of Seville. After the Christian reconquest, it was converted into the bell tower of the cathedral, blending Islamic and Christian architecture."
       },
       {
         prompt: "¿Qué barrio de Sevilla es cuna del flamenco?",
         options: ["Santa Cruz", "Macarena", "Triana", "Alameda"],
-        correct: 2
+        correct: 2,
+        explanation: "Triana, located across the Guadalquivir River, has been the historic home of Romani communities whose culture gave birth to flamenco. Many legendary flamenco singers, dancers, and guitarists have come from this neighborhood."
       },
       {
         prompt: "¿Qué serie de televisión se filmó en el Real Alcázar?",
         options: ["Breaking Bad", "The Crown", "Juego de Tronos", "Narcos"],
-        correct: 2
+        correct: 2,
+        explanation: "The Real Alcázar's stunning Mudéjar architecture and lush gardens served as the filming location for the Water Gardens of Dorne in HBO's Game of Thrones. The palace's blend of Islamic and Christian artistic styles made it a perfect stand-in for the fictional kingdom."
       }
     ]
   },
@@ -325,17 +352,20 @@ const TRAVEL_DATA = [
       {
         prompt: "¿Cuántos tipos de mole tiene la cocina oaxaqueña?",
         options: ["Tres", "Cinco", "Siete", "Nueve"],
-        correct: 2
+        correct: 2,
+        explanation: "Oaxaca is called 'the land of seven moles,' each with a distinct color, flavor, and set of ingredients. The seven varieties include negro, rojo, coloradito, amarillo, verde, chichilo, and manchamanteles, reflecting centuries of indigenous culinary tradition."
       },
       {
         prompt: "¿Qué antigua ciudad zapoteca se encuentra cerca de Oaxaca?",
         options: ["Teotihuacán", "Mitla", "Monte Albán", "Palenque"],
-        correct: 2
+        correct: 2,
+        explanation: "Monte Albán was the capital of the Zapotec civilization, founded around 500 BCE on a flattened mountaintop overlooking the Oaxaca Valley. It was one of Mesoamerica's earliest major cities and is now a UNESCO World Heritage Site."
       },
       {
         prompt: "¿Cuántos grupos étnicos indígenas tiene Oaxaca?",
         options: ["Ocho", "Doce", "Dieciséis", "Veinte"],
-        correct: 2
+        correct: 2,
+        explanation: "Oaxaca is home to 16 distinct indigenous ethnic groups, including the Zapotec and Mixtec, making it the most ethnically diverse state in Mexico. Each group maintains its own language, traditions, and cultural practices."
       }
     ]
   }

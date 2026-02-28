@@ -19,17 +19,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿En qué país nació el reggaetón?",
         options: ["Colombia", "Cuba", "Puerto Rico", "República Dominicana"],
-        correct: 2
+        correct: 2,
+        explanation: "Reggaeton originated in Puerto Rico in the 1990s, blending reggae en español with hip hop and Caribbean rhythms before spreading across Latin America."
       },
       {
         prompt: "¿Cómo se llama el ritmo característico del reggaetón?",
         options: ["Cumbia", "Dembow", "Son", "Merengue"],
-        correct: 1
+        correct: 1,
+        explanation: "The dembow rhythm is derived from Jamaican dancehall music and became the signature beat of reggaeton, giving the genre its distinctive, instantly recognizable pulse."
       },
       {
         prompt: "¿Qué canción de Daddy Yankee fue clave en la expansión internacional del reggaetón?",
         options: ["Despacito", "Gasolina", "Lo Que Pasó Pasó", "Rompe"],
-        correct: 1
+        correct: 1,
+        explanation: "'Gasolina' (2004) was the first reggaeton song to achieve massive global crossover success, introducing the genre to mainstream audiences worldwide."
       }
     ]
   },
@@ -53,17 +56,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿En qué ciudad se desarrolló la salsa como género?",
         options: ["La Habana", "San Juan", "Nueva York", "Cali"],
-        correct: 2
+        correct: 2,
+        explanation: "Although salsa has Cuban and Puerto Rican roots, it developed as a distinct genre in New York City during the 1960s–70s, where Latino immigrants blended son cubano, guaracha, and jazz."
       },
       {
         prompt: "¿Cuál era el famoso grito de Celia Cruz?",
         options: ["¡Fuego!", "¡Azúcar!", "¡Sabor!", "¡Wepa!"],
-        correct: 1
+        correct: 1,
+        explanation: "Celia Cruz, known as the 'Queen of Salsa,' made '¡Azúcar!' (Sugar!) her iconic catchphrase, reportedly inspired by a waiter asking if she wanted sugar in her coffee."
       },
       {
         prompt: "¿Qué sello discográfico fue fundamental para la salsa?",
         options: ["Motown", "Fania Records", "Sony Latin", "Discos Fuentes"],
-        correct: 1
+        correct: 1,
+        explanation: "Fania Records, founded in 1964 by Johnny Pacheco and Jerry Masucci, became the definitive salsa label, signing legends like Héctor Lavoe, Willie Colón, and Celia Cruz."
       }
     ]
   },
@@ -87,17 +93,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿De qué región de España es originario el flamenco?",
         options: ["Cataluña", "Galicia", "Andalucía", "Castilla"],
-        correct: 2
+        correct: 2,
+        explanation: "Flamenco developed in Andalusia, the southern region of Spain, where Romani, Arab, Jewish, and local Andalusian cultures intersected over centuries to create this unique art form."
       },
       {
         prompt: "¿Qué significa 'duende' en el contexto del flamenco?",
         options: ["Un instrumento", "Una emoción profunda del alma", "Un tipo de baile", "Un ritmo rápido"],
-        correct: 1
+        correct: 1,
+        explanation: "In flamenco, 'duende' refers to a heightened state of soulful emotion and authenticity that a performer channels during a performance. The poet Federico García Lorca famously described it as a mysterious power that everyone feels but no philosopher can explain."
       },
       {
         prompt: "¿En qué año declaró la UNESCO al flamenco Patrimonio Inmaterial?",
         options: ["2005", "2008", "2010", "2015"],
-        correct: 2
+        correct: 2,
+        explanation: "UNESCO inscribed flamenco on its Representative List of the Intangible Cultural Heritage of Humanity in 2010, recognizing it as a deeply rooted cultural tradition of Andalusia."
       }
     ]
   },
@@ -121,17 +130,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿De qué estado mexicano es originario el mariachi?",
         options: ["Oaxaca", "Veracruz", "Jalisco", "Guerrero"],
-        correct: 2
+        correct: 2,
+        explanation: "Mariachi music traces its origins to the western Mexican state of Jalisco, particularly the towns around Guadalajara, where it evolved from regional folk ensembles in the 19th century."
       },
       {
         prompt: "¿Cómo se llama la famosa plaza de mariachis en Ciudad de México?",
         options: ["Plaza del Zócalo", "Plaza Garibaldi", "Plaza de la Constitución", "Plaza Hidalgo"],
-        correct: 1
+        correct: 1,
+        explanation: "Plaza Garibaldi in Mexico City has been the traditional gathering place for mariachi musicians since the early 20th century, where groups can be hired for serenades and celebrations."
       },
       {
         prompt: "¿Qué instrumento de cuerda grave es típico del mariachi?",
         options: ["Contrabajo", "Violonchelo", "Guitarrón", "Bajo eléctrico"],
-        correct: 2
+        correct: 2,
+        explanation: "The guitarrón mexicano is a large, deep-bodied acoustic bass guitar unique to mariachi music. It provides the bass line and is played without a pick, using the thumb and fingers."
       }
     ]
   },
@@ -155,17 +167,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿De qué país es originaria la bachata?",
         options: ["Cuba", "Puerto Rico", "República Dominicana", "Colombia"],
-        correct: 2
+        correct: 2,
+        explanation: "Bachata originated in the Dominican Republic in the 1960s, emerging from marginalized urban neighborhoods before eventually gaining respectability and international popularity."
       },
       {
         prompt: "¿Qué significa 'música de amargue'?",
         options: ["Música alegre", "Música de amargura", "Música rápida", "Música religiosa"],
-        correct: 1
+        correct: 1,
+        explanation: "Bachata was originally called 'música de amargue' (music of bitterness) because its lyrics focused on themes of heartbreak, lost love, and the hardships of everyday life in poor neighborhoods."
       },
       {
         prompt: "¿En qué año declaró la UNESCO a la bachata Patrimonio Inmaterial?",
         options: ["2010", "2015", "2019", "2022"],
-        correct: 2
+        correct: 2,
+        explanation: "UNESCO inscribed bachata on its Intangible Cultural Heritage list in 2019, recognizing it as a fundamental part of Dominican cultural identity encompassing music, dance, and poetry."
       }
     ]
   },
@@ -189,17 +204,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿En qué costa de Colombia nació la cumbia?",
         options: ["Costa del Pacífico", "Costa Caribeña", "Costa del sur", "Interior del país"],
-        correct: 1
+        correct: 1,
+        explanation: "Cumbia was born on Colombia's Caribbean coast, where enslaved Africans, indigenous peoples, and Spanish colonizers lived in close proximity, allowing their musical traditions to blend."
       },
       {
         prompt: "¿Qué tres culturas se fusionaron para crear la cumbia?",
         options: ["Europea, asiática y africana", "Africana, indígena y española", "Indígena, francesa y africana", "Española, portuguesa y africana"],
-        correct: 1
+        correct: 1,
+        explanation: "Cumbia is a tri-ethnic fusion: African drumming traditions provided the rhythmic foundation, indigenous Colombian instruments like the gaita contributed melodies, and Spanish influences shaped the song structures."
       },
       {
         prompt: "¿Qué instrumento de viento es típico de la cumbia colombiana?",
         options: ["Flauta traversa", "Clarinete", "Gaita colombiana", "Trompeta"],
-        correct: 2
+        correct: 2,
+        explanation: "The gaita colombiana is a long, indigenous flute made from cactus wood and beeswax that produces the distinctive, haunting melodic sound of traditional Colombian cumbia."
       }
     ]
   },
@@ -223,17 +241,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿Quién fue el líder de Soda Stereo?",
         options: ["Fito Páez", "Charly García", "Gustavo Cerati", "Andrés Calamaro"],
-        correct: 2
+        correct: 2,
+        explanation: "Gustavo Cerati was the vocalist, guitarist, and primary songwriter of Soda Stereo, the Argentine band widely regarded as the most important and influential rock band in Latin American history."
       },
       {
         prompt: "¿En qué década surgió con fuerza el rock en español?",
         options: ["Años sesenta", "Años setenta", "Años ochenta", "Años noventa"],
-        correct: 2
+        correct: 2,
+        explanation: "The 1980s saw the explosion of rock en español, partly fueled by the return to democracy in countries like Argentina and Spain, where a new generation of artists used rock as a vehicle for free expression."
       },
       {
         prompt: "¿Contra qué fue a menudo voz de protesta el rock en español?",
         options: ["La globalización", "Las dictaduras", "La tecnología", "La religión"],
-        correct: 1
+        correct: 1,
+        explanation: "Rock en español served as a powerful voice against military dictatorships and social inequality across Latin America, giving young people a way to express dissent during politically repressive periods."
       }
     ]
   },
@@ -257,17 +278,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿En qué ciudad brasileña surgió la bossa nova?",
         options: ["São Paulo", "Salvador", "Río de Janeiro", "Brasilia"],
-        correct: 2
+        correct: 2,
+        explanation: "Bossa nova emerged in the late 1950s in Rio de Janeiro's affluent Zona Sul neighborhoods, particularly Ipanema and Copacabana, where young musicians blended samba with cool jazz harmonies."
       },
       {
         prompt: "¿Qué dos géneros musicales fusiona la bossa nova?",
         options: ["Rock y jazz", "Samba y jazz", "Reggae y samba", "Folk y blues"],
-        correct: 1
+        correct: 1,
+        explanation: "Bossa nova fuses Brazilian samba rhythms with American jazz harmonies, creating a softer, more intimate sound. Pioneers like Tom Jobim and João Gilberto stripped samba down to its essence and added sophisticated chord progressions."
       },
       {
         prompt: "¿Cuál es una de las canciones más famosas de la bossa nova?",
         options: ["Bésame Mucho", "Garota de Ipanema", "La Bamba", "Guantanamera"],
-        correct: 1
+        correct: 1,
+        explanation: "'Garota de Ipanema' (The Girl from Ipanema), composed by Tom Jobim with lyrics by Vinícius de Moraes, is one of the most recorded songs in music history, second only to 'Yesterday' by The Beatles."
       }
     ]
   },
@@ -291,17 +315,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿En qué país nació el bolero?",
         options: ["México", "Cuba", "España", "Puerto Rico"],
-        correct: 1
+        correct: 1,
+        explanation: "The bolero was born in Cuba in the late 19th century, specifically in Santiago de Cuba, where trovadores (troubadour singers) developed this romantic style of guitar-accompanied vocal music."
       },
       {
         prompt: "¿Qué trío mexicano es el máximo exponente del bolero?",
         options: ["Los Tigres del Norte", "Los Panchos", "Los Bukis", "Los Ángeles Negros"],
-        correct: 1
+        correct: 1,
+        explanation: "Trío Los Panchos, founded in 1944, became the most famous bolero group in history, perfecting the romantic trio format of three voices with guitars and the distinctive requinto guitar solos."
       },
       {
         prompt: "¿Cuál es considerado el primer bolero de la historia?",
         options: ["Bésame Mucho", "Solamente una vez", "Tristezas", "Perfidia"],
-        correct: 2
+        correct: 2,
+        explanation: "'Tristezas' (Sadnesses), composed by Cuban trovador José 'Pepe' Sánchez in 1883, is widely recognized as the first bolero ever written, establishing the genre's characteristic romantic style."
       }
     ]
   },
@@ -325,17 +352,20 @@ const MUSIC_DATA = [
       {
         prompt: "¿Quién es considerado la voz del tango?",
         options: ["Astor Piazzolla", "Carlos Gardel", "Aníbal Troilo", "Osvaldo Pugliese"],
-        correct: 1
+        correct: 1,
+        explanation: "Carlos Gardel, a French-born Argentine singer and actor, is universally regarded as the most iconic figure in tango history. His recordings in the 1920s and 1930s brought tango to international audiences."
       },
       {
         prompt: "¿Qué es el 'lunfardo' mencionado en las letras del tango?",
         options: ["Un instrumento", "Un baile", "Jerga rioplatense", "Un barrio de Buenos Aires"],
-        correct: 2
+        correct: 2,
+        explanation: "Lunfardo is a slang vocabulary that originated among immigrants in the port neighborhoods of Buenos Aires and Montevideo. It became a defining feature of tango lyrics, giving them a gritty, street-level authenticity."
       },
       {
         prompt: "¿Qué instrumento es el más emblemático del tango?",
         options: ["Guitarra", "Acordeón", "Bandoneón", "Flauta"],
-        correct: 2
+        correct: 2,
+        explanation: "The bandoneón, a type of concertina originally from Germany, was adopted by tango musicians in the late 19th century and became so central to the genre that tango is almost unthinkable without its distinctive melancholic sound."
       }
     ]
   }

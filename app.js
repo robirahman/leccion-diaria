@@ -960,31 +960,66 @@ const VERB_PATTERNS = {
 };
 
 // Get a teaching hint for a verb/tense combination
-function getVerbHint(verb, tense) {
+function buildVerbExplanation(verb, tense, personIdx, correctForm) {
   if (!verb) return '';
-  if (verb.type === 'regular') return `Regular -${verb.group} verb.`;
-  // Check stem change
+  const meta = TENSE_META[tense];
+  if (!meta) return '';
+  const tenseName = meta.labelEn;
+  const personKey = PERSONS[personIdx] || 'yo';
+  const personLabel = PERSON_LABELS[personKey] || personKey;
+
+  // Compound tenses: haber + participle
+  if (meta.compound) {
+    const participle = getParticiple(verb.infinitive.replace(/se$/, ''));
+    return `${tenseName}: haber (${meta.auxTense}) + past participle (${participle}). ${personLabel}: ${correctForm}.`;
+  }
+  // Progressive tenses: estar + gerund
+  if (meta.progressive) {
+    const gerund = getGerund(verb.infinitive.replace(/se$/, ''));
+    return `${tenseName}: estar (${meta.auxTense}) + gerund (${gerund}). ${personLabel}: ${correctForm}.`;
+  }
+  // Reflexive note
+  const reflexNote = verb.infinitive.endsWith('se') ? ' Reflexive: pronoun + conjugation.' : '';
+  // Irregular future/conditional stems
+  const base = verb.infinitive.replace(/se$/, '');
+  if (['future', 'conditional'].includes(tense) && IRREGULAR_FUTURE_STEMS[base]) {
+    const stem = IRREGULAR_FUTURE_STEMS[base];
+    return `Irregular ${tenseName.toLowerCase()} stem: ${stem}-.${reflexNote} ${personLabel}: ${correctForm}.`;
+  }
+  // Strong irregular preterites
+  if (tense === 'preterite' && verb.type === 'irregular') {
+    const pretStems = {tener:'tuv',estar:'estuv',hacer:'hic/hiz',poder:'pud',poner:'pus',saber:'sup',venir:'vin',querer:'quis',decir:'dij',traer:'traj',conducir:'conduj'};
+    if (pretStems[base]) return `Irregular preterite stem: ${pretStems[base]}-.${reflexNote} ${personLabel}: ${correctForm}.`;
+  }
+  // Stem-changing verbs
   if (verb.stemChange) {
     const pattern = verb.stemChange.replace('>', '→');
-    if (['present', 'subjunctive_present'].includes(tense)) {
-      return `${verb.infinitive}: stem change ${pattern} in stressed syllables (boot pattern).`;
+    const isBoot = BOOT_PERSONS.includes(personIdx);
+    if (['present', 'subjunctive_present'].includes(tense) && isBoot) {
+      return `Stem change ${pattern} in stressed syllables (boot pattern: yo/tú/él/ellos).${reflexNote} ${personLabel}: ${correctForm}.`;
     }
-    if (tense === 'preterite' && verb.stemChange === 'e>i') {
-      return `${verb.infinitive}: e→i also applies in 3rd person preterite.`;
+    if (['present', 'subjunctive_present'].includes(tense) && !isBoot) {
+      return `Stem change ${pattern} does NOT apply to ${personLabel} (outside boot pattern). ${correctForm}.`;
+    }
+    if (tense === 'preterite' && ['e>i', 'o>u'].includes(verb.stemChange) && [2, 5].includes(personIdx)) {
+      return `${pattern} stem change applies in 3rd person preterite.${reflexNote} ${personLabel}: ${correctForm}.`;
     }
   }
-  // Check specific patterns
-  if (['future', 'conditional'].includes(tense)) {
-    const stems = {tener:'tendr-',poder:'podr-',saber:'sabr-',hacer:'har-',decir:'dir-',salir:'saldr-',venir:'vendr-',poner:'pondr-',querer:'querr-',haber:'habr-'};
-    if (stems[verb.infinitive]) return `Irregular stem: ${stems[verb.infinitive]}`;
+  // Fully irregular
+  if (verb.type === 'irregular') {
+    return `${verb.infinitive} is irregular in the ${tenseName.toLowerCase()}. ${personLabel}: ${correctForm} (must be memorized).`;
   }
-  if (tense === 'preterite' && verb.type === 'irregular') {
-    const pretStems = {tener:'tuv-',estar:'estuv-',hacer:'hic-/hiz-',poder:'pud-',poner:'pus-',saber:'sup-',venir:'vin-',querer:'quis-',decir:'dij-',traer:'traj-',conducir:'conduj-'};
-    if (pretStems[verb.infinitive]) return `Irregular preterite stem: ${pretStems[verb.infinitive]}`;
+  // Regular verbs — show stem + ending
+  if (verb.type === 'regular' || verb.type === 'reflexive') {
+    const group = verb.group || base.slice(-2);
+    const endings = REGULAR_ENDINGS[tense];
+    if (endings && endings[group]) {
+      const ending = endings[group][personIdx];
+      const stem = base.slice(0, -2);
+      return `Regular -${group} verb. ${tenseName} ${personLabel}: stem (${stem}) + -${ending} = ${correctForm}.`;
+    }
   }
-  if (verb.type === 'irregular') return `${verb.infinitive}: irregular — forms must be memorized.`;
-  if (verb.type === 'reflexive') return `Reflexive verb: uses pronoun (me/te/se/nos/os/se).`;
-  return '';
+  return `${personLabel}: ${correctForm}.`;
 }
 
 let patternDrillPattern = null; // current pattern key for drill
@@ -1117,10 +1152,9 @@ function checkVerbDrill() {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
-  // Show pattern hint for irregular verbs
-  const hint = getVerbHint(item.verb, item.tense);
-  if (hint) {
-    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.8rem">${esc(hint)}</span>`;
+  const explanation = buildVerbExplanation(item.verb, item.tense, item.person, item.answer);
+  if (explanation) {
+    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(explanation)}</span>`;
   }
   speak(item.answer);
   document.getElementById('vd-next').style.display = 'flex';
@@ -1288,15 +1322,14 @@ function submitVerbQuizMC() {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
-  // Show pattern hint
-  const hint = getVerbHint(item.verb, item.tense);
-  if (hint) {
-    const hintDiv = document.createElement('div');
-    hintDiv.className = 'text-muted';
-    hintDiv.style.fontSize = '0.8rem';
-    hintDiv.style.marginTop = '0.5rem';
-    hintDiv.textContent = hint;
-    document.querySelector('#vq-container')?.appendChild(hintDiv);
+  const explanation = buildVerbExplanation(item.verb, item.tense, item.person, item.correct);
+  if (explanation) {
+    const expDiv = document.createElement('div');
+    expDiv.className = 'text-muted';
+    expDiv.style.fontSize = '0.85rem';
+    expDiv.style.marginTop = '0.5rem';
+    expDiv.textContent = explanation;
+    document.querySelector('#vq-container')?.appendChild(expDiv);
   }
   speak(item.correct);
   const submitBtn = document.querySelector('#vq-container .mc-submit');
@@ -1323,10 +1356,9 @@ function submitVerbQuizFIB() {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
     addXP(1);
   }
-  // Show pattern hint
-  const hint = getVerbHint(item.verb, item.tense);
-  if (hint) {
-    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.8rem">${esc(hint)}</span>`;
+  const explanation = buildVerbExplanation(item.verb, item.tense, item.person, item.correct);
+  if (explanation) {
+    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(explanation)}</span>`;
   }
   speak(item.correct);
   document.getElementById('vq-next').style.display = 'flex';
@@ -1801,6 +1833,13 @@ function submitGrammarQuizMC() {
   }
   const submitBtn = document.querySelector('#gq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
+  if (q.explanation) {
+    const expDiv = document.createElement('div');
+    expDiv.className = 'quiz-feedback text-muted';
+    expDiv.style.fontSize = '0.85rem';
+    expDiv.textContent = q.explanation;
+    document.getElementById('gq-container').appendChild(expDiv);
+  }
   document.getElementById('gq-next').style.display = 'flex';
 }
 
@@ -1829,6 +1868,9 @@ function submitGrammarFIB() {
     fb.className = 'quiz-feedback incorrect';
     fb.textContent = `${t('incorrectAnswer')} ${answer}`;
     addXP(1);
+  }
+  if (q.explanation) {
+    fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
   }
   document.getElementById('gq-next').style.display = 'flex';
 }
@@ -2072,6 +2114,13 @@ function submitCultureQuizMC() {
   else { addXP(1); }
   const submitBtn = document.querySelector('#cq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
+  if (q.explanation) {
+    const expDiv = document.createElement('div');
+    expDiv.className = 'quiz-feedback text-muted';
+    expDiv.style.fontSize = '0.85rem';
+    expDiv.textContent = q.explanation;
+    document.getElementById('cq-container').appendChild(expDiv);
+  }
   document.getElementById('cq-next').style.display = 'flex';
 }
 
@@ -2160,7 +2209,15 @@ function buildPlacementVocabQs(level, count) {
   return picked.map(w => {
     const reverse = Math.random() < 0.5;
     const pool = words.filter(x => x.word !== w.word);
-    const wrongs = pickN(pool, 3);
+    // Prefer distractors with similar word count so multi-word answers
+    // don't stand out against single-word distractors (and vice versa)
+    const answerWordCount = (reverse ? w.word : w.english).split(/\s+/).length;
+    const sameLength = pool.filter(x => {
+      const xWords = (reverse ? x.word : x.english).split(/\s+/).length;
+      return xWords === answerWordCount;
+    });
+    const distPool = sameLength.length >= 3 ? sameLength : pool;
+    const wrongs = pickN(distPool, 3);
     if (reverse) {
       return {
         domain: 'vocab', level, type: 'mc',
@@ -2215,21 +2272,21 @@ function buildPlacementVerbQs(level, count) {
     // Build harder distractors: same verb in different persons/tenses
     const wrongs = new Set();
     let attempts = 0;
-    // First: same verb, same tense, different person
+    // First: same verb, different tense, same person (shares person marker)
     while (wrongs.size < 2 && attempts < 20) {
+      const wt = pick(simpleTenses.filter(t => t !== tense));
+      if (wt === 'imperative_aff' || wt === 'imperative_neg') { attempts++; continue; }
+      const w = conjugate(v.infinitive, wt, person);
+      if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
+      attempts++;
+    }
+    // Then: same verb, same tense, different person
+    attempts = 0;
+    while (wrongs.size < 3 && attempts < 20) {
       let wp = Math.floor(Math.random() * 6);
       if (isImperative && wp === 0) wp = 1;
       if (wp === person) { attempts++; continue; }
       const w = conjugate(v.infinitive, tense, wp);
-      if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
-      attempts++;
-    }
-    // Then: same verb, different tense, same person
-    attempts = 0;
-    while (wrongs.size < 3 && attempts < 20) {
-      const wt = pick(simpleTenses.filter(t => t !== tense));
-      if (wt === 'imperative_aff' || wt === 'imperative_neg') { attempts++; continue; }
-      const w = conjugate(v.infinitive, wt, person);
       if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
       attempts++;
     }

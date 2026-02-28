@@ -19,17 +19,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿En qué fechas se celebra el Día de los Muertos?",
         options: ["31 de octubre", "1 y 2 de noviembre", "2 de noviembre solamente", "1 de noviembre solamente"],
-        correct: 1
+        correct: 1,
+        explanation: "November 1 (All Saints' Day) honors deceased children, while November 2 (All Souls' Day) honors deceased adults. Both days together form the full Día de los Muertos celebration."
       },
       {
         prompt: "¿Qué flor es símbolo del Día de los Muertos?",
         options: ["Rosa", "Girasol", "Cempasúchil", "Clavel"],
-        correct: 2
+        correct: 2,
+        explanation: "The cempasúchil (marigold) is believed to guide the spirits of the dead back to their families with its bright orange color and strong scent. It has been used in Mexican death rituals since pre-Hispanic times."
       },
       {
         prompt: "¿Qué organización declaró esta fiesta Patrimonio Cultural Inmaterial?",
         options: ["OEA", "ONU", "UNESCO", "UNICEF"],
-        correct: 2
+        correct: 2,
+        explanation: "UNESCO (the United Nations Educational, Scientific and Cultural Organization) designated Día de los Muertos as Intangible Cultural Heritage in 2008, recognizing its significance as a living cultural tradition."
       }
     ]
   },
@@ -53,17 +56,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿En qué pueblo español se celebra La Tomatina?",
         options: ["Valencia", "Buñol", "Alicante", "Castellón"],
-        correct: 1
+        correct: 1,
+        explanation: "Buñol is a small town of about 9,000 people in the Valencia province. Although Valencia is the nearby major city, the festival itself takes place specifically in Buñol's town center."
       },
       {
         prompt: "¿Cuántas toneladas de tomates se usan aproximadamente?",
         options: ["50", "80", "120", "200"],
-        correct: 2
+        correct: 2,
+        explanation: "Over 120 metric tons of overripe tomatoes are trucked in specifically for the event. These are low-quality tomatoes not suitable for sale, so the festival does not waste edible produce."
       },
       {
         prompt: "¿Qué señal marca el inicio de la batalla de tomates?",
         options: ["Un cañón", "Alguien alcanza un jamón en un poste", "Una campana", "Un cohete"],
-        correct: 1
+        correct: 1,
+        explanation: "A ham is placed at the top of a tall, greased wooden pole (palo jabón). The tomato fight officially begins only after someone successfully climbs the slippery pole and retrieves the ham."
       }
     ]
   },
@@ -87,17 +93,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿En qué ciudad se celebra la Feria de Abril?",
         options: ["Madrid", "Granada", "Sevilla", "Córdoba"],
-        correct: 2
+        correct: 2,
+        explanation: "The Feria de Abril is Seville's signature celebration and one of Andalusia's most iconic events. It originated in 1847 as a livestock fair and evolved into the massive cultural festival it is today."
       },
       {
         prompt: "¿Qué baile es típico de la Feria de Abril?",
         options: ["Flamenco puro", "Sevillanas", "Salsa", "Pasodoble"],
-        correct: 1
+        correct: 1,
+        explanation: "Sevillanas are a specific folk dance style from Seville, distinct from flamenco puro. They are danced in pairs with four structured parts (coplas) and are considered more accessible than traditional flamenco."
       },
       {
         prompt: "¿Cuándo se celebra la Feria de Abril?",
         options: ["En abril siempre", "Dos semanas después de Semana Santa", "El primer fin de semana de abril", "En mayo"],
-        correct: 1
+        correct: 1,
+        explanation: "Despite its name ('April Fair'), the Feria's dates shift each year because they are tied to the date of Easter. When Easter falls late, the Feria can actually take place in May."
       }
     ]
   },
@@ -121,17 +130,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿Cómo se llama el desfile que abre el Carnaval de Barranquilla?",
         options: ["Gran Parada", "Batalla de Flores", "Desfile de Comparsas", "Marcha Real"],
-        correct: 1
+        correct: 1,
+        explanation: "The Batalla de Flores (Battle of Flowers) is the opening parade on Saturday, featuring elaborately decorated floats. It dates back to 1903 and sets the tone for the four days of celebration."
       },
       {
         prompt: "¿En qué año declaró la UNESCO al Carnaval de Barranquilla Patrimonio?",
         options: ["2000", "2003", "2005", "2010"],
-        correct: 1
+        correct: 1,
+        explanation: "UNESCO recognized the Barranquilla Carnival in 2003 as a Masterpiece of the Oral and Intangible Heritage of Humanity, acknowledging its unique blend of Indigenous, African, and European cultural traditions."
       },
       {
         prompt: "¿Cómo termina el Carnaval de Barranquilla?",
         options: ["Con fuegos artificiales", "Con el entierro de Joselito Carnaval", "Con un concierto", "Con una misa"],
-        correct: 1
+        correct: 1,
+        explanation: "Joselito Carnaval is a symbolic character who represents the spirit of the festival. His mock funeral on the final day (Tuesday) is a humorous and emotional farewell, with participants pretending to mourn the end of the festivities."
       }
     ]
   },
@@ -155,17 +167,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿Cómo se llama el acto que abre las fiestas de San Fermín?",
         options: ["El encierro", "El chupinazo", "La corrida", "El pasacalles"],
-        correct: 1
+        correct: 1,
+        explanation: "The chupinazo is a rocket (cohete) fired from the balcony of Pamplona's city hall at noon on July 6. The moment it launches, the crowd erupts and the nine-day festival officially begins."
       },
       {
         prompt: "¿Cuántos días duran las fiestas de San Fermín?",
         options: ["Cinco", "Siete", "Nueve", "Diez"],
-        correct: 2
+        correct: 2,
+        explanation: "The festival runs from July 6 through July 14, making it nine full days. The encierro (bull run) takes place every morning at 8:00 AM during this period."
       },
       {
         prompt: "¿Cómo se llama el acto que cierra las fiestas?",
         options: ["El adiós", "Pobre de mí", "Hasta luego", "El final"],
-        correct: 1
+        correct: 1,
+        explanation: "At midnight on July 14, crowds gather in the town square singing 'Pobre de mí, pobre de mí, que se han acabado las fiestas de San Fermín' (Poor me, the festival is over), holding candles in a bittersweet farewell."
       }
     ]
   },
@@ -189,17 +204,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿A qué dios inca está dedicado el Inti Raymi?",
         options: ["Pachamama", "Viracocha", "Inti", "Quilla"],
-        correct: 2
+        correct: 2,
+        explanation: "Inti means 'sun' in Quechua and was the most revered deity of the Inca Empire. The Incas considered themselves 'children of the sun,' and the Sapa Inca was believed to be Inti's direct descendant."
       },
       {
         prompt: "¿En qué lugar de Cusco se realiza la ceremonia principal?",
         options: ["Machu Picchu", "Plaza de Armas", "Sacsayhuamán", "Ollantaytambo"],
-        correct: 2
+        correct: 2,
+        explanation: "Sacsayhuaman is an enormous Inca stone fortress overlooking Cusco. Its massive stone walls and open esplanade make it the perfect stage for recreating the grand imperial ceremony as it was performed in Inca times."
       },
       {
         prompt: "¿En qué año se restauró la celebración del Inti Raymi?",
         options: ["1920", "1933", "1944", "1960"],
-        correct: 2
+        correct: 2,
+        explanation: "After being banned by the Spanish in 1572, the ceremony was revived in 1944 by Peruvian actor and intellectual Faustino Espinoza Navarro, based on the chronicles of Inca Garcilaso de la Vega."
       }
     ]
   },
@@ -223,17 +241,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿Qué pasa con las fallas el 19 de marzo?",
         options: ["Se guardan en un museo", "Se queman", "Se venden", "Se regalan"],
-        correct: 1
+        correct: 1,
+        explanation: "The 'cremà' (burning) on March 19 — the feast of San José, patron saint of carpenters — is the climax of the festival. Burning the figures symbolizes purification and renewal, letting go of the old to welcome spring."
       },
       {
         prompt: "¿Qué es el 'ninot indultat'?",
         options: ["El artista ganador", "La falla más grande", "La única figura que no se quema", "El juez del concurso"],
-        correct: 2
+        correct: 2,
+        explanation: "Each year the public votes to 'pardon' (indultar) one ninot from the flames. This saved figure is preserved in the Museo Fallero in Valencia, creating a unique historical collection dating back to 1934."
       },
       {
         prompt: "¿Qué es la 'mascletà'?",
         options: ["Un baile", "Una comida", "Una serie de petardos", "Una procesión"],
-        correct: 2
+        correct: 2,
+        explanation: "The mascletà is a daytime firecracker display focused on rhythm and noise rather than visual effects. It takes place every day at 2:00 PM in the Plaza del Ayuntamiento and is felt as much as heard, with the ground shaking from the explosions."
       }
     ]
   },
@@ -257,17 +278,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿Qué significa 'Guelaguetza' en zapoteco?",
         options: ["Fiesta grande", "Ofrenda o intercambio recíproco", "Danza sagrada", "Cosecha buena"],
-        correct: 1
+        correct: 1,
+        explanation: "The Zapotec word 'guelaguetza' refers to a system of reciprocal giving deeply rooted in indigenous Oaxacan culture. Communities exchange gifts, labor, and support — a practice that predates Spanish colonization and still governs social relations today."
       },
       {
         prompt: "¿En qué estado mexicano se celebra la Guelaguetza?",
         options: ["Chiapas", "Guerrero", "Oaxaca", "Puebla"],
-        correct: 2
+        correct: 2,
+        explanation: "Oaxaca is one of Mexico's most ethnically diverse states, home to 16 indigenous groups including Zapotecs and Mixtecs. The Guelaguetza showcases this diversity by bringing together delegations from all eight of Oaxaca's cultural regions."
       },
       {
         prompt: "¿Qué hacen los bailarines después de cada presentación?",
         options: ["Cantan una canción", "Lanzan regalos al público", "Hacen una oración", "Saludan al gobernador"],
-        correct: 1
+        correct: 1,
+        explanation: "Throwing gifts to the audience embodies the festival's core meaning of reciprocal exchange. Dancers toss regional products like pineapples, mezcal, bread, and handmade crafts as a way of sharing their community's bounty."
       }
     ]
   },
@@ -291,17 +315,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿Cómo se llaman los que cargan los pasos en Semana Santa en España?",
         options: ["Portadores", "Costaleros", "Nazarenos", "Cofrades"],
-        correct: 1
+        correct: 1,
+        explanation: "Costaleros carry the enormous pasos (floats) on their necks and shoulders, hidden beneath the platform. The name comes from 'costal' (sack), referring to the padded cloth they wear on their necks for protection."
       },
       {
         prompt: "¿Qué se crea en las calles de Antigua Guatemala durante Semana Santa?",
         options: ["Murales", "Alfombras de aserrín de colores", "Fuentes de agua", "Arcos de flores"],
-        correct: 1
+        correct: 1,
+        explanation: "These elaborate carpets are made from dyed sawdust, flowers, fruits, and vegetables, laid out by hand along the procession route. They take hours to create but are destroyed in minutes as the processions walk over them, symbolizing the transience of life."
       },
       {
         prompt: "¿Qué ciudad española es más famosa por su Semana Santa?",
         options: ["Madrid", "Barcelona", "Sevilla", "Bilbao"],
-        correct: 2
+        correct: 2,
+        explanation: "Seville's Semana Santa is world-renowned for its dramatic processions organized by over 60 cofradías (brotherhoods), some dating back to the 14th century. It draws hundreds of thousands of visitors and is considered the most elaborate Holy Week celebration in Spain."
       }
     ]
   },
@@ -325,17 +352,20 @@ const FESTIVALS_DATA = [
       {
         prompt: "¿Qué fecha se celebra el Día de los Reyes?",
         options: ["25 de diciembre", "1 de enero", "6 de enero", "2 de febrero"],
-        correct: 2
+        correct: 2,
+        explanation: "January 6 corresponds to the Christian feast of Epiphany, which commemorates the visit of the Three Wise Men to the baby Jesus. In most Spanish-speaking countries, this date — not December 25 — is traditionally the main gift-giving day for children."
       },
       {
         prompt: "¿Qué dejan los niños españoles para los camellos de los Reyes?",
         options: ["Galletas", "Leche", "Paja y agua", "Zanahorias"],
-        correct: 2
+        correct: 2,
+        explanation: "Children leave straw and water for the camels that the Three Kings ride, similar to how American children leave cookies for Santa. It teaches generosity by having children think of the animals that carried the kings on their long journey."
       },
       {
         prompt: "¿Qué se esconde dentro del Roscón de Reyes?",
         options: ["Una moneda y un anillo", "Una figurita y un haba", "Un mensaje y una llave", "Un caramelo y un dado"],
-        correct: 1
+        correct: 1,
+        explanation: "The person who finds the small figurine in their slice is 'crowned' king or queen for the day, while the person who gets the dried bean (haba) traditionally has to pay for the roscón — adding a playful element to the family gathering."
       }
     ]
   }

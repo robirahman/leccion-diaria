@@ -27,9 +27,9 @@ const JOKES_DATA = [
       { word: 'falso amigo', english: 'false cognate' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "sopa" en inglés?', options: ['soap', 'soup', 'rope', 'sofa'], correct: 1 },
-      { prompt: '¿Qué significa "ropa" en inglés?', options: ['rope', 'robe', 'clothing', 'red'], correct: 2 },
-      { prompt: '"Mantequilla" sounds like...', options: ['man to cure ya', 'meant to kill ya', 'man take a villa', 'meant to chill ya'], correct: 1 },
+      { prompt: '¿Qué significa "sopa" en inglés?', options: ['soap', 'soup', 'rope', 'sofa'], correct: 1, explanation: '"Sopa" is a classic false cognate: it looks like "soap" but actually means "soup." The Spanish word for soap is "jabón."' },
+      { prompt: '¿Qué significa "ropa" en inglés?', options: ['rope', 'robe', 'clothing', 'red'], correct: 2, explanation: '"Ropa" sounds like "rope" but means "clothing" in general. The Spanish word for rope is "cuerda."' },
+      { prompt: '"Mantequilla" sounds like...', options: ['man to cure ya', 'meant to kill ya', 'man take a villa', 'meant to chill ya'], correct: 1, explanation: 'The four syllables of "man-te-qui-lla" closely mimic the English phrase "meant to kill ya," making it a popular mnemonic for remembering the word for butter.' },
     ],
   },
 
@@ -47,8 +47,8 @@ const JOKES_DATA = [
       { word: 'vergüenza', english: 'shame, embarrassment' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "embarazada"?', options: ['embarrassed', 'pregnant', 'embraced', 'amazed'], correct: 1 },
-      { prompt: '¿Cómo se dice "embarrassed" en español?', options: ['embarazado', 'avergonzado', 'embasado', 'abrazado'], correct: 1 },
+      { prompt: '¿Qué significa "embarazada"?', options: ['embarrassed', 'pregnant', 'embraced', 'amazed'], correct: 1, explanation: '"Embarazada" is perhaps the most infamous Spanish false cognate. Despite sounding like "embarrassed," it means "pregnant." Both words share a root meaning "to impede," but diverged dramatically in meaning.' },
+      { prompt: '¿Cómo se dice "embarrassed" en español?', options: ['embarazado', 'avergonzado', 'embasado', 'abrazado'], correct: 1, explanation: '"Avergonzado/a" comes from "vergüenza" (shame/embarrassment) and is the correct way to say "embarrassed" in Spanish. "Embarazado" would mean "pregnant."' },
     ],
   },
 
@@ -66,8 +66,8 @@ const JOKES_DATA = [
       { word: 'pastel', english: 'cake, pastry' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "pie" en español?', options: ['pie (dessert)', 'foot', 'leg', 'skin'], correct: 1 },
-      { prompt: '¿Cómo se dice "pie" (el postre) en español?', options: ['pie', 'tarta', 'piel', 'torta'], correct: 1 },
+      { prompt: '¿Qué significa "pie" en español?', options: ['pie (dessert)', 'foot', 'leg', 'skin'], correct: 1, explanation: 'The Spanish word "pie" (pronounced "pyeh") means "foot," not the dessert. This is a false cognate that trips up many English speakers.' },
+      { prompt: '¿Cómo se dice "pie" (el postre) en español?', options: ['pie', 'tarta', 'piel', 'torta'], correct: 1, explanation: '"Tarta" is the standard Spanish word for a pie or cake dessert. "Piel" means "skin" and "torta" can mean cake in some regions or a sandwich in Mexico.' },
     ],
   },
 
@@ -88,9 +88,9 @@ const JOKES_DATA = [
       { word: 'estreñido', english: 'constipated' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "éxito"?', options: ['exit', 'success', 'excitement', 'exile'], correct: 1 },
-      { prompt: '¿Cómo se dice "excited" (sin connotación sexual)?', options: ['excitado', 'exitoso', 'emocionado', 'exigente'], correct: 2 },
-      { prompt: '¿Qué significa "estoy constipado"?', options: ['I\'m constipated', 'I have a cold', 'I\'m confused', 'I\'m constant'], correct: 1 },
+      { prompt: '¿Qué significa "éxito"?', options: ['exit', 'success', 'excitement', 'exile'], correct: 1, explanation: '"Éxito" means "success," not "exit." The Spanish word for exit is "salida." "Éxito" comes from the Latin "exitus" (outcome), which evolved toward "successful outcome" in Spanish.' },
+      { prompt: '¿Cómo se dice "excited" (sin connotación sexual)?', options: ['excitado', 'exitoso', 'emocionado', 'exigente'], correct: 2, explanation: '"Emocionado" is the safe way to say "excited" in Spanish. "Excitado" has a strong sexual connotation in most Spanish-speaking contexts and should be avoided for general excitement.' },
+      { prompt: '¿Qué significa "estoy constipado"?', options: ['I\'m constipated', 'I have a cold', 'I\'m confused', 'I\'m constant'], correct: 1, explanation: '"Constipado" means "having a cold" in Spanish, not "constipated." The Spanish word for constipated is "estreñido." Both come from Latin "constipare" (to crowd together), but diverged in meaning.' },
     ],
   },
 
@@ -113,8 +113,8 @@ const JOKES_DATA = [
       { word: 'dependiente', english: 'shop clerk' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "calcetines"?', options: ['calculators', 'socks', 'calendars', 'caps'], correct: 1 },
-      { prompt: '"Eso sí que es" sounds like which English word when spelled out?', options: ['SHOES', 'SOCKS', 'SACKS', 'SIXES'], correct: 1 },
+      { prompt: '¿Qué significa "calcetines"?', options: ['calculators', 'socks', 'calendars', 'caps'], correct: 1, explanation: '"Calcetines" means "socks." It comes from "calceta" (stocking), which derives from the Latin "calceus" (shoe). Despite the similar sound, it has no relation to "calculators."' },
+      { prompt: '"Eso sí que es" sounds like which English word when spelled out?', options: ['SHOES', 'SOCKS', 'SACKS', 'SIXES'], correct: 1, explanation: 'The phrase "eso sí que es" (that\'s it!) is pronounced roughly "S-O-C-K-S" when you match each syllable to an English letter name: E(s)-O-C(í)-K(e)-S, making it a classic bilingual mnemonic.' },
     ],
   },
 
@@ -132,8 +132,8 @@ const JOKES_DATA = [
       { word: 'estornudo', english: 'sneeze' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "zapato"?', options: ['hat', 'jacket', 'shoe', 'sock'], correct: 2 },
-      { prompt: '¿Cuándo se dice "¡Salud!"?', options: ['When someone sneezes', 'When someone coughs', 'When someone yawns', 'When someone hiccups'], correct: 0 },
+      { prompt: '¿Qué significa "zapato"?', options: ['hat', 'jacket', 'shoe', 'sock'], correct: 2, explanation: '"Zapato" means "shoe." The word likely comes from the Turkish "zabata." In the joke, "a shoe" sounds like "achoo," creating the bilingual pun.' },
+      { prompt: '¿Cuándo se dice "¡Salud!"?', options: ['When someone sneezes', 'When someone coughs', 'When someone yawns', 'When someone hiccups'], correct: 0, explanation: '"¡Salud!" (literally "health!") is said when someone sneezes, equivalent to "bless you" in English. It is also used as a toast when drinking, like "cheers."' },
     ],
   },
 
@@ -156,9 +156,9 @@ const JOKES_DATA = [
       { word: 'tilde', english: 'accent mark / tilde' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "papá" (con acento)?', options: ['potato', 'dad', 'pope', 'papaya'], correct: 1 },
-      { prompt: '¿Qué palabra significa "year"?', options: ['ano', 'año', 'anna', 'añil'], correct: 1 },
-      { prompt: '¿Qué significa "papa" (sin acento)?', options: ['dad', 'pope', 'potato', 'paper'], correct: 2 },
+      { prompt: '¿Qué significa "papá" (con acento)?', options: ['potato', 'dad', 'pope', 'papaya'], correct: 1, explanation: 'The accent mark shifts the stress to the second syllable (pa-PA), changing the meaning from "potato" to "dad." Accent marks in Spanish frequently distinguish otherwise identical words.' },
+      { prompt: '¿Qué palabra significa "year"?', options: ['ano', 'año', 'anna', 'añil'], correct: 1, explanation: 'The tilde (~) over the N creates the distinct letter "ñ," making "año" (year) completely different from "ano" (anus). The ñ represents a palatal nasal sound unique to Spanish.' },
+      { prompt: '¿Qué significa "papa" (sin acento)?', options: ['dad', 'pope', 'potato', 'paper'], correct: 2, explanation: 'Without the accent mark, "papa" (stress on first syllable) means "potato." It can also mean "Pope" when capitalized (el Papa). The accent on "papá" is essential to mean "dad."' },
     ],
   },
 
@@ -177,9 +177,9 @@ const JOKES_DATA = [
       { word: 'permanente', english: 'permanent' },
     ],
     quiz: [
-      { prompt: '"Estoy aburrido" means...', options: ['I am boring', 'I am bored', 'I am board', 'I am boredom'], correct: 1 },
-      { prompt: '"Soy aburrido" means...', options: ['I am bored', 'I am boring', 'I am annoyed', 'I am tired'], correct: 1 },
-      { prompt: 'Which verb is used for temporary states?', options: ['ser', 'estar', 'haber', 'tener'], correct: 1 },
+      { prompt: '"Estoy aburrido" means...', options: ['I am boring', 'I am bored', 'I am board', 'I am boredom'], correct: 1, explanation: '"Estar + aburrido" describes a temporary state: being bored right now. "Estar" is used for conditions that can change, like emotions, locations, and temporary states.' },
+      { prompt: '"Soy aburrido" means...', options: ['I am bored', 'I am boring', 'I am annoyed', 'I am tired'], correct: 1, explanation: '"Ser + aburrido" describes an inherent characteristic: being a boring person by nature. "Ser" is used for permanent qualities, identity, and essential traits.' },
+      { prompt: 'Which verb is used for temporary states?', options: ['ser', 'estar', 'haber', 'tener'], correct: 1, explanation: '"Estar" is used for temporary states, emotions, locations, and conditions that can change. "Ser" is for permanent characteristics, identity, origin, and time. This is one of the most fundamental distinctions in Spanish.' },
     ],
   },
 
@@ -199,8 +199,8 @@ const JOKES_DATA = [
       { word: 'por', english: 'for (cause/exchange/through)' },
     ],
     quiz: [
-      { prompt: '"¿Por qué?" means...', options: ['for what?', 'why?', 'for whom?', 'because'], correct: 1 },
-      { prompt: '"Vamos para largo" means...', options: ['Let\'s go far', 'This will take a while', 'We\'re going to be tall', 'Let\'s leave for Long'], correct: 1 },
+      { prompt: '"¿Por qué?" means...', options: ['for what?', 'why?', 'for whom?', 'because'], correct: 1, explanation: '"¿Por qué?" (two words, with accent) means "why?" The "por" here expresses cause/reason. Note the four forms: "por qué" (why?), "porque" (because), "porqué" (the reason), and "por que" (for which).' },
+      { prompt: '"Vamos para largo" means...', options: ['Let\'s go far', 'This will take a while', 'We\'re going to be tall', 'Let\'s leave for Long'], correct: 1, explanation: '"Ir para largo" is an idiomatic expression meaning "to take a long time." Here "para" indicates direction or destination in a figurative sense, one of its core uses.' },
     ],
   },
 
@@ -220,9 +220,9 @@ const JOKES_DATA = [
       { word: 'ojalá', english: 'I wish / if only (+ subjunctive)' },
     ],
     quiz: [
-      { prompt: '"Es posible que sea difícil." What triggers the subjunctive here?', options: ['certainty', 'possibility/doubt', 'command', 'past tense'], correct: 1 },
-      { prompt: '"Ojalá fuera más fácil." What form is "fuera"?', options: ['present indicative', 'preterite', 'imperfect subjunctive', 'conditional'], correct: 2 },
-      { prompt: 'Which does NOT trigger the subjunctive?', options: ['quiero que...', 'es cierto que...', 'dudo que...', 'ojalá...'], correct: 1 },
+      { prompt: '"Es posible que sea difícil." What triggers the subjunctive here?', options: ['certainty', 'possibility/doubt', 'command', 'past tense'], correct: 1, explanation: 'Expressions of possibility and doubt (es posible que, quizás, tal vez) trigger the subjunctive because they indicate uncertainty. The indicative is used for statements of fact and certainty.' },
+      { prompt: '"Ojalá fuera más fácil." What form is "fuera"?', options: ['present indicative', 'preterite', 'imperfect subjunctive', 'conditional'], correct: 2, explanation: '"Fuera" is the imperfect subjunctive of "ser." "Ojalá" (from Arabic "inshallah") triggers the subjunctive, and the imperfect subjunctive is used here because the wish is contrary to reality (it is not easy).' },
+      { prompt: 'Which does NOT trigger the subjunctive?', options: ['quiero que...', 'es cierto que...', 'dudo que...', 'ojalá...'], correct: 1, explanation: '"Es cierto que" (it is certain that) expresses certainty, so it takes the indicative, not the subjunctive. Expressions of desire, doubt, and wishes all require the subjunctive in the subordinate clause.' },
     ],
   },
 
@@ -245,8 +245,8 @@ const JOKES_DATA = [
       { word: 'agitada', english: 'agitated, upset' },
     ],
     quiz: [
-      { prompt: '¿Qué doble significado tiene "esposas"?', options: ['wives and handcuffs', 'wives and rings', 'sisters and chains', 'mothers and locks'], correct: 0 },
-      { prompt: '¿Qué significa "detenida"?', options: ['detained', 'sick', 'confused', 'relaxed'], correct: 0 },
+      { prompt: '¿Qué doble significado tiene "esposas"?', options: ['wives and handcuffs', 'wives and rings', 'sisters and chains', 'mothers and locks'], correct: 0, explanation: '"Esposas" means both "wives" and "handcuffs." Both meanings derive from the Latin "sponsa" (betrothed). The dual meaning is a well-known source of humor in Spanish.' },
+      { prompt: '¿Qué significa "detenida"?', options: ['detained', 'sick', 'confused', 'relaxed'], correct: 0, explanation: '"Detenida" means "detained" or "under arrest," from the verb "detener" (to detain/stop). It can also mean simply "stopped," but in a police context it specifically means placed under arrest.' },
     ],
   },
 
@@ -265,8 +265,8 @@ const JOKES_DATA = [
       { word: 'banquero', english: 'banker' },
     ],
     quiz: [
-      { prompt: '¿Qué dos significados tiene "banco"?', options: ['bank and bench', 'white and blank', 'bank and boat', 'bench and branch'], correct: 0 },
-      { prompt: '¿De dónde viene la palabra "banco"?', options: ['Latin "bancus"', 'Germanic "bank"', 'Arabic "bunka"', 'Greek "bancos"'], correct: 1 },
+      { prompt: '¿Qué dos significados tiene "banco"?', options: ['bank and bench', 'white and blank', 'bank and boat', 'bench and branch'], correct: 0, explanation: '"Banco" means both "bank" (financial institution) and "bench" (seat). The connection is historical: early money-lenders conducted business on benches in public markets.' },
+      { prompt: '¿De dónde viene la palabra "banco"?', options: ['Latin "bancus"', 'Germanic "bank"', 'Arabic "bunka"', 'Greek "bancos"'], correct: 1, explanation: '"Banco" comes from the Germanic word "bank" (bench/table), which entered Spanish through medieval commerce. The same root gave English both "bank" and "bench."' },
     ],
   },
 
@@ -290,9 +290,9 @@ const JOKES_DATA = [
       { word: 'el día', english: 'the day (masculine!)' },
     ],
     quiz: [
-      { prompt: '¿Cuál es el artículo correcto? "___ problema"', options: ['la', 'el', 'una', 'los'], correct: 1 },
-      { prompt: '¿Por qué "problema" es masculino aunque termina en -a?', options: ['It\'s from Arabic', 'It\'s from Greek (neuter -ma)', 'It\'s irregular', 'It\'s actually feminine'], correct: 1 },
-      { prompt: '¿Cuál de estas palabras es femenina?', options: ['el mapa', 'el día', 'la mesa', 'el clima'], correct: 2 },
+      { prompt: '¿Cuál es el artículo correcto? "___ problema"', options: ['la', 'el', 'una', 'los'], correct: 1, explanation: '"Problema" is masculine despite ending in -a, so it takes the masculine article "el." This applies to many Spanish words of Greek origin ending in -ma: el tema, el sistema, el programa.' },
+      { prompt: '¿Por qué "problema" es masculino aunque termina en -a?', options: ['It\'s from Arabic', 'It\'s from Greek (neuter -ma)', 'It\'s irregular', 'It\'s actually feminine'], correct: 1, explanation: 'Words like "problema," "tema," and "sistema" come from Greek neuter nouns ending in -ma. When they entered Spanish (which has no neuter gender), they were assigned masculine gender, keeping their -a ending.' },
+      { prompt: '¿Cuál de estas palabras es femenina?', options: ['el mapa', 'el día', 'la mesa', 'el clima'], correct: 2, explanation: '"Mesa" (table) is a standard feminine noun ending in -a. The others are all exceptions: "mapa," "día," and "clima" are masculine despite their -a endings.' },
     ],
   },
 
@@ -311,8 +311,8 @@ const JOKES_DATA = [
       { word: 'tónica', english: 'stressed (syllable)' },
     ],
     quiz: [
-      { prompt: '¿"El agua" es masculino o femenino?', options: ['masculino', 'femenino', 'neutro', 'ambos'], correct: 1 },
-      { prompt: '¿Cuál es correcto?', options: ['el agua frío', 'el agua fría', 'la agua fría', 'la agua frío'], correct: 1 },
+      { prompt: '¿"El agua" es masculino o femenino?', options: ['masculino', 'femenino', 'neutro', 'ambos'], correct: 1, explanation: '"Agua" is feminine. It uses "el" instead of "la" only to avoid the awkward "la agua" (two stressed a-sounds colliding). The adjective remains feminine: "el agua fría," not "el agua frío."' },
+      { prompt: '¿Cuál es correcto?', options: ['el agua frío', 'el agua fría', 'la agua fría', 'la agua frío'], correct: 1, explanation: '"El agua fría" is correct. The article "el" is used for phonetic reasons (to avoid "la agua"), but the adjective "fría" stays feminine because "agua" is a feminine noun. In the plural, it reverts to "las aguas."' },
     ],
   },
 
@@ -336,8 +336,8 @@ const JOKES_DATA = [
       { word: 'no cabe duda', english: 'there is no doubt (lit: doubt doesn\'t fit)' },
     ],
     quiz: [
-      { prompt: '¿Cuál es la forma correcta? "Yo ___ en el coche."', options: ['cabo', 'quepo', 'capo', 'cupo'], correct: 1 },
-      { prompt: '¿Cuál es el futuro de "caber"?', options: ['caberé', 'cabré', 'queperé', 'cupré'], correct: 1 },
+      { prompt: '¿Cuál es la forma correcta? "Yo ___ en el coche."', options: ['cabo', 'quepo', 'capo', 'cupo'], correct: 1, explanation: 'The first-person present of "caber" is the highly irregular "quepo." This stem change (cab- to quep-) only occurs in the yo form, similar to how "saber" becomes "sé" and "poner" becomes "pongo."' },
+      { prompt: '¿Cuál es el futuro de "caber"?', options: ['caberé', 'cabré', 'queperé', 'cupré'], correct: 1, explanation: '"Caber" has an irregular future stem: "cabr-" instead of the expected "caber-." This shortened stem pattern is shared by other common verbs like "saber" (sabré), "poder" (podré), and "haber" (habré).' },
     ],
   },
 
@@ -355,8 +355,8 @@ const JOKES_DATA = [
       { word: 'haber empezado', english: 'should have started (past infinitive)' },
     ],
     quiz: [
-      { prompt: '¿Cuál es correcto?', options: ['Haber si vienes', 'A ver si vienes', 'Aber si vienes', 'Ha ver si vienes'], correct: 1 },
-      { prompt: '"Haber" is primarily used as...', options: ['a preposition', 'an auxiliary verb', 'an interjection', 'an adverb'], correct: 1 },
+      { prompt: '¿Cuál es correcto?', options: ['Haber si vienes', 'A ver si vienes', 'Aber si vienes', 'Ha ver si vienes'], correct: 1, explanation: '"A ver si vienes" (let\'s see if you come) is correct. "A ver" is the preposition "a" plus the infinitive "ver." "Haber" is the auxiliary verb (to have) and cannot be used here, though this is one of the most common spelling errors among native Spanish speakers.' },
+      { prompt: '"Haber" is primarily used as...', options: ['a preposition', 'an auxiliary verb', 'an interjection', 'an adverb'], correct: 1, explanation: '"Haber" is the primary auxiliary verb in Spanish, used to form compound tenses (he comido, había dicho). It also serves as an impersonal verb meaning "there is/are" (hay, hubo, habrá).' },
     ],
   },
 
@@ -379,8 +379,8 @@ const JOKES_DATA = [
       { word: 'recoger', english: 'to pick up, to collect' },
     ],
     quiz: [
-      { prompt: 'In Latin America, "coger" is...', options: ['formal', 'normal', 'vulgar', 'archaic'], correct: 2 },
-      { prompt: 'The safe alternative for "to catch the bus" in all countries is...', options: ['coger el autobús', 'tomar el autobús', 'pegar el autobús', 'meter el autobús'], correct: 1 },
+      { prompt: 'In Latin America, "coger" is...', options: ['formal', 'normal', 'vulgar', 'archaic'], correct: 2, explanation: 'In most of Latin America, "coger" has a strong vulgar/sexual connotation and should be avoided. In Spain, however, it is a perfectly normal everyday verb meaning "to take" or "to catch." This is one of the biggest regional vocabulary differences in Spanish.' },
+      { prompt: 'The safe alternative for "to catch the bus" in all countries is...', options: ['coger el autobús', 'tomar el autobús', 'pegar el autobús', 'meter el autobús'], correct: 1, explanation: '"Tomar el autobús" is universally understood and safe across all Spanish-speaking countries. "Tomar" (to take) is the standard neutral alternative that avoids any regional taboo associated with "coger."' },
     ],
   },
 
@@ -399,8 +399,8 @@ const JOKES_DATA = [
       { word: 'cuerno', english: 'horn' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "asta" (sin h)?', options: ['until', 'horn/flagpole', 'star', 'toast'], correct: 1 },
-      { prompt: '¿Cuál es correcto para "See you tomorrow"?', options: ['Asta mañana', 'Hasta mañana', 'Asta mayana', 'Hasta manana'], correct: 1 },
+      { prompt: '¿Qué significa "asta" (sin h)?', options: ['until', 'horn/flagpole', 'star', 'toast'], correct: 1, explanation: '"Asta" (without H) means "horn," "antler," or "flagpole." Since the H is silent in Spanish, "asta" and "hasta" are homophones, but they have completely different meanings and spellings.' },
+      { prompt: '¿Cuál es correcto para "See you tomorrow"?', options: ['Asta mañana', 'Hasta mañana', 'Asta mayana', 'Hasta manana'], correct: 1, explanation: '"Hasta mañana" is the correct spelling. "Hasta" (with H) means "until," so the phrase literally means "until tomorrow." Note that "mañana" also requires the ñ to distinguish it from "manana," which is not a word.' },
     ],
   },
 
@@ -419,8 +419,8 @@ const JOKES_DATA = [
       { word: 'sucio', english: 'dirty' },
     ],
     quiz: [
-      { prompt: '¿Qué significa "fregadero"?', options: ['refrigerator', 'kitchen sink', 'dishwasher', 'oven'], correct: 1 },
-      { prompt: '¿Qué número es "cinco"?', options: ['4', '5', '6', '15'], correct: 1 },
+      { prompt: '¿Qué significa "fregadero"?', options: ['refrigerator', 'kitchen sink', 'dishwasher', 'oven'], correct: 1, explanation: '"Fregadero" means "kitchen sink," from the verb "fregar" (to scrub/wash dishes). The root "fregar" comes from Latin "fricare" (to rub), which also gave English the word "friction."' },
+      { prompt: '¿Qué número es "cinco"?', options: ['4', '5', '6', '15'], correct: 1, explanation: '"Cinco" means "five," from Latin "quinque." In the joke, its pronunciation (/siŋko/) sounds like "sink-o" in English, creating the bilingual pun about dishes going in the sink.' },
     ],
   },
 
@@ -439,8 +439,8 @@ const JOKES_DATA = [
       { word: 'pronunciar', english: 'to pronounce' },
     ],
     quiz: [
-      { prompt: 'The H in Spanish is generally...', options: ['pronounced like English H', 'silent', 'pronounced like J', 'only in questions'], correct: 1 },
-      { prompt: 'Why does Spanish keep the silent H?', options: ['Arabic influence', 'Historical spelling from Latin', 'To distinguish homophones', 'Grammar rules'], correct: 1 },
+      { prompt: 'The H in Spanish is generally...', options: ['pronounced like English H', 'silent', 'pronounced like J', 'only in questions'], correct: 1, explanation: 'The Spanish H is silent in nearly all native words. It was once aspirated in Latin (like in English), but lost its sound over centuries while the spelling was preserved. It is only pronounced in loanwords like "hámster" or "hacker."' },
+      { prompt: 'Why does Spanish keep the silent H?', options: ['Arabic influence', 'Historical spelling from Latin', 'To distinguish homophones', 'Grammar rules'], correct: 1, explanation: 'Spanish retains the silent H because of historical spelling conventions inherited from Latin. Words like "hablar" (from Latin "fabulare") and "hacer" (from Latin "facere") kept the H to reflect their etymological origins, even after the sound disappeared.' },
     ],
   },
 ];

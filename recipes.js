@@ -20,17 +20,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿De qué región de España es originaria la paella?",
         options: ["Andalucía", "Cataluña", "Valencia", "Galicia"],
-        correct: 2
+        correct: 2,
+        explanation: "Paella originated in the Valencia region on Spain's eastern coast, where rice paddies thrive in the local wetlands. The dish evolved from humble field-worker meals cooked over open fires."
       },
       {
         prompt: "¿Qué especia le da el color amarillo a la paella?",
         options: ["Pimentón", "Cúrcuma", "Comino", "Azafrán"],
-        correct: 3
+        correct: 3,
+        explanation: "Saffron (azafrán) gives paella its signature golden-yellow color. It is the world's most expensive spice by weight, harvested from the stigmas of the crocus flower."
       },
       {
         prompt: "¿Cómo se llama la capa crujiente de arroz en el fondo de la paella?",
         options: ["Sofrito", "Socarrat", "Picada", "Refrito"],
-        correct: 1
+        correct: 1,
+        explanation: "The socarrat is the caramelized, crispy rice crust that forms at the bottom of the pan. It comes from the verb 'socarrar' (to scorch) and is prized as a sign of a well-made paella."
       }
     ]
   },
@@ -55,17 +58,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿Qué tipo de carne se usa en los tacos al pastor?",
         options: ["Res", "Pollo", "Cerdo", "Cordero"],
-        correct: 2
+        correct: 2,
+        explanation: "Tacos al pastor use pork (cerdo) that is marinated in a blend of dried chiles, achiote paste, and spices. The name 'al pastor' (shepherd-style) reflects the dish's roots in spit-roasted meat traditions."
       },
       {
         prompt: "¿Qué fruta se añade tradicionalmente a los tacos al pastor?",
         options: ["Mango", "Piña", "Papaya", "Limón"],
-        correct: 1
+        correct: 1,
+        explanation: "Pineapple (piña) is placed on top of the meat spit, and its juices drip down to tenderize and sweeten the pork as it cooks. Slices are carved off alongside the meat when serving."
       },
       {
         prompt: "¿De qué cocina se inspiró el método de cocción del trompo?",
         options: ["Italiana", "China", "Libanesa", "Francesa"],
-        correct: 2
+        correct: 2,
+        explanation: "Lebanese immigrants to Mexico in the early 20th century brought the vertical spit technique used for shawarma. Mexican cooks adapted it with local ingredients like chiles and achiote, creating tacos al pastor."
       }
     ]
   },
@@ -90,17 +96,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿Cómo se llama el plegado decorativo del borde de la empanada?",
         options: ["Cierre", "Repulgue", "Trenza", "Sello"],
-        correct: 1
+        correct: 1,
+        explanation: "The repulgue is the distinctive crimped or braided edge of an empanada. In Argentina, each filling type has its own unique repulgue pattern so people can identify the contents without opening them."
       },
       {
         prompt: "¿En qué país las empanadas varían según la provincia?",
         options: ["México", "Colombia", "Argentina", "Chile"],
-        correct: 2
+        correct: 2,
+        explanation: "Argentina is famous for its regional empanada varieties: Salta uses potatoes and spicy peppers, Tucumán features hand-chopped beef, and Mendoza adds olives. Each province takes great pride in its own recipe."
       },
       {
         prompt: "¿Cuáles son las dos formas principales de cocinar empanadas?",
         options: ["Hervir y asar", "Hornear y freír", "Guisar y asar", "Hervir y hornear"],
-        correct: 1
+        correct: 1,
+        explanation: "Empanadas are either baked (al horno) or fried (fritas). Baked empanadas have a flakier, lighter crust, while fried empanadas are crispier and more indulgent."
       }
     ]
   },
@@ -125,17 +134,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿De qué país es plato nacional el ceviche?",
         options: ["Ecuador", "Chile", "Perú", "Colombia"],
-        correct: 2
+        correct: 2,
+        explanation: "Peru declared ceviche its national dish and part of its Cultural Heritage. While many Latin American countries have ceviche traditions, Peru's version is the most internationally recognized and dates back to pre-Columbian times."
       },
       {
         prompt: "¿Cómo se llama el líquido del ceviche?",
         options: ["Jugo de mar", "Leche de tigre", "Agua de limón", "Caldo frío"],
-        correct: 1
+        correct: 1,
+        explanation: "Leche de tigre (tiger's milk) is the flavorful citrus-based marinade left after the fish cures. In Peru it is often drunk on its own as an appetizer or as a popular hangover remedy."
       },
       {
         prompt: "¿Qué ingrediente 'cocina' el pescado en el ceviche?",
         options: ["Vinagre", "Sal", "Jugo de limón", "Aceite"],
-        correct: 2
+        correct: 2,
+        explanation: "The citric acid in lime juice denatures the proteins in raw fish, turning the flesh opaque and firm in a process similar to heat cooking. This is why ceviche is considered 'cooked' without ever applying heat."
       }
     ]
   },
@@ -160,17 +172,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿Qué es un 'sofrito' en la cocina latinoamericana?",
         options: ["Un postre frito", "Una base de vegetales salteados", "Un tipo de sopa", "Una salsa picante"],
-        correct: 1
+        correct: 1,
+        explanation: "A sofrito is a slowly sauteed aromatic base of onions, garlic, peppers, and tomatoes that forms the flavor foundation of countless Latin American and Spanish dishes. The word comes from 'sofreir' (to lightly fry)."
       },
       {
         prompt: "¿Cuál es el primer paso para preparar el pollo en este plato?",
         options: ["Hervirlo", "Dorarlo", "Marinarlo", "Asarlo"],
-        correct: 1
+        correct: 1,
+        explanation: "Browning (dorar) the chicken first creates a flavorful caramelized crust through the Maillard reaction. This step builds a deeper, richer flavor base before the rice and liquid are added."
       },
       {
         prompt: "¿En cuántos países hispanohablantes se prepara alguna versión de arroz con pollo?",
         options: ["Solo en España", "Solo en el Caribe", "En casi todos", "Solo en Sudamérica"],
-        correct: 2
+        correct: 2,
+        explanation: "Arroz con pollo is found in nearly every Spanish-speaking country, from Spain to the Caribbean to South America. Each region adds its own twist, such as beer in Costa Rica or culantro in Puerto Rico."
       }
     ]
   },
@@ -195,17 +210,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿Con qué se acompañan tradicionalmente los churros en España?",
         options: ["Café con leche", "Chocolate espeso", "Mermelada", "Miel"],
-        correct: 1
+        correct: 1,
+        explanation: "In Spain, churros are traditionally dipped in thick hot chocolate (chocolate espeso), which is much thicker and richer than typical hot cocoa. Famous churrerias like San Gines in Madrid have served this pairing since 1894."
       },
       {
         prompt: "¿Qué es la 'cajeta' que se usa para rellenar churros en México?",
         options: ["Crema de vainilla", "Dulce de leche de cabra", "Mermelada de fresa", "Salsa de caramelo"],
-        correct: 1
+        correct: 1,
+        explanation: "Cajeta is a thick, sweet caramel spread made specifically from goat's milk, originating from the Mexican city of Celaya, Guanajuato. It differs from Argentine dulce de leche, which uses cow's milk."
       },
       {
         prompt: "¿En qué momento del día se comen los churros tradicionalmente en España?",
         options: ["Almuerzo", "Cena", "Desayuno o merienda", "Medianoche"],
-        correct: 2
+        correct: 2,
+        explanation: "Churros are a traditional breakfast or merienda (afternoon snack) food in Spain. The merienda is a light meal eaten between lunch and the characteristically late Spanish dinner."
       }
     ]
   },
@@ -230,17 +248,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿De qué lengua indígena proviene la palabra 'guacamole'?",
         options: ["Maya", "Quechua", "Náhuatl", "Zapoteco"],
-        correct: 2
+        correct: 2,
+        explanation: "The word 'guacamole' comes from the Nahuatl word 'ahuacamolli,' combining 'ahuacatl' (avocado) and 'molli' (sauce). Nahuatl was the language of the Aztec Empire and has given Spanish many food words including tomate, chile, and chocolate."
       },
       {
         prompt: "¿Cuál es el ingrediente principal del guacamole?",
         options: ["Tomate", "Aguacate", "Chile", "Cebolla"],
-        correct: 1
+        correct: 1,
+        explanation: "Avocado (aguacate) is the base ingredient that gives guacamole its creamy texture and rich flavor. The Aztecs first prepared the dish by mashing ripe avocados with a molcajete (stone mortar)."
       },
       {
         prompt: "¿De qué región es originario el aguacate?",
         options: ["Sudamérica", "Asia", "Mesoamérica", "África"],
-        correct: 2
+        correct: 2,
+        explanation: "The avocado is native to Mesoamerica, the region spanning central Mexico through Central America. Archaeological evidence shows avocados were consumed in Mexico as early as 5,000 years ago."
       }
     ]
   },
@@ -265,17 +286,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿Cuál es el gran debate sobre la tortilla española?",
         options: ["Si se usa aceite o mantequilla", "Si lleva cebolla o no", "Si se sirve fría o caliente", "Si se usa patata o boniato"],
-        correct: 1
+        correct: 1,
+        explanation: "The 'con cebolla o sin cebolla' (with or without onion) debate is a lighthearted but passionate cultural divide in Spain. Supporters of onion say it adds sweetness and moisture, while purists insist on only eggs and potatoes."
       },
       {
         prompt: "¿Cómo se da la vuelta a la tortilla en la sartén?",
         options: ["Con una espátula", "Lanzándola al aire", "Con un plato", "Con dos sartenes"],
-        correct: 2
+        correct: 2,
+        explanation: "A flat plate is placed over the skillet, then the pan is flipped upside down so the tortilla lands on the plate. The tortilla is then slid back into the pan to cook the other side -- a technique that takes practice to master."
       },
       {
         prompt: "¿Qué tipo de aceite se usa tradicionalmente?",
         options: ["Aceite de girasol", "Aceite de coco", "Aceite de oliva", "Mantequilla"],
-        correct: 2
+        correct: 2,
+        explanation: "Olive oil (aceite de oliva) is the cornerstone of Spanish cooking and essential for an authentic tortilla. Spain is the world's largest producer of olive oil, and the potatoes are slowly fried in a generous amount of it."
       }
     ]
   },
@@ -300,17 +324,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿Cómo se cocina el flan en el horno?",
         options: ["Directamente en la bandeja", "A baño maría", "En papel aluminio", "A fuego directo"],
-        correct: 1
+        correct: 1,
+        explanation: "A water bath (baño maría) surrounds the flan mold with hot water during baking, which provides gentle, even heat. This prevents the custard from curdling or cracking, resulting in a smooth, silky texture."
       },
       {
         prompt: "¿Qué ingrediente especial se usa en el flan mexicano?",
         options: ["Chocolate", "Queso crema", "Coco", "Frutas"],
-        correct: 1
+        correct: 1,
+        explanation: "Mexican flan (flan napolitano) uses cream cheese (queso crema) along with condensed and evaporated milk, giving it an exceptionally dense, creamy texture that distinguishes it from the lighter Spanish version."
       },
       {
         prompt: "¿Qué forma la salsa dorada del flan?",
         options: ["Miel", "Azúcar glass", "Caramelo líquido", "Mermelada"],
-        correct: 2
+        correct: 2,
+        explanation: "Liquid caramel is made by heating sugar until it melts and turns amber. It is poured into the mold first, and when the flan is flipped out after cooling, the hardened caramel melts into a golden sauce that coats the custard."
       }
     ]
   },
@@ -335,17 +362,20 @@ const RECIPES_DATA = [
       {
         prompt: "¿De qué país son plato nacional las pupusas?",
         options: ["Honduras", "Guatemala", "El Salvador", "Nicaragua"],
-        correct: 2
+        correct: 2,
+        explanation: "Pupusas are the national dish of El Salvador, with their own holiday -- the Dia Nacional de la Pupusa -- celebrated on the second Sunday of November. Their pre-Columbian origins trace back over 2,000 years."
       },
       {
         prompt: "¿Qué es el 'curtido' que acompaña las pupusas?",
         options: ["Una salsa picante", "Ensalada de repollo fermentado", "Crema agria", "Guacamole"],
-        correct: 1
+        correct: 1,
+        explanation: "Curtido is a lightly fermented cabbage slaw made with shredded cabbage, carrots, onion, and oregano in vinegar. Its tangy crunch provides a refreshing contrast to the warm, rich pupusa."
       },
       {
         prompt: "¿Qué es el 'loroco' usado como relleno?",
         options: ["Un queso especial", "Un tipo de frijol", "Una flor comestible", "Una hierba aromática"],
-        correct: 2
+        correct: 2,
+        explanation: "Loroco is an edible flower bud native to Central America with a distinctive earthy, slightly tangy flavor. It grows on a vine and is one of the most beloved and uniquely Salvadoran pupusa fillings, often paired with cheese."
       }
     ]
   }

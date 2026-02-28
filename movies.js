@@ -19,17 +19,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Quién dirigió El Laberinto del Fauno?",
         options: ["Alfonso Cuarón", "Alejandro González Iñárritu", "Guillermo del Toro", "Pedro Almodóvar"],
-        correct: 2
+        correct: 2,
+        explanation: "Guillermo del Toro wrote and directed Pan's Labyrinth (2006). The film is one of his signature works blending dark fantasy with historical drama, earning him widespread international acclaim before his later Oscar win for The Shape of Water."
       },
       {
         prompt: "¿En qué año está ambientada la película?",
         options: ["1936", "1939", "1944", "1950"],
-        correct: 2
+        correct: 2,
+        explanation: "The film is set in 1944, five years after the Spanish Civil War ended in 1939. This post-war period under Franco's dictatorship is crucial to the plot, as Ofelia's stepfather is a Francoist captain fighting remaining Republican guerrillas."
       },
       {
         prompt: "¿Cuántas tareas debe completar Ofelia?",
         options: ["Una", "Dos", "Tres", "Cuatro"],
-        correct: 2
+        correct: 2,
+        explanation: "The faun Pan tells Ofelia she must complete three tasks to prove she is the reborn princess of the underground realm. The number three is a classic fairy-tale motif, and each task tests her courage and moral character in increasingly dangerous ways."
       }
     ]
   },
@@ -53,17 +56,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿En qué barrio de Ciudad de México está ambientada la película?",
         options: ["Coyoacán", "Roma", "Condesa", "Polanco"],
-        correct: 1
+        correct: 1,
+        explanation: "The film is set in the Colonia Roma neighborhood of Mexico City, which also gives the movie its title. Cuarón grew up in this middle-class neighborhood in the 1970s, and the film is a semi-autobiographical portrait of his childhood."
       },
       {
         prompt: "¿En qué formato visual está filmada Roma?",
         options: ["Color saturado", "Sepia", "Blanco y negro", "Formato cuadrado a color"],
-        correct: 2
+        correct: 2,
+        explanation: "Cuarón chose to shoot Roma in black and white to evoke the look and feel of his childhood memories. The monochrome cinematography by Cuarón himself won the Academy Award for Best Cinematography, making him the first director to win that award for his own film."
       },
       {
         prompt: "¿Quién es Cleo en la película?",
         options: ["La madre de familia", "La hija mayor", "Una trabajadora doméstica", "Una profesora"],
-        correct: 2
+        correct: 2,
+        explanation: "Cleo is an indigenous Mixtec domestic worker employed by a middle-class family. The character is based on Liboria 'Libo' Rodriguez, the real-life nanny who helped raise Cuarón, and the film is dedicated to her."
       }
     ]
   },
@@ -87,17 +93,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿A qué ciudad viaja Manuela en la película?",
         options: ["Madrid", "Sevilla", "Barcelona", "Valencia"],
-        correct: 2
+        correct: 2,
+        explanation: "Manuela travels from Madrid to Barcelona to find her son's father. Barcelona serves as the backdrop for her new life, where she connects with a community of resilient women including a pregnant nun and a transgender sex worker."
       },
       {
         prompt: "¿Qué premio internacional ganó esta película?",
         options: ["Palma de Oro", "Óscar a Mejor Película Extranjera", "Oso de Oro", "BAFTA"],
-        correct: 1
+        correct: 1,
+        explanation: "All About My Mother won the Academy Award for Best Foreign Language Film in 2000. It was Almodovar's first Oscar and cemented his status as one of the most important filmmakers in world cinema."
       },
       {
         prompt: "¿Cuál es la profesión de Manuela?",
         options: ["Actriz", "Profesora", "Enfermera", "Escritora"],
-        correct: 2
+        correct: 2,
+        explanation: "Manuela works as a nurse and organ transplant coordinator at a Madrid hospital. Her medical background is central to the plot, as the film opens with a scene about organ donation that foreshadows her son's tragic death."
       }
     ]
   },
@@ -121,17 +130,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Cómo se llamaba la motocicleta del viaje?",
         options: ["La Veloz", "La Poderosa", "La Valiente", "La Libertad"],
-        correct: 1
+        correct: 1,
+        explanation: "The Norton 500 motorcycle was nicknamed 'La Poderosa' (The Mighty One), an ironic name since it broke down repeatedly during the trip. It finally gave out in Chile, forcing the pair to continue by hitchhiking, bus, and raft."
       },
       {
         prompt: "¿Qué estudiaba Ernesto Guevara durante el viaje?",
         options: ["Derecho", "Filosofía", "Medicina", "Ingeniería"],
-        correct: 2
+        correct: 2,
+        explanation: "Ernesto Guevara was a 23-year-old medical student at the University of Buenos Aires when he embarked on the journey. His medical training shaped how he viewed the poverty and disease he encountered, particularly at a leper colony in Peru."
       },
       {
         prompt: "¿En qué año se realizó el viaje real?",
         options: ["1948", "1950", "1952", "1955"],
-        correct: 2
+        correct: 2,
+        explanation: "The real journey took place in 1952, when Guevara was not yet the revolutionary figure known as 'Che.' The trip across South America exposed him to widespread poverty and inequality, which he documented in his travel diary that later became the book the film is based on."
       }
     ]
   },
@@ -155,17 +167,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Cómo se llama la playa ficticia del viaje?",
         options: ["Playa del Carmen", "Boca del Cielo", "Puerto Escondido", "Costa Azul"],
-        correct: 1
+        correct: 1,
+        explanation: "'Boca del Cielo' (Heaven's Mouth) is a fictional beach that the characters invent on the spot to impress Luisa. The name is symbolic -- the destination itself is an illusion, and the real journey is about self-discovery and confronting uncomfortable truths."
       },
       {
         prompt: "¿Qué actores protagonizan la película?",
         options: ["Bardem y Banderas", "García Bernal y Luna", "del Toro y Peña", "Bernal y Cantinflas"],
-        correct: 1
+        correct: 1,
+        explanation: "Gael Garcia Bernal and Diego Luna, real-life childhood friends, play the two teenage protagonists. Their natural chemistry and friendship translated authentically on screen, and the film launched both actors into international stardom."
       },
       {
         prompt: "¿De qué nacionalidad es el personaje de Luisa?",
         options: ["Mexicana", "Argentina", "Española", "Francesa"],
-        correct: 2
+        correct: 2,
+        explanation: "Luisa is a Spanish woman living in Mexico, played by Spanish actress Maribel Verdu. Her outsider perspective allows her to observe Mexican class dynamics between the two boys -- Julio from a working-class family and Tenoch from a wealthy political family."
       }
     ]
   },
@@ -189,17 +204,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Qué premio ganó El secreto de sus ojos?",
         options: ["Palma de Oro", "Óscar a Mejor Película Extranjera", "Goya", "BAFTA"],
-        correct: 1
+        correct: 1,
+        explanation: "The Secret in Their Eyes won the Academy Award for Best Foreign Language Film in 2010, making it only the second Argentine film ever to win an Oscar. Its success led to an American remake in 2015 starring Julia Roberts and Nicole Kidman."
       },
       {
         prompt: "¿Qué decide escribir Benjamín Espósito?",
         options: ["Sus memorias", "Un poema", "Una novela", "Un guion"],
-        correct: 2
+        correct: 2,
+        explanation: "After retiring, Esposito decides to write a novel based on the 1974 murder case that haunted him for decades. The act of writing forces him to revisit not only the unsolved crime but also his unspoken feelings for his former colleague Irene."
       },
       {
         prompt: "¿En qué década está ambientado el caso criminal de la película?",
         options: ["Años sesenta", "Años setenta", "Años ochenta", "Años noventa"],
-        correct: 1
+        correct: 1,
+        explanation: "The murder case takes place in the 1970s, a turbulent period in Argentine history leading up to the military dictatorship (1976-1983). The political instability of that era is directly woven into the plot, as government corruption obstructs justice."
       }
     ]
   },
@@ -223,17 +241,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Cuántas historias cortas componen Relatos salvajes?",
         options: ["Cuatro", "Cinco", "Seis", "Siete"],
-        correct: 2
+        correct: 2,
+        explanation: "Wild Tales is an anthology of six self-contained short films, each exploring what happens when ordinary people are pushed past their breaking point. The segments range from road rage to a wedding gone wrong, united by the theme of explosive human reactions to injustice."
       },
       {
         prompt: "¿Qué tipo de humor caracteriza a la película?",
         options: ["Humor blanco", "Humor negro", "Humor absurdo", "Humor romántico"],
-        correct: 1
+        correct: 1,
+        explanation: "The film uses dark humor (humor negro) to explore themes of violence, revenge, and societal frustration. By making audiences laugh at extreme situations, Szifron highlights how thin the line is between civilized behavior and savage impulse."
       },
       {
         prompt: "¿Qué récord logró esta película en Argentina?",
         options: ["Mayor presupuesto", "Más premios", "Más taquillera de la historia", "Más larga"],
-        correct: 2
+        correct: 2,
+        explanation: "Wild Tales became the highest-grossing Argentine film in history, with over 3.5 million tickets sold domestically. Produced by Pedro Almodovar's company El Deseo, it was also nominated for the Academy Award for Best Foreign Language Film."
       }
     ]
   },
@@ -257,17 +278,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Qué tradición mexicana celebra la película Coco?",
         options: ["Navidad", "Día de los Muertos", "Semana Santa", "Quinceañera"],
-        correct: 1
+        correct: 1,
+        explanation: "Coco centers on Dia de los Muertos (Day of the Dead), celebrated on November 1-2 in Mexico. This tradition honors deceased loved ones with ofrendas (altars), marigold flowers, and their favorite foods -- the belief being that the dead can visit the living on this day."
       },
       {
         prompt: "¿Cuál es el sueño de Miguel?",
         options: ["Ser pintor", "Ser músico", "Ser chef", "Ser escritor"],
-        correct: 1
+        correct: 1,
+        explanation: "Miguel dreams of becoming a musician like his idol Ernesto de la Cruz, but his family has banned music for generations after a musician ancestor abandoned them. This conflict between family loyalty and personal passion drives the entire story."
       },
       {
         prompt: "¿Cómo se llama la canción principal de la película?",
         options: ["Recuérdame", "No me olvides", "Mi familia", "El mundo de los muertos"],
-        correct: 0
+        correct: 0,
+        explanation: "'Recuerdame' (Remember Me) won the Academy Award for Best Original Song. Written in two versions -- a flashy performance number and a tender lullaby -- the song embodies the film's central message that loved ones live on as long as we remember them."
       }
     ]
   },
@@ -291,17 +315,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Quién interpreta a Raimunda en Volver?",
         options: ["Carmen Maura", "Penélope Cruz", "Victoria Abril", "Rossy de Palma"],
-        correct: 1
+        correct: 1,
+        explanation: "Penelope Cruz plays Raimunda in one of her most acclaimed Spanish-language roles. Cruz has been a frequent collaborator of Almodovar since the 1990s, and her performance in Volver earned her first major international award recognition."
       },
       {
         prompt: "¿De qué región española es originaria Raimunda?",
         options: ["Andalucía", "Galicia", "La Mancha", "Cataluña"],
-        correct: 2
+        correct: 2,
+        explanation: "Raimunda is from La Mancha, the rural region in central Spain also famous as the setting of Don Quixote. Almodovar himself grew up in La Mancha, and the film is his personal tribute to the strong, resilient women of that region."
       },
       {
         prompt: "¿Qué premio ganó Penélope Cruz por esta película?",
         options: ["Óscar", "Goya", "Mejor Actriz en Cannes", "Globo de Oro"],
-        correct: 2
+        correct: 2,
+        explanation: "Cruz won the Best Actress award at the 2006 Cannes Film Festival for her role as Raimunda. The award was shared with five other actresses from the film's ensemble cast, reflecting Almodovar's focus on collective female strength."
       }
     ]
   },
@@ -325,17 +352,20 @@ const MOVIES_DATA = [
       {
         prompt: "¿Qué evento conecta las tres historias de la película?",
         options: ["Un terremoto", "Un accidente de coche", "Un robo", "Un incendio"],
-        correct: 1
+        correct: 1,
+        explanation: "A violent car crash in Mexico City is the pivotal event that links all three storylines. This narrative structure -- multiple stories connected by a single incident -- became Inarritu's signature technique, which he later used in 21 Grams and Babel."
       },
       {
         prompt: "¿Quién dirigió Amores perros?",
         options: ["Alfonso Cuarón", "Guillermo del Toro", "Alejandro González Iñárritu", "Carlos Reygadas"],
-        correct: 2
+        correct: 2,
+        explanation: "Amores Perros was Alejandro Gonzalez Inarritu's feature film debut. It launched his career alongside screenwriter Guillermo Arriaga, and Inarritu went on to win consecutive Best Director Oscars for Birdman (2014) and The Revenant (2015)."
       },
       {
         prompt: "¿Qué movimiento cinematográfico inauguró esta película?",
         options: ["Cine de oro mexicano", "Nuevo Cine Mexicano", "Realismo mágico", "Cine independiente"],
-        correct: 1
+        correct: 1,
+        explanation: "Amores Perros is widely considered the film that launched the 'Nuevo Cine Mexicano' (New Mexican Cinema) movement around 2000. Along with Y Tu Mama Tambien and other films, it brought international attention to a new generation of Mexican filmmakers including Inarritu, Cuaron, and del Toro."
       }
     ]
   }
