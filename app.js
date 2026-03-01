@@ -26,6 +26,7 @@ let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
 let ppQueue = [], ppIdx = 0, ppScore = 0, ppAnswered = false;
 let homQueue = [], homIdx = 0, homScore = 0, homAnswered = false;
 let connQueue = [], connIdx = 0, connScore = 0, connAnswered = false;
+let adminTaps = 0, adminTapTimer = null;
 let sbQueue = [], sbIdx = 0, sbScore = 0;
 let clozeQueue = [], clozeIdx = 0, clozeScore = 0;
 let trQueue = [], trIdx = 0, trScore = 0;
@@ -3017,6 +3018,108 @@ function importProgress() {
 }
 
 // ════════════════════════════════════════
+//  ADMIN MODE
+// ════════════════════════════════════════
+
+function renderAdmin() {
+  const el = document.getElementById('admin-content');
+  if (!el || !progress) return;
+  let html = '';
+
+  // ── Placement Level ──
+  const levels = ['', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  html += `<div class="settings-group"><h3>Placement Level</h3>
+    <div class="setting-row"><div class="pill-group">
+      ${levels.map(l => `<button class="pill${(progress.placementLevel || '') === l ? ' active' : ''}" data-action="admin-set-level" data-val="${l}">${l || 'None'}</button>`).join('')}
+    </div></div></div>`;
+
+  // ── Boolean completion stores ──
+  const boolSections = [
+    { title: 'Grammar Lessons', store: 'grammarDone', items: typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.map(g => ({ key: g.id, label: `${g.titleEn || g.title} (${g.level})` })) : [] },
+    { title: 'Themed Vocabulary', store: 'themedVocabDone', items: typeof THEMED_VOCAB_DATA !== 'undefined' ? THEMED_VOCAB_DATA.map(t => ({ key: t.id, label: `${t.theme} (${t.level})` })) : [] },
+  ];
+
+  // Culture items from various modules
+  const cultureItems = [];
+  const cultureModules = [
+    [typeof CONVERSATIONS_DATA !== 'undefined' ? CONVERSATIONS_DATA : null, 'title'],
+    [typeof RECIPES_DATA !== 'undefined' ? RECIPES_DATA : null, 'englishName'],
+    [typeof MUSIC_DATA !== 'undefined' ? MUSIC_DATA : null, 'titleEn'],
+    [typeof MOVIES_DATA !== 'undefined' ? MOVIES_DATA : null, 'titleEn'],
+    [typeof POETRY_DATA !== 'undefined' ? POETRY_DATA : null, 'titleEn'],
+    [typeof SPORTS_DATA !== 'undefined' ? SPORTS_DATA : null, 'titleEn'],
+    [typeof PROVERBS_DATA !== 'undefined' ? PROVERBS_DATA : null, 'titleEn'],
+    [typeof FOLKTALES_DATA !== 'undefined' ? FOLKTALES_DATA : null, 'titleEn'],
+    [typeof FESTIVALS_DATA !== 'undefined' ? FESTIVALS_DATA : null, 'titleEn'],
+    [typeof HISTORY_DATA !== 'undefined' ? HISTORY_DATA : null, 'titleEn'],
+    [typeof TRAVEL_DATA !== 'undefined' ? TRAVEL_DATA : null, 'titleEn'],
+    [typeof TRIVIA_DATA !== 'undefined' ? TRIVIA_DATA : null, 'titleEn'],
+    [typeof IDIOMS_DATA !== 'undefined' ? IDIOMS_DATA : null, 'titleEn'],
+    [typeof JOKES_DATA !== 'undefined' ? JOKES_DATA : null, 'titleEn'],
+  ];
+  for (const [d, field] of cultureModules) {
+    if (d && Array.isArray(d)) {
+      for (const item of d) {
+        if (item.id) cultureItems.push({ key: item.id, label: item[field] || item.title || item.id });
+      }
+    }
+  }
+  if (cultureItems.length) boolSections.push({ title: 'Culture', store: 'cultureDone', items: cultureItems });
+
+  for (const sec of boolSections) {
+    const doneCount = sec.items.filter(i => progress[sec.store]?.[i.key]).length;
+    html += `<div class="settings-group">
+      <h3 data-action="admin-collapse" style="cursor:pointer">${sec.title} <span class="text-muted text-sm">(${doneCount}/${sec.items.length})</span> ▸</h3>
+      <div class="admin-section" style="display:none">
+        ${sec.items.map(i => {
+          const done = !!progress[sec.store]?.[i.key];
+          return `<div class="setting-row" style="padding:0.3rem 0">
+            <span class="text-sm">${esc(i.label)}</span>
+            <button class="btn btn-sm ${done ? 'btn-primary' : 'btn-outline'}" data-action="admin-toggle" data-store="${sec.store}" data-key="${esc(i.key)}" style="min-width:3rem">${done ? 'Done' : '—'}</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── FSRS/Mastery stores ──
+  const fsrsStores = [
+    { title: 'Verb Mastery', stores: 'verbFsrs,verbMastery' },
+    { title: 'Vocabulary Mastery', stores: 'vocabFsrs,vocabMastery' },
+    { title: 'Phrase Mastery', stores: 'phraseFsrs,phraseMastery' },
+    { title: 'Number Mastery', stores: 'numberMastery' },
+    { title: 'Minimal Pairs', stores: 'mpFsrs,mpMastery' },
+    { title: 'Phonetic Pairs', stores: 'ppFsrs,ppMastery' },
+    { title: 'Homophones', stores: 'homFsrs,homMastery' },
+    { title: 'Connectors', stores: 'connFsrs,connMastery' },
+    { title: 'Sentence Construction', stores: 'sentenceFsrs,sentenceMastery' },
+    { title: 'Cloze Passages', stores: 'clozeFsrs,clozeMastery' },
+    { title: 'Translation Drills', stores: 'translationFsrs,translationMastery' },
+    { title: 'Dictation', stores: 'dictFsrs,dictMastery' },
+    { title: 'Reading', stores: 'readingFsrs,readingMastery' },
+  ];
+
+  html += '<div class="settings-group"><h3>Mastery &amp; FSRS Stores</h3>';
+  for (const fs of fsrsStores) {
+    const keys = fs.stores.split(',');
+    const count = keys.reduce((n, k) => n + Object.keys(progress[k] || {}).length, 0);
+    html += `<div class="setting-row">
+      <span class="text-sm">${fs.title} <span class="text-muted">(${count} items)</span></span>
+      ${count > 0 ? `<button class="btn btn-sm btn-outline" data-action="admin-clear-store" data-stores="${fs.stores}" style="color:var(--red)">Clear</button>` : ''}
+    </div>`;
+  }
+  html += '</div>';
+
+  // ── XP & Streak ──
+  html += `<div class="settings-group"><h3>Stats</h3>
+    <div class="setting-row"><span class="text-sm">XP: ${progress.xp}</span></div>
+    <div class="setting-row"><span class="text-sm">Streak: ${progress.streak} days (longest: ${progress.longestStreak})</span></div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+// ════════════════════════════════════════
 //  PRACTICE EXERCISES
 // ════════════════════════════════════════
 
@@ -4708,6 +4811,53 @@ document.addEventListener('click', e => {
       updateNavStats();
       closeModal();
       switchTab('today');
+      break;
+    }
+
+    // Admin mode
+    case 'admin-tap-settings': {
+      adminTaps++;
+      clearTimeout(adminTapTimer);
+      adminTapTimer = setTimeout(() => adminTaps = 0, 3000);
+      if (adminTaps >= 5) {
+        adminTaps = 0;
+        const btn = document.getElementById('admin-mode-btn');
+        if (btn) btn.style.display = '';
+      }
+      break;
+    }
+    case 'open-admin': showScreen('admin'); renderAdmin(); break;
+    case 'admin-collapse': {
+      const section = target.nextElementSibling;
+      if (section) {
+        const open = section.style.display !== 'none';
+        section.style.display = open ? 'none' : '';
+        target.textContent = target.textContent.replace(/[▸▾]/, open ? '▸' : '▾');
+      }
+      break;
+    }
+    case 'admin-toggle': {
+      const store = target.dataset.store;
+      const key = target.dataset.key;
+      if (store && key && progress[store]) {
+        if (progress[store][key]) { delete progress[store][key]; }
+        else { progress[store][key] = true; }
+        saveProgress();
+        renderAdmin();
+      }
+      break;
+    }
+    case 'admin-clear-store': {
+      const stores = (target.dataset.stores || '').split(',');
+      for (const s of stores) { if (progress[s]) progress[s] = {}; }
+      saveProgress();
+      renderAdmin();
+      break;
+    }
+    case 'admin-set-level': {
+      progress.placementLevel = target.dataset.val || null;
+      saveProgress();
+      renderAdmin();
       break;
     }
 
