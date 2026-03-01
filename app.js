@@ -1529,7 +1529,33 @@ function openVocabCategory(cat) {
   document.getElementById('vcat-title').textContent = catInfo ? `${catInfo.title} (${catInfo.titleEn})` : cat;
 
   const words = VOCAB_DATA.filter(v => v.category === cat);
-  document.getElementById('vcat-words').innerHTML = words.map(w => `
+
+  // Group by POS, show sub-headers when a category has multiple parts of speech
+  const posLabels = { noun: 'Nouns', verb: 'Verbs', v: 'Verbs', adjective: 'Adjectives', adj: 'Adjectives', adverb: 'Adverbs', adv: 'Adverbs', phrase: 'Phrases', preposition: 'Prepositions', conjunction: 'Conjunctions', pronoun: 'Pronouns', interjection: 'Interjections', number: 'Numbers' };
+  const posOrder = ['noun', 'verb', 'adjective', 'adj', 'adverb', 'adv', 'phrase', 'preposition', 'conjunction', 'pronoun', 'interjection', 'number'];
+  const groups = {};
+  for (const w of words) {
+    const label = posLabels[w.pos] || 'Other';
+    (groups[label] ??= []).push(w);
+  }
+  const groupKeys = Object.keys(groups);
+  const showHeaders = groupKeys.length > 1;
+
+  // Render in POS order
+  const seen = new Set();
+  const ordered = [];
+  for (const p of posOrder) {
+    const label = posLabels[p];
+    if (label && groups[label] && !seen.has(label)) {
+      seen.add(label);
+      ordered.push([label, groups[label]]);
+    }
+  }
+  for (const [label, items] of Object.entries(groups)) {
+    if (!seen.has(label)) ordered.push([label, items]);
+  }
+
+  const renderWord = w => `
     <div class="card" style="padding:0.6rem 0.75rem">
       <div class="flex justify-between items-center">
         <div>
@@ -1540,8 +1566,14 @@ function openVocabCategory(cat) {
         <button class="tts-btn" data-action="speak" data-text="${esc(w.word)}">&#128266;</button>
       </div>
       ${w.example ? `<div class="text-sm text-muted mt-1">${esc(w.example)}</div>` : ''}
-    </div>
-  `).join('');
+    </div>`;
+
+  let html = '';
+  for (const [label, items] of ordered) {
+    if (showHeaders) html += `<h3 class="mt-2 mb-1" style="font-size:0.9rem;opacity:0.7">${label}</h3>`;
+    html += items.map(renderWord).join('');
+  }
+  document.getElementById('vcat-words').innerHTML = html;
 }
 
 // ── Vocab Learn (Flashcards) ──
