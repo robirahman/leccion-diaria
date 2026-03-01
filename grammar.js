@@ -982,7 +982,7 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "mc", question: "'¡Ojalá pudiera volar!' expresses:", answer: "An unreal wish about the present", options: ["A command","An unreal wish about the present","A certainty","A past event"], explanation: "Ojalá + imperfect subjunctive = wish about something unlikely/unreal." },
       { type: "fib", question: "¡Que _____ buen viaje! (tener, tú — exclamatory wish)", answer: "tengas", options: null, explanation: "¡Que + subjunctive! for exclamatory wishes." },
       { type: "mc", question: "'Quizás venga mañana' vs. 'Quizás viene mañana.' The subjunctive version expresses:", answer: "More doubt/uncertainty", options: ["More certainty","More doubt/uncertainty","Past tense","A command"], explanation: "Subjunctive after quizás/tal vez expresses greater uncertainty." },
-      { type: "fib", question: "_____ lo que _____, no me rindo. (ser, concessive: whatever it may be)", answer: "Sea", options: null, explanation: "Sea lo que sea = whatever it may be — concessive subjunctive." },
+      { type: "fib", question: "_____ lo que sea, no me rindo. (ser, concessive: whatever it may be)", answer: "Sea", options: null, explanation: "Sea lo que sea = whatever it may be — concessive subjunctive." },
       { type: "mc", question: "'Digan lo que digan, seguiré adelante.' This structure is:", answer: "A concessive subjunctive construction", options: ["A conditional","A concessive subjunctive construction","A relative clause","Reported speech"], explanation: "Verb (subj.) + lo que + verb (subj.) = whatever/no matter what." }
     ]
   },
