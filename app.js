@@ -19,6 +19,7 @@ let placementHistory = [];     // [{difficulty, correct, domain}]
 let placementSEs = { grammar: 2.0, vocab: 2.0 };     // per-domain standard error
 let placementUsedIds = new Set();
 let placementLastDomains = []; // track recent domains for variety
+let placementTargetLength = 20; // adjustable test length (10, 20, or 40)
 
 // Practice exercise state
 let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
@@ -449,7 +450,7 @@ function confirmCreateProfile() {
   setTimeout(() => {
     showModal(t('placementTest'), `
       <p>Want to take a quick placement test to skip content you already know?</p>
-      <p class="text-muted">~5 minutes, 40 adaptive questions covering grammar, vocabulary, and verbs.</p>
+      <p class="text-muted">Adaptive test — choose your starting level and test length. As few as 10 questions.</p>
     `, [
       { label: tBtn('skip'), action: 'close-modal', cls: 'btn-secondary' },
       { label: tBtn('takeTest'), action: 'start-placement', cls: 'btn-primary' },
@@ -2456,6 +2457,7 @@ function savePlacementState() {
       ses: placementSEs,
       usedIds: [...placementUsedIds],
       lastDomains: placementLastDomains,
+      targetLength: placementTargetLength,
       profile: currentProfile,
     };
     sessionStorage.setItem('ld_placement_state', JSON.stringify(state));
@@ -2471,7 +2473,7 @@ function restorePlacementTest() {
     const raw = sessionStorage.getItem('ld_placement_state');
     if (!raw) return false;
     const state = JSON.parse(raw);
-    if (state.profile !== currentProfile || state.idx >= 40) {
+    if (state.profile !== currentProfile || state.idx >= (state.targetLength || 40)) {
       clearPlacementState();
       return false;
     }
@@ -2488,6 +2490,7 @@ function restorePlacementTest() {
     placementHistory = state.history;
     placementUsedIds = new Set(state.usedIds);
     placementLastDomains = state.lastDomains;
+    placementTargetLength = state.targetLength || 40;
     showScreen('placement');
     renderPlacementQuestion();
     return true;
@@ -2499,15 +2502,53 @@ function restorePlacementTest() {
 
 function startPlacementTest() {
   closeModal();
+  showScreen('placement');
+  // Show self-assessment step
+  document.getElementById('pt-container').innerHTML = `
+    <h3 style="text-align:center;margin-bottom:0.5rem">How would you describe your Spanish?</h3>
+    <p class="text-muted text-sm" style="text-align:center;margin-bottom:1rem">This helps us start the test at the right level.</p>
+    <div class="pt-self-assess">
+      <button class="card pt-level-choice" data-action="start-placement-at" data-level="A1">
+        <div class="card-title">Complete Beginner</div>
+        <div class="card-subtitle text-xs">I know little to no Spanish</div>
+      </button>
+      <button class="card pt-level-choice" data-action="start-placement-at" data-level="A2">
+        <div class="card-title">Elementary</div>
+        <div class="card-subtitle text-xs">I know basic greetings, numbers, and simple phrases</div>
+      </button>
+      <button class="card pt-level-choice" data-action="start-placement-at" data-level="B1">
+        <div class="card-title">Intermediate</div>
+        <div class="card-subtitle text-xs">I can hold simple conversations and use past tense</div>
+      </button>
+      <button class="card pt-level-choice" data-action="start-placement-at" data-level="B2">
+        <div class="card-title">Upper Intermediate</div>
+        <div class="card-subtitle text-xs">I'm comfortable with most tenses and can discuss complex topics</div>
+      </button>
+      <button class="card pt-level-choice" data-action="start-placement-at" data-level="C1">
+        <div class="card-title">Advanced</div>
+        <div class="card-subtitle text-xs">I'm fluent but want to refine grammar and vocabulary</div>
+      </button>
+    </div>
+  `;
+  document.getElementById('pt-progress').textContent = '';
+  document.getElementById('pt-level-badge').textContent = '';
+  document.getElementById('pt-progress-bar-fill').style.width = '0%';
+  document.getElementById('pt-next').style.display = 'none';
+  const ctrl = document.getElementById('pt-controls');
+  if (ctrl) ctrl.innerHTML = '';
+}
+
+function startPlacementAt(level) {
+  const startTheta = LEVEL_DIFFICULTY[level] || 3.0;
   placementQuestions = buildPlacementIRTPool();
   placementIdx = 0;
-  placementThetas = { grammar: 3.0, vocab: 3.0 };
+  placementThetas = { grammar: startTheta, vocab: startTheta };
   placementHistory = [];
   placementSEs = { grammar: 2.0, vocab: 2.0 };
   placementUsedIds = new Set();
   placementLastDomains = [];
+  placementTargetLength = 20;
   savePlacementState();
-  showScreen('placement');
   renderPlacementQuestion();
 }
 
@@ -2520,11 +2561,13 @@ function selectNextIRTQuestion() {
   const counts = { grammar: 0, vocab: 0 };
   for (const h of placementHistory) counts[scoringGroup(h.domain)]++;
   const total = placementHistory.length;
-  const remaining = 40 - total;
+  const remaining = placementTargetLength - total;
 
   // Target ~60% grammar, ~40% vocab for balanced estimates
-  const grammarNeed = Math.max(0, 24 - counts.grammar);
-  const vocabNeed = Math.max(0, 16 - counts.vocab);
+  const grammarTarget = Math.round(placementTargetLength * 0.6);
+  const vocabTarget = placementTargetLength - grammarTarget;
+  const grammarNeed = Math.max(0, grammarTarget - counts.grammar);
+  const vocabNeed = Math.max(0, vocabTarget - counts.vocab);
   let preferredGroup = null;
   if (remaining > 0) {
     if (vocabNeed >= remaining) preferredGroup = 'vocab';
@@ -2553,7 +2596,7 @@ function selectNextIRTQuestion() {
 }
 
 function renderPlacementQuestion() {
-  if (placementIdx >= 40) { finishPlacementTest(); return; }
+  if (placementIdx >= placementTargetLength) { finishPlacementTest(); return; }
 
   const q = selectNextIRTQuestion();
   if (!q) { finishPlacementTest(); return; }
@@ -2564,12 +2607,24 @@ function renderPlacementQuestion() {
 
   // Update UI
   const estimatedLevel = thetaToLevel((placementThetas.grammar + placementThetas.vocab) / 2);
-  document.getElementById('pt-progress').textContent = `${placementIdx + 1} / 40`;
-  const pct = Math.round(((placementIdx) / 40) * 100);
+  document.getElementById('pt-progress').textContent = `${placementIdx + 1} / ${placementTargetLength}`;
+  const pct = Math.round(((placementIdx) / placementTargetLength) * 100);
   document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
   document.getElementById('pt-level-badge').textContent = `${t('testingLevel')} ${estimatedLevel}`;
   document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[estimatedLevel]?.color || 'var(--accent)';
   document.getElementById('pt-next').style.display = 'none';
+
+  // Test controls (adjust length / end early)
+  const controlsEl = document.getElementById('pt-controls');
+  if (controlsEl) {
+    const minReached = placementIdx >= 5;
+    controlsEl.innerHTML = `<div class="pt-controls-row">
+      <button class="btn btn-outline btn-xs${placementTargetLength===10?' active':''}" data-action="pt-set-length" data-len="10">10 Qs</button>
+      <button class="btn btn-outline btn-xs${placementTargetLength===20?' active':''}" data-action="pt-set-length" data-len="20">20 Qs</button>
+      <button class="btn btn-outline btn-xs${placementTargetLength===40?' active':''}" data-action="pt-set-length" data-len="40">40 Qs</button>
+      <button class="btn btn-outline btn-xs pt-end-btn" data-action="end-placement-early" ${minReached?'':'disabled'} title="${minReached?'End test and see results':'Answer at least 5 questions'}">End Test</button>
+    </div>`;
+  }
 
   const container = document.getElementById('pt-container');
   const domainLabel = q.domain === 'grammar' ? t('grammarDomain') : q.domain === 'vocab' ? t('vocabDomain') : q.domain === 'usage' ? t('usageDomain') : q.domain === 'reading' ? t('readingDomain') : t('conjDomain');
@@ -4445,6 +4500,32 @@ document.addEventListener('click', e => {
     case 'next-placement': nextPlacementQuestion(); break;
     case 'placement-done': switchTab('today'); break;
     case 'retake-placement': startPlacementTest(); break;
+    case 'start-placement-at': startPlacementAt(target.dataset.level); break;
+    case 'end-placement-early': if (placementIdx >= 5) finishPlacementTest(); break;
+    case 'pt-set-length': {
+      const len = parseInt(target.dataset.len);
+      if ([10, 20, 40].includes(len)) {
+        placementTargetLength = len;
+        savePlacementState();
+        if (placementIdx >= len) finishPlacementTest();
+        else {
+          // Re-render just the controls and progress, not the question
+          document.getElementById('pt-progress').textContent = `${placementIdx + 1} / ${placementTargetLength}`;
+          document.getElementById('pt-progress-bar-fill').style.width = Math.round((placementIdx / placementTargetLength) * 100) + '%';
+          const ctrl = document.getElementById('pt-controls');
+          if (ctrl) {
+            const minReached = placementIdx >= 5;
+            ctrl.innerHTML = `<div class="pt-controls-row">
+              <button class="btn btn-outline btn-xs${placementTargetLength===10?' active':''}" data-action="pt-set-length" data-len="10">10 Qs</button>
+              <button class="btn btn-outline btn-xs${placementTargetLength===20?' active':''}" data-action="pt-set-length" data-len="20">20 Qs</button>
+              <button class="btn btn-outline btn-xs${placementTargetLength===40?' active':''}" data-action="pt-set-length" data-len="40">40 Qs</button>
+              <button class="btn btn-outline btn-xs pt-end-btn" data-action="end-placement-early" ${minReached?'':'disabled'}>End Test</button>
+            </div>`;
+          }
+        }
+      }
+      break;
+    }
 
     // Practice exercises
     case 'open-minimal-pairs': showScreen('minimal-pairs'); renderMinimalPairCategories(); break;
