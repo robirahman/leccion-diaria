@@ -117,6 +117,8 @@ const UI_STRINGS = {
   allCaughtUp: ['All caught up! No reviews due.', '¡Todo al día! No hay repasos pendientes.'],
   quickDrill: ['Quick Conjugation Drill', 'Ejercicio rápido de conjugación'],
   quickDrillDesc: ['10 random conjugation questions', '10 preguntas aleatorias de conjugación'],
+  quickVocab: ['Quick Vocabulary Quiz', 'Prueba rápida de vocabulario'],
+  quickVocabDesc: ['10 random vocabulary questions', '10 preguntas aleatorias de vocabulario'],
   words: ['words', 'palabras'],
 
   // Quiz prompts
@@ -934,6 +936,10 @@ function renderToday() {
       <div class="card-title">${t('quickDrill')}</div>
       <div class="card-subtitle">${t('quickDrillDesc')}</div>
     </div>
+    <div class="card" data-action="start-quick-vocab" style="cursor:pointer">
+      <div class="card-title">${t('quickVocab')}</div>
+      <div class="card-subtitle">${t('quickVocabDesc')}</div>
+    </div>
   `;
 }
 
@@ -1635,6 +1641,25 @@ function startVocabQuiz() {
     : VOCAB_DATA;
   if (pool.length < 4) return;
 
+  vocabQuizQueue = [];
+  const words = pickN(pool, Math.min(10, pool.length));
+  words.forEach(w => {
+    const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
+    const options = shuffle([w.english, ...wrongs]);
+    vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
+  });
+  vocabQuizIdx = 0;
+  vocabQuizScore = 0;
+  showScreen('vocab-quiz');
+  renderVocabQuizQuestion();
+}
+
+function startQuickVocab() {
+  if (typeof VOCAB_DATA === 'undefined' || VOCAB_DATA.length < 4) return;
+  const level = progress.placementLevel || 'A1';
+  const levelPool = VOCAB_DATA.filter(v => levelAtOrBelow(v.level, level));
+  const pool = levelPool.length >= 4 ? levelPool : VOCAB_DATA;
+  currentVocabCategory = null;
   vocabQuizQueue = [];
   const words = pickN(pool, Math.min(10, pool.length));
   words.forEach(w => {
@@ -4903,6 +4928,7 @@ document.addEventListener('click', e => {
     case 'open-vocab-cat': openVocabCategory(target.dataset.cat); break;
     case 'start-vocab-learn': startVocabLearn(); break;
     case 'start-vocab-quiz': startVocabQuiz(); break;
+    case 'start-quick-vocab': startQuickVocab(); break;
     case 'start-gender-quiz': startGenderQuiz(); break;
     case 'flip-vocab-card': flipVocabCard(); break;
     case 'rate-vocab': rateVocab(parseInt(target.dataset.rating)); break;
