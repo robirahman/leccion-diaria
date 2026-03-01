@@ -23,6 +23,8 @@ let placementTargetLength = 20; // adjustable test length (10, 20, or 40)
 
 // Practice exercise state
 let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
+let ppQueue = [], ppIdx = 0, ppScore = 0, ppAnswered = false;
+let homQueue = [], homIdx = 0, homScore = 0, homAnswered = false;
 let sbQueue = [], sbIdx = 0, sbScore = 0;
 let clozeQueue = [], clozeIdx = 0, clozeScore = 0;
 let trQueue = [], trIdx = 0, trScore = 0;
@@ -304,6 +306,8 @@ function newProgress() {
     cultureDone: {},
     practiceLog: {},
     mpFsrs: {}, mpMastery: {},
+    ppFsrs: {}, ppMastery: {},
+    homFsrs: {}, homMastery: {},
     sentenceFsrs: {}, sentenceMastery: {},
     clozeFsrs: {}, clozeMastery: {},
     translationFsrs: {}, translationMastery: {},
@@ -904,7 +908,7 @@ function renderToday() {
   `;
 
   // Due for review (all FSRS stores)
-  const allFsrsStores = ['verbFsrs','vocabFsrs','grammarFsrs','phraseFsrs','mpFsrs','sentenceFsrs','clozeFsrs','translationFsrs','dictFsrs','readingFsrs'];
+  const allFsrsStores = ['verbFsrs','vocabFsrs','grammarFsrs','phraseFsrs','mpFsrs','ppFsrs','homFsrs','sentenceFsrs','clozeFsrs','translationFsrs','dictFsrs','readingFsrs'];
   let totalDue = 0;
   for (const store of allFsrsStores) {
     if (progress[store]) totalDue += getDueItems(progress[store], Object.keys(progress[store])).length;
@@ -3083,6 +3087,198 @@ function submitMP() {
 
 function nextMP() { mpIdx++; renderMPQuestion(); }
 
+// ── Phonetic Pairs ──
+
+function renderPhoneticPairCategories() {
+  const container = document.getElementById('pp-categories');
+  if (!container || typeof PHONETIC_PAIR_CATEGORIES === 'undefined') return;
+  container.innerHTML = Object.entries(PHONETIC_PAIR_CATEGORIES).map(([key, cat]) => `
+    <div class="card" data-action="start-pp" data-cat="${key}" style="cursor:pointer">
+      <div class="card-title">${esc(cat.label)}</div>
+      <div class="card-subtitle">${esc(cat.description)}</div>
+    </div>
+  `).join('');
+}
+
+function startPhoneticPairs(category) {
+  if (typeof PHONETIC_PAIRS === 'undefined') return;
+  const items = shuffle(PHONETIC_PAIRS.filter(p => p.category === category));
+  // Flatten: each pair produces 2 questions (one per example sentence)
+  const queue = [];
+  for (const item of items) {
+    // Randomly pick which side (A or B) to ask first
+    const sides = shuffle(['A', 'B']);
+    for (const side of sides) {
+      queue.push({ item, side, sentence: item['example' + side], answer: item['word' + side], wrong: item['word' + (side === 'A' ? 'B' : 'A')] });
+    }
+  }
+  ppQueue = shuffle(queue).slice(0, 10);
+  if (ppQueue.length === 0) return;
+  ppIdx = 0; ppScore = 0; ppAnswered = false;
+  showScreen('pp-drill');
+  renderPPQuestion();
+}
+
+function renderPPQuestion() {
+  if (ppIdx >= ppQueue.length) { showResults(ppScore, ppQueue.length, 'pp', 'Phonetic Pairs'); return; }
+  const q = ppQueue[ppIdx];
+  const cat = PHONETIC_PAIR_CATEGORIES[q.item.category];
+  ppAnswered = false;
+  document.getElementById('pp-progress').textContent = `${ppIdx + 1} / ${ppQueue.length}`;
+  document.getElementById('pp-ipa').innerHTML = `${esc(q.item.ipaA)} vs ${esc(q.item.ipaB)}`;
+  document.getElementById('pp-tts').innerHTML =
+    `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordA)}">${esc(q.item.wordA)} &#9654;</button> ` +
+    `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordB)}">${esc(q.item.wordB)} &#9654;</button>`;
+  document.getElementById('pp-sentence').innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
+  const options = shuffle([q.answer, q.wrong]);
+  document.getElementById('pp-options').innerHTML = options.map((opt, i) =>
+    `<button class="quiz-option" data-action="answer-pp" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
+  ).join('');
+  document.getElementById('pp-feedback').style.display = 'none';
+  document.getElementById('pp-next').style.display = 'none';
+}
+
+function answerPP(idx) {
+  if (ppAnswered) return;
+  const btns = document.querySelectorAll('#pp-options .quiz-option');
+  btns.forEach(b => b.classList.remove('selected'));
+  btns[idx]?.classList.add('selected');
+  submitPP();
+}
+
+function submitPP() {
+  if (ppAnswered) return;
+  const selectedBtn = document.querySelector('#pp-options .quiz-option.selected');
+  if (!selectedBtn) return;
+  ppAnswered = true;
+  const q = ppQueue[ppIdx];
+  const chosen = selectedBtn.dataset.val;
+  const correct = chosen === q.answer;
+
+  const btns = document.querySelectorAll('#pp-options .quiz-option');
+  btns.forEach(b => {
+    b.classList.add('disabled');
+    if (b.dataset.val === q.answer) b.classList.add('correct');
+    else if (b.classList.contains('selected')) b.classList.add('incorrect');
+  });
+
+  if (correct) { ppScore++; addXP(5); } else { addXP(1); }
+
+  const displayMode = progress?.settings?.display || 'standard';
+  const meaningKey = q.side === 'A' ? 'meaningA' : 'meaningB';
+  const meaningEsKey = q.side === 'A' ? 'meaningAEs' : 'meaningBEs';
+  const wrongMeaningKey = q.side === 'A' ? 'meaningB' : 'meaningA';
+  const explanation = `"${q.answer}" = ${displayMode === 'immersion' ? q.item[meaningEsKey] : q.item[meaningKey]}. ` +
+    `"${q.wrong}" = ${displayMode === 'immersion' ? q.item[meaningEsKey === 'meaningAEs' ? 'meaningBEs' : 'meaningAEs'] : q.item[wrongMeaningKey]}.`;
+
+  const fb = document.getElementById('pp-feedback');
+  fb.innerHTML = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`;
+  fb.style.display = 'block';
+  document.getElementById('pp-next').style.display = 'flex';
+  reviewItem(progress.ppFsrs, progress.ppMastery, q.item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextPP() { ppIdx++; renderPPQuestion(); }
+
+// ── Homophones ──
+
+function renderHomophoneCategories() {
+  const container = document.getElementById('hom-categories');
+  if (!container || typeof HOMOPHONE_CATEGORIES === 'undefined') return;
+  container.innerHTML = Object.entries(HOMOPHONE_CATEGORIES).map(([key, cat]) => `
+    <div class="card" data-action="start-hom" data-cat="${key}" style="cursor:pointer">
+      <div class="card-title">${esc(cat.label)}</div>
+      <div class="card-subtitle">${esc(cat.description)}</div>
+    </div>
+  `).join('');
+}
+
+function startHomophones(category) {
+  if (typeof HOMOPHONES === 'undefined') return;
+  const items = HOMOPHONES.filter(h => h.category === category);
+  // Flatten: each homophone set produces one question per example sentence
+  const queue = [];
+  for (const item of items) {
+    for (const ex of item.examples) {
+      const options = item.words.map(w => w.word);
+      queue.push({ item, sentence: ex.sentence, answer: ex.answer, english: ex.english, options });
+    }
+  }
+  homQueue = shuffle(queue).slice(0, 10);
+  if (homQueue.length === 0) return;
+  homIdx = 0; homScore = 0; homAnswered = false;
+  showScreen('hom-drill');
+  renderHomQuestion();
+}
+
+function renderHomQuestion() {
+  if (homIdx >= homQueue.length) { showResults(homScore, homQueue.length, 'hom', 'Homophones'); return; }
+  const q = homQueue[homIdx];
+  homAnswered = false;
+  document.getElementById('hom-progress').textContent = `${homIdx + 1} / ${homQueue.length}`;
+  document.getElementById('hom-pronunciation').textContent = q.item.pronunciation;
+  document.getElementById('hom-sentence').innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
+  const options = shuffle([...new Set(q.options.map(o => o.toLowerCase().replace(/^¡|!$/g, '')))].map(o => {
+    // Find original casing from the options
+    return q.options.find(orig => orig.toLowerCase().replace(/^¡|!$/g, '') === o) || o;
+  }));
+  document.getElementById('hom-options').innerHTML = options.map((opt, i) =>
+    `<button class="quiz-option" data-action="answer-hom" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
+  ).join('');
+  document.getElementById('hom-feedback').style.display = 'none';
+  document.getElementById('hom-next').style.display = 'none';
+}
+
+function answerHom(idx) {
+  if (homAnswered) return;
+  const btns = document.querySelectorAll('#hom-options .quiz-option');
+  btns.forEach(b => b.classList.remove('selected'));
+  btns[idx]?.classList.add('selected');
+  submitHom();
+}
+
+function submitHom() {
+  if (homAnswered) return;
+  const selectedBtn = document.querySelector('#hom-options .quiz-option.selected');
+  if (!selectedBtn) return;
+  homAnswered = true;
+  const q = homQueue[homIdx];
+  const chosen = selectedBtn.dataset.val;
+  const correct = chosen.toLowerCase() === q.answer.toLowerCase() ||
+    stripAccents(chosen.toLowerCase()) === stripAccents(q.answer.toLowerCase());
+
+  const btns = document.querySelectorAll('#hom-options .quiz-option');
+  btns.forEach(b => {
+    b.classList.add('disabled');
+    const btnVal = b.dataset.val;
+    if (btnVal.toLowerCase() === q.answer.toLowerCase() || stripAccents(btnVal.toLowerCase()) === stripAccents(q.answer.toLowerCase())) {
+      b.classList.add('correct');
+    } else if (b.classList.contains('selected')) {
+      b.classList.add('incorrect');
+    }
+  });
+
+  if (correct) { homScore++; addXP(5); } else { addXP(1); }
+
+  const displayMode = progress?.settings?.display || 'standard';
+  const tip = (displayMode === 'immersion' && q.item.tipEs) ? q.item.tipEs : q.item.tip;
+
+  const fb = document.getElementById('hom-feedback');
+  let html = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '\u2713' : '\u2717'} ${esc(tip)}</div>`;
+  if (q.item.regionalNote) {
+    const note = (displayMode === 'immersion' && q.item.regionalNoteEs) ? q.item.regionalNoteEs : q.item.regionalNote;
+    html += `<div class="text-muted text-sm mt-half">${esc(note)}</div>`;
+  }
+  fb.innerHTML = html;
+  fb.style.display = 'block';
+  document.getElementById('hom-next').style.display = 'flex';
+  reviewItem(progress.homFsrs, progress.homMastery, q.item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextHom() { homIdx++; renderHomQuestion(); }
+
 // ── Sentence Construction ──
 
 function startSentenceBuild() {
@@ -3548,6 +3744,8 @@ function buildReviewQueue() {
     { type: 'grammar', fsrs: 'grammarFsrs', mastery: 'grammarDone', max: MAX_REVIEW_GRAMMAR },
     { type: 'phrase', fsrs: 'phraseFsrs', mastery: 'phraseMastery', max: MAX_REVIEW_PHRASES },
     { type: 'mp', fsrs: 'mpFsrs', mastery: 'mpMastery', max: 3 },
+    { type: 'pp', fsrs: 'ppFsrs', mastery: 'ppMastery', max: 3 },
+    { type: 'hom', fsrs: 'homFsrs', mastery: 'homMastery', max: 3 },
     { type: 'cloze', fsrs: 'clozeFsrs', mastery: 'clozeMastery', max: 3 },
     { type: 'translation', fsrs: 'translationFsrs', mastery: 'translationMastery', max: 3 },
     { type: 'dictation', fsrs: 'dictFsrs', mastery: 'dictMastery', max: 3 },
@@ -4533,6 +4731,14 @@ document.addEventListener('click', e => {
     case 'answer-mp': answerMP(parseInt(target.dataset.idx)); break;
     case 'submit-mp': submitMP(); break;
     case 'next-mp': nextMP(); break;
+    case 'open-phonetic-pairs': showScreen('phonetic-pairs'); renderPhoneticPairCategories(); break;
+    case 'start-pp': startPhoneticPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
+    case 'answer-pp': answerPP(parseInt(target.dataset.idx)); break;
+    case 'next-pp': nextPP(); break;
+    case 'open-homophones': showScreen('homophones'); renderHomophoneCategories(); break;
+    case 'start-hom': startHomophones(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
+    case 'answer-hom': answerHom(parseInt(target.dataset.idx)); break;
+    case 'next-hom': nextHom(); break;
     case 'open-sentence-build-topics': startSentenceBuild(); break;
     case 'tap-sb-word': tapSBWord(target); break;
     case 'check-sentence-build': checkSentenceBuild(); break;

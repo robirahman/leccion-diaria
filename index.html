@@ -366,6 +366,14 @@
       <div class="card-title">Pronunciation Guide</div>
       <div class="card-subtitle">Spanish sounds, stress rules, and regional variations</div>
     </div>
+    <div class="card" data-action="open-phonetic-pairs" style="cursor:pointer">
+      <div class="card-title">Phonetic Pairs</div>
+      <div class="card-subtitle">R vs RR — hear and spell the difference</div>
+    </div>
+    <div class="card" data-action="open-homophones" style="cursor:pointer">
+      <div class="card-title">Homophones</div>
+      <div class="card-subtitle">Same sound, different spelling and meaning</div>
+    </div>
   </div>
 
   <!-- ════════ MINIMAL PAIRS CATEGORY SELECT ════════ -->
@@ -385,6 +393,45 @@
       <div class="mp-contrast" id="mp-contrast" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-mp" style="display:none" id="mp-next">Next</button>
+  </div>
+
+  <!-- ════════ PHONETIC PAIRS CATEGORY SELECT ════════ -->
+  <div class="screen" id="screen-phonetic-pairs">
+    <h2 class="mb-2">Phonetic Pairs</h2>
+    <p class="text-muted text-sm mb-2">Practice sound contrasts that change meaning:</p>
+    <div id="pp-categories"></div>
+  </div>
+
+  <!-- ════════ PHONETIC PAIRS DRILL ════════ -->
+  <div class="screen" id="screen-pp-drill">
+    <div class="quiz-progress" id="pp-progress"></div>
+    <div class="card">
+      <div id="pp-ipa" class="text-center text-muted text-sm mb-1"></div>
+      <div id="pp-tts" class="text-center mb-1"></div>
+      <div class="quiz-question" id="pp-sentence"></div>
+      <div class="quiz-options" id="pp-options"></div>
+      <div class="quiz-feedback" id="pp-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-pp" style="display:none" id="pp-next">Next</button>
+  </div>
+
+  <!-- ════════ HOMOPHONES CATEGORY SELECT ════════ -->
+  <div class="screen" id="screen-homophones">
+    <h2 class="mb-2">Homophones</h2>
+    <p class="text-muted text-sm mb-2">Words that sound the same but mean different things:</p>
+    <div id="hom-categories"></div>
+  </div>
+
+  <!-- ════════ HOMOPHONES DRILL ════════ -->
+  <div class="screen" id="screen-hom-drill">
+    <div class="quiz-progress" id="hom-progress"></div>
+    <div class="card">
+      <div id="hom-pronunciation" class="text-center text-muted text-sm mb-1"></div>
+      <div class="quiz-question" id="hom-sentence"></div>
+      <div class="quiz-options" id="hom-options"></div>
+      <div class="quiz-feedback" id="hom-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-hom" style="display:none" id="hom-next">Next</button>
   </div>
 
   <!-- ════════ SENTENCE CONSTRUCTION ════════ -->
@@ -869,6 +916,8 @@
 <script src="reading.js"></script>
 <script src="themed_vocab.js"></script>
 <script src="curriculum_tracks.js"></script>
+<script src="phonetic_pairs.js"></script>
+<script src="homophones.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
