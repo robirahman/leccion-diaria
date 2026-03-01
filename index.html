@@ -374,6 +374,10 @@
       <div class="card-title">Homophones</div>
       <div class="card-subtitle">Same sound, different spelling and meaning</div>
     </div>
+    <div class="card" data-action="open-connectors" style="cursor:pointer">
+      <div class="card-title">Connectors</div>
+      <div class="card-subtitle">Sin embargo, además, por lo tanto — link your ideas</div>
+    </div>
   </div>
 
   <!-- ════════ MINIMAL PAIRS CATEGORY SELECT ════════ -->
@@ -432,6 +436,24 @@
       <div class="quiz-feedback" id="hom-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-hom" style="display:none" id="hom-next">Next</button>
+  </div>
+
+  <!-- ════════ CONNECTORS CATEGORY SELECT ════════ -->
+  <div class="screen" id="screen-connectors">
+    <h2 class="mb-2">Connectors</h2>
+    <p class="text-muted text-sm mb-2">Choose a connector type to practice:</p>
+    <div id="conn-categories"></div>
+  </div>
+
+  <!-- ════════ CONNECTORS DRILL ════════ -->
+  <div class="screen" id="screen-conn-drill">
+    <div class="quiz-progress" id="conn-progress"></div>
+    <div class="card">
+      <div class="quiz-question" id="conn-sentence"></div>
+      <div class="quiz-options" id="conn-options"></div>
+      <div class="quiz-feedback" id="conn-feedback" style="display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-conn" style="display:none" id="conn-next">Next</button>
   </div>
 
   <!-- ════════ SENTENCE CONSTRUCTION ════════ -->
@@ -918,6 +940,7 @@
 <script src="curriculum_tracks.js"></script>
 <script src="phonetic_pairs.js"></script>
 <script src="homophones.js"></script>
+<script src="connectors.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

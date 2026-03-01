@@ -25,6 +25,7 @@ let placementTargetLength = 20; // adjustable test length (10, 20, or 40)
 let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
 let ppQueue = [], ppIdx = 0, ppScore = 0, ppAnswered = false;
 let homQueue = [], homIdx = 0, homScore = 0, homAnswered = false;
+let connQueue = [], connIdx = 0, connScore = 0, connAnswered = false;
 let sbQueue = [], sbIdx = 0, sbScore = 0;
 let clozeQueue = [], clozeIdx = 0, clozeScore = 0;
 let trQueue = [], trIdx = 0, trScore = 0;
@@ -308,6 +309,7 @@ function newProgress() {
     mpFsrs: {}, mpMastery: {},
     ppFsrs: {}, ppMastery: {},
     homFsrs: {}, homMastery: {},
+    connFsrs: {}, connMastery: {},
     sentenceFsrs: {}, sentenceMastery: {},
     clozeFsrs: {}, clozeMastery: {},
     translationFsrs: {}, translationMastery: {},
@@ -908,7 +910,7 @@ function renderToday() {
   `;
 
   // Due for review (all FSRS stores)
-  const allFsrsStores = ['verbFsrs','vocabFsrs','grammarFsrs','phraseFsrs','mpFsrs','ppFsrs','homFsrs','sentenceFsrs','clozeFsrs','translationFsrs','dictFsrs','readingFsrs'];
+  const allFsrsStores = ['verbFsrs','vocabFsrs','grammarFsrs','phraseFsrs','mpFsrs','ppFsrs','homFsrs','connFsrs','sentenceFsrs','clozeFsrs','translationFsrs','dictFsrs','readingFsrs'];
   let totalDue = 0;
   for (const store of allFsrsStores) {
     if (progress[store]) totalDue += getDueItems(progress[store], Object.keys(progress[store])).length;
@@ -3279,6 +3281,81 @@ function submitHom() {
 
 function nextHom() { homIdx++; renderHomQuestion(); }
 
+// ── Connectors ──
+
+function renderConnectorCategories() {
+  const container = document.getElementById('conn-categories');
+  if (!container || typeof CONNECTOR_CATEGORIES === 'undefined') return;
+  container.innerHTML = Object.entries(CONNECTOR_CATEGORIES).map(([key, cat]) => `
+    <div class="card" data-action="start-conn" data-cat="${key}" style="cursor:pointer">
+      <div class="card-title">${esc(cat.label)}</div>
+      <div class="card-subtitle">${esc(cat.description)}</div>
+    </div>
+  `).join('');
+}
+
+function startConnectors(category) {
+  if (typeof CONNECTORS === 'undefined') return;
+  const items = shuffle(CONNECTORS.filter(c => c.category === category)).slice(0, 10);
+  if (items.length === 0) return;
+  connQueue = items; connIdx = 0; connScore = 0; connAnswered = false;
+  showScreen('conn-drill');
+  renderConnQuestion();
+}
+
+function renderConnQuestion() {
+  if (connIdx >= connQueue.length) { showResults(connScore, connQueue.length, 'conn', 'Connectors'); return; }
+  const item = connQueue[connIdx];
+  connAnswered = false;
+  document.getElementById('conn-progress').textContent = `${connIdx + 1} / ${connQueue.length}`;
+  document.getElementById('conn-sentence').innerHTML = esc(item.sentence).replace('___', '<strong>______</strong>');
+  const options = shuffle([...item.options]);
+  document.getElementById('conn-options').innerHTML = options.map((opt, i) =>
+    `<button class="quiz-option" data-action="answer-conn" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
+  ).join('');
+  document.getElementById('conn-feedback').style.display = 'none';
+  document.getElementById('conn-next').style.display = 'none';
+}
+
+function answerConn(idx) {
+  if (connAnswered) return;
+  const btns = document.querySelectorAll('#conn-options .quiz-option');
+  btns.forEach(b => b.classList.remove('selected'));
+  btns[idx]?.classList.add('selected');
+  submitConn();
+}
+
+function submitConn() {
+  if (connAnswered) return;
+  const selectedBtn = document.querySelector('#conn-options .quiz-option.selected');
+  if (!selectedBtn) return;
+  connAnswered = true;
+  const item = connQueue[connIdx];
+  const chosen = selectedBtn.dataset.val;
+  const correct = chosen === item.answer;
+
+  const btns = document.querySelectorAll('#conn-options .quiz-option');
+  btns.forEach(b => {
+    b.classList.add('disabled');
+    if (b.dataset.val === item.answer) b.classList.add('correct');
+    else if (b.classList.contains('selected')) b.classList.add('incorrect');
+  });
+
+  if (correct) { connScore++; addXP(5); } else { addXP(1); }
+
+  const displayMode = progress?.settings?.display || 'standard';
+  const explanation = (displayMode === 'immersion' && item.explanationEs) ? item.explanationEs : item.explanation;
+
+  const fb = document.getElementById('conn-feedback');
+  fb.innerHTML = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`;
+  fb.style.display = 'block';
+  document.getElementById('conn-next').style.display = 'flex';
+  reviewItem(progress.connFsrs, progress.connMastery, item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
+  saveProgress();
+}
+
+function nextConn() { connIdx++; renderConnQuestion(); }
+
 // ── Sentence Construction ──
 
 function startSentenceBuild() {
@@ -3746,6 +3823,7 @@ function buildReviewQueue() {
     { type: 'mp', fsrs: 'mpFsrs', mastery: 'mpMastery', max: 3 },
     { type: 'pp', fsrs: 'ppFsrs', mastery: 'ppMastery', max: 3 },
     { type: 'hom', fsrs: 'homFsrs', mastery: 'homMastery', max: 3 },
+    { type: 'conn', fsrs: 'connFsrs', mastery: 'connMastery', max: 3 },
     { type: 'cloze', fsrs: 'clozeFsrs', mastery: 'clozeMastery', max: 3 },
     { type: 'translation', fsrs: 'translationFsrs', mastery: 'translationMastery', max: 3 },
     { type: 'dictation', fsrs: 'dictFsrs', mastery: 'dictMastery', max: 3 },
@@ -4739,6 +4817,10 @@ document.addEventListener('click', e => {
     case 'start-hom': startHomophones(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
     case 'answer-hom': answerHom(parseInt(target.dataset.idx)); break;
     case 'next-hom': nextHom(); break;
+    case 'open-connectors': showScreen('connectors'); renderConnectorCategories(); break;
+    case 'start-conn': startConnectors(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
+    case 'answer-conn': answerConn(parseInt(target.dataset.idx)); break;
+    case 'next-conn': nextConn(); break;
     case 'open-sentence-build-topics': startSentenceBuild(); break;
     case 'tap-sb-word': tapSBWord(target); break;
     case 'check-sentence-build': checkSentenceBuild(); break;
