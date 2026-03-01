@@ -2858,13 +2858,14 @@ function applyPlacementResults(levels) {
   const grammarLevel = levels.grammar;
   const vocabLevel = levels.vocab;
 
-  // Near-perfect score: include the placed level itself (you've demonstrated mastery of it)
-  // Otherwise only mark levels BELOW the placed level as known
+  // Mark levels BELOW the placed level as known.
+  // Only exception: 100% on the full 40-question test at C2 → mark C2 as complete too.
   const totalCorrect = placementHistory.filter(h => h.correct).length;
-  const pct = placementHistory.length > 0 ? totalCorrect / placementHistory.length : 0;
-  const nearPerfect = pct >= 0.9;
-  const grammarCheck = nearPerfect || grammarLevel === 'C2' ? levelAtOrBelow : levelBelow;
-  const vocabCheck = nearPerfect || vocabLevel === 'C2' ? levelAtOrBelow : levelBelow;
+  const perfectFull = totalCorrect === placementHistory.length
+    && placementHistory.length >= 40
+    && levels.overall === 'C2';
+  const grammarCheck = perfectFull ? levelAtOrBelow : levelBelow;
+  const vocabCheck = perfectFull ? levelAtOrBelow : levelBelow;
 
   // Mark grammar lessons as done (uses grammar level)
   if (typeof GRAMMAR_DATA !== 'undefined') {
@@ -2977,9 +2978,11 @@ function finishPlacementTest() {
 
   // Message showing per-domain results (match the same check used in applyPlacementResults)
   const totalCorr = placementHistory.filter(h => h.correct).length;
-  const nearPerf = placementHistory.length > 0 && (totalCorr / placementHistory.length) >= 0.9;
-  const gCheck = nearPerf || levels.grammar === 'C2' ? levelAtOrBelow : levelBelow;
-  const vCheck = nearPerf || levels.vocab === 'C2' ? levelAtOrBelow : levelBelow;
+  const perfFull = totalCorr === placementHistory.length
+    && placementHistory.length >= 40
+    && levels.overall === 'C2';
+  const gCheck = perfFull ? levelAtOrBelow : levelBelow;
+  const vCheck = perfFull ? levelAtOrBelow : levelBelow;
   const grammarCount = GRAMMAR_DATA?.filter(l => gCheck(l.level, levels.grammar)).length || 0;
   const vocabCount = VOCAB_DATA?.filter(w => vCheck(w.level, levels.vocab)).length || 0;
   document.getElementById('ptr-message').innerHTML =
