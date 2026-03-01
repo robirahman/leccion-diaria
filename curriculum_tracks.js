@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════
 //  CURRICULUM TRACKS — Structured learning paths
-//  Ordered by difficulty: Travel → Romance → History →
-//  Science → Law → Philosophy
+//  Ordered by difficulty: Travel → Romance → Kitchen →
+//  History → Science → Law → Philosophy
 // ═══════════════════════════════════════════════════════════
 
 const CURRICULUM_TRACKS = [
@@ -62,10 +62,40 @@ const CURRICULUM_TRACKS = [
     ]
   },
 
-  // ─── Track 3: History (A2–B2) ──────────────────────────
+  // ─── Track 3: Kitchen (A1–B1) ──────────────────────────
+  {
+    id: 'track-kitchen',
+    order: 3,
+    title: 'La Cocina',
+    titleEn: 'The Kitchen',
+    icon: '👨‍🍳',
+    level: 'A1–B1',
+    color: '#FF5722',
+    grammarFocus: 'Imperative mood, irregular imperatives, direct object pronouns',
+    description: 'Learn Spanish through cooking — master commands and instructions with recipes from across the Spanish-speaking world.',
+    descriptionEs: 'Aprende español cocinando — domina los mandatos e instrucciones con recetas de todo el mundo hispanohablante.',
+    modules: [
+      { id: 'kitchen-m1', title: 'Food Vocabulary', titleEs: 'Vocabulario de comida', type: 'vocab', ref: { category: 'food' } },
+      { id: 'kitchen-m2', title: 'Commands (Imperative)', titleEs: 'Los mandatos (imperativo)', type: 'grammar', ref: { grammarId: 'gram-27' } },
+      { id: 'kitchen-m3', title: 'Recipe: Guacamole', titleEs: 'Receta: Guacamole', type: 'culture', ref: { module: 'recipes', itemId: 'recipe-guacamole' } },
+      { id: 'kitchen-m4', title: 'At the Market', titleEs: 'En el mercado', type: 'conversation', ref: { module: 'conversations', itemId: 'mercado-1' } },
+      { id: 'kitchen-m5', title: 'Reading: At the Supermarket', titleEs: 'Lectura: En el supermercado', type: 'reading', ref: { readingId: 'read-3' } },
+      { id: 'kitchen-m6', title: 'Recipe: Churros', titleEs: 'Receta: Churros', type: 'culture', ref: { module: 'recipes', itemId: 'recipe-churros' } },
+      { id: 'kitchen-m7', title: 'Shopping for Ingredients', titleEs: 'Comprando ingredientes', type: 'themed', ref: { themedId: 'theme-shopping' } },
+      { id: 'kitchen-m8', title: 'Irregular Imperatives', titleEs: 'El imperativo irregular', type: 'grammar', ref: { grammarId: 'gram-65' } },
+      { id: 'kitchen-m9', title: 'Recipe: Tacos al Pastor', titleEs: 'Receta: Tacos al Pastor', type: 'culture', ref: { module: 'recipes', itemId: 'recipe-tacos-al-pastor' } },
+      { id: 'kitchen-m10', title: 'Direct Object Pronouns', titleEs: 'Pronombres de objeto directo', type: 'grammar', ref: { grammarId: 'gram-16' } },
+      { id: 'kitchen-m11', title: 'Recipe: Ceviche', titleEs: 'Receta: Ceviche', type: 'culture', ref: { module: 'recipes', itemId: 'recipe-ceviche' } },
+      { id: 'kitchen-m12', title: 'Recipe: Paella', titleEs: 'Receta: Paella', type: 'culture', ref: { module: 'recipes', itemId: 'recipe-paella' } },
+      { id: 'kitchen-m13', title: 'Oaxaca, Mexico', titleEs: 'Oaxaca, México', type: 'culture', ref: { module: 'travel', itemId: 'travel-oaxaca' } },
+      { id: 'kitchen-m14', title: 'Reading: Fast Food & Health', titleEs: 'Lectura: La comida rápida y la salud', type: 'reading', ref: { readingId: 'read-12' } },
+    ]
+  },
+
+  // ─── Track 4: History (A2–B2) ──────────────────────────
   {
     id: 'track-history',
-    order: 3,
+    order: 4,
     title: 'Crónicas',
     titleEn: 'Chronicles',
     icon: '📜',
@@ -91,10 +121,10 @@ const CURRICULUM_TRACKS = [
     ]
   },
 
-  // ─── Track 4: Science (B1–B2) ──────────────────────────
+  // ─── Track 5: Science (B1–B2) ──────────────────────────
   {
     id: 'track-science',
-    order: 4,
+    order: 5,
     title: 'Descubrimientos',
     titleEn: 'Discoveries',
     icon: '🔬',
@@ -120,10 +150,10 @@ const CURRICULUM_TRACKS = [
     ]
   },
 
-  // ─── Track 5: Law (B1–C1) ─────────────────────────────
+  // ─── Track 6: Law (B1–C1) ─────────────────────────────
   {
     id: 'track-law',
-    order: 5,
+    order: 6,
     title: 'La Ley',
     titleEn: 'The Law',
     icon: '⚖️',
@@ -149,10 +179,10 @@ const CURRICULUM_TRACKS = [
     ]
   },
 
-  // ─── Track 6: Philosophy (B2–C2) ──────────────────────
+  // ─── Track 7: Philosophy (B2–C2) ──────────────────────
   {
     id: 'track-philosophy',
-    order: 6,
+    order: 7,
     title: 'El Pensador',
     titleEn: 'The Thinker',
     icon: '🤔',
