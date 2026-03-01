@@ -2850,14 +2850,26 @@ function seedMatureFsrs(store, key) {
   store[key] = { s: 30, d: 5, lastRev: Date.now() };
 }
 
+function levelBelow(itemLevel, targetLevel) {
+  return (LEVEL_ORDER[itemLevel] || 0) < (LEVEL_ORDER[targetLevel] || 0);
+}
+
 function applyPlacementResults(levels) {
   const grammarLevel = levels.grammar;
   const vocabLevel = levels.vocab;
 
+  // Near-perfect score: include the placed level itself (you've demonstrated mastery of it)
+  // Otherwise only mark levels BELOW the placed level as known
+  const totalCorrect = placementHistory.filter(h => h.correct).length;
+  const pct = placementHistory.length > 0 ? totalCorrect / placementHistory.length : 0;
+  const nearPerfect = pct >= 0.9;
+  const grammarCheck = nearPerfect || grammarLevel === 'C2' ? levelAtOrBelow : levelBelow;
+  const vocabCheck = nearPerfect || vocabLevel === 'C2' ? levelAtOrBelow : levelBelow;
+
   // Mark grammar lessons as done (uses grammar level)
   if (typeof GRAMMAR_DATA !== 'undefined') {
     GRAMMAR_DATA.forEach(l => {
-      if (levelAtOrBelow(l.level, grammarLevel)) {
+      if (grammarCheck(l.level, grammarLevel)) {
         progress.grammarDone[l.id] = true;
       }
     });
@@ -2866,7 +2878,7 @@ function applyPlacementResults(levels) {
   // Mark vocab as mastered (uses vocab level)
   if (typeof VOCAB_DATA !== 'undefined') {
     VOCAB_DATA.forEach(w => {
-      if (levelAtOrBelow(w.level, vocabLevel)) {
+      if (vocabCheck(w.level, vocabLevel)) {
         progress.vocabMastery[w.word] = 3;
         seedMatureFsrs(progress.vocabFsrs, w.word);
       }
@@ -2876,9 +2888,9 @@ function applyPlacementResults(levels) {
   // Mark verb forms as mastered (uses grammar level — conjugation is structural)
   if (typeof VERB_DATA !== 'undefined' && typeof TENSE_META !== 'undefined') {
     VERB_DATA.forEach(v => {
-      if (!levelAtOrBelow(v.level, grammarLevel)) return;
+      if (!grammarCheck(v.level, grammarLevel)) return;
       Object.keys(TENSE_META).forEach(tense => {
-        if (!levelAtOrBelow(TENSE_META[tense].level, grammarLevel)) return;
+        if (!grammarCheck(TENSE_META[tense].level, grammarLevel)) return;
         for (let p = 0; p < 6; p++) {
           const key = `${v.infinitive}:${tense}:${p}`;
           progress.verbMastery[key] = 3;
@@ -2963,9 +2975,13 @@ function finishPlacementTest() {
   }
   document.getElementById('ptr-breakdown').innerHTML = breakdownHtml;
 
-  // Message showing per-domain results
-  const grammarCount = GRAMMAR_DATA?.filter(l => levelAtOrBelow(l.level, levels.grammar)).length || 0;
-  const vocabCount = VOCAB_DATA?.filter(w => levelAtOrBelow(w.level, levels.vocab)).length || 0;
+  // Message showing per-domain results (match the same check used in applyPlacementResults)
+  const totalCorr = placementHistory.filter(h => h.correct).length;
+  const nearPerf = placementHistory.length > 0 && (totalCorr / placementHistory.length) >= 0.9;
+  const gCheck = nearPerf || levels.grammar === 'C2' ? levelAtOrBelow : levelBelow;
+  const vCheck = nearPerf || levels.vocab === 'C2' ? levelAtOrBelow : levelBelow;
+  const grammarCount = GRAMMAR_DATA?.filter(l => gCheck(l.level, levels.grammar)).length || 0;
+  const vocabCount = VOCAB_DATA?.filter(w => vCheck(w.level, levels.vocab)).length || 0;
   document.getElementById('ptr-message').innerHTML =
     t('placementResultMsgDual')
       .replace('%gl', levels.grammar).replace('%g', grammarCount)
