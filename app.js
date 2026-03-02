@@ -130,6 +130,9 @@ const UI_STRINGS = {
   typeConjugation: ['Type the conjugation...', 'Escribe la conjugación...'],
   typeAnswer: ['Type your answer...', 'Escribe tu respuesta...'],
   typeTranslation: ['Your translation...', 'Tu traducción...'],
+  typeSpanishWord: ['Type the Spanish word...', 'Escribe la palabra en español...'],
+  translateToSpanish: ['How do you say', '¿Cómo se dice'],
+  inSpanish: ['in Spanish?', 'en español?'],
   whatDoesMean: ['What does', '¿Qué significa'],
   mean: ['mean?', '?'],
   conjugatePrompt: ['Conjugate', 'Conjuga'],
@@ -176,6 +179,9 @@ const UI_STRINGS = {
   laFem: ['la (feminine)', 'la (femenino)'],
   vocabQuizLabel: ['Vocabulary Quiz', 'Prueba de vocabulario'],
   genderQuizLabel: ['Gender Quiz', 'Prueba de género'],
+  phraseQuizLabel: ['Phrase Quiz', 'Prueba de frases'],
+  whatIsSpanishFor: ['What is the Spanish for:', '¿Cómo se dice en español:'],
+  whatDoesPhraseMean: ['What does this mean:', '¿Qué significa:'],
   conjDrill: ['Conjugation Drill', 'Ejercicio de conjugación'],
 
   // Grammar
@@ -418,12 +424,35 @@ function showToast(icon, text) {
 //  WEAK AREAS TRACKER
 // ════════════════════════════════════════
 
-function trackError(key, isCorrect) {
+function trackError(key, isCorrect, category) {
   if (!progress) return;
   if (!progress.errorCounts) progress.errorCounts = {};
   if (!progress.errorCounts[key]) progress.errorCounts[key] = { wrong: 0, total: 0 };
   progress.errorCounts[key].total++;
   if (!isCorrect) progress.errorCounts[key].wrong++;
+  // Track error categories
+  if (category && !isCorrect) {
+    if (!progress.errorCategories) progress.errorCategories = {};
+    if (!progress.errorCategories[category]) progress.errorCategories[category] = { wrong: 0, total: 0 };
+    progress.errorCategories[category].wrong++;
+    progress.errorCategories[category].total++;
+  } else if (category) {
+    if (!progress.errorCategories) progress.errorCategories = {};
+    if (!progress.errorCategories[category]) progress.errorCategories[category] = { wrong: 0, total: 0 };
+    progress.errorCategories[category].total++;
+  }
+}
+
+// Detect error category for verb drills
+function classifyVerbError(userInput, correctAnswer, tense) {
+  if (!userInput || !correctAnswer) return 'verb';
+  const inp = stripAccents(userInput.trim().toLowerCase());
+  const cor = stripAccents(correctAnswer.trim().toLowerCase());
+  if (inp === cor) return 'accent';
+  // Check if user got the tense wrong (same root, wrong ending pattern)
+  const tenseCat = ['subjunctive_present', 'subjunctive_imperfect', 'subjunctive_perfect', 'subjunctive_pluperfect'].includes(tense)
+    ? 'subjunctive' : tense;
+  return tenseCat;
 }
 
 function getWeakAreas(limit) {
@@ -436,23 +465,61 @@ function getWeakAreas(limit) {
   return items.slice(0, limit || 8);
 }
 
+function getWeakCategories() {
+  if (!progress || !progress.errorCategories) return [];
+  return Object.entries(progress.errorCategories)
+    .filter(([, v]) => v.total >= 3)
+    .map(([cat, v]) => ({ category: cat, wrong: v.wrong, total: v.total, rate: v.wrong / v.total }))
+    .filter(x => x.rate > 0.2)
+    .sort((a, b) => b.rate - a.rate);
+}
+
+const CATEGORY_LABELS = {
+  accent: 'Accent Marks', gender: 'Noun Gender', present: 'Present Tense',
+  preterite: 'Preterite', imperfect: 'Imperfect', future: 'Future Tense',
+  conditional: 'Conditional', subjunctive: 'Subjunctive', imperative: 'Imperative',
+  vocab: 'Vocabulary', grammar: 'Grammar', phrase: 'Phrases',
+};
+
 function renderWeakAreas() {
   const el = document.getElementById('stats-weak-areas');
   if (!el) return;
+
+  // Category-level weak areas
+  const weakCats = getWeakCategories();
+  let html = '';
+  if (weakCats.length > 0) {
+    html += '<div class="mb-1">';
+    html += weakCats.slice(0, 5).map(w => {
+      const pct = Math.round(w.rate * 100);
+      const label = CATEGORY_LABELS[w.category] || w.category;
+      return `<div class="weak-item">
+        <span class="weak-label">${esc(label)}</span>
+        <span class="text-muted text-sm">${w.wrong}/${w.total}</span>
+        <span class="weak-rate">${pct}%</span>
+      </div>`;
+    }).join('');
+    html += '</div>';
+  }
+
+  // Item-level weak areas
   const weak = getWeakAreas(8);
-  if (!weak.length) {
+  if (!weak.length && !weakCats.length) {
     el.innerHTML = '<p class="text-muted text-sm">No weak areas detected yet. Keep practicing!</p>';
     return;
   }
-  el.innerHTML = weak.map(w => {
-    const pct = Math.round(w.rate * 100);
-    const label = w.key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    return `<div class="weak-item">
-      <span class="weak-label">${esc(label)}</span>
-      <span class="text-muted text-sm">${w.wrong}/${w.total}</span>
-      <span class="weak-rate">${pct}%</span>
-    </div>`;
-  }).join('');
+  if (weak.length) {
+    html += weak.map(w => {
+      const pct = Math.round(w.rate * 100);
+      const label = w.key.replace(/:/g, ' ').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      return `<div class="weak-item">
+        <span class="weak-label">${esc(label)}</span>
+        <span class="text-muted text-sm">${w.wrong}/${w.total}</span>
+        <span class="weak-rate">${pct}%</span>
+      </div>`;
+    }).join('');
+  }
+  el.innerHTML = html;
 }
 
 function renderTodayFocus() {
@@ -1200,6 +1267,73 @@ function pickN(arr, n) { return shuffle(arr).slice(0, n); }
 //  TODAY SCREEN
 // ════════════════════════════════════════
 
+function getDateSeed(dateStr) {
+  // Deterministic seed from date string for consistent daily picks
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
+  return Math.abs(hash);
+}
+
+function renderWordOfTheDay() {
+  const div = document.getElementById('today-wotd');
+  if (!div || typeof VOCAB_DATA === 'undefined') return;
+  buildVocabIndexes();
+  const today = new Date().toISOString().slice(0, 10);
+  const level = progress.placementLevel || 'A1';
+  const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const maxIdx = levelOrder.indexOf(level);
+  // Build pool at or one level above user's level for challenge
+  const targetLevels = [level];
+  if (maxIdx < 5) targetLevels.push(levelOrder[maxIdx + 1]);
+  let pool = [];
+  for (const lv of targetLevels) {
+    if (VOCAB_BY_LEVEL[lv]) pool.push(...VOCAB_BY_LEVEL[lv]);
+  }
+  if (pool.length === 0) pool = VOCAB_DATA;
+  // Filter to words with examples
+  const withExamples = pool.filter(w => w.example);
+  if (withExamples.length > 0) pool = withExamples;
+  const seed = getDateSeed(today);
+  const word = pool[seed % pool.length];
+  const gender = word.gender ? (word.gender === 'm' ? 'el ' : 'la ') : '';
+  div.innerHTML = `
+    <h2>Word of the Day</h2>
+    <div class="card wotd-card">
+      <div class="wotd-word">${gender}<strong>${esc(word.word)}</strong></div>
+      <div class="wotd-english">${esc(word.english)}</div>
+      ${word.example ? `<div class="wotd-example text-muted text-sm mt-1"><em>"${esc(word.example)}"</em></div>` : ''}
+      ${word.exampleEn ? `<div class="text-muted text-sm">"${esc(word.exampleEn)}"</div>` : ''}
+      <button class="btn btn-sm btn-secondary mt-1" data-action="speak-wotd" data-word="${esc(word.word)}">Listen</button>
+    </div>
+  `;
+}
+
+function renderDailyChallenge() {
+  const div = document.getElementById('today-challenge');
+  if (!div) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const completed = progress.dailyChallengeDate === today;
+  // Rotate topics by day of week
+  const dayOfWeek = new Date().getDay(); // 0=Sun, 1=Mon, ...
+  const topics = [
+    { label: 'Conjugation Challenge', action: 'start-verb-drill', icon: '🏃' },
+    { label: 'Vocabulary Challenge', action: 'start-quick-vocab', icon: '📚' },
+    { label: 'Translation Challenge', action: 'start-translation', icon: '🌍' },
+    { label: 'Grammar Challenge', action: 'start-grammar-quiz-random', icon: '📝' },
+    { label: 'Dictation Challenge', action: 'start-dictation', icon: '🎧' },
+    { label: 'Phrase Challenge', action: 'start-phrase-quiz-daily', icon: '💬' },
+    { label: 'Mixed Challenge', action: 'start-verb-drill', icon: '🎯' },
+  ];
+  const topic = topics[dayOfWeek];
+  div.innerHTML = `
+    <h2>Daily Challenge</h2>
+    <div class="card${completed ? ' completed' : ''}" data-action="${completed ? '' : topic.action}">
+      <div class="card-title">${topic.icon} ${topic.label}</div>
+      <div class="card-subtitle">${completed ? 'Completed today!' : 'Complete for bonus XP'}</div>
+    </div>
+  `;
+}
+
 function renderToday() {
   const hour = new Date().getHours();
   const greet = hour < 12 ? '¡Buenos días!' : hour < 18 ? '¡Buenas tardes!' : '¡Buenas noches!';
@@ -1221,6 +1355,12 @@ function renderToday() {
     <div class="stat-card"><div class="stat-num">${verbsLearned}</div><div class="stat-desc">${tBtn('verbs')}</div></div>
     <div class="stat-card"><div class="stat-num">${vocabLearned}</div><div class="stat-desc">${t('words')}</div></div>
   `;
+
+  // Word of the Day
+  renderWordOfTheDay();
+
+  // Daily Challenge
+  renderDailyChallenge();
 
   // Continue learning
   const cont = document.getElementById('today-continue');
@@ -1539,7 +1679,8 @@ function checkVerbDrill() {
   fb.style.display = 'block';
 
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
-  trackError(key, result.correct);
+  const errCat = result.correct ? item.tense : classifyVerbError(input, item.answer, item.tense);
+  trackError(key, result.correct, errCat);
 
   if (result.correct) {
     fb.className = 'quiz-feedback correct';
@@ -1713,7 +1854,7 @@ function submitVerbQuizMC() {
   const selected = item.options[idx];
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
   const isCorrect = selected === item.correct;
-  trackError(key, isCorrect);
+  trackError(key, isCorrect, item.tense);
   const btns = document.querySelectorAll('#vq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
@@ -2048,10 +2189,15 @@ function startVocabQuiz() {
 
   vocabQuizQueue = [];
   const words = pickN(pool, Math.min(10, pool.length));
-  words.forEach(w => {
-    const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
-    const options = shuffle([w.english, ...wrongs]);
-    vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
+  words.forEach((w, i) => {
+    if (i % 3 === 2) {
+      // ~30% production questions: type Spanish from English
+      vocabQuizQueue.push({ word: w, correct: w.word, type: 'produce' });
+    } else {
+      const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
+      const options = shuffle([w.english, ...wrongs]);
+      vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
+    }
   });
   vocabQuizIdx = 0;
   vocabQuizScore = 0;
@@ -2074,10 +2220,14 @@ function startQuickVocab() {
   currentVocabCategory = null;
   vocabQuizQueue = [];
   const words = pickN(pool, Math.min(10, pool.length));
-  words.forEach(w => {
-    const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
-    const options = shuffle([w.english, ...wrongs]);
-    vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
+  words.forEach((w, i) => {
+    if (i % 3 === 2) {
+      vocabQuizQueue.push({ word: w, correct: w.word, type: 'produce' });
+    } else {
+      const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
+      const options = shuffle([w.english, ...wrongs]);
+      vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
+    }
   });
   vocabQuizIdx = 0;
   vocabQuizScore = 0;
@@ -2091,6 +2241,7 @@ function renderVocabQuizQuestion() {
     return;
   }
   const item = vocabQuizQueue[vocabQuizIdx];
+  if (item.type === 'produce') { renderVocabQuizQuestion_Produce(); return; }
   document.getElementById('vocq-progress').textContent = `${vocabQuizIdx + 1} / ${vocabQuizQueue.length}`;
   const container = document.getElementById('vocq-container');
   document.getElementById('vocq-next').style.display = 'none';
@@ -2105,6 +2256,57 @@ function renderVocabQuizQuestion() {
     <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">${tBtn('submit')}</button>
   `;
   speak(item.word.word);
+}
+
+function renderVocabQuizQuestion_Produce() {
+  const item = vocabQuizQueue[vocabQuizIdx];
+  document.getElementById('vocq-progress').textContent = `${vocabQuizIdx + 1} / ${vocabQuizQueue.length}`;
+  const container = document.getElementById('vocq-container');
+  document.getElementById('vocq-next').style.display = 'none';
+
+  container.innerHTML = `
+    <div class="quiz-question">${t('translateToSpanish')} <strong>"${esc(item.word.english)}"</strong> ${t('inSpanish')}</div>
+    <div class="fib-container mt-1">
+      <input type="text" class="quiz-input" id="vocq-produce-input" placeholder="${t('typeSpanishWord')}" autocomplete="off" autocapitalize="none">
+      <button class="btn btn-primary" data-action="submit-vocab-quiz-produce">${tBtn('check')}</button>
+    </div>
+    <div class="accent-bar">
+      <button class="accent-btn" data-action="insert-accent-vocq" data-char="á">á</button>
+      <button class="accent-btn" data-action="insert-accent-vocq" data-char="é">é</button>
+      <button class="accent-btn" data-action="insert-accent-vocq" data-char="í">í</button>
+      <button class="accent-btn" data-action="insert-accent-vocq" data-char="ó">ó</button>
+      <button class="accent-btn" data-action="insert-accent-vocq" data-char="ú">ú</button>
+      <button class="accent-btn" data-action="insert-accent-vocq" data-char="ñ">ñ</button>
+    </div>
+    <div class="quiz-feedback" id="vocq-produce-feedback" style="display:none"></div>
+  `;
+  document.getElementById('vocq-produce-input').focus();
+}
+
+function submitVocabQuizProduce() {
+  const item = vocabQuizQueue[vocabQuizIdx];
+  const input = document.getElementById('vocq-produce-input');
+  if (!input || !input.value.trim()) return;
+  const result = checkAnswer(input.value, item.correct);
+  input.disabled = true;
+  trackError(`vocab:${item.word.word}`, result.correct, 'vocab');
+  const fb = document.getElementById('vocq-produce-feedback');
+  if (result.correct) {
+    vocabQuizScore++;
+    fb.innerHTML = result.accentWarn
+      ? `<span class="text-correct">${t('correctAccent')} ${esc(item.correct)}</span>`
+      : `<span class="text-correct">${t('correct')}</span>`;
+    reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
+    addXP(5);
+  } else {
+    fb.innerHTML = result.accentWarn
+      ? `<span class="text-incorrect">${t('incorrectAccent')} ${esc(item.correct)}</span>`
+      : `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(item.correct)}</span>`;
+    reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_AGAIN);
+    addXP(1);
+  }
+  fb.style.display = 'block';
+  document.getElementById('vocq-next').style.display = 'flex';
 }
 
 function answerVocabQuizMC(idx) {
@@ -2124,7 +2326,7 @@ function submitVocabQuizMC() {
     if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
   });
   const vocCorrect = selected === item.correct;
-  trackError(`vocab:${item.word.word}`, vocCorrect);
+  trackError(`vocab:${item.word.word}`, vocCorrect, 'vocab');
   if (vocCorrect) {
     vocabQuizScore++;
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_GOOD);
@@ -2327,6 +2529,44 @@ function renderGrammarQuizQuestion() {
       <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
     `;
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
+  } else if (q.type === 'error-correct') {
+    container.innerHTML = `
+      <div class="quiz-question">Find and fix the error:</div>
+      <div class="error-sentence">"${esc(q.sentence)}"</div>
+      <div class="quiz-input-row mt-1">
+        <input type="text" id="gq-fib-input" placeholder="Type the corrected sentence..." autocomplete="off" autocapitalize="none" value="${esc(q.sentence)}">
+        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
+      </div>
+      <div class="accent-bar">
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="é">é</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="í">í</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="ñ">ñ</button>
+      </div>
+      <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
+    `;
+    setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
+  } else if (q.type === 'transform') {
+    container.innerHTML = `
+      <div class="quiz-question">${esc(q.question)}</div>
+      <div class="error-sentence">"${esc(q.sentence)}"</div>
+      <div class="quiz-input-row mt-1">
+        <input type="text" id="gq-fib-input" placeholder="Type the transformed sentence..." autocomplete="off" autocapitalize="none">
+        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
+      </div>
+      <div class="accent-bar">
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="é">é</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="í">í</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-gq" data-char="ñ">ñ</button>
+      </div>
+      <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
+    `;
+    setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   }
 }
 
@@ -2346,7 +2586,7 @@ function submitGrammarQuizMC() {
     if (i === correctIdx) btn.classList.add('correct');
     if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });
-  trackError(`grammar:${q.id || grammarQuizIdx}`, idx === correctIdx);
+  trackError(`grammar:${q.id || grammarQuizIdx}`, idx === correctIdx, 'grammar');
   if (idx === correctIdx) {
     grammarQuizScore++;
     addXP(5);
@@ -2485,6 +2725,102 @@ function ratePhrase(rating) {
   addXP(rating >= 3 ? 5 : 2);
   phraseLearnIdx++;
   renderPhraseLearnCard();
+}
+
+// ── Phrase Quiz ──
+
+let phraseQuizQueue = [];
+let phraseQuizIdx = 0;
+let phraseQuizScore = 0;
+
+function startPhraseQuiz() {
+  if (typeof PHRASES_DATA === 'undefined') return;
+  const phrases = currentSituation
+    ? PHRASES_DATA.filter(p => p.situation === currentSituation)
+    : PHRASES_DATA;
+  if (phrases.length < 4) return;
+
+  phraseQuizQueue = [];
+  const selected = pickN(phrases, Math.min(10, phrases.length));
+  selected.forEach((p, i) => {
+    if (i % 3 === 0) {
+      // English→Spanish MC
+      const wrongs = pickN(phrases.filter(x => x.id !== p.id), 3).map(x => x.spanish);
+      const options = shuffle([p.spanish, ...wrongs]);
+      phraseQuizQueue.push({ phrase: p, options, correct: p.spanish, direction: 'en-es' });
+    } else {
+      // Spanish→English MC
+      const wrongs = pickN(phrases.filter(x => x.id !== p.id), 3).map(x => x.english);
+      const options = shuffle([p.english, ...wrongs]);
+      phraseQuizQueue.push({ phrase: p, options, correct: p.english, direction: 'es-en' });
+    }
+  });
+  phraseQuizIdx = 0;
+  phraseQuizScore = 0;
+  showScreen('phrase-quiz');
+  renderPhraseQuizQuestion();
+}
+
+function renderPhraseQuizQuestion() {
+  if (phraseQuizIdx >= phraseQuizQueue.length) {
+    showResults(phraseQuizScore, phraseQuizQueue.length, 'phrase-quiz', t('phraseQuizLabel'));
+    return;
+  }
+  const item = phraseQuizQueue[phraseQuizIdx];
+  document.getElementById('pq-progress').textContent = `${phraseQuizIdx + 1} / ${phraseQuizQueue.length}`;
+  const container = document.getElementById('pq-container');
+  document.getElementById('pq-next').style.display = 'none';
+
+  const prompt = item.direction === 'en-es'
+    ? `${t('whatIsSpanishFor')} <strong>"${esc(item.phrase.english)}"</strong>`
+    : `${t('whatDoesPhraseMean')} <strong>"${esc(item.phrase.spanish)}"</strong>`;
+
+  container.innerHTML = `
+    <div class="quiz-question">${prompt}</div>
+    <div class="quiz-options">
+      ${item.options.map((opt, i) =>
+        `<button class="quiz-option" data-action="answer-phrase-quiz" data-idx="${i}">${esc(opt)}</button>`
+      ).join('')}
+    </div>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-phrase-quiz-mc" style="display:none">${tBtn('submit')}</button>
+  `;
+  if (item.direction === 'es-en') speak(item.phrase.spanish);
+}
+
+function answerPhraseQuizMC(idx) {
+  selectMCOption('#pq-container', idx);
+}
+
+function submitPhraseQuizMC() {
+  const selectedBtn = document.querySelector('#pq-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
+  const item = phraseQuizQueue[phraseQuizIdx];
+  const selected = item.options[idx];
+  const btns = document.querySelectorAll('#pq-container .quiz-option');
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (item.options[i] === item.correct) btn.classList.add('correct');
+    if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
+  });
+  const isCorrect = selected === item.correct;
+  trackError(`phrase:${item.phrase.id}`, isCorrect, 'phrase');
+  if (isCorrect) {
+    phraseQuizScore++;
+    reviewItem(progress.phraseFsrs, progress.phraseMastery, item.phrase.id, FSRS_GOOD);
+    addXP(5);
+  } else {
+    reviewItem(progress.phraseFsrs, progress.phraseMastery, item.phrase.id, FSRS_AGAIN);
+    addXP(1);
+  }
+  const submitBtn = document.querySelector('#pq-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
+  document.getElementById('pq-next').style.display = 'flex';
+}
+
+function nextPhraseQuiz() {
+  phraseQuizIdx++;
+  renderPhraseQuizQuestion();
 }
 
 // ════════════════════════════════════════
@@ -2649,6 +2985,122 @@ function submitCultureQuizMC() {
 function nextCultureQuiz() {
   cultureQuizIdx++;
   renderCultureQuizQuestion();
+}
+
+// ── Dialogue Practice ──
+
+let dialogueQueue = [];
+let dialogueIdx = 0;
+let dialogueScore = 0;
+
+function startDialoguePractice() {
+  if (typeof CONVERSATIONS_DATA === 'undefined' || CONVERSATIONS_DATA.length === 0) return;
+  // Pick a random conversation
+  const conv = CONVERSATIONS_DATA[Math.floor(Math.random() * CONVERSATIONS_DATA.length)];
+  // Find all player turns (indices where speaker role is 'player')
+  const playerIndices = [];
+  conv.dialogue.forEach((line, i) => {
+    if (conv.speakers[line.speaker]?.role === 'player') playerIndices.push(i);
+  });
+  if (playerIndices.length === 0) return;
+
+  // Collect all player lines from all conversations for distractors
+  const allPlayerLines = [];
+  for (const c of CONVERSATIONS_DATA) {
+    for (const line of c.dialogue) {
+      if (c.speakers[line.speaker]?.role === 'player') allPlayerLines.push(line.spanish);
+    }
+  }
+
+  // Build quiz queue — each item is a choice point in the dialogue
+  dialogueQueue = playerIndices.map(idx => {
+    const correctLine = conv.dialogue[idx];
+    const context = conv.dialogue.slice(0, idx); // lines before this point
+    // Pick 3 wrong options from other player lines
+    const wrongPool = allPlayerLines.filter(s => s !== correctLine.spanish);
+    const wrongs = pickN(wrongPool, 3);
+    return {
+      conv,
+      context,
+      correct: correctLine,
+      options: shuffle([correctLine.spanish, ...wrongs]),
+    };
+  });
+  dialogueIdx = 0;
+  dialogueScore = 0;
+  showScreen('dialogue-practice');
+  renderDialoguePractice();
+}
+
+function renderDialoguePractice() {
+  if (dialogueIdx >= dialogueQueue.length) {
+    showResults(dialogueScore, dialogueQueue.length, 'dialogue', 'Dialogue Practice');
+    return;
+  }
+  const item = dialogueQueue[dialogueIdx];
+  document.getElementById('dp-progress').textContent = `${dialogueIdx + 1} / ${dialogueQueue.length}`;
+  document.getElementById('dp-next').style.display = 'none';
+
+  // Render conversation transcript up to this point
+  const transcript = document.getElementById('dp-transcript');
+  transcript.innerHTML = item.context.map(line => {
+    const speaker = item.conv.speakers[line.speaker];
+    const isPlayer = speaker?.role === 'player';
+    return `<div class="dialogue-line${isPlayer ? ' player' : ''}">
+      <strong>${esc(speaker?.name || '?')}:</strong> ${esc(line.spanish)}
+      <div class="text-muted text-sm">${esc(line.english)}</div>
+    </div>`;
+  }).join('');
+
+  // Render the choice prompt
+  const container = document.getElementById('dp-container');
+  container.innerHTML = `
+    <div class="quiz-question">What would you say next?</div>
+    <div class="quiz-options">
+      ${item.options.map((opt, i) =>
+        `<button class="quiz-option" data-action="answer-dialogue" data-idx="${i}">${esc(opt)}</button>`
+      ).join('')}
+    </div>
+    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-dialogue-mc" style="display:none">${tBtn('submit')}</button>
+  `;
+}
+
+function answerDialogueMC(idx) {
+  selectMCOption('#dp-container', idx);
+}
+
+function submitDialogueMC() {
+  const selectedBtn = document.querySelector('#dp-container .quiz-option.selected');
+  if (!selectedBtn) return;
+  const idx = parseInt(selectedBtn.dataset.idx);
+  const item = dialogueQueue[dialogueIdx];
+  const selected = item.options[idx];
+  const btns = document.querySelectorAll('#dp-container .quiz-option');
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (item.options[i] === item.correct.spanish) btn.classList.add('correct');
+    if (i === idx && selected !== item.correct.spanish) btn.classList.add('incorrect');
+  });
+  if (selected === item.correct.spanish) {
+    dialogueScore++;
+    addXP(5);
+  } else {
+    addXP(1);
+  }
+  // Show the English translation of the correct answer
+  const fb = document.createElement('div');
+  fb.className = 'text-muted text-sm mt-1';
+  fb.textContent = `"${item.correct.english}"`;
+  document.querySelector('#dp-container').appendChild(fb);
+
+  const submitBtn = document.querySelector('#dp-container .mc-submit');
+  if (submitBtn) submitBtn.style.display = 'none';
+  document.getElementById('dp-next').style.display = 'flex';
+}
+
+function nextDialogue() {
+  dialogueIdx++;
+  renderDialoguePractice();
 }
 
 // ════════════════════════════════════════
@@ -4160,7 +4612,9 @@ function startTranslation() {
   if (typeof TRANSLATION_DRILLS === 'undefined') return;
   let items = shuffle([...TRANSLATION_DRILLS]).slice(0, 10);
   if (items.length === 0) return;
-  trQueue = items; trIdx = 0; trScore = 0;
+  // Assign random direction: ~50% EN→ES, ~50% ES→EN
+  trQueue = items.map(item => ({ ...item, direction: Math.random() < 0.5 ? 'es-en' : 'en-es' }));
+  trIdx = 0; trScore = 0;
   showScreen('translation');
   renderTranslationQuestion();
 }
@@ -4169,7 +4623,12 @@ function renderTranslationQuestion() {
   if (trIdx >= trQueue.length) { showResults(trScore, trQueue.length, 'tr', 'Translation Drills'); return; }
   const item = trQueue[trIdx];
   document.getElementById('tr-progress').textContent = `${trIdx + 1} / ${trQueue.length}`;
-  document.getElementById('tr-prompt').innerHTML = `Translate to Spanish: <strong>${esc(item.english)}</strong>`;
+  if (item.direction === 'es-en') {
+    document.getElementById('tr-prompt').innerHTML = `Translate to English: <strong>${esc(item.primary)}</strong>`;
+    speak(item.primary);
+  } else {
+    document.getElementById('tr-prompt').innerHTML = `Translate to Spanish: <strong>${esc(item.english)}</strong>`;
+  }
   document.getElementById('tr-input').value = '';
   document.getElementById('tr-feedback').style.display = 'none';
   document.getElementById('tr-next').style.display = 'none';
@@ -4180,7 +4639,12 @@ function checkTranslation() {
   const item = trQueue[trIdx];
   const input = document.getElementById('tr-input').value.trim();
   if (!input) return;
-  const allCorrect = [item.primary, ...(item.acceptable || [])];
+
+  const isReverse = item.direction === 'es-en';
+  const allCorrect = isReverse
+    ? [item.english, ...(item.acceptableEn || [])]
+    : [item.primary, ...(item.acceptable || [])];
+  const modelAnswer = isReverse ? item.english : item.primary;
 
   // Tier 1: exact match with accent tolerance
   let correct = false, accentWarn = false;
@@ -4197,9 +4661,9 @@ function checkTranslation() {
     }
   }
 
-  // Tier 3: key word analysis for partial credit feedback
+  // Tier 3: key word analysis for partial credit feedback (EN→ES only)
   let keyHits = [], keyMisses = [];
-  if (!correct && item.keyWords) {
+  if (!correct && !isReverse && item.keyWords) {
     const inputLower = stripAccents(input.toLowerCase());
     keyHits = item.keyWords.filter(kw => inputLower.includes(stripAccents(kw.toLowerCase())));
     keyMisses = item.keyWords.filter(kw => !inputLower.includes(stripAccents(kw.toLowerCase())));
@@ -4212,11 +4676,12 @@ function checkTranslation() {
   let html = '';
   if (correct) {
     html = `<div class="text-correct">✓ Correct!</div>`;
-    if (accentWarn) html += `<div class="text-muted text-sm">Watch your accents: ${esc(item.primary)}</div>`;
+    if (accentWarn) html += `<div class="text-muted text-sm">Watch your accents: ${esc(modelAnswer)}</div>`;
   } else {
-    html = `<div class="text-incorrect">✗ Model answer: <strong>${esc(item.primary)}</strong></div>`;
-    if (item.acceptable?.length) {
-      html += `<div class="text-muted text-sm">Also accepted: ${item.acceptable.map(a => esc(a)).join(', ')}</div>`;
+    html = `<div class="text-incorrect">✗ Model answer: <strong>${esc(modelAnswer)}</strong></div>`;
+    const altAnswers = isReverse ? (item.acceptableEn || []) : (item.acceptable || []);
+    if (altAnswers.length) {
+      html += `<div class="text-muted text-sm">Also accepted: ${altAnswers.map(a => esc(a)).join(', ')}</div>`;
     }
     if (keyHits.length > 0) {
       html += `<div class="text-muted text-sm">You got: ${keyHits.map(k => '<strong>' + esc(k) + '</strong>').join(', ')}</div>`;
@@ -4898,6 +5363,7 @@ function renderPronunciation() {
 // ════════════════════════════════════════
 
 let readingQueue = [], readingIdx = 0, readingQIdx = 0, readingScore = 0, readingSelected = -1, currentReading = null;
+let listenMode = false;
 
 let readingTypeFilter = 'standard';
 
@@ -4946,11 +5412,14 @@ function startReading(id) {
     || (typeof READING_SAT_DATA !== 'undefined' ? READING_SAT_DATA.find(p => p.id === id) : null);
   if (!currentReading) return;
   readingQIdx = 0; readingScore = 0; readingSelected = -1;
+  listenMode = false;
   showScreen('reading');
   document.getElementById('read-title').textContent = currentReading.title;
   document.getElementById('read-level').textContent = currentReading.level;
   document.getElementById('read-text').textContent = currentReading.text;
+  document.getElementById('read-text').style.display = '';
   document.getElementById('read-speak').dataset.text = currentReading.text;
+  document.getElementById('read-listen-toggle').classList.remove('active');
 
   // Vocab sidebar
   if (currentReading.vocab && currentReading.vocab.length) {
@@ -5381,6 +5850,18 @@ document.addEventListener('click', e => {
       break;
     }
 
+    // Word of the Day / Daily Challenge
+    case 'speak-wotd': speak(target.dataset.word); break;
+    case 'start-phrase-quiz-daily': { currentSituation = null; startPhraseQuiz(); break; }
+    case 'start-grammar-quiz-random': {
+      if (typeof GRAMMAR_DATA !== 'undefined' && GRAMMAR_DATA.length > 0) {
+        const lesson = GRAMMAR_DATA[Math.floor(Math.random() * GRAMMAR_DATA.length)];
+        openGrammarLesson(lesson.id);
+        startGrammarQuiz();
+      }
+      break;
+    }
+
     // Verbs
     case 'start-verb-learn': startVerbLearn(); break;
     case 'start-verb-drill': startVerbDrill(); break;
@@ -5421,9 +5902,17 @@ document.addEventListener('click', e => {
       }
       break;
     }
+    case 'submit-vocab-quiz-produce': submitVocabQuizProduce(); break;
+    case 'insert-accent-vocq': {
+      const input = document.getElementById('vocq-produce-input');
+      if (input) insertCharAtCursor(input, target.dataset.char);
+      break;
+    }
     case 'next-vocab-quiz': {
       vocabQuizIdx++;
-      if (vocabQuizQueue[vocabQuizIdx]?.type === 'gender') renderVocabQuizQuestion_Gender();
+      const nextItem = vocabQuizQueue[vocabQuizIdx];
+      if (nextItem?.type === 'gender') renderVocabQuizQuestion_Gender();
+      else if (nextItem?.type === 'produce') renderVocabQuizQuestion_Produce();
       else renderVocabQuizQuestion();
       break;
     }
@@ -5439,7 +5928,10 @@ document.addEventListener('click', e => {
     // Phrases
     case 'open-phrase-sit': openPhraseSituation(target.dataset.sit); break;
     case 'start-phrase-learn': startPhraseLearn(); break;
-    case 'start-phrase-quiz': {/* TODO */} break;
+    case 'start-phrase-quiz': startPhraseQuiz(); break;
+    case 'answer-phrase-quiz': answerPhraseQuizMC(parseInt(target.dataset.idx)); break;
+    case 'submit-phrase-quiz-mc': submitPhraseQuizMC(); break;
+    case 'next-phrase-quiz': nextPhraseQuiz(); break;
     case 'flip-phrase-card': flipPhraseCard(); break;
     case 'rate-phrase': ratePhrase(parseInt(target.dataset.rating)); break;
 
@@ -5447,6 +5939,10 @@ document.addEventListener('click', e => {
     case 'open-culture': openCultureModule(target.dataset.module); break;
     case 'open-culture-item': openCultureItem(target.dataset.id); break;
     case 'start-culture-quiz': startCultureQuiz(); break;
+    case 'start-dialogue-practice': startDialoguePractice(); break;
+    case 'answer-dialogue': answerDialogueMC(parseInt(target.dataset.idx)); break;
+    case 'submit-dialogue-mc': submitDialogueMC(); break;
+    case 'next-dialogue': nextDialogue(); break;
     case 'answer-culture-quiz': answerCultureQuizMC(parseInt(target.dataset.idx)); break;
     case 'submit-culture-quiz-mc': submitCultureQuizMC(); break;
     case 'next-culture-quiz': nextCultureQuiz(); break;
@@ -5567,6 +6063,21 @@ document.addEventListener('click', e => {
     case 'answer-reading': answerReadingMC(parseInt(target.dataset.idx)); break;
     case 'submit-reading-mc': submitReadingMC(); break;
     case 'next-reading': nextReading(); break;
+    case 'toggle-listen-mode': {
+      listenMode = !listenMode;
+      const textEl = document.getElementById('read-text');
+      const toggleBtn = document.getElementById('read-listen-toggle');
+      if (listenMode) {
+        textEl.style.display = 'none';
+        toggleBtn.classList.add('active');
+        // Auto-play the passage
+        speak(currentReading.text);
+      } else {
+        textEl.style.display = '';
+        toggleBtn.classList.remove('active');
+      }
+      break;
+    }
 
     // Themed Vocabulary
     case 'open-themed-vocab': showScreen('themed-vocab'); renderThemedVocabList(); break;
@@ -5649,9 +6160,11 @@ document.addEventListener('keydown', e => {
     // Enter to advance or submit on quiz screens
     const quizScreens = [
       { screen: 'verb-quiz', next: 'vq-next', fib: 'vq-fib-input', submitFn: submitVerbQuizFIB, nextFn: nextVerbQuiz },
-      { screen: 'vocab-quiz', next: 'vocq-next', fib: null, submitFn: null, nextFn: () => { vocabQuizIdx++; if (vocabQuizQueue[vocabQuizIdx]?.type === 'gender') renderVocabQuizQuestion_Gender(); else renderVocabQuizQuestion(); } },
+      { screen: 'vocab-quiz', next: 'vocq-next', fib: 'vocq-produce-input', submitFn: submitVocabQuizProduce, nextFn: () => { vocabQuizIdx++; const ni = vocabQuizQueue[vocabQuizIdx]; if (ni?.type === 'gender') renderVocabQuizQuestion_Gender(); else if (ni?.type === 'produce') renderVocabQuizQuestion_Produce(); else renderVocabQuizQuestion(); } },
       { screen: 'grammar-quiz', next: 'gq-next', fib: 'gq-fib-input', submitFn: submitGrammarFIB, nextFn: nextGrammarQuiz },
+      { screen: 'phrase-quiz', next: 'pq-next', fib: null, submitFn: null, nextFn: nextPhraseQuiz },
       { screen: 'culture-quiz', next: 'cq-next', fib: null, submitFn: null, nextFn: nextCultureQuiz },
+      { screen: 'dialogue-practice', next: 'dp-next', fib: null, submitFn: null, nextFn: nextDialogue },
       { screen: 'placement', next: 'pt-next', fib: 'pt-fib-input', submitFn: submitPlacementFIB, nextFn: nextPlacementQuestion },
       { screen: 'mp-drill', next: 'mp-next', fib: null, submitFn: submitMP, nextFn: nextMP },
       { screen: 'sentence-build', next: 'sb-next', fib: null, submitFn: checkSentenceBuild, nextFn: nextSentenceBuild },

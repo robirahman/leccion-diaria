@@ -43,6 +43,14 @@
     </div>
     <div class="stat-cards" id="today-stats" data-action="open-stats"></div>
 
+    <div class="today-section" id="today-wotd-section">
+      <div id="today-wotd"></div>
+    </div>
+
+    <div class="today-section" id="today-challenge-section">
+      <div id="today-challenge"></div>
+    </div>
+
     <div class="today-section">
       <h2>Continue Learning</h2>
       <div id="today-continue"></div>
@@ -335,10 +343,25 @@
     </div>
   </div>
 
+  <!-- ════════ PHRASE QUIZ ════════ -->
+  <div class="screen" id="screen-phrase-quiz">
+    <div class="quiz-progress" id="pq-progress"></div>
+    <div class="quiz-container" id="pq-container"></div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-phrase-quiz" style="display:none" id="pq-next">Next</button>
+  </div>
+
   <!-- ════════ CONVERSATIONS ════════ -->
   <div class="screen" id="screen-conversations">
     <h2 class="mb-2">Conversations</h2>
     <div id="conv-list"></div>
+  </div>
+
+  <!-- ════════ DIALOGUE PRACTICE ════════ -->
+  <div class="screen" id="screen-dialogue-practice">
+    <div class="quiz-progress" id="dp-progress"></div>
+    <div id="dp-transcript"></div>
+    <div class="quiz-container" id="dp-container"></div>
+    <button class="btn btn-secondary btn-block mt-1" data-action="next-dialogue" style="display:none" id="dp-next">Next</button>
   </div>
 
   <!-- ════════ CONVERSATION DETAIL ════════ -->
@@ -462,7 +485,7 @@
     </div>
     <div class="card" data-action="open-translation-topics">
       <div class="card-title">Translation Drills</div>
-      <div class="card-subtitle">Translate English to Spanish</div>
+      <div class="card-subtitle">Translate between English and Spanish</div>
     </div>
     <div class="card" data-action="open-dictation">
       <div class="card-title">Dictation</div>
@@ -487,6 +510,10 @@
     <div class="card" data-action="open-connectors">
       <div class="card-title">Connectors</div>
       <div class="card-subtitle">Sin embargo, además, por lo tanto — link your ideas</div>
+    </div>
+    <div class="card" data-action="start-dialogue-practice">
+      <div class="card-title">Dialogue Practice</div>
+      <div class="card-subtitle">Choose the right response in a conversation</div>
     </div>
   </div>
 
@@ -1070,7 +1097,10 @@
         <span class="text-muted text-sm" id="read-level"></span>
       </div>
       <div class="reading-passage mt-1" id="read-text"></div>
-      <button class="btn btn-outline btn-sm mt-1" data-action="speak" id="read-speak">&#9654; Listen</button>
+      <div class="flex gap-1 mt-1">
+        <button class="btn btn-outline btn-sm" data-action="speak" id="read-speak">&#9654; Listen</button>
+        <button class="btn btn-outline btn-sm" data-action="toggle-listen-mode" id="read-listen-toggle">Listening Mode</button>
+      </div>
     </div>
     <div id="read-vocab" class="mt-1"></div>
     <div class="card mt-1" id="read-question-card">

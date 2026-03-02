@@ -26,7 +26,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "What gender is 'problema'?", answer: "Masculine", options: ["Masculine","Feminine","Neuter","It depends"], explanation: "Despite ending in -a, 'problema' is masculine (Greek origin -ma words): el problema." },
       { type: "mc", question: "Which ending typically indicates a feminine noun?", answer: "-ción", options: ["-or","-ción","-ma","-aje"], explanation: "Nouns ending in -ción are feminine: la nación, la educación." },
       { type: "fib", question: "Complete: ___ mano (the hand)", answer: "la", options: null, explanation: "'Mano' is feminine despite ending in -o: la mano." },
-      { type: "mc", question: "Which noun is an exception to the -o = masculine rule?", answer: "mano", options: ["libro","mano","gato","vaso"], explanation: "'Mano' is feminine despite ending in -o: la mano." }
+      { type: "mc", question: "Which noun is an exception to the -o = masculine rule?", answer: "mano", options: ["libro","mano","gato","vaso"], explanation: "'Mano' is feminine despite ending in -o: la mano." },
+      { type: "error-correct", sentence: "El problema es muy grande. La sistema no funciona.", answer: "El problema es muy grande. El sistema no funciona.", explanation: "'Sistema' is masculine (Greek -ma), so it uses 'el', not 'la'." },
+      { type: "error-correct", sentence: "La día está bonito.", answer: "El día está bonito.", explanation: "'Día' is masculine despite ending in -a: el día." }
     ]
   },
   {
@@ -136,7 +138,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Estar aburrido' means:", answer: "To be bored", options: ["To be boring","To be bored","To be tired","To be sad"], explanation: "Estar aburrido = bored (state). Ser aburrido = boring (characteristic)." },
       { type: "fib", question: "Mi hermana ___ alta. (My sister is tall.)", answer: "es", options: null, explanation: "Physical description (permanent trait) uses ser." },
       { type: "mc", question: "Origin uses which verb?", answer: "ser", options: ["ser","estar","both","neither"], explanation: "Origin always uses ser: Soy de Chile." },
-      { type: "fib", question: "La puerta ___ abierta. (The door is open.)", answer: "está", options: null, explanation: "Result of an action (opened) uses estar." }
+      { type: "fib", question: "La puerta ___ abierta. (The door is open.)", answer: "está", options: null, explanation: "Result of an action (opened) uses estar." },
+      { type: "error-correct", sentence: "María está inteligente.", answer: "María es inteligente.", explanation: "Intelligence is an inherent characteristic, so use 'ser', not 'estar'." },
+      { type: "error-correct", sentence: "Yo soy cansado.", answer: "Yo estoy cansado.", explanation: "Being tired is a temporary state → use 'estar'." }
     ]
   },
   {
@@ -405,7 +409,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "For describing what someone looked like, use:", answer: "Imperfect", options: ["Preterite","Imperfect","Either","Present"], explanation: "Descriptions in the past use imperfect: Era alto y tenía ojos verdes." },
       { type: "fib", question: "Ayer _____ a las 10 de la noche. (llegar, yo)", answer: "llegué", options: null, explanation: "Specific completed action yesterday → preterite: llegué." },
       { type: "mc", question: "'Siempre comía arroz de niño' uses imperfect because:", answer: "It was a habitual action", options: ["It happened once","It was a habitual action","It has a specific end time","The speaker is uncertain"], explanation: "Habitual past actions use imperfect." },
-      { type: "fib", question: "_____ las 8 cuando empezó la película. (ser)", answer: "Eran", options: null, explanation: "Time in the past → imperfect: Eran las 8." }
+      { type: "fib", question: "_____ las 8 cuando empezó la película. (ser)", answer: "Eran", options: null, explanation: "Time in the past → imperfect: Eran las 8." },
+      { type: "transform", question: "Rewrite in the imperfect (habitual past):", sentence: "Todos los días como arroz.", answer: "Todos los días comía arroz.", explanation: "Habitual past actions use imperfect: como → comía." },
+      { type: "transform", question: "Rewrite in the preterite (completed action):", sentence: "Llego a las diez.", answer: "Llegué a las diez.", explanation: "Completed past action uses preterite: llego → llegué (note spelling change g → gu before é)." }
     ]
   },
   {
@@ -862,7 +868,9 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "Se _____ muchos idiomas en Suiza. (hablar)", answer: "hablan", options: null, explanation: "Se pasiva: se + verb agrees with the logical subject (idiomas)." },
       { type: "mc", question: "'La puerta está cerrada' expresses:", answer: "A resultant state", options: ["An action in progress","A resultant state","A habitual action","A future event"], explanation: "Estar + participle describes a state resulting from an action." },
       { type: "fib", question: "Los cuadros _____ _____ por Picasso. (ser + pintar, preterite)", answer: "fueron pintados", options: null, explanation: "Ser passive: fueron (preterite of ser) + pintados (agrees with cuadros, masc. pl.)." },
-      { type: "mc", question: "Which passive construction is preferred in everyday spoken Spanish?", answer: "Se pasiva", options: ["Ser + participle","Se pasiva","Estar + participle","Haber + participle"], explanation: "Spanish prefers se constructions over ser passives in speech." }
+      { type: "mc", question: "Which passive construction is preferred in everyday spoken Spanish?", answer: "Se pasiva", options: ["Ser + participle","Se pasiva","Estar + participle","Haber + participle"], explanation: "Spanish prefers se constructions over ser passives in speech." },
+      { type: "transform", question: "Rewrite using passive se:", sentence: "La gente habla español aquí.", answer: "Se habla español aquí.", explanation: "Passive se removes the agent: Se habla español aquí." },
+      { type: "transform", question: "Rewrite using ser-passive:", sentence: "Picasso pintó el cuadro.", answer: "El cuadro fue pintado por Picasso.", explanation: "Ser-passive: subject + ser + participle + por + agent." }
     ]
   },
   {

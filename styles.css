@@ -299,6 +299,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   color: var(--text);
 }
 .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-outline.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
 .btn-block { display: flex; width: 100%; }
 .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
 .btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; }
@@ -537,6 +538,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
 }
+.wotd-word { font-size: 1.5rem; margin-bottom: 0.25rem; }
+.wotd-english { color: var(--text2); font-size: 1rem; }
+.card.completed { opacity: 0.6; }
+.dialogue-line { padding: 0.4rem 0.6rem; border-radius: 0.5rem; margin-bottom: 0.3rem; background: var(--card-bg); }
+.dialogue-line.player { background: var(--accent-bg); }
+.error-sentence { font-size: 1.1rem; padding: 0.5rem; background: var(--card-bg); border-radius: 0.5rem; margin-top: 0.5rem; }
 
 /* ── Profile Screen ── */
 .profile-screen {
