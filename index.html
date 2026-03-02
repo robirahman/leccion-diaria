@@ -57,6 +57,11 @@
       <h2>Daily Practice</h2>
       <div id="today-practice"></div>
     </div>
+
+    <div class="today-section" id="today-focus-section" style="display:none">
+      <h2>Focus Areas</h2>
+      <div id="today-focus"></div>
+    </div>
   </div>
 
   <!-- ════════ LEARN HUB ════════ -->
@@ -1040,13 +1045,18 @@
   <!-- ════════ READING COMPREHENSION LIST ════════ -->
   <div class="screen" id="screen-reading-list">
     <h2 class="mb-2">Reading Comprehension</h2>
-    <div class="flex gap-1 mb-2" id="reading-filters">
+    <div class="flex gap-1 mb-1" id="reading-type-filters">
+      <button class="btn btn-sm btn-outline active" data-action="filter-reading-type" data-filter="standard">Standard</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading-type" data-filter="sat">SAT-Style</button>
+    </div>
+    <div class="flex gap-1 mb-2" id="reading-filters" style="flex-wrap:wrap">
       <button class="btn btn-sm btn-outline active" data-action="filter-reading" data-filter="all">All</button>
       <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="A1">A1</button>
       <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="A2">A2</button>
       <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="B1">B1</button>
       <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="B2">B2</button>
       <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="C1">C1</button>
+      <button class="btn btn-sm btn-outline" data-action="filter-reading" data-filter="C2">C2</button>
     </div>
     <div id="reading-passages"></div>
   </div>
@@ -1109,6 +1119,14 @@
     <h2 class="mb-2">Statistics</h2>
     <div class="stat-cards" id="stats-overview"></div>
     <div class="card mt-1">
+      <div class="card-title mb-1">Achievements</div>
+      <div class="badge-grid" id="stats-achievements"></div>
+    </div>
+    <div class="card mt-1">
+      <div class="card-title mb-1">Focus Areas</div>
+      <div id="stats-weak-areas"></div>
+    </div>
+    <div class="card mt-1">
       <div class="card-title mb-1">Mastery Breakdown</div>
       <div id="stats-mastery"></div>
     </div>
@@ -1124,6 +1142,7 @@
       <div class="card-title mb-1">Practice Calendar</div>
       <div class="streak-calendar" id="stats-calendar"></div>
     </div>
+    <button class="btn btn-outline btn-block mt-2" data-action="share-progress">&#128228; Share Progress</button>
     <div class="card mt-2" data-action="open-guide">
       <div class="card-title">User Guide</div>
       <div class="card-subtitle">How to use all features of Lección Diaria</div>
@@ -1181,6 +1200,22 @@
   </div>
 </div>
 
+<!-- ════════ SHARE PREVIEW MODAL ════════ -->
+<div class="modal-overlay" id="share-overlay">
+  <div class="modal" style="text-align:center">
+    <h2>Share Progress</h2>
+    <canvas id="share-canvas" width="400" height="500" style="max-width:100%;border-radius:var(--radius);margin-bottom:1rem"></canvas>
+    <div class="modal-actions" style="justify-content:center">
+      <button class="btn btn-secondary" data-action="close-share">Cancel</button>
+      <button class="btn btn-primary" data-action="download-share">&#11015; Download</button>
+      <button class="btn btn-primary" data-action="native-share" id="native-share-btn" style="display:none">&#128228; Share</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ TOAST ════════ -->
+<div id="toast-container"></div>
+
 <!-- ════════ SCRIPTS ════════ -->
 <script src="fsrs.js"></script>
 <script src="conjugation.js"></script>
@@ -1209,6 +1244,7 @@
 <script src="dictation.js"></script>
 <script src="jokes.js"></script>
 <script src="reading.js"></script>
+<script src="reading_sat.js"></script>
 <script src="themed_vocab.js"></script>
 <script src="curriculum_tracks.js"></script>
 <script src="phonetic_pairs.js"></script>

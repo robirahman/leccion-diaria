@@ -322,6 +322,8 @@ function newProgress() {
     dictFsrs: {}, dictMastery: {},
     readingFsrs: {}, readingMastery: {},
     themedVocabDone: {},
+    achievements: {},
+    errorCounts: {},
     placementLevel: null,
     placementDate: null,
     settings: {
@@ -330,6 +332,300 @@ function newProgress() {
       hideFutureSubjunctive: true, subjunctiveForm: 'ra',
     },
   };
+}
+
+// ════════════════════════════════════════
+//  ACHIEVEMENTS / BADGES
+// ════════════════════════════════════════
+
+const ACHIEVEMENTS = [
+  // Streak
+  { id: 'streak-1',  icon: '✨', name: 'First Spark',       desc: '1-day streak',           check: p => p.streak >= 1 },
+  { id: 'streak-7',  icon: '🔥', name: 'On Fire',           desc: '7-day streak',           check: p => p.longestStreak >= 7 },
+  { id: 'streak-30', icon: '💥', name: 'Unstoppable',       desc: '30-day streak',          check: p => p.longestStreak >= 30 },
+  // XP
+  { id: 'xp-100',   icon: '⭐', name: 'Getting Started',   desc: 'Earn 100 XP',            check: p => p.xp >= 100 },
+  { id: 'xp-1000',  icon: '🌟', name: 'Dedicated',         desc: 'Earn 1,000 XP',          check: p => p.xp >= 1000 },
+  { id: 'xp-5000',  icon: '💫', name: 'Scholar',            desc: 'Earn 5,000 XP',          check: p => p.xp >= 5000 },
+  // Verbs
+  { id: 'verb-1',   icon: '🏃', name: 'First Conjugation',  desc: 'Practice 1 verb',        check: p => Object.keys(p.verbMastery).length >= 1 },
+  { id: 'verb-25',  icon: '📖', name: 'Verb Collector',     desc: 'Practice 25 verbs',      check: p => Object.keys(p.verbMastery).length >= 25 },
+  { id: 'verb-100', icon: '🏆', name: 'Conjugation Master', desc: 'Practice 100 verbs',     check: p => Object.keys(p.verbMastery).length >= 100 },
+  // Vocab
+  { id: 'vocab-10',  icon: '📝', name: 'Word Learner',      desc: 'Learn 10 words',         check: p => Object.keys(p.vocabMastery).length >= 10 },
+  { id: 'vocab-100', icon: '📚', name: 'Vocabulary Builder', desc: 'Learn 100 words',        check: p => Object.keys(p.vocabMastery).length >= 100 },
+  { id: 'vocab-500', icon: '🗃️', name: 'Lexicon',           desc: 'Learn 500 words',        check: p => Object.keys(p.vocabMastery).length >= 500 },
+  // Grammar
+  { id: 'grammar-5',  icon: '📐', name: 'Grammar Student',  desc: '5 grammar lessons',      check: p => Object.values(p.grammarDone).filter(Boolean).length >= 5 },
+  { id: 'grammar-20', icon: '🎓', name: 'Grammar Pro',      desc: '20 grammar lessons',     check: p => Object.values(p.grammarDone).filter(Boolean).length >= 20 },
+  // Perfect scores
+  { id: 'perfect-1', icon: '💯', name: 'Perfectionist',     desc: 'Score 100% on any quiz', check: p => (p._perfectQuizCount || 0) >= 1 },
+  { id: 'perfect-5', icon: '🎯', name: 'Flawless Five',     desc: '5 perfect quizzes',      check: p => (p._perfectQuizCount || 0) >= 5 },
+  // Level
+  { id: 'level-a1', icon: '🌱', name: 'Beginner',          desc: 'Reach A1',               check: p => p.placementLevel },
+  { id: 'level-b1', icon: '🌿', name: 'Intermediate',      desc: 'Reach B1+',              check: p => (LEVEL_ORDER[p.placementLevel] || 0) >= 2 },
+  { id: 'level-c1', icon: '🌳', name: 'Advanced',          desc: 'Reach C1+',              check: p => (LEVEL_ORDER[p.placementLevel] || 0) >= 4 },
+  // Practice variety
+  { id: 'well-rounded', icon: '🔄', name: 'Well-Rounded',  desc: 'Try all practice types', check: p => {
+    const stores = ['mpMastery','ppMastery','homMastery','connMastery','sentenceMastery','clozeMastery','translationMastery','dictMastery','readingMastery','verbMastery','vocabMastery'];
+    return stores.every(s => Object.keys(p[s] || {}).length > 0);
+  }},
+  { id: 'night-owl', icon: '🦉', name: 'Night Owl',        desc: 'Practice after 9 PM',    check: p => p._nightOwl },
+];
+
+function checkAchievements() {
+  if (!progress) return;
+  // Compute transient counters
+  if (new Date().getHours() >= 21) progress._nightOwl = true;
+  const newBadges = [];
+  for (const badge of ACHIEVEMENTS) {
+    if (progress.achievements[badge.id]) continue;
+    if (badge.check(progress)) {
+      progress.achievements[badge.id] = Date.now();
+      newBadges.push(badge);
+    }
+  }
+  if (newBadges.length) {
+    saveProgress();
+    for (const b of newBadges) showToast(b.icon, `Achievement unlocked: ${b.name}`);
+  }
+}
+
+function renderAchievements() {
+  const el = document.getElementById('stats-achievements');
+  if (!el) return;
+  el.innerHTML = ACHIEVEMENTS.map(b => {
+    const unlocked = progress.achievements[b.id];
+    const cls = unlocked ? 'unlocked' : 'locked';
+    const dateStr = unlocked ? new Date(unlocked).toLocaleDateString() : '';
+    return `<div class="badge-item ${cls}" title="${esc(b.desc)}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${esc(b.name)}</div>
+      ${dateStr ? `<div class="badge-date">${dateStr}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function showToast(icon, text) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${esc(text)}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+// ════════════════════════════════════════
+//  WEAK AREAS TRACKER
+// ════════════════════════════════════════
+
+function trackError(key, isCorrect) {
+  if (!progress) return;
+  if (!progress.errorCounts) progress.errorCounts = {};
+  if (!progress.errorCounts[key]) progress.errorCounts[key] = { wrong: 0, total: 0 };
+  progress.errorCounts[key].total++;
+  if (!isCorrect) progress.errorCounts[key].wrong++;
+}
+
+function getWeakAreas(limit) {
+  if (!progress || !progress.errorCounts) return [];
+  const items = Object.entries(progress.errorCounts)
+    .filter(([, v]) => v.total >= 3)
+    .map(([key, v]) => ({ key, wrong: v.wrong, total: v.total, rate: v.wrong / v.total }))
+    .filter(x => x.rate > 0.3)
+    .sort((a, b) => b.rate - a.rate);
+  return items.slice(0, limit || 8);
+}
+
+function renderWeakAreas() {
+  const el = document.getElementById('stats-weak-areas');
+  if (!el) return;
+  const weak = getWeakAreas(8);
+  if (!weak.length) {
+    el.innerHTML = '<p class="text-muted text-sm">No weak areas detected yet. Keep practicing!</p>';
+    return;
+  }
+  el.innerHTML = weak.map(w => {
+    const pct = Math.round(w.rate * 100);
+    const label = w.key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    return `<div class="weak-item">
+      <span class="weak-label">${esc(label)}</span>
+      <span class="text-muted text-sm">${w.wrong}/${w.total}</span>
+      <span class="weak-rate">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+function renderTodayFocus() {
+  const weak = getWeakAreas(3);
+  const section = document.getElementById('today-focus-section');
+  const el = document.getElementById('today-focus');
+  if (!section || !el) return;
+  if (!weak.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  el.innerHTML = `
+    <div class="card" data-action="start-weak-review">
+      <div class="card-title">Practice Weak Areas</div>
+      <div class="card-subtitle">${weak.length} items need extra practice</div>
+    </div>
+  `;
+}
+
+function startWeakReview() {
+  // Build a review queue from weak items only
+  const weak = getWeakAreas(10);
+  if (!weak.length) {
+    showModal('Focus Areas', '<p>No weak areas found yet. Keep practicing!</p>', [
+      { label: tBtn('ok'), action: 'close-modal', cls: 'btn-primary' }
+    ]);
+    return;
+  }
+  // Map weak keys back to review items
+  reviewQueue = [];
+  for (const w of weak) {
+    // Try to identify item type from key format
+    if (w.key.startsWith('vocab:')) {
+      reviewQueue.push({ type: 'vocab', key: w.key.replace('vocab:', ''), fsrs: 'vocabFsrs', mastery: 'vocabMastery' });
+    } else if (w.key.startsWith('grammar:')) {
+      reviewQueue.push({ type: 'grammar', key: w.key.replace('grammar:', ''), fsrs: 'grammarFsrs', mastery: 'grammarDone' });
+    } else if (w.key.includes(':')) {
+      // verb key format: infinitive:tense:person → convert to dash format for review
+      const parts = w.key.split(':');
+      const dashKey = parts.join('-');
+      reviewQueue.push({ type: 'verb', key: dashKey, fsrs: 'verbFsrs', mastery: 'verbMastery' });
+    }
+  }
+  if (!reviewQueue.length) { startReview(); return; }
+  reviewIdx = 0; reviewScore = 0; reviewSelected = -1;
+  showScreen('review');
+  renderReviewItem();
+}
+
+// ════════════════════════════════════════
+//  PROGRESS SHARING CARD
+// ════════════════════════════════════════
+
+function generateShareCard() {
+  const canvas = document.getElementById('share-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = 400, h = 500;
+  canvas.width = w; canvas.height = h;
+
+  // Background gradient
+  const isDark = (progress?.settings?.theme || 'dark') === 'dark';
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  if (isDark) {
+    grad.addColorStop(0, '#1a1a2e');
+    grad.addColorStop(1, '#16213e');
+  } else {
+    grad.addColorStop(0, '#f5f0eb');
+    grad.addColorStop(1, '#ede5db');
+  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Border
+  ctx.strokeStyle = isDark ? '#c7553b' : '#c7553b';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(10, 10, w - 20, h - 20);
+
+  const textColor = isDark ? '#e8e8e8' : '#2c2418';
+  const mutedColor = isDark ? '#a0a8c0' : '#6b5d4f';
+  const accentColor = '#c7553b';
+
+  // App name
+  ctx.fillStyle = accentColor;
+  ctx.font = 'bold 28px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Lección Diaria', w / 2, 60);
+
+  // Level badge
+  const level = progress?.placementLevel || 'A1';
+  ctx.beginPath();
+  ctx.arc(w / 2, 120, 35, 0, Math.PI * 2);
+  ctx.fillStyle = accentColor;
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 24px system-ui, sans-serif';
+  ctx.fillText(level, w / 2, 130);
+
+  // Stats
+  ctx.fillStyle = textColor;
+  ctx.font = 'bold 18px system-ui, sans-serif';
+  let y = 190;
+
+  const stats = [
+    [`⚡ ${progress?.xp || 0} XP`, ''],
+    [`🔥 ${progress?.streak || 0} day streak`, `(longest: ${progress?.longestStreak || 0})`],
+    [`🏃 ${Object.keys(progress?.verbMastery || {}).length} verb forms`, ''],
+    [`📚 ${Object.keys(progress?.vocabMastery || {}).length} words learned`, ''],
+    [`📝 ${Object.values(progress?.grammarDone || {}).filter(Boolean).length} grammar lessons`, ''],
+  ];
+
+  for (const [main, sub] of stats) {
+    ctx.fillStyle = textColor;
+    ctx.font = 'bold 16px system-ui, sans-serif';
+    ctx.fillText(main, w / 2, y);
+    if (sub) {
+      ctx.fillStyle = mutedColor;
+      ctx.font = '13px system-ui, sans-serif';
+      ctx.fillText(sub, w / 2, y + 18);
+      y += 22;
+    }
+    y += 32;
+  }
+
+  // Top achievement
+  const unlocked = ACHIEVEMENTS.filter(b => progress?.achievements[b.id]);
+  if (unlocked.length) {
+    const top = unlocked[unlocked.length - 1];
+    ctx.fillStyle = mutedColor;
+    ctx.font = '13px system-ui, sans-serif';
+    ctx.fillText('Latest achievement', w / 2, y + 5);
+    ctx.fillStyle = textColor;
+    ctx.font = 'bold 16px system-ui, sans-serif';
+    ctx.fillText(`${top.icon} ${top.name}`, w / 2, y + 28);
+    y += 45;
+  }
+
+  // Date
+  ctx.fillStyle = mutedColor;
+  ctx.font = '12px system-ui, sans-serif';
+  ctx.fillText(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), w / 2, h - 25);
+
+  // Show the overlay
+  document.getElementById('share-overlay').classList.add('open');
+  if (navigator.share && navigator.canShare) {
+    document.getElementById('native-share-btn').style.display = '';
+  }
+}
+
+function downloadShareCard() {
+  const canvas = document.getElementById('share-canvas');
+  if (!canvas) return;
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'leccion-diaria-progress.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+function nativeShareCard() {
+  const canvas = document.getElementById('share-canvas');
+  if (!canvas) return;
+  canvas.toBlob(async blob => {
+    const file = new File([blob], 'leccion-diaria-progress.png', { type: 'image/png' });
+    try {
+      await navigator.share({ files: [file], title: 'My Lección Diaria Progress' });
+    } catch (e) {
+      // User cancelled or share failed
+    }
+  });
 }
 
 // ════════════════════════════════════════
@@ -343,7 +639,13 @@ function getProfiles() {
 function saveProfiles(list) { localStorage.setItem('ld_profiles', JSON.stringify(list)); }
 
 function loadProgress(name) {
-  try { return JSON.parse(localStorage.getItem('ld_progress_' + name)) || newProgress(); }
+  try {
+    const p = JSON.parse(localStorage.getItem('ld_progress_' + name)) || newProgress();
+    // Ensure new fields exist for older saves
+    if (!p.achievements) p.achievements = {};
+    if (!p.errorCounts) p.errorCounts = {};
+    return p;
+  }
   catch { return newProgress(); }
 }
 function saveProgress() {
@@ -488,6 +790,15 @@ function closeModal() { document.getElementById('modal-overlay').classList.remov
 
 // Modal focus trap and ESC to close
 document.addEventListener('keydown', e => {
+  // Close share overlay on ESC
+  if (e.key === 'Escape') {
+    const shareOverlay = document.getElementById('share-overlay');
+    if (shareOverlay?.classList.contains('open')) {
+      shareOverlay.classList.remove('open');
+      e.preventDefault();
+      return;
+    }
+  }
   const overlay = document.getElementById('modal-overlay');
   if (!overlay || !overlay.classList.contains('open')) return;
   if (e.key === 'Escape') { closeModal(); e.preventDefault(); return; }
@@ -765,6 +1076,7 @@ function addXP(amount) {
   checkStreak();
   saveProgress();
   updateNavStats();
+  checkAchievements();
 }
 
 function checkStreak() {
@@ -931,18 +1243,36 @@ function renderToday() {
     </div>
   `;
 
-  // Due for review (all FSRS stores)
-  const allFsrsStores = ['verbFsrs','vocabFsrs','grammarFsrs','phraseFsrs','mpFsrs','ppFsrs','homFsrs','connFsrs','sentenceFsrs','clozeFsrs','translationFsrs','dictFsrs','readingFsrs'];
+  // Due for review — detailed per-category breakdown
+  const dueCategories = [
+    { label: 'verb forms',   icon: '🏃', stores: ['verbFsrs'] },
+    { label: 'vocabulary',   icon: '📚', stores: ['vocabFsrs'] },
+    { label: 'grammar',      icon: '📝', stores: ['grammarFsrs'] },
+    { label: 'phrases',      icon: '💬', stores: ['phraseFsrs'] },
+    { label: 'exercises',    icon: '✏️', stores: ['mpFsrs','ppFsrs','homFsrs','connFsrs','sentenceFsrs','clozeFsrs','translationFsrs','dictFsrs','readingFsrs'] },
+  ];
   let totalDue = 0;
-  for (const store of allFsrsStores) {
-    if (progress[store]) totalDue += getDueItems(progress[store], Object.keys(progress[store])).length;
+  const dueLines = [];
+  for (const cat of dueCategories) {
+    let catDue = 0;
+    for (const store of cat.stores) {
+      if (progress[store]) catDue += getDueItems(progress[store], Object.keys(progress[store])).length;
+    }
+    if (catDue > 0) dueLines.push({ ...cat, count: catDue });
+    totalDue += catDue;
   }
   const reviewDiv = document.getElementById('today-review');
   if (totalDue > 0) {
+    const breakdown = dueLines.map(d =>
+      `<li><span class="due-icon">${d.icon}</span><span class="due-count">${d.count}</span> ${d.label}</li>`
+    ).join('');
     reviewDiv.innerHTML = `
       <div class="card" data-action="start-review">
-        <div class="card-title">${totalDue} ${t('itemsDue')}</div>
-        <div class="card-subtitle">${t('mixedReview')}</div>
+        <div class="card-title">${t('dueForReview')}</div>
+        <ul class="due-breakdown mt-1">
+          ${breakdown}
+          <li class="due-total"><span class="due-icon"></span><span class="due-count">${totalDue}</span> total — Start Review</li>
+        </ul>
       </div>
     `;
   } else {
@@ -960,6 +1290,9 @@ function renderToday() {
       <div class="card-subtitle">${t('quickVocabDesc')}</div>
     </div>
   `;
+
+  // Focus areas (weak items)
+  renderTodayFocus();
 }
 
 // ════════════════════════════════════════
@@ -1210,6 +1543,7 @@ function checkVerbDrill() {
   fb.style.display = 'block';
 
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
+  trackError(key, result.correct);
 
   if (result.correct) {
     fb.className = 'quiz-feedback correct';
@@ -1382,13 +1716,15 @@ function submitVerbQuizMC() {
   const item = verbQuizQueue[verbQuizIdx];
   const selected = item.options[idx];
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
+  const isCorrect = selected === item.correct;
+  trackError(key, isCorrect);
   const btns = document.querySelectorAll('#vq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
     if (item.options[i] === item.correct) btn.classList.add('correct');
     if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
   });
-  if (selected === item.correct) {
+  if (isCorrect) {
     verbQuizScore++;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_GOOD);
     addXP(5);
@@ -1791,7 +2127,9 @@ function submitVocabQuizMC() {
     if (item.options[i] === item.correct) btn.classList.add('correct');
     if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
   });
-  if (selected === item.correct) {
+  const vocCorrect = selected === item.correct;
+  trackError(`vocab:${item.word.word}`, vocCorrect);
+  if (vocCorrect) {
     vocabQuizScore++;
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_GOOD);
     addXP(5);
@@ -2012,6 +2350,7 @@ function submitGrammarQuizMC() {
     if (i === correctIdx) btn.classList.add('correct');
     if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });
+  trackError(`grammar:${q.id || grammarQuizIdx}`, idx === correctIdx);
   if (idx === correctIdx) {
     grammarQuizScore++;
     addXP(5);
@@ -2326,6 +2665,13 @@ function showResults(score, total, module, label) {
   lastQuizModule = module;
   showScreen('results');
   const pct = Math.round((score / total) * 100);
+
+  // Track perfect quizzes for achievements
+  if (pct === 100 && total >= 3) {
+    progress._perfectQuizCount = (progress._perfectQuizCount || 0) + 1;
+    saveProgress();
+  }
+  checkAchievements();
 
   // Celebratory feedback based on score
   let scoreClass, emoji, message;
@@ -4029,6 +4375,10 @@ function renderStats() {
     }
     cal.innerHTML = calHtml;
   }
+
+  // Render achievements and weak areas
+  renderAchievements();
+  renderWeakAreas();
 }
 
 // ════════════════════════════════════════
@@ -4219,6 +4569,7 @@ function submitReviewMC() {
     else if (i === reviewSelected && i !== q.correct) o.classList.add('incorrect');
   });
   const correct = reviewSelected === q.correct;
+  trackError(item.key, correct);
   if (correct) reviewScore++;
   const fb = document.getElementById('rev-mc-fb');
   fb.textContent = correct ? t('correct') : `${t('incorrectAnswer')} ${q.answer || q.options[q.correct]}`;
@@ -4239,6 +4590,7 @@ function checkReviewDrill() {
   const input = document.getElementById('rev-drill-input');
   if (!input) return;
   const result = checkAnswer(input.value, correct);
+  trackError(item.key, result.correct);
   const fb = document.getElementById('rev-drill-fb');
   if (result.correct) {
     reviewScore++;
@@ -4487,22 +4839,37 @@ function renderPronunciation() {
 
 let readingQueue = [], readingIdx = 0, readingQIdx = 0, readingScore = 0, readingSelected = -1, currentReading = null;
 
+let readingTypeFilter = 'standard';
+
 function renderReadingList(filter) {
   if (typeof READING_DATA === 'undefined') {
     document.getElementById('reading-passages').innerHTML = '<p class="text-muted">Loading...</p>';
     return;
   }
   filter = filter || 'all';
-  // Update filter button active states
+
+  // Update type filter buttons
+  document.querySelectorAll('#reading-type-filters .btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === readingTypeFilter);
+  });
+
+  // Update level filter button active states
   document.querySelectorAll('#reading-filters .btn').forEach(b => {
     b.classList.toggle('active', b.dataset.filter === filter);
   });
-  const passages = filter === 'all' ? READING_DATA : READING_DATA.filter(p => p.level === filter);
+
+  // Select data source based on type filter
+  const isSat = readingTypeFilter === 'sat';
+  const source = isSat && typeof READING_SAT_DATA !== 'undefined' ? READING_SAT_DATA
+    : !isSat ? READING_DATA : [];
+
+  const passages = filter === 'all' ? source : source.filter(p => p.level === filter);
   document.getElementById('reading-passages').innerHTML = passages.map(p => {
     const done = progress.readingMastery && progress.readingMastery[p.id];
-    return `<div class="card" data-action="start-reading" data-id="${esc(p.id)}">
+    const satBadge = p.sat ? '<span class="sat-badge">SAT</span> ' : '';
+    return `<div class="card" data-action="start-reading" data-id="${esc(p.id)}" data-sat="${p.sat ? '1' : ''}">
       <div class="flex" style="justify-content:space-between;align-items:center">
-        <div class="card-title">${esc(p.title)}</div>
+        <div class="card-title">${satBadge}${esc(p.title)}</div>
         <div style="display:flex;gap:0.25rem;align-items:center">
           ${done ? '<span style="color:var(--green)">&#10003;</span>' : ''}
           <span style="font-size:0.65rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text2);border-radius:3px">${p.level}</span>
@@ -4515,7 +4882,8 @@ function renderReadingList(filter) {
 
 function startReading(id) {
   if (typeof READING_DATA === 'undefined') return;
-  currentReading = READING_DATA.find(p => p.id === id);
+  currentReading = READING_DATA.find(p => p.id === id)
+    || (typeof READING_SAT_DATA !== 'undefined' ? READING_SAT_DATA.find(p => p.id === id) : null);
   if (!currentReading) return;
   readingQIdx = 0; readingScore = 0; readingSelected = -1;
   showScreen('reading');
@@ -5043,6 +5411,11 @@ document.addEventListener('click', e => {
 
     // Stats / Progress Dashboard
     case 'open-stats': showScreen('stats'); renderStats(); break;
+    case 'share-progress': generateShareCard(); break;
+    case 'close-share': document.getElementById('share-overlay').classList.remove('open'); break;
+    case 'download-share': downloadShareCard(); break;
+    case 'native-share': nativeShareCard(); break;
+    case 'start-weak-review': startWeakReview(); break;
 
     // Placement Test
     case 'start-placement': startPlacementTest(); break;
@@ -5124,6 +5497,11 @@ document.addEventListener('click', e => {
     // Reading Comprehension
     case 'open-reading': showScreen('reading-list'); renderReadingList(); break;
     case 'filter-reading': renderReadingList(target.dataset.filter); break;
+    case 'filter-reading-type': {
+      readingTypeFilter = target.dataset.filter || 'standard';
+      renderReadingList();
+      break;
+    }
     case 'start-reading': startReading(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
     case 'answer-reading': answerReadingMC(parseInt(target.dataset.idx)); break;
     case 'submit-reading-mc': submitReadingMC(); break;

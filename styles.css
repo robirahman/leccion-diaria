@@ -1132,3 +1132,97 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .btn-xs.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .pt-end-btn { color: var(--incorrect); border-color: var(--incorrect); }
 .pt-end-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Achievement Badge Grid ── */
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.5rem;
+}
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  transition: all var(--transition);
+}
+.badge-item.locked { opacity: 0.35; filter: grayscale(1); }
+.badge-item.unlocked { border-color: var(--accent); background: var(--accent-bg); }
+.badge-icon { font-size: 1.5rem; margin-bottom: 0.15rem; }
+.badge-name { font-size: 0.65rem; font-weight: 600; line-height: 1.2; }
+.badge-date { font-size: 0.55rem; color: var(--text3); margin-top: 0.1rem; }
+
+/* ── Toast Notifications ── */
+#toast-container {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  max-width: var(--max-w);
+  width: 90%;
+}
+.toast {
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  pointer-events: auto;
+}
+.toast .toast-icon { font-size: 1.3rem; }
+.toast .toast-text { font-size: 0.85rem; font-weight: 600; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+/* ── Due Breakdown List ── */
+.due-breakdown { list-style: none; padding: 0; margin: 0 0 0.5rem; }
+.due-breakdown li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+}
+.due-breakdown li .due-icon { width: 1.5rem; text-align: center; }
+.due-breakdown li .due-count { font-weight: 700; min-width: 1.5rem; text-align: right; }
+.due-breakdown .due-total {
+  border-top: 1px solid var(--border);
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  font-weight: 700;
+}
+
+/* ── Weak Areas List ── */
+.weak-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.weak-item:last-child { border-bottom: none; }
+.weak-item .weak-label { flex: 1; font-weight: 600; }
+.weak-item .weak-rate { color: var(--red); font-weight: 600; min-width: 3rem; text-align: right; }
+
+/* ── Share Card Modal ── */
+#share-overlay { display: none; }
+#share-overlay.open { display: flex; }
+
+/* ── Reading type filter ── */
+#reading-type-filters .btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+.sat-badge { font-size: 0.55rem; padding: 0.05rem 0.3rem; background: var(--yellow-bg); color: var(--yellow); border-radius: 3px; font-weight: 700; }
+.question-type-tag { font-size: 0.6rem; padding: 0.1rem 0.3rem; background: var(--bg3); color: var(--text3); border-radius: 3px; margin-left: 0.25rem; }
