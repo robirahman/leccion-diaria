@@ -20,8 +20,8 @@
     <button class="nav-back nav-btn" data-action="go-back" title="Back">&#8592;</button>
     <span class="nav-title">Lección Diaria</span>
     <div class="nav-stats">
-      <span class="xp" id="nav-xp" title="XP">0 XP</span>
-      <span class="streak" id="nav-streak" title="Streak">0d</span>
+      <span class="xp" id="nav-xp" title="Experience Points">0 XP</span>
+      <span class="streak" id="nav-streak" title="Day Streak">0d</span>
     </div>
     <button class="nav-btn" data-action="toggle-theme" title="Toggle theme">&#9681;</button>
     <button class="nav-btn" data-action="open-settings" title="Settings">&#9881;</button>
@@ -41,7 +41,7 @@
       <h1 id="today-greeting">¡Buenos días!</h1>
       <p class="date" id="today-date"></p>
     </div>
-    <div class="stat-cards" id="today-stats" data-action="open-stats" style="cursor:pointer"></div>
+    <div class="stat-cards" id="today-stats" data-action="open-stats"></div>
 
     <div class="today-section">
       <h2>Continue Learning</h2>
@@ -59,32 +59,59 @@
     </div>
   </div>
 
+  <!-- ════════ LEARN HUB ════════ -->
+  <div class="screen" id="screen-learn">
+    <h2 class="mb-2">Learn</h2>
+    <div class="card-grid">
+      <div class="card" data-action="switch-tab" data-tab="verbs">
+        <div class="card-icon">&#127939;</div>
+        <div class="card-title">Verbs</div>
+        <div class="card-subtitle">Conjugation &amp; drills</div>
+      </div>
+      <div class="card" data-action="switch-tab" data-tab="vocab">
+        <div class="card-icon">&#128218;</div>
+        <div class="card-title">Vocabulary</div>
+        <div class="card-subtitle">Words &amp; categories</div>
+      </div>
+      <div class="card" data-action="switch-tab" data-tab="grammar">
+        <div class="card-icon">&#128221;</div>
+        <div class="card-title">Grammar</div>
+        <div class="card-subtitle">Lessons &amp; quizzes</div>
+      </div>
+      <div class="card" data-action="switch-tab" data-tab="numbers">
+        <div class="card-icon">&#128290;</div>
+        <div class="card-title">Numbers</div>
+        <div class="card-subtitle">Cardinals, ordinals &amp; time</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ════════ VERBS HOME SCREEN ════════ -->
   <div class="screen" id="screen-verbs">
     <h2 class="mb-2">Verb Conjugation</h2>
     <div class="stat-cards" id="verbs-stats"></div>
 
-    <div class="card" data-action="start-verb-learn" style="cursor:pointer">
+    <div class="card" data-action="start-verb-learn">
       <div class="card-title">Learn New Verbs</div>
       <div class="card-subtitle">Flashcards with conjugation tables</div>
     </div>
-    <div class="card" data-action="start-verb-drill" style="cursor:pointer">
+    <div class="card" data-action="start-verb-drill">
       <div class="card-title">Conjugation Drill</div>
       <div class="card-subtitle">Type the correct conjugation</div>
     </div>
-    <div class="card" data-action="start-verb-quiz" style="cursor:pointer">
+    <div class="card" data-action="start-verb-quiz">
       <div class="card-title">Verb Quiz</div>
       <div class="card-subtitle">Multiple choice &amp; fill-in-blank</div>
     </div>
-    <div class="card" data-action="open-verb-patterns" style="cursor:pointer">
+    <div class="card" data-action="open-verb-patterns">
       <div class="card-title">Irregular Patterns</div>
       <div class="card-subtitle">Practice verbs grouped by pattern</div>
     </div>
-    <div class="card" data-action="open-verb-browser" style="cursor:pointer">
+    <div class="card" data-action="open-verb-browser">
       <div class="card-title">Verb Browser</div>
       <div class="card-subtitle">Browse all verbs and conjugation tables</div>
     </div>
-    <div class="card" data-action="open-verb-reference" style="cursor:pointer">
+    <div class="card" data-action="open-verb-reference">
       <div class="card-title">Conjugation Reference</div>
       <div class="card-subtitle">Full conjugation tables for any verb</div>
     </div>
@@ -100,7 +127,7 @@
   <!-- ════════ VERB LEARN (FLASHCARDS) ════════ -->
   <div class="screen" id="screen-verb-learn">
     <div class="quiz-progress" id="verb-learn-progress"></div>
-    <div class="flashcard" id="verb-flashcard" data-action="flip-verb-card">
+    <div class="flashcard" id="verb-flashcard" data-action="flip-verb-card" role="button" tabindex="0">
       <div class="front">
         <div class="word-main" id="vl-verb"></div>
         <div class="word-detail" id="vl-english"></div>
@@ -125,7 +152,7 @@
     <div class="card">
       <div class="quiz-question" id="vd-question"></div>
       <div class="quiz-input-row">
-        <input type="text" id="vd-input" placeholder="Type the conjugation..." autocomplete="off" autocapitalize="off">
+        <input type="text" id="vd-input" placeholder="Type the conjugation..." autocomplete="off" autocapitalize="off" aria-label="Type the conjugation">
         <button class="btn btn-primary" data-action="check-verb-drill">Check</button>
       </div>
       <div class="accent-bar">
@@ -153,7 +180,7 @@
   <div class="screen" id="screen-verb-browser">
     <div class="search-box">
       <span class="search-icon">&#128269;</span>
-      <input type="text" id="verb-search" placeholder="Search verbs..." data-action="search-verbs">
+      <input type="text" id="verb-search" placeholder="Search verbs..." data-action="search-verbs" aria-label="Search verbs">
     </div>
     <div class="flex gap-1 mb-2">
       <button class="btn btn-sm btn-outline" data-action="filter-verbs" data-filter="all">All</button>
@@ -175,15 +202,15 @@
   <!-- ════════ NUMBERS SCREEN ════════ -->
   <div class="screen" id="screen-numbers">
     <h2 class="mb-2">Numbers</h2>
-    <div class="card" data-action="start-number-learn" style="cursor:pointer">
+    <div class="card" data-action="start-number-learn">
       <div class="card-title">Learn Numbers</div>
       <div class="card-subtitle">Cardinal and ordinal numbers in Spanish</div>
     </div>
-    <div class="card" data-action="start-number-quiz" style="cursor:pointer">
+    <div class="card" data-action="start-number-quiz">
       <div class="card-title">Number Quiz</div>
       <div class="card-subtitle">Practice writing numbers in Spanish</div>
     </div>
-    <div class="card" data-action="start-time-quiz" style="cursor:pointer">
+    <div class="card" data-action="start-time-quiz">
       <div class="card-title">Telling Time</div>
       <div class="card-subtitle">Practice telling time in Spanish</div>
     </div>
@@ -195,9 +222,9 @@
     <div class="stat-cards" id="vocab-stats"></div>
     <div class="search-box">
       <span class="search-icon">&#128269;</span>
-      <input type="text" id="vocab-search" placeholder="Search vocabulary..." data-action="search-vocab">
+      <input type="text" id="vocab-search" placeholder="Search vocabulary..." data-action="search-vocab" aria-label="Search vocabulary">
     </div>
-    <div class="card" data-action="open-themed-vocab" style="cursor:pointer;margin-bottom:0.75rem">
+    <div class="card" data-action="open-themed-vocab" style="margin-bottom:0.75rem">
       <div class="card-title">Themed Sets</div>
       <div class="card-subtitle">Situational vocabulary for real-life scenarios</div>
     </div>
@@ -218,11 +245,11 @@
   <!-- ════════ VOCAB LEARN (FLASHCARDS) ════════ -->
   <div class="screen" id="screen-vocab-learn">
     <div class="quiz-progress" id="vocl-progress"></div>
-    <div class="flashcard" id="vocab-flashcard" data-action="flip-vocab-card">
+    <div class="flashcard" id="vocab-flashcard" data-action="flip-vocab-card" role="button" tabindex="0">
       <div class="front">
         <div class="word-gender" id="vocl-gender"></div>
         <div class="word-main" id="vocl-word"></div>
-        <div class="text-muted text-sm">Tap to reveal</div>
+        <div class="text-muted text-sm">Press to reveal</div>
       </div>
       <div class="back">
         <div class="word-main" id="vocl-english"></div>
@@ -285,10 +312,10 @@
   <!-- ════════ PHRASE LEARN ════════ -->
   <div class="screen" id="screen-phrase-learn">
     <div class="quiz-progress" id="pl-progress"></div>
-    <div class="flashcard" id="phrase-flashcard" data-action="flip-phrase-card">
+    <div class="flashcard" id="phrase-flashcard" data-action="flip-phrase-card" role="button" tabindex="0">
       <div class="front">
         <div class="word-main" id="pl-spanish"></div>
-        <div class="text-muted text-sm">Tap to reveal</div>
+        <div class="text-muted text-sm">Press to reveal</div>
       </div>
       <div class="back">
         <div class="word-main" id="pl-english"></div>
@@ -316,6 +343,80 @@
     <div id="conv-options" class="mt-2"></div>
   </div>
 
+  <!-- ════════ CULTURE HUB ════════ -->
+  <div class="screen" id="screen-culture">
+    <h2 class="mb-2">Culture &amp; Explore</h2>
+    <div class="card" data-action="open-tracks">
+      <div class="card-title">Learning Paths</div>
+      <div class="card-subtitle">Structured curriculum tracks</div>
+    </div>
+    <div class="card" data-action="open-culture" data-module="conversations">
+      <div class="card-title">Conversations</div>
+      <div class="card-subtitle">Practice dialogues &amp; role-play</div>
+    </div>
+    <h3 class="text-muted text-sm mt-2 mb-1" style="text-transform:uppercase;letter-spacing:0.05em">Arts &amp; Literature</h3>
+    <div class="card-grid">
+      <div class="card" data-action="open-culture" data-module="music">
+        <div class="card-icon">&#127925;</div>
+        <div class="card-title">Music</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="movies">
+        <div class="card-icon">&#127916;</div>
+        <div class="card-title">Movies</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="poetry">
+        <div class="card-icon">&#128220;</div>
+        <div class="card-title">Poetry</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="folktales">
+        <div class="card-icon">&#128214;</div>
+        <div class="card-title">Folk Tales</div>
+      </div>
+    </div>
+    <h3 class="text-muted text-sm mt-2 mb-1" style="text-transform:uppercase;letter-spacing:0.05em">Life &amp; Traditions</h3>
+    <div class="card-grid">
+      <div class="card" data-action="open-culture" data-module="recipes">
+        <div class="card-icon">&#127858;</div>
+        <div class="card-title">Recipes</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="sports">
+        <div class="card-icon">&#9917;</div>
+        <div class="card-title">Sports</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="festivals">
+        <div class="card-icon">&#127881;</div>
+        <div class="card-title">Festivals</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="travel">
+        <div class="card-icon">&#9992;</div>
+        <div class="card-title">Travel</div>
+      </div>
+    </div>
+    <h3 class="text-muted text-sm mt-2 mb-1" style="text-transform:uppercase;letter-spacing:0.05em">Knowledge &amp; Wisdom</h3>
+    <div class="card-grid">
+      <div class="card" data-action="open-culture" data-module="history">
+        <div class="card-icon">&#127984;</div>
+        <div class="card-title">History</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="proverbs">
+        <div class="card-icon">&#128172;</div>
+        <div class="card-title">Proverbs</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="idioms">
+        <div class="card-icon">&#128161;</div>
+        <div class="card-title">Idioms</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="trivia">
+        <div class="card-icon">&#128300;</div>
+        <div class="card-title">Trivia</div>
+      </div>
+      <div class="card" data-action="open-culture" data-module="jokes">
+        <div class="card-icon">&#128514;</div>
+        <div class="card-title">Jokes</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ════════ CULTURAL CONTENT SCREENS ════════ -->
   <div class="screen" id="screen-culture-list">
     <h2 id="culture-title" class="mb-2"></h2>
@@ -338,43 +439,47 @@
   <!-- ════════ PRACTICE HUB ════════ -->
   <div class="screen" id="screen-practice">
     <h2 class="mb-2">Practice</h2>
-    <div class="card" data-action="open-minimal-pairs" style="cursor:pointer">
+    <div class="card" data-action="switch-tab" data-tab="phrases">
+      <div class="card-title">Phrases</div>
+      <div class="card-subtitle">Common phrases for everyday situations</div>
+    </div>
+    <div class="card" data-action="open-minimal-pairs">
       <div class="card-title">Minimal Pairs</div>
       <div class="card-subtitle">ser/estar, por/para, preterite/imperfect</div>
     </div>
-    <div class="card" data-action="open-sentence-build-topics" style="cursor:pointer">
+    <div class="card" data-action="open-sentence-build-topics">
       <div class="card-title">Sentence Construction</div>
       <div class="card-subtitle">Arrange words in correct order</div>
     </div>
-    <div class="card" data-action="open-cloze-topics" style="cursor:pointer">
+    <div class="card" data-action="open-cloze-topics">
       <div class="card-title">Cloze Passages</div>
       <div class="card-subtitle">Fill blanks in context paragraphs</div>
     </div>
-    <div class="card" data-action="open-translation-topics" style="cursor:pointer">
+    <div class="card" data-action="open-translation-topics">
       <div class="card-title">Translation Drills</div>
       <div class="card-subtitle">Translate English to Spanish</div>
     </div>
-    <div class="card" data-action="open-dictation" style="cursor:pointer">
+    <div class="card" data-action="open-dictation">
       <div class="card-title">Dictation</div>
       <div class="card-subtitle">Listen and type what you hear</div>
     </div>
-    <div class="card" data-action="open-reading" style="cursor:pointer">
+    <div class="card" data-action="open-reading">
       <div class="card-title">Reading Comprehension</div>
       <div class="card-subtitle">Short passages with comprehension questions</div>
     </div>
-    <div class="card" data-action="open-pronunciation" style="cursor:pointer">
+    <div class="card" data-action="open-pronunciation">
       <div class="card-title">Pronunciation Guide</div>
       <div class="card-subtitle">Spanish sounds, stress rules, and regional variations</div>
     </div>
-    <div class="card" data-action="open-phonetic-pairs" style="cursor:pointer">
+    <div class="card" data-action="open-phonetic-pairs">
       <div class="card-title">Phonetic Pairs</div>
       <div class="card-subtitle">R vs RR — hear and spell the difference</div>
     </div>
-    <div class="card" data-action="open-homophones" style="cursor:pointer">
+    <div class="card" data-action="open-homophones">
       <div class="card-title">Homophones</div>
       <div class="card-subtitle">Same sound, different spelling and meaning</div>
     </div>
-    <div class="card" data-action="open-connectors" style="cursor:pointer">
+    <div class="card" data-action="open-connectors">
       <div class="card-title">Connectors</div>
       <div class="card-subtitle">Sin embargo, además, por lo tanto — link your ideas</div>
     </div>
@@ -502,7 +607,7 @@
     <div class="card">
       <div class="quiz-question" id="tr-prompt"></div>
       <div class="quiz-input-row">
-        <input type="text" id="tr-input" placeholder="Your translation..." autocomplete="off" autocapitalize="off">
+        <input type="text" id="tr-input" placeholder="Your translation..." autocomplete="off" autocapitalize="off" aria-label="Your translation">
         <button class="btn btn-primary" data-action="check-translation">Check</button>
       </div>
       <div class="accent-bar">
@@ -530,7 +635,7 @@
         <button class="btn btn-outline" data-action="dict-play-slow">&#128034; Slow</button>
       </div>
       <div class="quiz-input-row">
-        <input type="text" id="dict-input" placeholder="Type what you hear..." autocomplete="off" autocapitalize="off">
+        <input type="text" id="dict-input" placeholder="Type what you hear..." autocomplete="off" autocapitalize="off" aria-label="Type what you hear">
         <button class="btn btn-primary" data-action="check-dictation">Check</button>
       </div>
       <div class="accent-bar">
@@ -736,7 +841,7 @@
     <h2 class="mb-1">Conjugation Reference</h2>
     <div class="search-box">
       <span class="search-icon">&#128269;</span>
-      <input type="text" id="vref-search" placeholder="Search verb...">
+      <input type="text" id="vref-search" placeholder="Search verb..." aria-label="Search verb">
     </div>
     <div id="vref-suggestions"></div>
     <div id="vref-content"></div>
@@ -829,6 +934,10 @@
       <div class="card-title mb-1">Practice Calendar</div>
       <div class="streak-calendar" id="stats-calendar"></div>
     </div>
+    <div class="card mt-2" data-action="open-settings">
+      <div class="card-title">Settings</div>
+      <div class="card-subtitle">Theme, display mode, learning preferences</div>
+    </div>
   </div>
 
   <!-- ════════ LEARNING PATHS ════════ -->
@@ -851,66 +960,27 @@
     <span class="tab-icon">&#127968;</span>
     <span>Today</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="verbs">
-    <span class="tab-icon">&#127939;</span>
-    <span>Verbs</span>
-  </button>
-  <button class="tab" data-action="switch-tab" data-tab="numbers">
-    <span class="tab-icon">&#128290;</span>
-    <span>Numbers</span>
-  </button>
-  <button class="tab" data-action="switch-tab" data-tab="vocab">
+  <button class="tab" data-action="switch-tab" data-tab="learn">
     <span class="tab-icon">&#128218;</span>
-    <span>Vocab</span>
-  </button>
-  <button class="tab" data-action="switch-tab" data-tab="grammar">
-    <span class="tab-icon">&#128221;</span>
-    <span>Grammar</span>
-  </button>
-  <button class="tab" data-action="switch-tab" data-tab="phrases">
-    <span class="tab-icon">&#128172;</span>
-    <span>Phrases</span>
+    <span>Learn</span>
   </button>
   <button class="tab" data-action="switch-tab" data-tab="practice">
     <span class="tab-icon">&#9997;</span>
     <span>Practice</span>
   </button>
-  <div class="tab-wrapper" style="position:relative">
-    <button class="tab" data-action="switch-tab" data-tab="culture">
-      <span class="tab-icon">&#127928;</span>
-      <span>Culture</span>
-    </button>
-    <div class="tab-dropdown" id="culture-dropdown">
-      <button class="dropdown-item" data-action="open-culture" data-module="music">Music</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="movies">Movies</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="poetry">Poetry</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="proverbs">Proverbs</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="folktales">Folk Tales</button>
-    </div>
-  </div>
-  <div class="tab-wrapper" style="position:relative">
-    <button class="tab" data-action="switch-tab" data-tab="explore">
-      <span class="tab-icon">&#127758;</span>
-      <span>Explore</span>
-    </button>
-    <div class="tab-dropdown" id="explore-dropdown">
-      <button class="dropdown-item" data-action="open-tracks" style="font-weight:600;border-bottom:1px solid var(--border)">📚 Learning Paths</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="conversations">Conversations</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="recipes">Recipes</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="sports">Sports</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="festivals">Festivals</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="history">History</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="travel">Travel</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="trivia">Trivia</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="idioms">Idioms</button>
-      <button class="dropdown-item" data-action="open-culture" data-module="jokes">Jokes</button>
-    </div>
-  </div>
+  <button class="tab" data-action="switch-tab" data-tab="culture">
+    <span class="tab-icon">&#127928;</span>
+    <span>Culture</span>
+  </button>
+  <button class="tab" data-action="switch-tab" data-tab="stats">
+    <span class="tab-icon">&#128202;</span>
+    <span>Stats</span>
+  </button>
 </div>
 
 <!-- ════════ MODAL ════════ -->
 <div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <h2 id="modal-title"></h2>
     <div id="modal-body"></div>
     <div class="modal-actions" id="modal-actions"></div>
@@ -937,7 +1007,6 @@
 <script src="travel.js"></script>
 <script src="trivia.js"></script>
 <script src="idioms.js"></script>
-<script src="freq_vocab.js"></script>
 <script src="placement_questions.js"></script>
 <script src="minimal_pairs.js"></script>
 <script src="sentence_construction.js"></script>

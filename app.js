@@ -39,9 +39,11 @@ function scoringGroup(domain) { return DOMAIN_GROUP[domain] || 'grammar'; }
 // ── UI Strings for Display Modes (standard / immersion / hints) ──
 const UI_STRINGS = {
   // Tab bar
-  today: ['Today', 'Hoy'], verbs: ['Verbs', 'Verbos'], numbers: ['Numbers', 'Números'],
+  today: ['Today', 'Hoy'], learn: ['Learn', 'Aprender'], verbs: ['Verbs', 'Verbos'], numbers: ['Numbers', 'Números'],
   vocab: ['Vocab', 'Vocabulario'], grammar: ['Grammar', 'Gramática'],
-  phrases: ['Phrases', 'Frases'], culture: ['Culture', 'Cultura'], explore: ['Explore', 'Explorar'],
+  phrases: ['Phrases', 'Frases'], practice: ['Practice', 'Práctica'],
+  culture: ['Culture', 'Cultura'], explore: ['Explore', 'Explorar'],
+  stats: ['Stats', 'Estadísticas'],
 
   // Rating buttons
   again: ['Again', 'Otra vez'], hard: ['Hard', 'Difícil'],
@@ -62,7 +64,7 @@ const UI_STRINGS = {
   retakeTest: ['Retake Test', 'Repetir prueba'],
 
   // Flashcards
-  tapToReveal: ['Tap to reveal', 'Toca para ver'],
+  tapToReveal: ['Press to reveal', 'Presiona para ver'],
 
   // Section headers
   continueLearning: ['Continue Learning', 'Continuar aprendiendo'],
@@ -378,19 +380,14 @@ function goBack() {
 }
 
 function switchTab(tab) {
-  // Dropdown tabs
-  if (tab === 'culture' || tab === 'explore') {
-    const dd = document.getElementById(tab === 'culture' ? 'culture-dropdown' : 'explore-dropdown');
-    if (dd) {
-      const isOpen = dd.classList.contains('open');
-      closeDropdowns();
-      if (!isOpen) { dd.classList.add('open'); activeDropdown = dd; }
-    }
-    return;
-  }
   closeDropdowns();
+
+  // Map sub-tabs to their parent tab for highlighting
+  const TAB_PARENT = { verbs: 'learn', vocab: 'learn', grammar: 'learn', numbers: 'learn', phrases: 'practice' };
+  const highlightTab = TAB_PARENT[tab] || tab;
+
   document.querySelectorAll('.tab-bar .tab').forEach(t => t.classList.remove('active'));
-  const tabBtn = document.querySelector(`.tab[data-tab="${tab}"]`);
+  const tabBtn = document.querySelector(`.tab[data-tab="${highlightTab}"]`);
   if (tabBtn) tabBtn.classList.add('active');
 
   screenStack = [tab];
@@ -398,11 +395,14 @@ function switchTab(tab) {
 
   // Populate screen
   if (tab === 'today') renderToday();
+  else if (tab === 'learn') { /* static hub */ }
   else if (tab === 'verbs') renderVerbsHome();
   else if (tab === 'vocab') renderVocabHome();
   else if (tab === 'grammar') renderGrammarHome();
   else if (tab === 'phrases') renderPhrasesHome();
   else if (tab === 'numbers') renderNumbersHome();
+  else if (tab === 'culture') { /* static culture hub */ }
+  else if (tab === 'stats') renderStats();
 }
 
 function closeDropdowns() {
@@ -477,9 +477,27 @@ function showModal(title, bodyHtml, buttons) {
   document.getElementById('modal-actions').innerHTML = buttons.map(b =>
     `<button class="btn ${b.cls || ''}" data-action="${b.action}">${b.label}</button>`
   ).join('');
-  document.getElementById('modal-overlay').classList.add('open');
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  // Focus the first button in the modal
+  const firstBtn = overlay.querySelector('.modal .btn');
+  if (firstBtn) setTimeout(() => firstBtn.focus(), 50);
 }
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+// Modal focus trap and ESC to close
+document.addEventListener('keydown', e => {
+  const overlay = document.getElementById('modal-overlay');
+  if (!overlay || !overlay.classList.contains('open')) return;
+  if (e.key === 'Escape') { closeModal(); e.preventDefault(); return; }
+  if (e.key === 'Tab') {
+    const focusable = overlay.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length === 0) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+    else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+  }
+});
 
 // ════════════════════════════════════════
 //  SETTINGS
@@ -594,7 +612,7 @@ function applyDisplayMode() {
 
   // Flashcard "Tap to reveal"
   document.querySelectorAll('.flashcard .front .text-muted.text-sm').forEach(el => {
-    if (el.textContent.trim() === 'Tap to reveal' || el.textContent.trim() === 'Toca para ver')
+    if (el.textContent.trim() === 'Press to reveal' || el.textContent.trim() === 'Presiona para ver')
       el.textContent = t('tapToReveal');
   });
 
@@ -770,7 +788,7 @@ function checkStreak() {
 function updateNavStats() {
   if (!progress) return;
   document.getElementById('nav-xp').textContent = progress.xp + ' XP';
-  document.getElementById('nav-streak').textContent = progress.streak + 'd';
+  document.getElementById('nav-streak').innerHTML = '🔥 ' + progress.streak;
 }
 
 // ════════════════════════════════════════
@@ -898,15 +916,15 @@ function renderToday() {
   // Continue learning
   const cont = document.getElementById('today-continue');
   cont.innerHTML = `
-    <div class="card" data-action="switch-tab" data-tab="verbs" style="cursor:pointer">
+    <div class="card" data-action="switch-tab" data-tab="verbs">
       <div class="card-title">${t('verbConjugation')}</div>
       <div class="card-subtitle">${verbsLearned} ${t('formsPracticedLC')}</div>
     </div>
-    <div class="card" data-action="switch-tab" data-tab="vocab" style="cursor:pointer">
+    <div class="card" data-action="switch-tab" data-tab="vocab">
       <div class="card-title">${t('vocabulary')}</div>
       <div class="card-subtitle">${vocabLearned} ${t('wordsLearnedLC')}</div>
     </div>
-    <div class="card" data-action="switch-tab" data-tab="grammar" style="cursor:pointer">
+    <div class="card" data-action="switch-tab" data-tab="grammar">
       <div class="card-title">${tBtn('grammar')}</div>
       <div class="card-subtitle">${grammarDone} ${t('lessonsCompleted')}</div>
     </div>
@@ -921,7 +939,7 @@ function renderToday() {
   const reviewDiv = document.getElementById('today-review');
   if (totalDue > 0) {
     reviewDiv.innerHTML = `
-      <div class="card" style="cursor:pointer" data-action="start-review">
+      <div class="card" data-action="start-review">
         <div class="card-title">${totalDue} ${t('itemsDue')}</div>
         <div class="card-subtitle">${t('mixedReview')}</div>
       </div>
@@ -932,11 +950,11 @@ function renderToday() {
 
   // Daily practice
   document.getElementById('today-practice').innerHTML = `
-    <div class="card" data-action="start-verb-drill" style="cursor:pointer">
+    <div class="card" data-action="start-verb-drill">
       <div class="card-title">${t('quickDrill')}</div>
       <div class="card-subtitle">${t('quickDrillDesc')}</div>
     </div>
-    <div class="card" data-action="start-quick-vocab" style="cursor:pointer">
+    <div class="card" data-action="start-quick-vocab">
       <div class="card-title">${t('quickVocab')}</div>
       <div class="card-subtitle">${t('quickVocabDesc')}</div>
     </div>
@@ -1234,7 +1252,7 @@ function renderVerbPatterns() {
     const desc = mode === 'immersion' ? pat.descEs : pat.desc;
     const examples = verbs.slice(0, 4).map(v => v.infinitive).join(', ');
     html += `
-      <div class="card" data-action="start-pattern-drill" data-pattern="${key}" style="cursor:pointer">
+      <div class="card" data-action="start-pattern-drill" data-pattern="${key}">
         <div class="card-title">${esc(label)}</div>
         <div class="card-subtitle">${esc(desc)}</div>
         <div class="text-muted text-sm" style="margin-top:0.25rem">${esc(examples)}${verbs.length > 4 ? '...' : ''} (${verbs.length} verbs)</div>
@@ -1506,11 +1524,33 @@ let vocabQuizIdx = 0;
 let vocabQuizScore = 0;
 let currentVocabCategory = null;
 
+// ── Vocab Indexes (built once for O(1) lookups instead of O(n) .filter()) ──
+const VOCAB_BY_CATEGORY = Object.create(null);
+const VOCAB_BY_LEVEL = Object.create(null);
+const VOCAB_BY_WORD = Object.create(null);
+const VOCAB_CATEGORY_COUNTS = Object.create(null);
+let vocabIndexesBuilt = false;
+
+function buildVocabIndexes() {
+  if (vocabIndexesBuilt || typeof VOCAB_DATA === 'undefined') return;
+  for (const v of VOCAB_DATA) {
+    const cat = v.category;
+    (VOCAB_BY_CATEGORY[cat] ??= []).push(v);
+    (VOCAB_BY_LEVEL[v.level] ??= []).push(v);
+    VOCAB_BY_WORD[v.word.toLowerCase()] = v;
+  }
+  for (const [cat, arr] of Object.entries(VOCAB_BY_CATEGORY)) {
+    VOCAB_CATEGORY_COUNTS[cat] = arr.length;
+  }
+  vocabIndexesBuilt = true;
+}
+
 function renderVocabHome() {
   if (typeof VOCAB_DATA === 'undefined' || typeof VOCAB_CATEGORIES === 'undefined') {
     document.getElementById('vocab-categories').innerHTML = `<p class="text-muted">${t('vocabLoading')}</p>`;
     return;
   }
+  buildVocabIndexes();
   const learned = Object.keys(progress.vocabMastery).length;
   document.getElementById('vocab-stats').innerHTML = `
     <div class="stat-card"><div class="stat-num">${learned}</div><div class="stat-desc">${t('wordsLearned')}</div></div>
@@ -1519,8 +1559,8 @@ function renderVocabHome() {
 
   const grid = document.getElementById('vocab-categories');
   grid.innerHTML = Object.entries(VOCAB_CATEGORIES).map(([key, cat]) => {
-    const count = VOCAB_DATA.filter(v => v.category === key).length;
-    return `<div class="card" data-action="open-vocab-cat" data-cat="${key}" style="cursor:pointer">
+    const count = VOCAB_CATEGORY_COUNTS[key] || 0;
+    return `<div class="card" data-action="open-vocab-cat" data-cat="${key}">
       <div class="card-icon">${cat.icon || ''}</div>
       <div class="card-title text-sm">${esc(cat.title)}</div>
       <div class="card-subtitle text-xs">${count} ${t('words')}</div>
@@ -1528,14 +1568,19 @@ function renderVocabHome() {
   }).join('');
 }
 
-function openVocabCategory(cat) {
+let vocabCatPage = 0;
+const VOCAB_CAT_PAGE_SIZE = 50;
+
+function openVocabCategory(cat, page) {
   if (typeof VOCAB_DATA === 'undefined') return;
+  buildVocabIndexes();
   currentVocabCategory = cat;
+  vocabCatPage = page || 0;
   const catInfo = VOCAB_CATEGORIES[cat];
   showScreen('vocab-cat');
   document.getElementById('vcat-title').textContent = catInfo ? `${catInfo.title} (${catInfo.titleEn})` : cat;
 
-  const words = VOCAB_DATA.filter(v => v.category === cat);
+  const words = VOCAB_BY_CATEGORY[cat] || [];
 
   // Group by POS, show sub-headers when a category has multiple parts of speech
   const posLabels = { noun: 'Nouns', verb: 'Verbs', v: 'Verbs', adjective: 'Adjectives', adj: 'Adjectives', adverb: 'Adverbs', adv: 'Adverbs', phrase: 'Phrases', preposition: 'Prepositions', conjunction: 'Conjunctions', pronoun: 'Pronouns', interjection: 'Interjections', number: 'Numbers' };
@@ -1562,6 +1607,17 @@ function openVocabCategory(cat) {
     if (!seen.has(label)) ordered.push([label, items]);
   }
 
+  // Flatten for pagination
+  const flat = [];
+  for (const [label, items] of ordered) {
+    if (showHeaders) flat.push({ _header: label });
+    for (const w of items) flat.push(w);
+  }
+
+  const start = vocabCatPage * VOCAB_CAT_PAGE_SIZE;
+  const pageItems = flat.slice(start, start + VOCAB_CAT_PAGE_SIZE);
+  const hasMore = start + VOCAB_CAT_PAGE_SIZE < flat.length;
+
   const renderWord = w => `
     <div class="card" style="padding:0.6rem 0.75rem">
       <div class="flex justify-between items-center">
@@ -1576,18 +1632,33 @@ function openVocabCategory(cat) {
     </div>`;
 
   let html = '';
-  for (const [label, items] of ordered) {
-    if (showHeaders) html += `<h3 class="mt-2 mb-1" style="font-size:0.9rem;opacity:0.7">${label}</h3>`;
-    html += items.map(renderWord).join('');
+  for (const item of pageItems) {
+    if (item._header) {
+      html += `<h3 class="mt-2 mb-1" style="font-size:0.9rem;opacity:0.7">${item._header}</h3>`;
+    } else {
+      html += renderWord(item);
+    }
   }
-  document.getElementById('vcat-words').innerHTML = html;
+  if (hasMore) {
+    html += `<button class="btn btn-secondary btn-block mt-1" data-action="vocab-cat-more" data-cat="${cat}" data-page="${vocabCatPage + 1}">Load More (${flat.length - start - VOCAB_CAT_PAGE_SIZE} remaining)</button>`;
+  }
+  if (vocabCatPage === 0) {
+    document.getElementById('vcat-words').innerHTML = html;
+  } else {
+    // Remove previous "Load More" button and append
+    const container = document.getElementById('vcat-words');
+    const oldBtn = container.querySelector('[data-action="vocab-cat-more"]');
+    if (oldBtn) oldBtn.remove();
+    container.insertAdjacentHTML('beforeend', html);
+  }
 }
 
 // ── Vocab Learn (Flashcards) ──
 function startVocabLearn() {
   if (typeof VOCAB_DATA === 'undefined') return;
+  buildVocabIndexes();
   const words = currentVocabCategory
-    ? VOCAB_DATA.filter(v => v.category === currentVocabCategory)
+    ? (VOCAB_BY_CATEGORY[currentVocabCategory] || [])
     : VOCAB_DATA;
   vocabLearnQueue = pickN(words, Math.min(15, words.length));
   vocabLearnIdx = 0;
@@ -1636,8 +1707,9 @@ function rateVocab(rating) {
 // ── Vocab Quiz ──
 function startVocabQuiz() {
   if (typeof VOCAB_DATA === 'undefined') return;
+  buildVocabIndexes();
   const pool = currentVocabCategory
-    ? VOCAB_DATA.filter(v => v.category === currentVocabCategory)
+    ? (VOCAB_BY_CATEGORY[currentVocabCategory] || [])
     : VOCAB_DATA;
   if (pool.length < 4) return;
 
@@ -1656,8 +1728,15 @@ function startVocabQuiz() {
 
 function startQuickVocab() {
   if (typeof VOCAB_DATA === 'undefined' || VOCAB_DATA.length < 4) return;
+  buildVocabIndexes();
   const level = progress.placementLevel || 'A1';
-  const levelPool = VOCAB_DATA.filter(v => levelAtOrBelow(v.level, level));
+  const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const maxIdx = levelOrder.indexOf(level);
+  const levelPool = [];
+  for (let i = 0; i <= maxIdx; i++) {
+    const lv = levelOrder[i];
+    if (VOCAB_BY_LEVEL[lv]) levelPool.push(...VOCAB_BY_LEVEL[lv]);
+  }
   const pool = levelPool.length >= 4 ? levelPool : VOCAB_DATA;
   currentVocabCategory = null;
   vocabQuizQueue = [];
@@ -1750,8 +1829,9 @@ function nextVocabQuiz() {
 // ── Gender Quiz ──
 function startGenderQuiz() {
   if (typeof VOCAB_DATA === 'undefined') return;
+  buildVocabIndexes();
   const pool = (currentVocabCategory
-    ? VOCAB_DATA.filter(v => v.category === currentVocabCategory)
+    ? (VOCAB_BY_CATEGORY[currentVocabCategory] || [])
     : VOCAB_DATA).filter(v => v.gender);
   if (pool.length < 4) return;
 
@@ -1809,7 +1889,7 @@ function renderGrammarHome() {
     html += `<h3 class="text-sm text-muted mt-2 mb-1">${level}</h3>`;
     lessons.forEach(l => {
       const done = progress.grammarDone[l.id];
-      html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}" style="cursor:pointer">
+      html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
         <div class="flex justify-between items-center">
           <div>
             <div class="card-title">${l.order}. ${esc(l.titleEn || l.title)}</div>
@@ -2001,7 +2081,7 @@ function renderPhrasesHome() {
   }
   const grid = document.getElementById('phrases-situations');
   grid.innerHTML = PHRASES_SITUATIONS.map(s => `
-    <div class="card" data-action="open-phrase-sit" data-sit="${esc(s.slug)}" style="cursor:pointer">
+    <div class="card" data-action="open-phrase-sit" data-sit="${esc(s.slug)}">
       <div class="card-icon">${s.icon || ''}</div>
       <div class="card-title text-sm">${esc(s.title)}</div>
       <div class="card-subtitle text-xs">${esc(s.desc || '')}</div>
@@ -2133,7 +2213,7 @@ function openCultureModule(module) {
   }
 
   document.getElementById('culture-items').innerHTML = items.map(item => `
-    <div class="card" data-action="open-culture-item" data-id="${esc(item.id)}" style="cursor:pointer">
+    <div class="card" data-action="open-culture-item" data-id="${esc(item.id)}">
       ${item.icon ? `<div class="card-icon">${item.icon}</div>` : ''}
       <div class="card-title text-sm">${esc(item.spanishName || item.title || item.spanish || '')}</div>
       <div class="card-subtitle text-xs">${esc(item.englishName || item.titleEn || item.meaning || item.english || '')}</div>
@@ -2245,8 +2325,27 @@ function showResults(score, total, module, label) {
   lastQuizModule = module;
   showScreen('results');
   const pct = Math.round((score / total) * 100);
-  document.getElementById('res-score').textContent = `${pct}%`;
-  document.getElementById('res-label').textContent = `${score} / ${total} ${t('correctLabel').toLowerCase()} — ${label}`;
+
+  // Celebratory feedback based on score
+  let scoreClass, emoji, message;
+  if (pct >= 90) {
+    scoreClass = 'excellent'; emoji = '🎉'; message = '¡Excelente!';
+  } else if (pct >= 70) {
+    scoreClass = 'good'; emoji = '👏'; message = '¡Muy bien!';
+  } else {
+    scoreClass = 'needs-work'; emoji = '💪'; message = '¡Sigue practicando!';
+  }
+
+  const scoreEl = document.getElementById('res-score');
+  scoreEl.textContent = `${pct}%`;
+  scoreEl.className = `score ${scoreClass}`;
+
+  // Insert emoji and message before the label
+  document.getElementById('res-label').innerHTML = `
+    <div class="score-emoji">${emoji}</div>
+    <div class="score-message">${message}</div>
+    <div>${score} / ${total} ${t('correctLabel').toLowerCase()} — ${label}</div>
+  `;
   document.getElementById('res-stats').innerHTML = `
     <div class="stat-card"><div class="stat-num" style="color:var(--green)">${score}</div><div class="stat-desc">${t('correctLabel')}</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--red)">${total - score}</div><div class="stat-desc">${t('incorrectLabel')}</div></div>
@@ -2306,10 +2405,11 @@ function isCognate(spanish, english) {
 
 function buildPlacementVocabQs(level, count) {
   if (typeof VOCAB_DATA === 'undefined') return [];
+  buildVocabIndexes();
   // Exclude cognates from B1+ — they're trivially guessable at higher levels
   const levelIdx = LEVEL_ORDER[level] || 0;
-  const words = VOCAB_DATA.filter(w => w.level === level
-    && (levelIdx < 3 || !isCognate(w.word, w.english)));
+  const words = (VOCAB_BY_LEVEL[level] || []).filter(w =>
+    levelIdx < 3 || !isCognate(w.word, w.english));
   if (words.length < 4) return [];
   const picked = pickN(words, count);
   return picked.map(w => {
@@ -2443,72 +2543,7 @@ function buildPlacementIRTPool() {
     verbs.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-vb-${pool.length}`, source: 'generated' }));
   }
 
-  // 3. Add freq-vocab recognition questions
-  if (typeof FREQ_VOCAB !== 'undefined') {
-    pool.push(...buildFreqVocabQuestions(20));
-  }
-
   return pool;
-}
-
-function buildFreqVocabQuestions(count) {
-  // Generate vocab questions by matching FREQ_VOCAB words against VOCAB_DATA (which has translations)
-  if (typeof VOCAB_DATA === 'undefined') return [];
-  const questions = [];
-
-  // Build lookup of freq words that also have translations in VOCAB_DATA
-  const vocabByWord = Object.create(null);
-  for (const v of VOCAB_DATA) vocabByWord[v.word.toLowerCase()] = v;
-
-  // Find freq_vocab entries that have corresponding VOCAB_DATA entries
-  // Exclude cognates from B1+ levels — they're trivially guessable
-  const matchable = FREQ_VOCAB.filter(fw => {
-    const v = vocabByWord[fw.w.toLowerCase()];
-    if (!v) return false;
-    const levelIdx = LEVEL_ORDER[fw.l] || 0;
-    return levelIdx < 3 || !isCognate(fw.w, v.english);
-  });
-  if (matchable.length < 10) return [];
-
-  // Sample across difficulty levels
-  const levelSamples = { A1: 2, A2: 3, B1: 3, B2: 4, C1: 4, C2: 4 };
-
-  for (const [level, n] of Object.entries(levelSamples)) {
-    const wordsAtLevel = matchable.filter(w => w.l === level);
-    if (wordsAtLevel.length < 4) continue;
-    const picked = pickN(wordsAtLevel, Math.min(n, wordsAtLevel.length));
-    for (const fw of picked) {
-      const vocabEntry = vocabByWord[fw.w.toLowerCase()];
-      const diff = LEVEL_DIFFICULTY[level] + (Math.random() - 0.5) * 0.3;
-      // Get distractors from same level in VOCAB_DATA
-      const sameLevel = VOCAB_DATA.filter(v => v.level === level && v.word.toLowerCase() !== fw.w.toLowerCase());
-      if (sameLevel.length < 3) continue;
-      const wrongs = pickN(sameLevel, 3);
-      const reverse = Math.random() < 0.5;
-      if (reverse) {
-        questions.push({
-          id: `fv-${fw.r}`,
-          level, difficulty: diff, domain: 'vocab', type: 'mc',
-          prompt: `${t('howDoYouSay')} "${esc(vocabEntry.english)}" ${t('inSpanish')}`,
-          answer: vocabEntry.word,
-          options: shuffle([vocabEntry.word, ...wrongs.map(w => w.word)]),
-          explanation: `${vocabEntry.word} = ${vocabEntry.english}`,
-          source: 'freq',
-        });
-      } else {
-        questions.push({
-          id: `fv-${fw.r}`,
-          level, difficulty: diff, domain: 'vocab', type: 'mc',
-          prompt: `${t('whatDoesMean')} "${esc(vocabEntry.word)}" ${t('mean')}`,
-          answer: vocabEntry.english,
-          options: shuffle([vocabEntry.english, ...wrongs.map(w => w.english)]),
-          explanation: `${vocabEntry.word} = ${vocabEntry.english}`,
-          source: 'freq',
-        });
-      }
-    }
-  }
-  return questions;
 }
 
 function savePlacementState() {
@@ -2903,12 +2938,15 @@ function applyPlacementResults(levels) {
 
   // Mark vocab as mastered (uses vocab level)
   if (typeof VOCAB_DATA !== 'undefined') {
-    VOCAB_DATA.forEach(w => {
-      if (vocabCheck(w.level, vocabLevel)) {
+    buildVocabIndexes();
+    const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+    for (const lv of levelOrder) {
+      if (!vocabCheck(lv, vocabLevel)) continue;
+      for (const w of (VOCAB_BY_LEVEL[lv] || [])) {
         progress.vocabMastery[w.word] = 3;
         seedMatureFsrs(progress.vocabFsrs, w.word);
       }
-    });
+    }
   }
 
   // Mark verb forms as mastered (uses grammar level — conjugation is structural)
@@ -3009,7 +3047,11 @@ function finishPlacementTest() {
   const gCheck = perfFull ? levelAtOrBelow : levelBelow;
   const vCheck = perfFull ? levelAtOrBelow : levelBelow;
   const grammarCount = GRAMMAR_DATA?.filter(l => gCheck(l.level, levels.grammar)).length || 0;
-  const vocabCount = VOCAB_DATA?.filter(w => vCheck(w.level, levels.vocab)).length || 0;
+  buildVocabIndexes();
+  let vocabCount = 0;
+  for (const lv of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
+    if (vCheck(lv, levels.vocab)) vocabCount += (VOCAB_BY_LEVEL[lv] || []).length;
+  }
   document.getElementById('ptr-message').innerHTML =
     t('placementResultMsgDual')
       .replace('%gl', levels.grammar).replace('%g', grammarCount)
@@ -3113,7 +3155,7 @@ function renderAdmin() {
   for (const sec of boolSections) {
     const doneCount = sec.items.filter(i => progress[sec.store]?.[i.key]).length;
     html += `<div class="settings-group">
-      <h3 data-action="admin-collapse" style="cursor:pointer">${sec.title} <span class="text-muted text-sm">(${doneCount}/${sec.items.length})</span> ▸</h3>
+      <h3 data-action="admin-collapse">${sec.title} <span class="text-muted text-sm">(${doneCount}/${sec.items.length})</span> ▸</h3>
       <div class="admin-section" style="display:none">
         ${sec.items.map(i => {
           const done = !!progress[sec.store]?.[i.key];
@@ -3183,7 +3225,7 @@ function renderMinimalPairCategories() {
   const container = document.getElementById('mp-categories');
   if (!container || typeof MINIMAL_PAIR_CATEGORIES === 'undefined') return;
   container.innerHTML = Object.entries(MINIMAL_PAIR_CATEGORIES).map(([key, cat]) => `
-    <div class="card" data-action="start-mp" data-cat="${key}" style="cursor:pointer">
+    <div class="card" data-action="start-mp" data-cat="${key}">
       <div class="card-title">${esc(cat.titleEn || cat.title)}</div>
       <div class="card-subtitle">${esc(cat.options?.join(' vs ') || '')}</div>
     </div>
@@ -3274,7 +3316,7 @@ function renderPhoneticPairCategories() {
   const container = document.getElementById('pp-categories');
   if (!container || typeof PHONETIC_PAIR_CATEGORIES === 'undefined') return;
   container.innerHTML = Object.entries(PHONETIC_PAIR_CATEGORIES).map(([key, cat]) => `
-    <div class="card" data-action="start-pp" data-cat="${key}" style="cursor:pointer">
+    <div class="card" data-action="start-pp" data-cat="${key}">
       <div class="card-title">${esc(cat.label)}</div>
       <div class="card-subtitle">${esc(cat.description)}</div>
     </div>
@@ -3368,7 +3410,7 @@ function renderHomophoneCategories() {
   const container = document.getElementById('hom-categories');
   if (!container || typeof HOMOPHONE_CATEGORIES === 'undefined') return;
   container.innerHTML = Object.entries(HOMOPHONE_CATEGORIES).map(([key, cat]) => `
-    <div class="card" data-action="start-hom" data-cat="${key}" style="cursor:pointer">
+    <div class="card" data-action="start-hom" data-cat="${key}">
       <div class="card-title">${esc(cat.label)}</div>
       <div class="card-subtitle">${esc(cat.description)}</div>
     </div>
@@ -3466,7 +3508,7 @@ function renderConnectorCategories() {
   const container = document.getElementById('conn-categories');
   if (!container || typeof CONNECTOR_CATEGORIES === 'undefined') return;
   container.innerHTML = Object.entries(CONNECTOR_CATEGORIES).map(([key, cat]) => `
-    <div class="card" data-action="start-conn" data-cat="${key}" style="cursor:pointer">
+    <div class="card" data-action="start-conn" data-cat="${key}">
       <div class="card-title">${esc(cat.label)}</div>
       <div class="card-subtitle">${esc(cat.description)}</div>
     </div>
@@ -3626,11 +3668,11 @@ function renderClozeTopics() {
     prepositions: 'Prepositions', mixed: 'Mixed Grammar',
   };
   container.innerHTML = topics.map(t => `
-    <div class="card" data-action="start-cloze" data-topic="${t}" style="cursor:pointer">
+    <div class="card" data-action="start-cloze" data-topic="${t}">
       <div class="card-title">${esc(topicLabels[t] || t)}</div>
     </div>
   `).join('') + `
-    <div class="card" data-action="start-cloze" data-topic="all" style="cursor:pointer">
+    <div class="card" data-action="start-cloze" data-topic="all">
       <div class="card-title">All Topics</div>
     </div>
   `;
@@ -3938,10 +3980,12 @@ function renderStats() {
   // Category progress
   let catHtml = '';
   if (typeof VOCAB_CATEGORIES !== 'undefined' && typeof VOCAB_DATA !== 'undefined') {
+    buildVocabIndexes();
     const cats = Object.entries(VOCAB_CATEGORIES).slice(0, 12);
     for (const [key, cat] of cats) {
-      const total = VOCAB_DATA.filter(v => v.category === key).length;
-      const learned = VOCAB_DATA.filter(v => v.category === key && progress.vocabMastery[v.word]).length;
+      const catWords = VOCAB_BY_CATEGORY[key] || [];
+      const total = catWords.length;
+      const learned = catWords.filter(v => progress.vocabMastery[v.word]).length;
       const pct = total ? Math.round(learned / total * 100) : 0;
       catHtml += `<div class="stat-row">
         <span class="stat-label">${cat.titleEn || cat.title}</span>
@@ -4075,7 +4119,8 @@ function renderReviewItem() {
     document.getElementById('rev-accents').style.display = 'flex';
     document.getElementById('rev-drill-input').focus();
   } else if (item.type === 'vocab') {
-    const word = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.find(v => v.word === item.key) : null;
+    buildVocabIndexes();
+    const word = VOCAB_BY_WORD[item.key?.toLowerCase()] || null;
     if (!word) { reviewIdx++; renderReviewItem(); return; }
     c.innerHTML = `
       <div class="card">
@@ -4454,7 +4499,7 @@ function renderReadingList(filter) {
   const passages = filter === 'all' ? READING_DATA : READING_DATA.filter(p => p.level === filter);
   document.getElementById('reading-passages').innerHTML = passages.map(p => {
     const done = progress.readingMastery && progress.readingMastery[p.id];
-    return `<div class="card" data-action="start-reading" data-id="${esc(p.id)}" style="cursor:pointer">
+    return `<div class="card" data-action="start-reading" data-id="${esc(p.id)}">
       <div class="flex" style="justify-content:space-between;align-items:center">
         <div class="card-title">${esc(p.title)}</div>
         <div style="display:flex;gap:0.25rem;align-items:center">
@@ -4554,7 +4599,7 @@ function renderThemedVocabList() {
   }
   document.getElementById('themed-vocab-list').innerHTML = THEMED_VOCAB_DATA.map(th => {
     const done = progress.themedVocabDone && progress.themedVocabDone[th.id];
-    return `<div class="card" data-action="open-themed-detail" data-id="${esc(th.id)}" style="cursor:pointer">
+    return `<div class="card" data-action="open-themed-detail" data-id="${esc(th.id)}">
       <div class="flex" style="justify-content:space-between;align-items:center">
         <div class="card-title">${th.icon || ''} ${esc(th.theme)}</div>
         <div style="display:flex;gap:0.25rem;align-items:center">
@@ -4680,7 +4725,7 @@ function renderTrackList() {
   el.innerHTML = CURRICULUM_TRACKS.map(track => {
     const comp = getTrackCompletion(track);
     return `
-    <div class="card track-card" data-action="open-track-detail" data-id="${esc(track.id)}" style="border-left:4px solid ${track.color};cursor:pointer">
+    <div class="card track-card" data-action="open-track-detail" data-id="${esc(track.id)}" style="border-left:4px solid ${track.color}">
       <div class="flex align-center gap-1 mb-1">
         <span style="font-size:1.5rem">${track.icon}</span>
         <div style="flex:1">
@@ -4728,7 +4773,7 @@ function openTrackDetail(trackId) {
     const label = typeLabels[mod.type] || mod.type;
     const color = typeColors[mod.type] || '#666';
     return `
-    <div class="track-module-item${done ? ' completed' : ''}" data-action="launch-track-module" data-track-id="${esc(track.id)}" data-module-id="${esc(mod.id)}" style="cursor:pointer">
+    <div class="track-module-item${done ? ' completed' : ''}" data-action="launch-track-module" data-track-id="${esc(track.id)}" data-module-id="${esc(mod.id)}">
       <div class="track-module-num" style="background:${done ? track.color : 'var(--surface2)'};color:${done ? '#fff' : 'var(--text2)'}">${i + 1}</div>
       <div style="flex:1">
         <div class="text-sm" style="font-weight:500">${esc(mod.title)}</div>
@@ -4753,8 +4798,9 @@ function isTrackModuleComplete(mod) {
       return !!(progress.cultureDone && progress.cultureDone[mod.ref.itemId]);
     case 'vocab': {
       if (!progress.vocabMastery || typeof VOCAB_DATA === 'undefined') return false;
+      buildVocabIndexes();
       const cat = mod.ref.category;
-      const catWords = VOCAB_DATA.filter(v => v.category === cat);
+      const catWords = VOCAB_BY_CATEGORY[cat] || [];
       const threshold = Math.min(10, catWords.length);
       const learned = catWords.filter(v => progress.vocabMastery[v.word]).length;
       return learned >= threshold;
@@ -4926,6 +4972,7 @@ document.addEventListener('click', e => {
 
     // Vocab
     case 'open-vocab-cat': openVocabCategory(target.dataset.cat); break;
+    case 'vocab-cat-more': openVocabCategory(target.dataset.cat, parseInt(target.dataset.page)); break;
     case 'start-vocab-learn': startVocabLearn(); break;
     case 'start-vocab-quiz': startVocabQuiz(); break;
     case 'start-quick-vocab': startQuickVocab(); break;
@@ -5141,6 +5188,16 @@ document.addEventListener('click', e => {
 
 // Keyboard shortcuts
 document.addEventListener('keydown', e => {
+  // Flashcard flip on Enter/Space (#3 keyboard accessibility)
+  if (e.key === 'Enter' || e.key === ' ') {
+    const focused = document.activeElement;
+    if (focused && focused.classList.contains('flashcard') && focused.dataset.action) {
+      e.preventDefault();
+      focused.click();
+      return;
+    }
+  }
+
   if (e.key === 'Enter') {
     // Submit on Enter for drill inputs
     if (document.getElementById('screen-verb-drill')?.classList.contains('active')) {
@@ -5206,19 +5263,31 @@ document.getElementById('verb-search')?.addEventListener('input', e => {
   renderVerbBrowser('all', e.target.value);
 });
 
-// Vocab search input
+// Vocab search input (debounced for 30k entries)
+let vocabSearchTimer = null;
 document.getElementById('vocab-search')?.addEventListener('input', e => {
   if (typeof VOCAB_DATA === 'undefined') return;
   const q = e.target.value.toLowerCase();
-  if (!q) { renderVocabHome(); return; }
-  const results = VOCAB_DATA.filter(v => v.word.includes(q) || v.english.toLowerCase().includes(q));
-  document.getElementById('vocab-categories').innerHTML = results.slice(0, 50).map(w => `
-    <div class="card" style="padding:0.5rem 0.75rem;text-align:left">
-      ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
-      <strong>${esc(w.word)}</strong>
-      <span class="text-muted text-sm"> — ${esc(w.english)}</span>
-    </div>
-  `).join('') || `<p class="text-muted">${t('noResults')}</p>`;
+  if (!q) { clearTimeout(vocabSearchTimer); renderVocabHome(); return; }
+  clearTimeout(vocabSearchTimer);
+  vocabSearchTimer = setTimeout(() => {
+    buildVocabIndexes();
+    // Early-break search: collect up to 50 results without scanning entire array
+    const results = [];
+    for (let i = 0; i < VOCAB_DATA.length && results.length < 50; i++) {
+      const v = VOCAB_DATA[i];
+      if (v.word.includes(q) || v.english.toLowerCase().includes(q)) {
+        results.push(v);
+      }
+    }
+    document.getElementById('vocab-categories').innerHTML = results.map(w => `
+      <div class="card" style="padding:0.5rem 0.75rem;text-align:left">
+        ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
+        <strong>${esc(w.word)}</strong>
+        <span class="text-muted text-sm"> — ${esc(w.english)}</span>
+      </div>
+    `).join('') || `<p class="text-muted">${t('noResults')}</p>`;
+  }, 200);
 });
 
 // Verb reference search input
