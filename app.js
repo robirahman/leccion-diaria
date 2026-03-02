@@ -13,6 +13,7 @@ let activeDropdown = null;
 
 // Placement test state (IRT-based, per-domain)
 let placementQuestions = [];   // flat array of all questions with difficulty
+let placementCurrentQ = null;  // current question being displayed
 let placementIdx = 0;
 let placementThetas = { grammar: 3.0, vocab: 3.0 };  // per-domain ability
 let placementHistory = [];     // [{difficulty, correct, domain}]
@@ -232,17 +233,13 @@ const UI_STRINGS = {
   readingDomain: ['Reading', 'Lectura'],
   grammarLevel: ['Grammar', 'Gramática'],
   vocabLevel: ['Vocabulary', 'Vocabulario'],
-  correctLabel: ['correct', 'correctas'],
+  correctLabelLC: ['correct', 'correctas'],
 
   // Profile
   dailySubtitle: ['Your daily Spanish lesson', 'Tu lección diaria de español'],
   newProfile: ['+ New Profile', '+ Nuevo perfil'],
   newProfileTitle: ['New Profile', 'Nuevo perfil'],
   yourName: ['Your name', 'Tu nombre'],
-
-  // Mastery
-  masteryBreakdown: ['Mastery Breakdown', 'Desglose de dominio'],
-  practiceCalendar: ['Practice Calendar', 'Calendario de práctica'],
 
   // Misc labels
   reply: ['Reply:', 'Respuesta:'],
@@ -491,10 +488,8 @@ function startWeakReview() {
     } else if (w.key.startsWith('grammar:')) {
       reviewQueue.push({ type: 'grammar', key: w.key.replace('grammar:', ''), fsrs: 'grammarFsrs', mastery: 'grammarDone' });
     } else if (w.key.includes(':')) {
-      // verb key format: infinitive:tense:person → convert to dash format for review
-      const parts = w.key.split(':');
-      const dashKey = parts.join('-');
-      reviewQueue.push({ type: 'verb', key: dashKey, fsrs: 'verbFsrs', mastery: 'verbMastery' });
+      // verb key format: infinitive:tense:person
+      reviewQueue.push({ type: 'verb', key: w.key, fsrs: 'verbFsrs', mastery: 'verbMastery' });
     }
   }
   if (!reviewQueue.length) { startReview(); return; }
@@ -2735,20 +2730,7 @@ function isCognate(spanish, english) {
   if (s === e) return true;
   const maxLen = Math.max(s.length, e.length);
   if (maxLen <= 2) return s === e;
-  // Levenshtein distance
-  const dp = Array.from({ length: s.length + 1 }, (_, i) => {
-    const row = new Array(e.length + 1);
-    row[0] = i;
-    return row;
-  });
-  for (let j = 0; j <= e.length; j++) dp[0][j] = j;
-  for (let i = 1; i <= s.length; i++) {
-    for (let j = 1; j <= e.length; j++) {
-      dp[i][j] = s[i-1] === e[j-1] ? dp[i-1][j-1]
-        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
-    }
-  }
-  return dp[s.length][e.length] / maxLen < 0.35;
+  return levenshtein(s, e) / maxLen < 0.35;
 }
 
 function buildPlacementVocabQs(level, count) {
@@ -3090,7 +3072,7 @@ function renderPlacementQuestion() {
 
   placementUsedIds.add(q.id);
   // Store current question for answer checking
-  placementQuestions._current = q;
+  placementCurrentQ = q;
 
   // Update UI — use the relevant theta for the current mode
   const mode = placementMode || 'both';
@@ -3161,7 +3143,7 @@ function submitPlacementMC() {
   const selectedBtn = document.querySelector('#pt-container .quiz-option.selected');
   if (!selectedBtn) return;
   const idx = parseInt(selectedBtn.dataset.idx);
-  const q = placementQuestions._current;
+  const q = placementCurrentQ;
   if (!q) return;
   const selected = q.options[idx];
   const isCorrect = selected === q.answer;
@@ -3181,7 +3163,7 @@ function submitPlacementMC() {
 }
 
 function submitPlacementFIB() {
-  const q = placementQuestions._current;
+  const q = placementCurrentQ;
   if (!q) return;
   const input = document.getElementById('pt-fib-input');
   if (!input) return;
@@ -3428,7 +3410,7 @@ function finishPlacementTest() {
   breakdownHtml += `
     </div>
     <div style="text-align:center;margin-bottom:0.75rem;font-size:0.85rem;color:var(--text-muted)">
-      ${totalCorrect}/${placementHistory.length} ${t('correctLabel')}
+      ${totalCorrect}/${placementHistory.length} ${t('correctLabelLC')}
     </div>
   `;
 
@@ -4522,13 +4504,13 @@ function renderReviewItem() {
     // Conjugation drill style
     const keys = Object.keys(progress.verbFsrs);
     const key = item.key;
-    // key format: "hablar-present-0" or just the verb infinitive
-    const parts = key.split('-');
+    // key format: "hablar:present:0" or just the verb infinitive
+    const parts = key.split(':');
     let verb, tense, person;
     if (parts.length >= 3) {
       person = parseInt(parts.pop());
       tense = parts.pop();
-      verb = parts.join('-');
+      verb = parts.join(':');
     } else {
       verb = key; tense = 'present'; person = 0;
     }
@@ -4660,9 +4642,9 @@ function submitReviewMC() {
 
 function checkReviewDrill() {
   const item = reviewQueue[reviewIdx];
-  const parts = item.key.split('-');
+  const parts = item.key.split(':');
   let verb, tense, person;
-  if (parts.length >= 3) { person = parseInt(parts.pop()); tense = parts.pop(); verb = parts.join('-'); }
+  if (parts.length >= 3) { person = parseInt(parts.pop()); tense = parts.pop(); verb = parts.join(':'); }
   else { verb = item.key; tense = 'present'; person = 0; }
   const correct = typeof conjugate === 'function' ? conjugate(verb, tense, person) : '';
   const input = document.getElementById('rev-drill-input');
@@ -5667,7 +5649,7 @@ document.addEventListener('keydown', e => {
     // Enter to advance or submit on quiz screens
     const quizScreens = [
       { screen: 'verb-quiz', next: 'vq-next', fib: 'vq-fib-input', submitFn: submitVerbQuizFIB, nextFn: nextVerbQuiz },
-      { screen: 'vocab-quiz', next: 'vocq-next', fib: null, submitFn: null, nextFn: () => { vocabQuizIdx++; renderVocabQuiz(); } },
+      { screen: 'vocab-quiz', next: 'vocq-next', fib: null, submitFn: null, nextFn: () => { vocabQuizIdx++; if (vocabQuizQueue[vocabQuizIdx]?.type === 'gender') renderVocabQuizQuestion_Gender(); else renderVocabQuizQuestion(); } },
       { screen: 'grammar-quiz', next: 'gq-next', fib: 'gq-fib-input', submitFn: submitGrammarFIB, nextFn: nextGrammarQuiz },
       { screen: 'culture-quiz', next: 'cq-next', fib: null, submitFn: null, nextFn: nextCultureQuiz },
       { screen: 'placement', next: 'pt-next', fib: 'pt-fib-input', submitFn: submitPlacementFIB, nextFn: nextPlacementQuestion },

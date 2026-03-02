@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leccion-diaria-v14';
+const CACHE_NAME = 'leccion-diaria-v15';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './fsrs.js',
   './conjugation.js', './verbs.js', './vocab.js', './grammar.js',
@@ -10,6 +10,7 @@ const ASSETS = [
   './translation_drills.js', './dictation.js', './jokes.js',
   './reading.js', './reading_sat.js', './themed_vocab.js',
   './phonetic_pairs.js', './homophones.js', './connectors.js',
+  './freq_vocab.js', './curriculum_tracks.js',
   './manifest.json',
 ];
 

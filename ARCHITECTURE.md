@@ -9,7 +9,7 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | File | Lines | Purpose |
 |------|-------|---------|
 | `index.html` | 559 | 30+ screens, nav bar, tab bar, modal system |
-| `app.js` | ~2,900 | Main controller: navigation, quiz logic, placement test, settings, events |
+| `app.js` | ~5,800 | Main controller: navigation, quiz logic, placement test, settings, events |
 | `conjugation.js` | 424 | Verb conjugation engine: 18 tenses, 200+ verbs, irregular/stem-change handling |
 | `fsrs.js` | 57 | FSRS-4.5 spaced repetition algorithm (17 parameters) |
 | `styles.css` | 970 | Dark/light themes, 4 color palettes, responsive mobile-first layout |
@@ -24,6 +24,8 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `freq_vocab.js` | 30,006 | Top 30k Spanish words by frequency (auto-generated) |
 | `placement_questions.js` | 1,471 | 120 hand-crafted IRT-calibrated placement questions (A1–C2) |
 | `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | ~2,800 total | Cultural content modules with descriptions, vocab, and quizzes |
+| `curriculum_tracks.js` | | Guided curriculum tracks with leveled lesson sequences |
+| `reading_sat.js` | | SAT-style reading comprehension passages and questions |
 | **Utilities** | | |
 | `generate_vocab.py` | 115 | Generates `freq_vocab.js` from the `wordfreq` Python library |
 
@@ -159,7 +161,7 @@ Returned by `newProgress()` in `app.js`, saved per-profile to localStorage:
   phraseFsrs: {},          // 'greet-1' → { s, d, lastRev }
   numberMastery: {},
   cultureDone: {},
-  practiceLog: {},         // 'YYYY-MM-DD' → { xp, items }
+  practiceLog: {},         // 'YYYY-MM-DD' → number (XP earned that day)
 
   placementLevel: 'B1',         // overall (backward compat)
   placementLevels: {             // per-domain
@@ -296,7 +298,7 @@ Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must 
 
 ## Service Worker (`sw.js`)
 
-Cache name: `leccion-diaria-v2`. Strategy: cache-first with background network update.
+Cache name: `leccion-diaria-v15`. Strategy: cache-first with background network update.
 
 All static assets are pre-cached on install. On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache. Bump the cache version when deploying changes.
 
