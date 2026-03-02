@@ -77,6 +77,7 @@ const UI_STRINGS = {
   vocabulary: ['Vocabulary', 'Vocabulario'],
   settings: ['Settings', 'Configuración'],
   statistics: ['Statistics', 'Estadísticas'],
+  guide: ['User Guide', 'Guía del usuario'],
 
   // Verb screen cards
   learnNewVerbs: ['Learn New Verbs', 'Aprender verbos nuevos'],
@@ -4868,6 +4869,7 @@ document.addEventListener('click', e => {
       break;
     }
     case 'open-settings': showScreen('settings'); break;
+    case 'open-guide': showScreen('guide'); break;
 
     // Profile
     case 'select-profile': selectProfile(target.dataset.name); break;

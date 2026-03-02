@@ -891,6 +891,26 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 }
 .tts-btn:hover { background: var(--accent-bg); border-color: var(--accent); }
 
+/* ── User Guide ── */
+.guide-section details summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.guide-section details summary::after {
+  content: '▸';
+  color: var(--text3);
+  transition: transform var(--transition);
+}
+.guide-section details[open] summary::after {
+  transform: rotate(90deg);
+}
+.guide-section details summary::-webkit-details-marker { display: none; }
+.guide-section ul { line-height: 1.7; }
+.guide-section li { margin-bottom: 0.35rem; }
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .card-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
