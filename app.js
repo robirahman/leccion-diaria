@@ -20,6 +20,7 @@ let placementSEs = { grammar: 2.0, vocab: 2.0 };     // per-domain standard erro
 let placementUsedIds = new Set();
 let placementLastDomains = []; // track recent domains for variety
 let placementTargetLength = 20; // adjustable test length (10, 20, or 40)
+let placementMode = 'both';    // 'both', 'grammar', or 'vocab'
 
 // Practice exercise state
 let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
@@ -2871,10 +2872,12 @@ const LEVEL_DIFFICULTY = { A1: 1.4, A2: 2.3, B1: 3.15, B2: 3.95, C1: 4.8, C2: 5.
 
 function buildPlacementIRTPool() {
   const pool = [];
+  const mode = placementMode || 'both';
 
   // 1. Add dedicated placement questions (placement_questions.js)
   if (typeof PLACEMENT_QUESTIONS !== 'undefined') {
     for (const q of PLACEMENT_QUESTIONS) {
+      if (mode !== 'both' && scoringGroup(q.domain) !== mode) continue;
       pool.push({ ...q, source: 'dedicated' });
     }
   }
@@ -2882,12 +2885,16 @@ function buildPlacementIRTPool() {
   // 2. Add generated questions from existing content (grammar, vocab, verbs)
   for (const level of PLACEMENT_LEVELS) {
     const diff = LEVEL_DIFFICULTY[level];
-    const grammar = buildPlacementGrammarQs(level, 5);
-    grammar.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-g-${pool.length}`, source: 'generated' }));
-    const vocab = buildPlacementVocabQs(level, 5);
-    vocab.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-v-${pool.length}`, source: 'generated' }));
-    const verbs = buildPlacementVerbQs(level, 4);
-    verbs.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-vb-${pool.length}`, source: 'generated' }));
+    if (mode !== 'vocab') {
+      const grammar = buildPlacementGrammarQs(level, 5);
+      grammar.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-g-${pool.length}`, source: 'generated' }));
+      const verbs = buildPlacementVerbQs(level, 4);
+      verbs.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-vb-${pool.length}`, source: 'generated' }));
+    }
+    if (mode !== 'grammar') {
+      const vocab = buildPlacementVocabQs(level, 5);
+      vocab.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-v-${pool.length}`, source: 'generated' }));
+    }
   }
 
   return pool;
@@ -2904,6 +2911,7 @@ function savePlacementState() {
       usedIds: [...placementUsedIds],
       lastDomains: placementLastDomains,
       targetLength: placementTargetLength,
+      mode: placementMode,
       profile: currentProfile,
     };
     sessionStorage.setItem('ld_placement_state', JSON.stringify(state));
@@ -2937,6 +2945,7 @@ function restorePlacementTest() {
     placementUsedIds = new Set(state.usedIds);
     placementLastDomains = state.lastDomains;
     placementTargetLength = state.targetLength || 40;
+    placementMode = state.mode || 'both';
     showScreen('placement');
     renderPlacementQuestion();
     return true;
@@ -2984,11 +2993,40 @@ function startPlacementTest() {
   if (ctrl) ctrl.innerHTML = '';
 }
 
-function startPlacementAt(level) {
+function showPlacementModeSelection(level) {
+  document.getElementById('pt-container').innerHTML = `
+    <h3 style="text-align:center;margin-bottom:0.5rem">What do you want to test?</h3>
+    <p class="text-muted text-sm" style="text-align:center;margin-bottom:1rem">Choose which skills to assess.</p>
+    <div class="pt-self-assess">
+      <button class="card pt-level-choice" data-action="start-placement-mode" data-level="${level}" data-mode="both">
+        <div class="card-title">Grammar &amp; Vocabulary</div>
+        <div class="card-subtitle text-xs">Full placement test covering both skills</div>
+      </button>
+      <button class="card pt-level-choice" data-action="start-placement-mode" data-level="${level}" data-mode="grammar">
+        <div class="card-title">Grammar Only</div>
+        <div class="card-subtitle text-xs">Test grammar and verb conjugation only</div>
+      </button>
+      <button class="card pt-level-choice" data-action="start-placement-mode" data-level="${level}" data-mode="vocab">
+        <div class="card-title">Vocabulary Only</div>
+        <div class="card-subtitle text-xs">Test vocabulary knowledge only</div>
+      </button>
+    </div>
+  `;
+}
+
+function startPlacementAt(level, mode) {
+  placementMode = mode || 'both';
   const startTheta = LEVEL_DIFFICULTY[level] || 3.0;
   placementQuestions = buildPlacementIRTPool();
   placementIdx = 0;
-  placementThetas = { grammar: startTheta, vocab: startTheta };
+  // Single-mode: only adjust the tested domain's theta; leave the other at default
+  if (placementMode === 'grammar') {
+    placementThetas = { grammar: startTheta, vocab: 3.0 };
+  } else if (placementMode === 'vocab') {
+    placementThetas = { grammar: 3.0, vocab: startTheta };
+  } else {
+    placementThetas = { grammar: startTheta, vocab: startTheta };
+  }
   placementHistory = [];
   placementSEs = { grammar: 2.0, vocab: 2.0 };
   placementUsedIds = new Set();
@@ -3003,26 +3041,29 @@ function selectNextIRTQuestion() {
   const available = placementQuestions.filter(q => !placementUsedIds.has(q.id));
   if (available.length === 0) return null;
 
+  const mode = placementMode || 'both';
+  const singleMode = mode !== 'both';
+
   // Count questions asked per scoring group so far
   const counts = { grammar: 0, vocab: 0 };
   for (const h of placementHistory) counts[scoringGroup(h.domain)]++;
   const total = placementHistory.length;
   const remaining = placementTargetLength - total;
 
-  // Target ~60% grammar, ~40% vocab for balanced estimates
-  const grammarTarget = Math.round(placementTargetLength * 0.6);
-  const vocabTarget = placementTargetLength - grammarTarget;
-  const grammarNeed = Math.max(0, grammarTarget - counts.grammar);
-  const vocabNeed = Math.max(0, vocabTarget - counts.vocab);
+  // Target ~60% grammar, ~40% vocab for balanced estimates (skip in single-mode)
   let preferredGroup = null;
-  if (remaining > 0) {
+  if (!singleMode && remaining > 0) {
+    const grammarTarget = Math.round(placementTargetLength * 0.6);
+    const vocabTarget = placementTargetLength - grammarTarget;
+    const grammarNeed = Math.max(0, grammarTarget - counts.grammar);
+    const vocabNeed = Math.max(0, vocabTarget - counts.vocab);
     if (vocabNeed >= remaining) preferredGroup = 'vocab';
     else if (grammarNeed >= remaining) preferredGroup = 'grammar';
   }
 
-  // Consecutive-domain penalty
+  // Consecutive-domain penalty (skip in single-mode — all same group)
   const lastTwo = placementLastDomains.slice(-2);
-  const allSame = lastTwo.length === 2 && lastTwo[0] === lastTwo[1];
+  const allSame = !singleMode && lastTwo.length === 2 && lastTwo[0] === lastTwo[1];
 
   let best = null;
   let bestScore = Infinity;
@@ -3051,8 +3092,12 @@ function renderPlacementQuestion() {
   // Store current question for answer checking
   placementQuestions._current = q;
 
-  // Update UI
-  const estimatedLevel = thetaToLevel((placementThetas.grammar + placementThetas.vocab) / 2);
+  // Update UI — use the relevant theta for the current mode
+  const mode = placementMode || 'both';
+  const estTheta = mode === 'grammar' ? placementThetas.grammar
+    : mode === 'vocab' ? placementThetas.vocab
+    : (placementThetas.grammar + placementThetas.vocab) / 2;
+  const estimatedLevel = thetaToLevel(estTheta);
   document.getElementById('pt-progress').textContent = `${placementIdx + 1} / ${placementTargetLength}`;
   const pct = Math.round(((placementIdx) / placementTargetLength) * 100);
   document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
@@ -3246,11 +3291,14 @@ function nextPlacementQuestion() {
 }
 
 function determinePlacementLevel() {
-  return {
-    grammar: thetaToLevel(placementThetas.grammar),
-    vocab: thetaToLevel(placementThetas.vocab),
-    overall: thetaToLevel((placementThetas.grammar + placementThetas.vocab) / 2),
-  };
+  const mode = placementMode || 'both';
+  const gLevel = thetaToLevel(placementThetas.grammar);
+  const vLevel = thetaToLevel(placementThetas.vocab);
+  let overall;
+  if (mode === 'grammar') overall = gLevel;
+  else if (mode === 'vocab') overall = vLevel;
+  else overall = thetaToLevel((placementThetas.grammar + placementThetas.vocab) / 2);
+  return { grammar: gLevel, vocab: vLevel, overall };
 }
 
 function seedMatureFsrs(store, key) {
@@ -3262,6 +3310,7 @@ function levelBelow(itemLevel, targetLevel) {
 }
 
 function applyPlacementResults(levels) {
+  const mode = placementMode || 'both';
   const grammarLevel = levels.grammar;
   const vocabLevel = levels.vocab;
 
@@ -3274,8 +3323,8 @@ function applyPlacementResults(levels) {
   const grammarCheck = perfectFull ? levelAtOrBelow : levelBelow;
   const vocabCheck = perfectFull ? levelAtOrBelow : levelBelow;
 
-  // Mark grammar lessons as done (uses grammar level)
-  if (typeof GRAMMAR_DATA !== 'undefined') {
+  // Mark grammar lessons as done (uses grammar level) — skip in vocab-only mode
+  if (mode !== 'vocab' && typeof GRAMMAR_DATA !== 'undefined') {
     GRAMMAR_DATA.forEach(l => {
       if (grammarCheck(l.level, grammarLevel)) {
         progress.grammarDone[l.id] = true;
@@ -3283,8 +3332,8 @@ function applyPlacementResults(levels) {
     });
   }
 
-  // Mark vocab as mastered (uses vocab level)
-  if (typeof VOCAB_DATA !== 'undefined') {
+  // Mark vocab as mastered (uses vocab level) — skip in grammar-only mode
+  if (mode !== 'grammar' && typeof VOCAB_DATA !== 'undefined') {
     buildVocabIndexes();
     const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
     for (const lv of levelOrder) {
@@ -3296,8 +3345,8 @@ function applyPlacementResults(levels) {
     }
   }
 
-  // Mark verb forms as mastered (uses grammar level — conjugation is structural)
-  if (typeof VERB_DATA !== 'undefined' && typeof TENSE_META !== 'undefined') {
+  // Mark verb forms as mastered (uses grammar level — conjugation is structural) — skip in vocab-only mode
+  if (mode !== 'vocab' && typeof VERB_DATA !== 'undefined' && typeof TENSE_META !== 'undefined') {
     VERB_DATA.forEach(v => {
       if (!grammarCheck(v.level, grammarLevel)) return;
       Object.keys(TENSE_META).forEach(tense => {
@@ -3312,7 +3361,14 @@ function applyPlacementResults(levels) {
   }
 
   progress.placementLevel = levels.overall;  // backward compat
-  progress.placementLevels = { grammar: grammarLevel, vocab: vocabLevel };
+  // In single-mode, only update the tested domain's level; preserve the other
+  if (mode === 'grammar') {
+    progress.placementLevels = { grammar: grammarLevel, vocab: progress.placementLevels?.vocab || vocabLevel };
+  } else if (mode === 'vocab') {
+    progress.placementLevels = { grammar: progress.placementLevels?.grammar || grammarLevel, vocab: vocabLevel };
+  } else {
+    progress.placementLevels = { grammar: grammarLevel, vocab: vocabLevel };
+  }
   progress.placementDate = todayStr();
   saveProgress();
 }
@@ -3343,6 +3399,7 @@ function finishPlacementTest() {
   let breakdownHtml = '';
 
   // Per-domain level badges
+  const mode = placementMode || 'both';
   const gInfo = GRAMMAR_LEVELS?.[levels.grammar] || { color: '#888' };
   const vInfo = GRAMMAR_LEVELS?.[levels.vocab] || { color: '#888' };
   const gTheta = Math.round(placementThetas.grammar * 100) / 100;
@@ -3351,18 +3408,24 @@ function finishPlacementTest() {
   const vSE = Math.round(placementSEs.vocab * 100) / 100;
   const totalCorrect = placementHistory.filter(h => h.correct).length;
 
-  breakdownHtml += `
-    <div style="display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem">
+  breakdownHtml += `<div style="display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem">`;
+  if (mode !== 'vocab') {
+    breakdownHtml += `
       <div style="text-align:center">
         <div style="font-size:0.75rem;color:var(--text-muted)">${t('grammarLevel')}</div>
         <div class="level-badge" style="background:${gInfo.color};display:inline-block;padding:0.25rem 0.75rem;border-radius:0.5rem;color:#fff;font-weight:700;font-size:1.1rem">${levels.grammar}</div>
         <div style="font-size:0.7rem;color:var(--text-muted)">${gTheta} &plusmn; ${gSE}</div>
-      </div>
+      </div>`;
+  }
+  if (mode !== 'grammar') {
+    breakdownHtml += `
       <div style="text-align:center">
         <div style="font-size:0.75rem;color:var(--text-muted)">${t('vocabLevel')}</div>
         <div class="level-badge" style="background:${vInfo.color};display:inline-block;padding:0.25rem 0.75rem;border-radius:0.5rem;color:#fff;font-weight:700;font-size:1.1rem">${levels.vocab}</div>
         <div style="font-size:0.7rem;color:var(--text-muted)">${vTheta} &plusmn; ${vSE}</div>
-      </div>
+      </div>`;
+  }
+  breakdownHtml += `
     </div>
     <div style="text-align:center;margin-bottom:0.75rem;font-size:0.85rem;color:var(--text-muted)">
       ${totalCorrect}/${placementHistory.length} ${t('correctLabel')}
@@ -3393,16 +3456,31 @@ function finishPlacementTest() {
     && levels.overall === 'C2';
   const gCheck = perfFull ? levelAtOrBelow : levelBelow;
   const vCheck = perfFull ? levelAtOrBelow : levelBelow;
-  const grammarCount = GRAMMAR_DATA?.filter(l => gCheck(l.level, levels.grammar)).length || 0;
-  buildVocabIndexes();
-  let vocabCount = 0;
-  for (const lv of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
-    if (vCheck(lv, levels.vocab)) vocabCount += (VOCAB_BY_LEVEL[lv] || []).length;
+
+  if (mode === 'grammar') {
+    const grammarCount = GRAMMAR_DATA?.filter(l => gCheck(l.level, levels.grammar)).length || 0;
+    document.getElementById('ptr-message').innerHTML =
+      `Grammar placed at <strong>${levels.grammar}</strong> — ${grammarCount} lessons and verb forms marked as known.`;
+  } else if (mode === 'vocab') {
+    buildVocabIndexes();
+    let vocabCount = 0;
+    for (const lv of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
+      if (vCheck(lv, levels.vocab)) vocabCount += (VOCAB_BY_LEVEL[lv] || []).length;
+    }
+    document.getElementById('ptr-message').innerHTML =
+      `Vocabulary placed at <strong>${levels.vocab}</strong> — ${vocabCount} words marked as mastered.`;
+  } else {
+    const grammarCount = GRAMMAR_DATA?.filter(l => gCheck(l.level, levels.grammar)).length || 0;
+    buildVocabIndexes();
+    let vocabCount = 0;
+    for (const lv of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
+      if (vCheck(lv, levels.vocab)) vocabCount += (VOCAB_BY_LEVEL[lv] || []).length;
+    }
+    document.getElementById('ptr-message').innerHTML =
+      t('placementResultMsgDual')
+        .replace('%gl', levels.grammar).replace('%g', grammarCount)
+        .replace('%vl', levels.vocab).replace('%v', vocabCount);
   }
-  document.getElementById('ptr-message').innerHTML =
-    t('placementResultMsgDual')
-      .replace('%gl', levels.grammar).replace('%g', grammarCount)
-      .replace('%vl', levels.vocab).replace('%v', vocabCount);
 }
 
 // ════════════════════════════════════════
@@ -5425,7 +5503,8 @@ document.addEventListener('click', e => {
     case 'next-placement': nextPlacementQuestion(); break;
     case 'placement-done': switchTab('today'); break;
     case 'retake-placement': startPlacementTest(); break;
-    case 'start-placement-at': startPlacementAt(target.dataset.level); break;
+    case 'start-placement-at': showPlacementModeSelection(target.dataset.level); break;
+    case 'start-placement-mode': startPlacementAt(target.dataset.level, target.dataset.mode); break;
     case 'end-placement-early': if (placementIdx >= 5) finishPlacementTest(); break;
     case 'pt-set-length': {
       const len = parseInt(target.dataset.len);
