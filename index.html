@@ -18,7 +18,7 @@
   <!-- ════════ NAV BAR ════════ -->
   <nav class="navbar" id="navbar">
     <button class="nav-back nav-btn" data-action="go-back" title="Back" aria-label="Go back">&#8592;</button>
-    <span class="nav-title">Lección Diaria</span>
+    <span class="nav-title"><span class="nav-crumb" id="nav-crumb"></span>Lección Diaria</span>
     <span class="offline-badge hidden" id="offline-badge" aria-live="polite">Offline</span>
     <div class="nav-stats">
       <span class="xp" id="nav-xp" title="Experience Points">0 XP</span>
@@ -142,14 +142,16 @@
   <div class="screen" id="screen-verb-learn">
     <div class="quiz-progress" id="verb-learn-progress"></div>
     <div class="flashcard" id="verb-flashcard" data-action="flip-verb-card" role="button" tabindex="0">
-      <div class="front">
-        <div class="word-main" id="vl-verb"></div>
-        <div class="word-detail" id="vl-english"></div>
-        <div class="text-muted text-sm mt-1" id="vl-prompt"></div>
-      </div>
-      <div class="back">
-        <div class="word-main" id="vl-answer"></div>
-        <div class="word-detail" id="vl-table"></div>
+      <div class="flashcard-inner">
+        <div class="front">
+          <div class="word-main" id="vl-verb"></div>
+          <div class="word-detail" id="vl-english"></div>
+          <div class="text-muted text-sm mt-1" id="vl-prompt"></div>
+        </div>
+        <div class="back">
+          <div class="word-main" id="vl-answer"></div>
+          <div class="word-detail" id="vl-table"></div>
+        </div>
       </div>
     </div>
     <div class="rating-bar" id="verb-learn-rating" style="display:none">
@@ -260,14 +262,16 @@
   <div class="screen" id="screen-vocab-learn">
     <div class="quiz-progress" id="vocl-progress"></div>
     <div class="flashcard" id="vocab-flashcard" data-action="flip-vocab-card" role="button" tabindex="0">
-      <div class="front">
-        <div class="word-gender" id="vocl-gender"></div>
-        <div class="word-main" id="vocl-word"></div>
-        <div class="text-muted text-sm">Press to reveal</div>
-      </div>
-      <div class="back">
-        <div class="word-main" id="vocl-english"></div>
-        <div class="word-detail" id="vocl-example"></div>
+      <div class="flashcard-inner">
+        <div class="front">
+          <div class="word-gender" id="vocl-gender"></div>
+          <div class="word-main" id="vocl-word"></div>
+          <div class="text-muted text-sm">Press to reveal</div>
+        </div>
+        <div class="back">
+          <div class="word-main" id="vocl-english"></div>
+          <div class="word-detail" id="vocl-example"></div>
+        </div>
       </div>
     </div>
     <div class="rating-bar" id="vocab-learn-rating" style="display:none">
@@ -327,13 +331,15 @@
   <div class="screen" id="screen-phrase-learn">
     <div class="quiz-progress" id="pl-progress"></div>
     <div class="flashcard" id="phrase-flashcard" data-action="flip-phrase-card" role="button" tabindex="0">
-      <div class="front">
-        <div class="word-main" id="pl-spanish"></div>
-        <div class="text-muted text-sm">Press to reveal</div>
-      </div>
-      <div class="back">
-        <div class="word-main" id="pl-english"></div>
-        <div class="word-detail" id="pl-notes"></div>
+      <div class="flashcard-inner">
+        <div class="front">
+          <div class="word-main" id="pl-spanish"></div>
+          <div class="text-muted text-sm">Press to reveal</div>
+        </div>
+        <div class="back">
+          <div class="word-main" id="pl-english"></div>
+          <div class="word-detail" id="pl-notes"></div>
+        </div>
       </div>
     </div>
     <div class="rating-bar" id="phrase-learn-rating" style="display:none">
@@ -1223,7 +1229,7 @@
 </div>
 
 <!-- ════════ MODAL ════════ -->
-<div class="modal-overlay" id="modal-overlay">
+<div class="modal-overlay" id="modal-overlay" aria-hidden="true">
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <h2 id="modal-title"></h2>
     <div id="modal-body"></div>

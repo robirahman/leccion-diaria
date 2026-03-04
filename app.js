@@ -742,19 +742,52 @@ function saveProgress() {
 //  NAVIGATION
 // ════════════════════════════════════════
 
+const SCREEN_NAMES = {
+  learn: 'Learn', verbs: 'Verbs', vocab: 'Vocabulary', grammar: 'Grammar',
+  numbers: 'Numbers', practice: 'Practice', culture: 'Culture', stats: 'Stats',
+  settings: 'Settings', 'verb-learn': 'Learn Verbs', 'verb-drill': 'Verb Drill',
+  'verb-quiz': 'Verb Quiz', 'verb-browser': 'Browse Verbs', 'verb-detail': 'Verb Detail',
+  'vocab-cat': 'Category', 'vocab-learn': 'Learn Vocab', 'vocab-quiz': 'Vocab Quiz',
+  'grammar-lesson': 'Lesson', 'grammar-quiz': 'Grammar Quiz',
+  'phrase-learn': 'Learn Phrases', 'phrase-quiz': 'Phrase Quiz',
+  review: 'Review', results: 'Results', placement: 'Placement Test',
+  'minimal-pairs': 'Minimal Pairs', 'sentence-build': 'Sentence Builder',
+  cloze: 'Cloze', 'translation-drill': 'Translation', dictation: 'Dictation',
+  reading: 'Reading', 'reading-sat': 'Reading SAT', pronunciation: 'Pronunciation',
+  'phonetic-pairs': 'Phonetic Pairs', homophones: 'Homophones',
+  connectors: 'Connectors', 'themed-vocab': 'Themed Vocab',
+};
+
+function emptyState(icon, message) {
+  return `<div class="empty-state"><div class="empty-state-icon">${icon}</div><p class="empty-state-text">${message}</p></div>`;
+}
+
 function showScreen(id, pushStack = true) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + id);
   if (el) {
     el.classList.add('active');
     el.classList.add('fade-in');
-    setTimeout(() => el.classList.remove('fade-in'), 300);
+    setTimeout(() => el.classList.remove('fade-in'), 250);
+    window.scrollTo(0, 0);
   }
   if (pushStack && screenStack[screenStack.length - 1] !== id) screenStack.push(id);
 
   // Show/hide nav back button
   const backBtn = document.querySelector('.nav-back');
   if (backBtn) backBtn.classList.toggle('visible', screenStack.length > 1 && id !== 'profile' && id !== 'today');
+
+  // Update breadcrumb
+  const crumbEl = document.getElementById('nav-crumb');
+  if (crumbEl) {
+    const name = SCREEN_NAMES[id];
+    if (name && id !== 'today' && id !== 'profile') {
+      crumbEl.textContent = name;
+      crumbEl.classList.add('visible');
+    } else {
+      crumbEl.classList.remove('visible');
+    }
+  }
 
   // Close any open dropdown
   closeDropdowns();
@@ -865,19 +898,27 @@ function confirmCreateProfile() {
 //  MODAL SYSTEM
 // ════════════════════════════════════════
 
+let _preModalFocus = null;
 function showModal(title, bodyHtml, buttons) {
+  _preModalFocus = document.activeElement;
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-body').innerHTML = bodyHtml;
   document.getElementById('modal-actions').innerHTML = buttons.map(b =>
     `<button class="btn ${b.cls || ''}" data-action="${b.action}">${b.label}</button>`
   ).join('');
   const overlay = document.getElementById('modal-overlay');
+  overlay.setAttribute('aria-hidden', 'false');
   overlay.classList.add('open');
   // Focus the first button in the modal
   const firstBtn = overlay.querySelector('.modal .btn');
   if (firstBtn) setTimeout(() => firstBtn.focus(), 50);
 }
-function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModal() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+  if (_preModalFocus) { _preModalFocus.focus(); _preModalFocus = null; }
+}
 
 // Modal focus trap and ESC to close
 document.addEventListener('keydown', e => {
@@ -1191,7 +1232,15 @@ function checkStreak() {
 
 function updateNavStats() {
   if (!progress) return;
-  document.getElementById('nav-xp').textContent = progress.xp + ' XP';
+  const xpEl = document.getElementById('nav-xp');
+  const oldText = xpEl.textContent;
+  const newText = progress.xp + ' XP';
+  xpEl.textContent = newText;
+  if (oldText !== newText && oldText !== '0 XP') {
+    xpEl.classList.remove('xp-pop');
+    void xpEl.offsetWidth;
+    xpEl.classList.add('xp-pop');
+  }
   document.getElementById('nav-streak').innerHTML = '🔥 ' + progress.streak;
 }
 
@@ -1992,9 +2041,9 @@ function showVerbDetail(infinitive) {
     const forms = conjugateAll(infinitive, tense);
     html += `<div class="card mb-1">
       <div class="card-title text-sm">${tenseLabel(meta)}</div>
-      <table class="conj-table mt-1">
+      <div class="conj-table-scroll"><table class="conj-table mt-1">
         ${PERSONS.map((p, i) => `<tr><td style="width:40%">${PERSON_LABELS[p]}</td><td>${forms[i]}</td></tr>`).join('')}
-      </table>
+      </table></div>
     </div>`;
   });
 
@@ -2006,9 +2055,9 @@ function showVerbDetail(infinitive) {
     const forms = conjugateAll(infinitive, tense);
     html += `<div class="card mb-1">
       <div class="card-title text-sm">${tenseLabel(meta)}</div>
-      <table class="conj-table mt-1">
+      <div class="conj-table-scroll"><table class="conj-table mt-1">
         ${PERSONS.map((p, i) => `<tr><td style="width:40%">${PERSON_LABELS[p]}</td><td>${forms[i]}</td></tr>`).join('')}
-      </table>
+      </table></div>
     </div>`;
   });
 
@@ -4897,7 +4946,7 @@ function renderStats() {
     }
   }
   const catEl = document.getElementById('stats-categories');
-  if (catEl) catEl.innerHTML = catHtml || '<p class="text-muted text-sm">No data yet.</p>';
+  if (catEl) catEl.innerHTML = catHtml || emptyState('📚', 'No vocabulary learned yet. Start a lesson to begin!');
 
   // Accuracy stats from practiceLog
   const log = progress.practiceLog || {};
@@ -4971,7 +5020,7 @@ function startReview() {
   reviewQueue = buildReviewQueue();
   reviewIdx = 0; reviewScore = 0; reviewSelected = -1;
   if (reviewQueue.length === 0) {
-    showModal(t('allCaughtUp'), `<p>No items due for review right now.</p>`, [
+    showModal(t('allCaughtUp'), emptyState('✅', 'All caught up! No reviews due right now.'), [
       { label: tBtn('ok'), action: 'close-modal', cls: 'btn-primary' }
     ]);
     return;
@@ -5032,13 +5081,15 @@ function renderReviewItem() {
         <h3 class="mt-1">${t('whatDoesMean')} "${esc(word.word)}" ${t('mean')}</h3>
         ${word.example ? `<p class="text-muted text-sm mt-1">${esc(word.example)}</p>` : ''}
       </div>
-      <div class="flashcard mt-1" data-action="flip-review-card">
-        <div class="front" id="rev-card-front">
-          <div class="word-main">${esc(word.word)}</div>
-          <div class="text-muted text-sm">${t('tapToReveal')}</div>
-        </div>
-        <div class="back" id="rev-card-back" style="display:none">
-          <div class="word-main">${esc(word.english)}</div>
+      <div class="flashcard mt-1" id="rev-flashcard" data-action="flip-review-card">
+        <div class="flashcard-inner">
+          <div class="front" id="rev-card-front">
+            <div class="word-main">${esc(word.word)}</div>
+            <div class="text-muted text-sm">${t('tapToReveal')}</div>
+          </div>
+          <div class="back" id="rev-card-back">
+            <div class="word-main">${esc(word.english)}</div>
+          </div>
         </div>
       </div>
       <div class="rating-buttons mt-1" id="rev-rating" style="display:none">
@@ -5055,13 +5106,15 @@ function renderReviewItem() {
       <div class="card">
         <div class="text-muted text-sm">${t('reviewQueue')} (${reviewIdx+1}/${total})</div>
       </div>
-      <div class="flashcard mt-1" data-action="flip-review-card">
-        <div class="front" id="rev-card-front">
-          <div class="word-main" style="font-size:1.1rem">${esc(phrase.spanish)}</div>
-          <div class="text-muted text-sm">${t('tapToReveal')}</div>
-        </div>
-        <div class="back" id="rev-card-back" style="display:none">
-          <div class="word-main" style="font-size:1.1rem">${esc(phrase.english)}</div>
+      <div class="flashcard mt-1" id="rev-flashcard" data-action="flip-review-card">
+        <div class="flashcard-inner">
+          <div class="front" id="rev-card-front">
+            <div class="word-main" style="font-size:1.1rem">${esc(phrase.spanish)}</div>
+            <div class="text-muted text-sm">${t('tapToReveal')}</div>
+          </div>
+          <div class="back" id="rev-card-back">
+            <div class="word-main" style="font-size:1.1rem">${esc(phrase.english)}</div>
+          </div>
         </div>
       </div>
       <div class="rating-buttons mt-1" id="rev-rating" style="display:none">
@@ -5096,12 +5149,10 @@ function renderReviewItem() {
 }
 
 function flipReviewCard() {
-  const front = document.getElementById('rev-card-front');
-  const back = document.getElementById('rev-card-back');
+  const card = document.getElementById('rev-flashcard');
   const rating = document.getElementById('rev-rating');
-  if (front && back) {
-    front.style.display = 'none';
-    back.style.display = 'block';
+  if (card) {
+    card.classList.add('flipped');
     if (rating) rating.style.display = 'flex';
   }
 }
@@ -5207,11 +5258,11 @@ function renderVerbReference(infinitive) {
   const base = infinitive.replace(/se$/, '');
   html += `<div class="card mb-1">
     <div class="card-title text-sm" style="color:var(--text2)">Non-Finite Forms</div>
-    <table class="conj-table mt-1">
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
       <tr><td>Infinitive</td><td><strong>${esc(infinitive)}</strong></td></tr>
       <tr><td>Past Participle</td><td><strong>${esc(getParticiple(base))}</strong></td></tr>
       <tr><td>Gerund</td><td><strong>${esc(getGerund(base))}</strong></td></tr>
-    </table>
+    </table></div>
   </div>`;
 
   // Tense groups by mood
@@ -5264,13 +5315,13 @@ function renderRefTenseTable(infinitive, tense, useSeForm = false) {
     </div>
     ${meta.compound ? `<div class="text-muted" style="font-size:0.7rem">haber (${meta.auxTense}) + past participle</div>` : ''}
     ${meta.progressive ? `<div class="text-muted" style="font-size:0.7rem">estar (${meta.auxTense}) + gerund</div>` : ''}
-    <table class="conj-table mt-1">
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
       ${PERSONS.map((p, i) => {
         const form = forms[i];
         if (form === '—') return `<tr><td>${PERSON_LABELS[p]}</td><td style="color:var(--text3)">—</td></tr>`;
         return `<tr><td>${PERSON_LABELS[p]}</td><td${isIrregular ? ' class="irreg"' : ''}>${esc(form)}</td></tr>`;
       }).join('')}
-    </table>
+    </table></div>
   </div>`;
 }
 
@@ -6278,7 +6329,7 @@ document.getElementById('vocab-search')?.addEventListener('input', e => {
           <strong>${esc(w.word)}</strong>
           <span class="text-muted text-sm"> — ${esc(w.english)}</span>
         </div>
-      `).join('') || `<p class="text-muted">${t('noResults')}</p>`;
+      `).join('') || emptyState('🔍', t('noResults'));
       hideLoading();
     });
   }, 200);
