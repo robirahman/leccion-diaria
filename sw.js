@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leccion-diaria-v15';
+const CACHE_NAME = 'leccion-diaria-v16';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './fsrs.js',
   './conjugation.js', './verbs.js', './vocab.js', './grammar.js',

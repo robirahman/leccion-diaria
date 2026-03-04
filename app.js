@@ -331,7 +331,9 @@ function newProgress() {
     placementLevel: null,
     placementDate: null,
     settings: {
-      display: 'standard', region: 'latam', theme: 'dark', palette: 'alhambra',
+      display: 'standard', region: 'latam',
+      theme: window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark',
+      palette: 'alhambra',
       accents: 'warn', ttsRate: 1,
       hideFutureSubjunctive: true, subjunctiveForm: 'ra',
     },
@@ -417,7 +419,7 @@ function showToast(icon, text) {
   toast.className = 'toast';
   toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${esc(text)}</span>`;
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3200);
+  setTimeout(() => toast.remove(), 4800);
 }
 
 function showLoading() {
@@ -6398,5 +6400,16 @@ function updateOnlineStatus() {
 window.addEventListener('online', updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
 updateOnlineStatus();
+
+// Global error handlers — show user-facing toast instead of silent console errors
+let _lastErrorToast = 0;
+function _showErrorToast() {
+  const now = Date.now();
+  if (now - _lastErrorToast < 3000) return;
+  _lastErrorToast = now;
+  try { showToast('⚠️', 'Something went wrong. Try reloading the page.'); } catch (_) { /* prevent loop */ }
+}
+window.addEventListener('error', e => { console.error('Uncaught error:', e.error); _showErrorToast(); });
+window.addEventListener('unhandledrejection', e => { console.error('Unhandled promise rejection:', e.reason); _showErrorToast(); });
 
 init();

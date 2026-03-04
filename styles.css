@@ -123,6 +123,7 @@ input, select, textarea {
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
 /* ── Focus-visible indicators ── */
@@ -215,6 +216,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 }
 .tab-bar .tab .tab-icon { font-size: 1.2rem; margin-bottom: 0.1rem; }
 .tab-bar .tab.active { color: var(--accent); }
+.tab-bar .tab.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 0 0 2px 2px;
+}
 .tab-bar .tab:hover { color: var(--text); }
 
 .tab-wrapper {
@@ -444,7 +455,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 }
 .quiz-option:hover:not(.disabled) { border-color: var(--accent); background: var(--accent-bg); }
 .quiz-option.selected { border-color: var(--accent); background: var(--accent-bg); }
-.quiz-option.disabled { cursor: default; opacity: 0.7; }
+.quiz-option.disabled { cursor: default; opacity: 0.55; pointer-events: none; }
 .quiz-option.correct { border-color: var(--green); background: var(--green-bg); }
 .quiz-option.incorrect { border-color: var(--red); background: var(--red-bg); }
 
@@ -484,6 +495,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   transition: all var(--transition);
 }
 .accent-bar .accent-btn:hover { background: var(--accent-bg); border-color: var(--accent); }
+.accent-bar .accent-btn:active { transform: scale(0.93); background: var(--accent-bg); border-color: var(--accent); }
 
 /* ── Conjugation Table ── */
 .conj-table {
@@ -1013,10 +1025,17 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .nav-crumb { font-size: 0.7rem; font-weight: 400; color: var(--text3); display: none; }
 .nav-crumb.visible { display: inline; }
 .nav-crumb::after { content: ' \203A '; color: var(--text3); }
-.nav-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 45vw; }
+.nav-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55vw; }
 
 /* ── Conjugation table scroll ── */
-.conj-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.5rem; padding: 0 0.5rem; }
+.conj-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -0.5rem;
+  padding: 0 0.5rem;
+  mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+}
 .conj-table-scroll .conj-table { min-width: 320px; }
 
 /* ── Placement Test ── */
@@ -1101,7 +1120,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 /* ── Cloze Passages ── */
 .cloze-passage { line-height: 2.2; font-size: 1.05rem; }
 .cloze-blank {
-  width: 90px; border: none; border-bottom: 2px solid var(--accent);
+  min-width: 90px; width: auto; max-width: 200px; border: none; border-bottom: 2px solid var(--accent);
   background: transparent; color: var(--text1); font-size: 1rem;
   text-align: center; padding: 0.1rem 0.25rem; outline: none;
 }
@@ -1255,7 +1274,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 4.5s forwards;
   pointer-events: auto;
 }
 .toast .toast-icon { font-size: 1.3rem; }
