@@ -17,14 +17,15 @@
 
   <!-- ════════ NAV BAR ════════ -->
   <nav class="navbar" id="navbar">
-    <button class="nav-back nav-btn" data-action="go-back" title="Back">&#8592;</button>
+    <button class="nav-back nav-btn" data-action="go-back" title="Back" aria-label="Go back">&#8592;</button>
     <span class="nav-title">Lección Diaria</span>
+    <span class="offline-badge hidden" id="offline-badge" aria-live="polite">Offline</span>
     <div class="nav-stats">
       <span class="xp" id="nav-xp" title="Experience Points">0 XP</span>
       <span class="streak" id="nav-streak" title="Day Streak">0d</span>
     </div>
-    <button class="nav-btn" data-action="toggle-theme" title="Toggle theme">&#9681;</button>
-    <button class="nav-btn" data-action="open-settings" title="Settings">&#9881;</button>
+    <button class="nav-btn" data-action="toggle-theme" title="Toggle theme" aria-label="Toggle dark and light theme">&#9681;</button>
+    <button class="nav-btn" data-action="open-settings" title="Settings" aria-label="Open settings">&#9881;</button>
   </nav>
 
   <!-- ════════ PROFILE SELECT SCREEN ════════ -->
@@ -169,13 +170,13 @@
         <button class="btn btn-primary" data-action="check-verb-drill">Check</button>
       </div>
       <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent" data-char="ñ">ñ</button>
-        <button class="accent-btn" data-action="insert-accent" data-char="ü">ü</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="á" aria-label="Insert á">á</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="é" aria-label="Insert é">é</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="í" aria-label="Insert í">í</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="ó" aria-label="Insert ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="ú" aria-label="Insert ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="ñ" aria-label="Insert ñ">ñ</button>
+        <button class="accent-btn" data-action="insert-accent" data-char="ü" aria-label="Insert ü">ü</button>
       </div>
       <div class="quiz-feedback" id="vd-feedback" style="display:none"></div>
     </div>
@@ -620,12 +621,12 @@
       <div class="text-muted text-sm mb-1" id="cloze-title"></div>
       <div class="cloze-passage" id="cloze-container"></div>
       <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-cloze" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-cloze" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-cloze" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ñ">ñ</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="á" aria-label="Insert á">á</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="é" aria-label="Insert é">é</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="í" aria-label="Insert í">í</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ó" aria-label="Insert ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ú" aria-label="Insert ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-cloze" data-char="ñ" aria-label="Insert ñ">ñ</button>
       </div>
       <div id="cloze-feedback" style="display:none"></div>
     </div>
@@ -643,14 +644,14 @@
         <button class="btn btn-primary" data-action="check-translation">Check</button>
       </div>
       <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="ñ">ñ</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="¿">¿</button>
-        <button class="accent-btn" data-action="insert-accent-tr" data-char="¡">¡</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="á" aria-label="Insert á">á</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="é" aria-label="Insert é">é</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="í" aria-label="Insert í">í</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="ó" aria-label="Insert ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="ú" aria-label="Insert ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="ñ" aria-label="Insert ñ">ñ</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="¿" aria-label="Insert inverted question mark">¿</button>
+        <button class="accent-btn" data-action="insert-accent-tr" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
       </div>
       <div class="quiz-feedback" id="tr-feedback" style="display:none"></div>
     </div>
@@ -671,14 +672,14 @@
         <button class="btn btn-primary" data-action="check-dictation">Check</button>
       </div>
       <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="ñ">ñ</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="¿">¿</button>
-        <button class="accent-btn" data-action="insert-accent-dict" data-char="¡">¡</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="á" aria-label="Insert á">á</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="é" aria-label="Insert é">é</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="í" aria-label="Insert í">í</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="ó" aria-label="Insert ó">ó</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="ú" aria-label="Insert ú">ú</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="ñ" aria-label="Insert ñ">ñ</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="¿" aria-label="Insert inverted question mark">¿</button>
+        <button class="accent-btn" data-action="insert-accent-dict" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
       </div>
       <div class="quiz-feedback" id="dict-feedback" style="display:none"></div>
     </div>
@@ -1045,15 +1046,15 @@
     <div class="quiz-progress" id="rev-progress"></div>
     <div id="rev-container"></div>
     <div class="accent-bar" id="rev-accents" style="display:none">
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="á">á</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="é">é</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="í">í</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="ó">ó</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="ú">ú</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="ñ">ñ</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="ü">ü</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="¿">¿</button>
-      <button class="accent-btn" data-action="insert-accent-rev" data-char="¡">¡</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="á" aria-label="Insert á">á</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="é" aria-label="Insert é">é</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="í" aria-label="Insert í">í</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ó" aria-label="Insert ó">ó</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ú" aria-label="Insert ú">ú</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ñ" aria-label="Insert ñ">ñ</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="ü" aria-label="Insert ü">ü</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="¿" aria-label="Insert inverted question mark">¿</button>
+      <button class="accent-btn" data-action="insert-accent-rev" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-review" style="display:none" id="rev-next">Next</button>
   </div>
@@ -1198,25 +1199,25 @@
 </div><!-- /app-container -->
 
 <!-- ════════ TAB BAR ════════ -->
-<div class="tab-bar" id="tab-bar" style="display:none">
-  <button class="tab active" data-action="switch-tab" data-tab="today">
-    <span class="tab-icon">&#127968;</span>
+<div class="tab-bar" id="tab-bar" role="tablist" style="display:none">
+  <button class="tab active" data-action="switch-tab" data-tab="today" role="tab" aria-current="page">
+    <span class="tab-icon" aria-hidden="true">&#127968;</span>
     <span>Today</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="learn">
-    <span class="tab-icon">&#128218;</span>
+  <button class="tab" data-action="switch-tab" data-tab="learn" role="tab">
+    <span class="tab-icon" aria-hidden="true">&#128218;</span>
     <span>Learn</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="practice">
-    <span class="tab-icon">&#9997;</span>
+  <button class="tab" data-action="switch-tab" data-tab="practice" role="tab">
+    <span class="tab-icon" aria-hidden="true">&#9997;</span>
     <span>Practice</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="culture">
-    <span class="tab-icon">&#127928;</span>
+  <button class="tab" data-action="switch-tab" data-tab="culture" role="tab">
+    <span class="tab-icon" aria-hidden="true">&#127928;</span>
     <span>Culture</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="stats">
-    <span class="tab-icon">&#128202;</span>
+  <button class="tab" data-action="switch-tab" data-tab="stats" role="tab">
+    <span class="tab-icon" aria-hidden="true">&#128202;</span>
     <span>Stats</span>
   </button>
 </div>
@@ -1241,6 +1242,11 @@
       <button class="btn btn-primary" data-action="native-share" id="native-share-btn" style="display:none">&#128228; Share</button>
     </div>
   </div>
+</div>
+
+<!-- ════════ LOADING OVERLAY ════════ -->
+<div class="loading-overlay hidden" id="loading-overlay" aria-live="assertive" aria-label="Loading">
+  <div class="spinner" style="width:40px;height:40px;border-width:4px"></div>
 </div>
 
 <!-- ════════ TOAST ════════ -->

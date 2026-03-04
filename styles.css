@@ -231,6 +231,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   min-width: 160px;
   padding: 0.25rem 0;
   display: none;
+  z-index: 150;
 }
 .tab-dropdown.open { display: block; }
 .tab-dropdown .dropdown-item {
@@ -303,6 +304,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .btn-block { display: flex; width: 100%; }
 .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
 .btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; }
+.btn:disabled, .btn.disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
 
 /* ── Progress bars ── */
 .progress-bar {
@@ -645,17 +647,19 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 /* Radio pills */
 .pill-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.25rem;
   background: var(--bg3);
   border-radius: var(--radius-sm);
-  padding: 0.15rem;
+  padding: 0.2rem;
 }
 .pill-group .pill {
-  padding: 0.35rem 0.6rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--text2);
+  white-space: nowrap;
   transition: all var(--transition);
 }
 .pill-group .pill.active {
@@ -925,6 +929,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   .flashcard .word-main { font-size: 1.4rem; }
   .conj-table { font-size: 0.75rem; }
   .conj-table th, .conj-table td { padding: 0.3rem 0.4rem; }
+  .modal { padding: 1rem; max-height: 80dvh; }
+  .modal-overlay { padding: 0.5rem; }
+}
+
+@media (min-width: 768px) {
+  :root { --max-w: 720px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .stat-cards { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .flashcard { min-height: 260px; padding: 2.5rem; }
+  .flashcard .word-main { font-size: 2rem; }
 }
 
 /* ── Transitions ── */
@@ -1037,8 +1051,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   text-align: center; padding: 0.1rem 0.25rem; outline: none;
 }
 .cloze-blank:focus { border-bottom-color: var(--text1); }
-.cloze-blank.correct { border-color: #4caf50; color: #4caf50; }
-.cloze-blank.incorrect { border-color: #f44336; color: #f44336; }
+.cloze-blank.correct { border-color: var(--green); color: var(--green); }
+.cloze-blank.incorrect { border-color: var(--red); color: var(--red); }
 .cloze-explanation { font-size: 0.85rem; color: var(--text2); margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid var(--accent); }
 
 /* ── Sentence Construction ── */
@@ -1058,7 +1072,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   transition: transform 0.1s; user-select: none; font-size: 0.95rem;
 }
 .sb-word-tile:active { transform: scale(0.94); }
-.sb-word-tile.distractor-wrong { border-color: #f44336; color: #f44336; }
+.sb-word-tile.distractor-wrong { border-color: var(--red); color: var(--red); }
 .sb-divider { border: none; border-top: 1px solid var(--border); margin: 0.75rem 0; }
 
 /* ── Dictation ── */
@@ -1066,11 +1080,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   display: flex; gap: 0.75rem; margin-bottom: 1rem; justify-content: center;
 }
 .dict-word { display: inline; }
-.dict-word.correct { color: #4caf50; }
-.dict-word.accent { color: #ff9800; }
-.dict-word.typo { color: #ff9800; text-decoration: underline; }
-.dict-word.wrong { color: #f44336; text-decoration: line-through; }
-.dict-word.missing { color: #f44336; font-style: italic; }
+.dict-word.correct { color: var(--green); }
+.dict-word.accent { color: var(--yellow); }
+.dict-word.typo { color: var(--yellow); text-decoration: underline; }
+.dict-word.wrong { color: var(--red); text-decoration: line-through; }
+.dict-word.missing { color: var(--red); font-style: italic; }
 
 /* ── Minimal Pairs ── */
 .mp-contrast {
@@ -1233,3 +1247,34 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 #reading-type-filters .btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 .sat-badge { font-size: 0.55rem; padding: 0.05rem 0.3rem; background: var(--yellow-bg); color: var(--yellow); border-radius: 3px; font-weight: 700; }
 .question-type-tag { font-size: 0.6rem; padding: 0.1rem 0.3rem; background: var(--bg3); color: var(--text3); border-radius: 3px; margin-left: 0.25rem; }
+
+/* ── Offline Badge ── */
+.offline-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: var(--yellow-bg);
+  color: var(--yellow);
+}
+
+/* ── Loading Overlay ── */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading-overlay.hidden { display: none; }
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

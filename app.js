@@ -420,6 +420,13 @@ function showToast(icon, text) {
   setTimeout(() => toast.remove(), 3200);
 }
 
+function showLoading() {
+  document.getElementById('loading-overlay')?.classList.remove('hidden');
+}
+function hideLoading() {
+  document.getElementById('loading-overlay')?.classList.add('hidden');
+}
+
 // ════════════════════════════════════════
 //  WEAK AREAS TRACKER
 // ════════════════════════════════════════
@@ -576,27 +583,25 @@ function generateShareCard() {
   const w = 400, h = 500;
   canvas.width = w; canvas.height = h;
 
+  // Read current theme colors from CSS variables
+  const cs = getComputedStyle(document.documentElement);
+  const bgColor = cs.getPropertyValue('--bg').trim();
+  const bg2Color = cs.getPropertyValue('--bg2').trim();
+  const textColor = cs.getPropertyValue('--text').trim();
+  const mutedColor = cs.getPropertyValue('--text2').trim();
+  const accentColor = cs.getPropertyValue('--accent').trim();
+
   // Background gradient
-  const isDark = (progress?.settings?.theme || 'dark') === 'dark';
   const grad = ctx.createLinearGradient(0, 0, 0, h);
-  if (isDark) {
-    grad.addColorStop(0, '#1a1a2e');
-    grad.addColorStop(1, '#16213e');
-  } else {
-    grad.addColorStop(0, '#f5f0eb');
-    grad.addColorStop(1, '#ede5db');
-  }
+  grad.addColorStop(0, bgColor);
+  grad.addColorStop(1, bg2Color);
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
   // Border
-  ctx.strokeStyle = isDark ? '#c7553b' : '#c7553b';
+  ctx.strokeStyle = accentColor;
   ctx.lineWidth = 3;
   ctx.strokeRect(10, 10, w - 20, h - 20);
-
-  const textColor = isDark ? '#e8e8e8' : '#2c2418';
-  const mutedColor = isDark ? '#a0a8c0' : '#6b5d4f';
-  const accentColor = '#c7553b';
 
   // App name
   ctx.fillStyle = accentColor;
@@ -697,7 +702,11 @@ function nativeShareCard() {
 
 function getProfiles() {
   try { return JSON.parse(localStorage.getItem('ld_profiles') || '[]'); }
-  catch { return []; }
+  catch (e) {
+    showToast('⚠️', 'Could not load profiles. Data may be corrupted.');
+    console.error('getProfiles error:', e);
+    return [];
+  }
 }
 function saveProfiles(list) { localStorage.setItem('ld_profiles', JSON.stringify(list)); }
 
@@ -709,11 +718,24 @@ function loadProgress(name) {
     if (!p.errorCounts) p.errorCounts = {};
     return p;
   }
-  catch { return newProgress(); }
+  catch (e) {
+    showToast('⚠️', 'Could not load progress. Starting fresh.');
+    console.error('loadProgress error:', e);
+    return newProgress();
+  }
 }
 function saveProgress() {
   if (!currentProfile) return;
-  localStorage.setItem('ld_progress_' + currentProfile, JSON.stringify(progress));
+  try {
+    localStorage.setItem('ld_progress_' + currentProfile, JSON.stringify(progress));
+  } catch (e) {
+    if (e.name === 'QuotaExceededError') {
+      showToast('⚠️', 'Storage full! Export your data from Settings.');
+    } else {
+      showToast('⚠️', 'Could not save progress.');
+    }
+    console.error('saveProgress error:', e);
+  }
 }
 
 // ════════════════════════════════════════
@@ -752,9 +774,15 @@ function switchTab(tab) {
   const TAB_PARENT = { verbs: 'learn', vocab: 'learn', grammar: 'learn', numbers: 'learn', phrases: 'practice' };
   const highlightTab = TAB_PARENT[tab] || tab;
 
-  document.querySelectorAll('.tab-bar .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-bar .tab').forEach(t => {
+    t.classList.remove('active');
+    t.removeAttribute('aria-current');
+  });
   const tabBtn = document.querySelector(`.tab[data-tab="${highlightTab}"]`);
-  if (tabBtn) tabBtn.classList.add('active');
+  if (tabBtn) {
+    tabBtn.classList.add('active');
+    tabBtn.setAttribute('aria-current', 'page');
+  }
 
   screenStack = [tab];
   showScreen(tab, false);
@@ -2100,7 +2128,7 @@ function openVocabCategory(cat, page) {
           <strong>${esc(w.word)}</strong>
           <span class="text-muted text-sm"> — ${esc(w.english)}</span>
         </div>
-        <button class="tts-btn" data-action="speak" data-text="${esc(w.word)}">&#128266;</button>
+        <button class="tts-btn" data-action="speak" data-text="${esc(w.word)}" aria-label="Listen to ${esc(w.word)}">&#128266;</button>
       </div>
       ${w.example ? `<div class="text-sm text-muted mt-1">${esc(w.example)}</div>` : ''}
     </div>`;
@@ -4209,8 +4237,8 @@ function renderPPQuestion() {
   document.getElementById('pp-progress').textContent = `${ppIdx + 1} / ${ppQueue.length}`;
   document.getElementById('pp-ipa').innerHTML = `${esc(q.item.ipaA)} vs ${esc(q.item.ipaB)}`;
   document.getElementById('pp-tts').innerHTML =
-    `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordA)}">${esc(q.item.wordA)} &#9654;</button> ` +
-    `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordB)}">${esc(q.item.wordB)} &#9654;</button>`;
+    `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordA)}" aria-label="Listen to ${esc(q.item.wordA)}">${esc(q.item.wordA)} &#9654;</button> ` +
+    `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordB)}" aria-label="Listen to ${esc(q.item.wordB)}">${esc(q.item.wordB)} &#9654;</button>`;
   document.getElementById('pp-sentence').innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
   const options = shuffle([q.answer, q.wrong]);
   document.getElementById('pp-options').innerHTML = options.map((opt, i) =>
@@ -5268,7 +5296,7 @@ function showVrefSuggestions(query) {
 // ════════════════════════════════════════
 
 function renderPronunciation() {
-  const speakBtn = (text) => `<button class="tts-inline" data-action="speak" data-text="${esc(text)}">&#9654;</button>`;
+  const speakBtn = (text) => `<button class="tts-inline" data-action="speak" data-text="${esc(text)}" aria-label="Listen to ${esc(text)}">&#9654;</button>`;
 
   let html = '';
 
@@ -5524,7 +5552,7 @@ function openThemedDetail(id) {
       `<div class="tv-dialogue-line">
         <span class="tv-speaker">${esc(d.speaker)}</span>
         <span>${esc(d.text)}</span>
-        <button class="tts-inline" data-action="speak" data-text="${esc(d.text)}">&#9654;</button>
+        <button class="tts-inline" data-action="speak" data-text="${esc(d.text)}" aria-label="Listen to ${esc(d.text)}">&#9654;</button>
       </div>`
     ).join('');
   } else {
@@ -5534,7 +5562,7 @@ function openThemedDetail(id) {
   // Phrases
   document.getElementById('tv-phrases').innerHTML = currentTheme.phrases.map(p =>
     `<div class="phrase-card">
-      <div class="phrase-es">${esc(p.spanish)} <button class="tts-inline" data-action="speak" data-text="${esc(p.spanish)}">&#9654;</button></div>
+      <div class="phrase-es">${esc(p.spanish)} <button class="tts-inline" data-action="speak" data-text="${esc(p.spanish)}" aria-label="Listen to ${esc(p.spanish)}">&#9654;</button></div>
       <div class="phrase-en">${esc(p.english)}</div>
       ${p.notes ? `<div class="text-muted text-sm">${esc(p.notes)}</div>` : ''}
     </div>`
@@ -5664,7 +5692,15 @@ function openTrackDetail(trackId) {
   `;
 
   const typeLabels = { vocab: 'Vocab', grammar: 'Grammar', themed: 'Scenario', culture: 'Culture', reading: 'Reading', conversation: 'Convo' };
-  const typeColors = { vocab: '#4CAF50', grammar: '#FF9800', themed: '#2196F3', culture: '#9C27B0', reading: '#795548', conversation: '#E91E63' };
+  const cs = getComputedStyle(document.documentElement);
+  const typeColors = {
+    vocab: cs.getPropertyValue('--green').trim(),
+    grammar: cs.getPropertyValue('--yellow').trim(),
+    themed: cs.getPropertyValue('--blue').trim(),
+    culture: cs.getPropertyValue('--accent').trim(),
+    reading: cs.getPropertyValue('--text2').trim(),
+    conversation: cs.getPropertyValue('--accent2').trim()
+  };
 
   document.getElementById('track-modules').innerHTML = track.modules.map((mod, i) => {
     const done = isTrackModuleComplete(mod);
@@ -6225,22 +6261,26 @@ document.getElementById('vocab-search')?.addEventListener('input', e => {
   if (!q) { clearTimeout(vocabSearchTimer); renderVocabHome(); return; }
   clearTimeout(vocabSearchTimer);
   vocabSearchTimer = setTimeout(() => {
-    buildVocabIndexes();
-    // Early-break search: collect up to 50 results without scanning entire array
-    const results = [];
-    for (let i = 0; i < VOCAB_DATA.length && results.length < 50; i++) {
-      const v = VOCAB_DATA[i];
-      if (v.word.includes(q) || v.english.toLowerCase().includes(q)) {
-        results.push(v);
+    showLoading();
+    requestAnimationFrame(() => {
+      buildVocabIndexes();
+      // Early-break search: collect up to 50 results without scanning entire array
+      const results = [];
+      for (let i = 0; i < VOCAB_DATA.length && results.length < 50; i++) {
+        const v = VOCAB_DATA[i];
+        if (v.word.includes(q) || v.english.toLowerCase().includes(q)) {
+          results.push(v);
+        }
       }
-    }
-    document.getElementById('vocab-categories').innerHTML = results.map(w => `
-      <div class="card" style="padding:0.5rem 0.75rem;text-align:left">
-        ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
-        <strong>${esc(w.word)}</strong>
-        <span class="text-muted text-sm"> — ${esc(w.english)}</span>
-      </div>
-    `).join('') || `<p class="text-muted">${t('noResults')}</p>`;
+      document.getElementById('vocab-categories').innerHTML = results.map(w => `
+        <div class="card" style="padding:0.5rem 0.75rem;text-align:left">
+          ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
+          <strong>${esc(w.word)}</strong>
+          <span class="text-muted text-sm"> — ${esc(w.english)}</span>
+        </div>
+      `).join('') || `<p class="text-muted">${t('noResults')}</p>`;
+      hideLoading();
+    });
   }, 200);
 });
 
@@ -6282,7 +6322,30 @@ function init() {
 
 // Register service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.register('sw.js')
+    .then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showToast('🔄', 'Update available! Reload to get the latest version.');
+          }
+        });
+      });
+    })
+    .catch(err => {
+      console.error('SW registration failed:', err);
+    });
 }
+
+// Offline indicator
+function updateOnlineStatus() {
+  const badge = document.getElementById('offline-badge');
+  if (badge) badge.classList.toggle('hidden', navigator.onLine);
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
 
 init();
