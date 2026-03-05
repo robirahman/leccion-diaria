@@ -422,11 +422,39 @@ function showToast(icon, text) {
   setTimeout(() => toast.remove(), 4800);
 }
 
-function showLoading() {
-  document.getElementById('loading-overlay')?.classList.remove('hidden');
+function showLoading(text) {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+  const textEl = document.getElementById('loading-text');
+  if (textEl) textEl.textContent = text || 'Loading...';
+  const progressBar = document.getElementById('loading-progress');
+  if (progressBar) progressBar.style.display = text ? 'block' : 'none';
+  const fill = document.getElementById('loading-progress-fill');
+  if (fill) fill.style.width = '0%';
+}
+function updateLoadingProgress(pct, text) {
+  const fill = document.getElementById('loading-progress-fill');
+  if (fill) fill.style.width = Math.min(100, Math.round(pct)) + '%';
+  const bar = document.getElementById('loading-progress');
+  if (bar) bar.style.display = 'block';
+  if (text) {
+    const textEl = document.getElementById('loading-text');
+    if (textEl) textEl.textContent = text;
+  }
 }
 function hideLoading() {
   document.getElementById('loading-overlay')?.classList.add('hidden');
+}
+
+// ── Error state helper ──
+function showErrorState(containerId, message, retryAction) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `<div class="error-state">
+    <div class="error-state-icon">&#9888;</div>
+    <div class="error-state-text">${esc(message)}</div>
+    ${retryAction ? `<button class="btn btn-primary" data-action="${retryAction}">Try Again</button>` : ''}
+  </div>`;
 }
 
 // ════════════════════════════════════════
@@ -922,7 +950,7 @@ function closeModal() {
   if (_preModalFocus) { _preModalFocus.focus(); _preModalFocus = null; }
 }
 
-// Modal focus trap and ESC to close
+// Modal focus trap, ESC to close, and global keyboard shortcuts
 document.addEventListener('keydown', e => {
   // Close share overlay on ESC
   if (e.key === 'Escape') {
@@ -934,14 +962,34 @@ document.addEventListener('keydown', e => {
     }
   }
   const overlay = document.getElementById('modal-overlay');
-  if (!overlay || !overlay.classList.contains('open')) return;
-  if (e.key === 'Escape') { closeModal(); e.preventDefault(); return; }
-  if (e.key === 'Tab') {
-    const focusable = overlay.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    if (focusable.length === 0) return;
-    const first = focusable[0], last = focusable[focusable.length - 1];
-    if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
-    else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+
+  // Modal focus trap
+  if (overlay && overlay.classList.contains('open')) {
+    if (e.key === 'Escape') { closeModal(); e.preventDefault(); return; }
+    if (e.key === 'Tab') {
+      const focusable = overlay.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusable.length === 0) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+    }
+    return;
+  }
+
+  // Skip shortcuts when typing in an input
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+  // Alt+1-5 for tab switching
+  if (e.altKey && !e.ctrlKey && !e.metaKey) {
+    const tabMap = { '1': 'today', '2': 'learn', '3': 'practice', '4': 'culture', '5': 'stats' };
+    if (tabMap[e.key]) { switchTab(tabMap[e.key]); e.preventDefault(); return; }
+  }
+
+  // Alt+B for back
+  if (e.altKey && e.key === 'b') {
+    const backBtn = document.querySelector('.nav-back.visible');
+    if (backBtn) { backBtn.click(); e.preventDefault(); }
   }
 });
 
@@ -2100,7 +2148,7 @@ function buildVocabIndexes() {
 
 function renderVocabHome() {
   if (typeof VOCAB_DATA === 'undefined' || typeof VOCAB_CATEGORIES === 'undefined') {
-    document.getElementById('vocab-categories').innerHTML = `<p class="text-muted">${t('vocabLoading')}</p>`;
+    showErrorState('vocab-categories', 'Vocabulary data is still loading. Please wait a moment and try again.', 'open-vocab');
     return;
   }
   buildVocabIndexes();
@@ -2494,7 +2542,7 @@ let currentLesson = null;
 
 function renderGrammarHome() {
   if (typeof GRAMMAR_DATA === 'undefined') {
-    document.getElementById('grammar-levels').innerHTML = `<p class="text-muted">${t('grammarLoading')}</p>`;
+    showErrorState('grammar-levels', 'Grammar data is still loading. Please wait a moment and try again.', 'open-grammar');
     return;
   }
   const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -2731,7 +2779,7 @@ let currentSituation = null;
 
 function renderPhrasesHome() {
   if (typeof PHRASES_SITUATIONS === 'undefined') {
-    document.getElementById('phrases-situations').innerHTML = `<p class="text-muted">${t('phrasesLoading')}</p>`;
+    showErrorState('phrases-situations', 'Phrase data is still loading. Please wait a moment and try again.', 'open-phrases');
     return;
   }
   const grid = document.getElementById('phrases-situations');
@@ -6355,6 +6403,28 @@ function insertCharAtCursor(input, char) {
 //  INITIALIZATION
 // ════════════════════════════════════════
 
+// ── Lazy-load secondary content modules after init ──
+const LAZY_SCRIPTS = [
+  'conversations.js', 'recipes.js', 'music.js', 'movies.js', 'poetry.js',
+  'sports.js', 'proverbs.js', 'folktales.js', 'festivals.js', 'history.js',
+  'travel.js', 'trivia.js', 'idioms.js', 'minimal_pairs.js',
+  'sentence_construction.js', 'cloze_passages.js', 'translation_drills.js',
+  'dictation.js', 'jokes.js', 'reading.js', 'reading_sat.js',
+  'themed_vocab.js', 'curriculum_tracks.js', 'phonetic_pairs.js',
+  'homophones.js', 'connectors.js'
+];
+let _lazyLoaded = false;
+function lazyLoadSecondaryScripts() {
+  if (_lazyLoaded) return;
+  _lazyLoaded = true;
+  LAZY_SCRIPTS.forEach(src => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    document.body.appendChild(s);
+  });
+}
+
 function init() {
   renderProfiles();
   // Pre-populate voices
@@ -6371,6 +6441,12 @@ function init() {
       restorePlacementTest();
     }
   } catch (e) { /* ignore */ }
+  // Lazy-load secondary content modules after a short delay
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(lazyLoadSecondaryScripts, { timeout: 2000 });
+  } else {
+    setTimeout(lazyLoadSecondaryScripts, 1000);
+  }
 }
 
 // Register service worker
@@ -6392,10 +6468,21 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Offline indicator
+// Offline indicator — badge in navbar + prominent banner + toast on change
+let _previousOnlineState = navigator.onLine;
 function updateOnlineStatus() {
+  const isOnline = navigator.onLine;
   const badge = document.getElementById('offline-badge');
-  if (badge) badge.classList.toggle('hidden', navigator.onLine);
+  if (badge) badge.classList.toggle('hidden', isOnline);
+  const banner = document.getElementById('offline-banner');
+  if (banner) banner.classList.toggle('visible', !isOnline);
+  // Show toast on transition
+  if (isOnline && !_previousOnlineState) {
+    showToast('\u2705', 'Back online');
+  } else if (!isOnline && _previousOnlineState) {
+    showToast('\u26A0\uFE0F', 'You are offline — progress is saved locally');
+  }
+  _previousOnlineState = isOnline;
 }
 window.addEventListener('online', updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);

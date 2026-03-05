@@ -1344,6 +1344,117 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 }
 .loading-overlay.hidden { display: none; }
 
+/* ── Color-blind accessible feedback icons ── */
+.quiz-option.correct::before { content: '\2713 '; font-weight: 700; }
+.quiz-option.incorrect::before { content: '\2717 '; font-weight: 700; }
+.quiz-feedback.correct::before { content: '\2713 '; font-weight: 700; }
+.quiz-feedback.incorrect::before { content: '\2717 '; font-weight: 700; }
+.cloze-blank.correct { text-decoration: underline 2px var(--green); }
+.cloze-blank.incorrect { text-decoration: underline wavy 2px var(--red); }
+.dict-word.correct::before { content: '\2713'; font-size: 0.7em; margin-right: 0.1em; }
+.dict-word.wrong::before { content: '\2717'; font-size: 0.7em; margin-right: 0.1em; }
+.mastery-0::before { content: '\25CB '; }
+.mastery-1::before { content: '\2606 '; }
+.mastery-2::before { content: '\2606\2606 '; letter-spacing: -0.15em; }
+.mastery-3::before { content: '\2605\2605\2605 '; letter-spacing: -0.15em; }
+.mastery-4::before { content: '\2605\2605\2605\2605 '; letter-spacing: -0.15em; }
+
+/* ── Error state for failed data loads ── */
+.error-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text2);
+}
+.error-state-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.7; }
+.error-state-text { font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem; }
+
+/* ── Improved contrast for text3 ── */
+:root {
+  --text3: #9aa2bc;
+}
+[data-theme="light"] {
+  --text3: #6b5d4f;
+}
+
+/* ── Loading overlay with progress ── */
+.loading-overlay .loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.loading-overlay .loading-text {
+  font-size: 0.85rem;
+  color: var(--text2);
+  font-weight: 500;
+}
+.loading-progress {
+  width: 200px;
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.loading-progress .loading-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* ── Improved offline indicator as banner ── */
+.offline-banner {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  background: var(--yellow-bg);
+  border-bottom: 1px solid rgba(255,193,7,0.3);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--yellow-text);
+}
+.offline-banner.visible { display: flex; }
+.offline-banner::before { content: '\26A0'; }
+
+/* ── Mobile notch spacing ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .app-container {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .tab-bar {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+@media (max-width: 480px) {
+  .app-container { padding-bottom: 96px; }
+}
+
+/* ── Print styles ── */
+@media print {
+  .navbar, .tab-bar, #toast-container, .loading-overlay,
+  .modal-overlay, .offline-banner, .offline-badge { display: none !important; }
+  .app-container { padding-bottom: 0; max-width: 100%; }
+  .screen { padding: 0; }
+  .card { break-inside: avoid; border: 1px solid #ccc; }
+  .flashcard { break-inside: avoid; min-height: auto; border: 1px solid #ccc; }
+  .flashcard .front, .flashcard .back {
+    position: static; transform: none; backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+  }
+  .flashcard .back { padding: 1rem; border-top: 1px dashed #ccc; }
+  .flashcard-inner { transform: none !important; }
+  .conj-table th, .conj-table td { border: 1px solid #ccc; }
+  .example-box { border-left: 3px solid #666; }
+  .btn { border: 1px solid #ccc; }
+  .rating-bar, .accent-bar { display: none; }
+  body { background: white; color: black; }
+  .lesson-content { font-size: 11pt; }
+  a { color: inherit; text-decoration: underline; }
+}
+
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
