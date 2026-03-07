@@ -1167,9 +1167,9 @@ function applyDisplayMode() {
 
   // Settings labels
   const settingsMap = [
-    ['#screen-settings .settings-group:nth-child(1) > h3', 'display'],
-    ['#screen-settings .settings-group:nth-child(2) > h3', 'learning'],
-    ['#screen-settings .settings-group:nth-child(3) > h3', 'data'],
+    ['#screen-settings .settings-group:nth-child(2) > h3', 'display'],
+    ['#screen-settings .settings-group:nth-child(3) > h3', 'learning'],
+    ['#screen-settings .settings-group:nth-child(4) > h3', 'data'],
   ];
   for (const [sel, key] of settingsMap) {
     const el = document.querySelector(sel);
@@ -1242,10 +1242,11 @@ function applyDisplayMode() {
   });
 
   // Stats screen
-  const masteryTitle = document.querySelector('#screen-stats .card:nth-child(2) .card-title');
-  if (masteryTitle) masteryTitle.textContent = t('masteryBreakdown');
-  const calTitle = document.querySelector('#screen-stats .card:nth-child(3) .card-title');
-  if (calTitle) calTitle.textContent = t('practiceCalendar');
+  // Stats screen card titles — find by their associated content containers
+  const masteryCard = document.getElementById('stats-mastery')?.closest('.card');
+  if (masteryCard) { const title = masteryCard.querySelector('.card-title'); if (title) title.textContent = t('masteryBreakdown'); }
+  const calCard = document.getElementById('stats-calendar')?.closest('.card');
+  if (calCard) { const title = calCard.querySelector('.card-title'); if (title) title.textContent = t('practiceCalendar'); }
 
   // Nav title
   const navTitle = document.querySelector('.nav-title');
@@ -1497,10 +1498,13 @@ function renderToday() {
   document.getElementById('today-greeting').textContent = greet;
   document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  // Section headers
-  document.querySelector('#screen-today .today-section:nth-child(3) h2').textContent = t('continueLearning');
-  document.querySelector('#screen-today .today-section:nth-child(4) h2').textContent = t('dueForReview');
-  document.querySelector('#screen-today .today-section:nth-child(5) h2').textContent = t('dailyPractice');
+  // Section headers (navigate from known container IDs to their sibling h2)
+  const continueH2 = document.getElementById('today-continue')?.parentElement?.querySelector('h2');
+  if (continueH2) continueH2.textContent = t('continueLearning');
+  const reviewH2 = document.getElementById('today-review')?.parentElement?.querySelector('h2');
+  if (reviewH2) reviewH2.textContent = t('dueForReview');
+  const practiceH2 = document.getElementById('today-practice')?.parentElement?.querySelector('h2');
+  if (practiceH2) practiceH2.textContent = t('dailyPractice');
 
   // Stats cards
   const verbsLearned = Object.keys(progress.verbMastery).length;
