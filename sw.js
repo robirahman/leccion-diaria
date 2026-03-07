@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leccion-diaria-v17';
+const CACHE_NAME = 'leccion-diaria-v18';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './fsrs.js',
   './conjugation.js', './verbs.js', './vocab.js', './grammar.js',
@@ -15,7 +15,11 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
+  e.waitUntil(caches.open(CACHE_NAME).then(c =>
+    Promise.allSettled(ASSETS.map(url =>
+      c.add(url).catch(err => console.warn('SW: failed to cache', url, err))
+    ))
+  ));
   self.skipWaiting();
 });
 

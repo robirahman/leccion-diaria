@@ -12,8 +12,8 @@
   --card-hover: #253358;
   --border: #2a3a5c;
   --text: #e8e8e8;
-  --text2: #a0a8c0;
-  --text3: #8a92b0;
+  --text2: #b8c0d4;
+  --text3: #9aa2bc;
   --accent: #c7553b;
   --accent2: #e07b5f;
   --accent-bg: rgba(199,85,59,0.15);
@@ -350,6 +350,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   perspective: 800px;
 }
 .flashcard:hover { box-shadow: var(--shadow-lg); }
+.flashcard:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .flashcard-inner {
   width: 100%;
   min-height: 220px;
@@ -454,6 +455,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   transition: all var(--transition);
 }
 .quiz-option:hover:not(.disabled) { border-color: var(--accent); background: var(--accent-bg); }
+.quiz-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .quiz-option.selected { border-color: var(--accent); background: var(--accent-bg); }
 .quiz-option.disabled { cursor: default; opacity: 0.55; pointer-events: none; }
 .quiz-option.correct { border-color: var(--green); background: var(--green-bg); }

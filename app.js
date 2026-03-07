@@ -23,16 +23,36 @@ let placementLastDomains = []; // track recent domains for variety
 let placementTargetLength = 20; // adjustable test length (10, 20, or 40)
 let placementMode = 'both';    // 'both', 'grammar', or 'vocab'
 
-// Practice exercise state
-let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
-let ppQueue = [], ppIdx = 0, ppScore = 0, ppAnswered = false;
-let homQueue = [], homIdx = 0, homScore = 0, homAnswered = false;
-let connQueue = [], connIdx = 0, connScore = 0, connAnswered = false;
+// Practice exercise state — centralized quiz state helper
+function createQuizState() {
+  return { queue: [], idx: 0, score: 0, answered: false };
+}
+const quizStates = {
+  mp: createQuizState(),
+  pp: createQuizState(),
+  hom: createQuizState(),
+  conn: createQuizState(),
+  sb: createQuizState(),
+  cloze: createQuizState(),
+  tr: createQuizState(),
+  dict: createQuizState(),
+};
+// Backward-compatible accessors (these are used extensively throughout)
+let mpQueue = quizStates.mp.queue, mpIdx = 0, mpScore = 0, mpAnswered = false;
+let ppQueue = quizStates.pp.queue, ppIdx = 0, ppScore = 0, ppAnswered = false;
+let homQueue = quizStates.hom.queue, homIdx = 0, homScore = 0, homAnswered = false;
+let connQueue = quizStates.conn.queue, connIdx = 0, connScore = 0, connAnswered = false;
 let adminTaps = 0, adminTapTimer = null;
-let sbQueue = [], sbIdx = 0, sbScore = 0;
-let clozeQueue = [], clozeIdx = 0, clozeScore = 0;
-let trQueue = [], trIdx = 0, trScore = 0;
-let dictQueue = [], dictIdx = 0, dictScore = 0;
+let sbQueue = quizStates.sb.queue, sbIdx = 0, sbScore = 0;
+let clozeQueue = quizStates.cloze.queue, clozeIdx = 0, clozeScore = 0;
+let trQueue = quizStates.tr.queue, trIdx = 0, trScore = 0;
+let dictQueue = quizStates.dict.queue, dictIdx = 0, dictScore = 0;
+
+// Tense name constants
+const TENSE_FUTURE_SUBJUNCTIVE = 'future_subjunctive';
+const TENSE_SUBJUNCTIVE_IMPERFECT = 'subjunctive_imperfect';
+const TENSE_IMPERATIVE_AFF = 'imperative_aff';
+const TENSE_IMPERATIVE_NEG = 'imperative_neg';
 
 // Map question domains to scoring groups
 const DOMAIN_GROUP = { grammar: 'grammar', usage: 'grammar', reading: 'grammar', verb: 'grammar', vocab: 'vocab' };
@@ -492,13 +512,21 @@ function classifyVerbError(userInput, correctAnswer, tense) {
   return tenseCat;
 }
 
+let _weakAreasCache = null;
+let _weakAreasCacheKey = '';
 function getWeakAreas(limit) {
   if (!progress || !progress.errorCounts) return [];
-  const items = Object.entries(progress.errorCounts)
-    .filter(([, v]) => v.total >= 3)
-    .map(([key, v]) => ({ key, wrong: v.wrong, total: v.total, rate: v.wrong / v.total }))
-    .filter(x => x.rate > 0.3)
-    .sort((a, b) => b.rate - a.rate);
+  // Memoize: invalidate when error counts change
+  const cacheKey = Object.keys(progress.errorCounts).length + ':' + Object.values(progress.errorCounts).reduce((s, v) => s + v.total, 0);
+  if (_weakAreasCacheKey !== cacheKey) {
+    _weakAreasCache = Object.entries(progress.errorCounts)
+      .filter(([, v]) => v.total >= 3)
+      .map(([key, v]) => ({ key, wrong: v.wrong, total: v.total, rate: v.wrong / v.total }))
+      .filter(x => x.rate > 0.3)
+      .sort((a, b) => b.rate - a.rate);
+    _weakAreasCacheKey = cacheKey;
+  }
+  const items = _weakAreasCache;
   return items.slice(0, limit || 8);
 }
 
@@ -839,12 +867,12 @@ function switchTab(tab) {
 
   document.querySelectorAll('.tab-bar .tab').forEach(t => {
     t.classList.remove('active');
-    t.removeAttribute('aria-current');
+    t.setAttribute('aria-selected', 'false');
   });
   const tabBtn = document.querySelector(`.tab[data-tab="${highlightTab}"]`);
   if (tabBtn) {
     tabBtn.classList.add('active');
-    tabBtn.setAttribute('aria-current', 'page');
+    tabBtn.setAttribute('aria-selected', 'true');
   }
 
   screenStack = [tab];
@@ -1017,7 +1045,9 @@ function applySettings() {
     else if (act === 'set-subjunctiveForm') key = 'subjunctiveForm';
     if (key) {
       const current = String(s[key] ?? '');
-      pill.classList.toggle('active', val === current);
+      const isActive = val === current;
+      pill.classList.toggle('active', isActive);
+      pill.setAttribute('aria-pressed', String(isActive));
     }
   });
   applyDisplayMode();
@@ -1234,7 +1264,7 @@ function setSetting(key, val) {
 function getActiveTenses(pool) {
   let tenses = pool ? [...pool] : Object.keys(TENSE_META);
   if (progress?.settings?.hideFutureSubjunctive) {
-    tenses = tenses.filter(t => t !== 'future_subjunctive');
+    tenses = tenses.filter(t => t !== TENSE_FUTURE_SUBJUNCTIVE);
   }
   return tenses;
 }
@@ -1430,7 +1460,7 @@ function renderWordOfTheDay() {
       <div class="wotd-english">${esc(word.english)}</div>
       ${word.example ? `<div class="wotd-example text-muted text-sm mt-1"><em>"${esc(word.example)}"</em></div>` : ''}
       ${word.exampleEn ? `<div class="text-muted text-sm">"${esc(word.exampleEn)}"</div>` : ''}
-      <button class="btn btn-sm btn-secondary mt-1" data-action="speak-wotd" data-word="${esc(word.word)}">Listen</button>
+      <button class="btn btn-sm btn-secondary mt-1" data-action="speak-wotd" data-word="${esc(word.word)}" aria-label="Listen to ${esc(word.word)}">Listen</button>
     </div>
   `;
 }
@@ -1712,7 +1742,7 @@ function startVerbLearn() {
   verbs.forEach(v => {
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    const useSeForm = (tense === 'subjunctive_imperfect') && shouldUseSeForm();
+    const useSeForm = (tense === TENSE_SUBJUNCTIVE_IMPERFECT) && shouldUseSeForm();
     verbLearnQueue.push({ verb: v, tense, person, useSeForm });
   });
   verbLearnIdx = 0;
@@ -1772,7 +1802,7 @@ function startVerbDrill() {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    const useSeForm = (tense === 'subjunctive_imperfect') && shouldUseSeForm();
+    const useSeForm = (tense === TENSE_SUBJUNCTIVE_IMPERFECT) && shouldUseSeForm();
     const answer = conjugate(verb.infinitive, tense, person, useSeForm);
     if (!answer || answer === '—' || answer === '?') { i--; continue; }
     verbDrillQueue.push({ verb, tense, person, answer, useSeForm });
@@ -1804,6 +1834,7 @@ function checkVerbDrill() {
   const result = checkAnswer(input, item.answer);
   const fb = document.getElementById('vd-feedback');
   fb.style.display = 'block';
+  fb.setAttribute('role', 'alert');
 
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
   const errCat = result.correct ? item.tense : classifyVerbError(input, item.answer, item.tense);
@@ -1877,7 +1908,7 @@ function startPatternDrill(patternKey) {
   while (verbDrillQueue.length < count && attempts < 50) {
     const verb = pick(verbs);
     const tense = pick(tenses);
-    const isImperative = tense === 'imperative_aff' || tense === 'imperative_neg';
+    const isImperative = tense === TENSE_IMPERATIVE_AFF || tense === TENSE_IMPERATIVE_NEG;
     const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
     const answer = conjugate(verb.infinitive, tense, person);
     if (!answer || answer === '—' || answer === '?') { attempts++; continue; }
@@ -1902,7 +1933,7 @@ function startVerbQuiz() {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
     const person = Math.floor(Math.random() * 6);
-    const useSeForm = (tense === 'subjunctive_imperfect' || (TENSE_META[tense]?.auxTense === 'subjunctive_imperfect')) && shouldUseSeForm();
+    const useSeForm = (tense === TENSE_SUBJUNCTIVE_IMPERFECT || TENSE_META[tense]?.auxTense === TENSE_SUBJUNCTIVE_IMPERFECT) && shouldUseSeForm();
     const correct = conjugate(verb.infinitive, tense, person, useSeForm);
     if (!correct || correct === '—' || correct === '?') { i--; continue; }
     // Generate wrong options
@@ -2130,10 +2161,16 @@ const VOCAB_BY_CATEGORY = Object.create(null);
 const VOCAB_BY_LEVEL = Object.create(null);
 const VOCAB_BY_WORD = Object.create(null);
 const VOCAB_CATEGORY_COUNTS = Object.create(null);
-let vocabIndexesBuilt = false;
+let _vocabIndexedLength = 0;
 
 function buildVocabIndexes() {
-  if (vocabIndexesBuilt || typeof VOCAB_DATA === 'undefined') return;
+  if (typeof VOCAB_DATA === 'undefined') return;
+  if (_vocabIndexedLength === VOCAB_DATA.length) return;
+  // Clear stale indexes before rebuilding
+  for (const k in VOCAB_BY_CATEGORY) delete VOCAB_BY_CATEGORY[k];
+  for (const k in VOCAB_BY_LEVEL) delete VOCAB_BY_LEVEL[k];
+  for (const k in VOCAB_BY_WORD) delete VOCAB_BY_WORD[k];
+  for (const k in VOCAB_CATEGORY_COUNTS) delete VOCAB_CATEGORY_COUNTS[k];
   for (const v of VOCAB_DATA) {
     const cat = v.category;
     (VOCAB_BY_CATEGORY[cat] ??= []).push(v);
@@ -2143,7 +2180,7 @@ function buildVocabIndexes() {
   for (const [cat, arr] of Object.entries(VOCAB_BY_CATEGORY)) {
     VOCAB_CATEGORY_COUNTS[cat] = arr.length;
   }
-  vocabIndexesBuilt = true;
+  _vocabIndexedLength = VOCAB_DATA.length;
 }
 
 function renderVocabHome() {
@@ -2418,6 +2455,7 @@ function submitVocabQuizProduce() {
   input.disabled = true;
   trackError(`vocab:${item.word.word}`, result.correct, 'vocab');
   const fb = document.getElementById('vocq-produce-feedback');
+  fb.setAttribute('role', 'alert');
   if (result.correct) {
     vocabQuizScore++;
     fb.innerHTML = result.accentWarn
@@ -2472,7 +2510,7 @@ function submitGenderQuizMC() {
   if (!selectedBtn) return;
   const idx = parseInt(selectedBtn.dataset.idx);
   const item = vocabQuizQueue[vocabQuizIdx];
-  const correctIdx = item.correct === 'el (masculine)' ? 0 : 1;
+  const correctIdx = item.correct === item.options[0] ? 0 : 1;
   const btns = document.querySelectorAll('#vocq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
@@ -2501,8 +2539,8 @@ function startGenderQuiz() {
 
   vocabQuizQueue = pickN(pool, Math.min(10, pool.length)).map(w => ({
     word: w,
-    options: ['el (masculine)', 'la (feminine)'],
-    correct: w.gender === 'm' ? 'el (masculine)' : 'la (feminine)',
+    options: [t('elMasc'), t('laFem')],
+    correct: w.gender === 'm' ? t('elMasc') : t('laFem'),
     type: 'gender',
   }));
   vocabQuizIdx = 0;
@@ -2576,8 +2614,12 @@ function openGrammarLesson(id) {
   document.getElementById('gl-level').textContent = `${lesson.level} — ${t('lesson')} ${lesson.order}`;
   document.getElementById('gl-title').textContent = lesson.titleEn || lesson.title;
 
-  // Render lesson content (already HTML)
-  document.getElementById('gl-content').innerHTML = lesson.content || '';
+  // Render lesson content (sanitized — strip script tags and event handlers)
+  const rawContent = lesson.content || '';
+  const sanitizedContent = rawContent
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, '');
+  document.getElementById('gl-content').innerHTML = sanitizedContent;
 
   // Examples
   const exHtml = (lesson.examples || []).map(ex => `
@@ -3384,7 +3426,7 @@ function buildPlacementVerbQs(level, count) {
   const picked = pickN(candidates, count);
   return picked.map(({ verb: v, tense }) => {
     // For imperatives, skip yo (person 0) — it doesn't exist
-    const isImperative = tense === 'imperative_aff' || tense === 'imperative_neg';
+    const isImperative = tense === TENSE_IMPERATIVE_AFF || tense === TENSE_IMPERATIVE_NEG;
     const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
     const correct = conjugate(v.infinitive, tense, person);
     if (!correct || correct === '—' || correct === '?') return null;
@@ -3394,7 +3436,7 @@ function buildPlacementVerbQs(level, count) {
     // First: same verb, different tense, same person (shares person marker)
     while (wrongs.size < 2 && attempts < 20) {
       const wt = pick(simpleTenses.filter(t => t !== tense));
-      if (wt === 'imperative_aff' || wt === 'imperative_neg') { attempts++; continue; }
+      if (wt === TENSE_IMPERATIVE_AFF || wt === TENSE_IMPERATIVE_NEG) { attempts++; continue; }
       const w = conjugate(v.infinitive, wt, person);
       if (w && w !== correct && w !== '—' && w !== '?') wrongs.add(w);
       attempts++;
@@ -5537,9 +5579,9 @@ function renderReadingList(filter) {
 
 function startReading(id) {
   if (typeof READING_DATA === 'undefined') return;
-  currentReading = READING_DATA.find(p => p.id === id)
+  currentReading = READING_DATA?.find(p => p.id === id)
     || (typeof READING_SAT_DATA !== 'undefined' ? READING_SAT_DATA.find(p => p.id === id) : null);
-  if (!currentReading) return;
+  if (!currentReading || !currentReading.questions) return;
   readingQIdx = 0; readingScore = 0; readingSelected = -1;
   listenMode = false;
   showScreen('reading');
@@ -5573,7 +5615,8 @@ function renderReadingQuestion() {
   }
 
   const total = currentReading.questions.length;
-  document.getElementById('read-progress').innerHTML = `<div class="quiz-progress-fill" style="width:${readingQIdx/total*100}%"></div>`;
+  const pct = total > 0 ? (readingQIdx / total * 100) : 0;
+  document.getElementById('read-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" style="width:${pct}%"></div>`;
   const q = currentReading.questions[readingQIdx];
   readingSelected = -1;
   document.getElementById('read-question').textContent = q.prompt;
@@ -5603,6 +5646,7 @@ function submitReadingMC() {
   const correct = readingSelected === q.correct;
   if (correct) readingScore++;
   const fb = document.getElementById('read-feedback');
+  fb.setAttribute('role', 'alert');
   fb.innerHTML = correct ? `<span class="text-correct">${t('correct')}</span>` :
     `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(q.options[q.correct])}</span>`;
   if (q.explanation) fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
@@ -5695,7 +5739,8 @@ function renderThemedQuizQuestion() {
   }
   const q = currentTheme.quiz[themedQuizIdx];
   const total = currentTheme.quiz.length;
-  document.getElementById('tvq-progress').innerHTML = `<div class="quiz-progress-fill" style="width:${themedQuizIdx/total*100}%"></div>`;
+  const tvqPct = total > 0 ? (themedQuizIdx / total * 100) : 0;
+  document.getElementById('tvq-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(tvqPct)}" aria-valuemin="0" aria-valuemax="100" style="width:${tvqPct}%"></div>`;
   themedQuizSelected = -1;
   document.getElementById('tvq-container').innerHTML = `
     <div class="card">
@@ -5729,6 +5774,7 @@ function submitThemedQuizMC() {
   const correct = themedQuizSelected === q.correct;
   if (correct) themedQuizScore++;
   const fb = document.getElementById('tvq-feedback');
+  fb.setAttribute('role', 'alert');
   fb.innerHTML = correct ? `<span class="text-correct">${t('correct')}</span>` :
     `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(q.options[q.correct])}</span>`;
   if (q.explanation) fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
@@ -6277,6 +6323,32 @@ document.addEventListener('click', e => {
 
 // Keyboard shortcuts
 document.addEventListener('keydown', e => {
+  // Arrow key navigation for quiz options
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    const focused = document.activeElement;
+    if (focused && focused.classList.contains('quiz-option') && !focused.classList.contains('disabled')) {
+      const options = [...focused.closest('.quiz-options').querySelectorAll('.quiz-option:not(.disabled)')];
+      const idx = options.indexOf(focused);
+      const next = e.key === 'ArrowDown' ? (idx + 1) % options.length : (idx - 1 + options.length) % options.length;
+      options[next]?.focus();
+      e.preventDefault();
+      return;
+    }
+  }
+
+  // Arrow key navigation for tab bar
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    const focused = document.activeElement;
+    if (focused && focused.classList.contains('tab') && focused.closest('.tab-bar')) {
+      const tabs = [...focused.closest('.tab-bar').querySelectorAll('.tab')];
+      const idx = tabs.indexOf(focused);
+      const next = e.key === 'ArrowRight' ? (idx + 1) % tabs.length : (idx - 1 + tabs.length) % tabs.length;
+      tabs[next]?.focus();
+      e.preventDefault();
+      return;
+    }
+  }
+
   // Flashcard flip on Enter/Space (#3 keyboard accessibility)
   if (e.key === 'Enter' || e.key === ' ') {
     const focused = document.activeElement;
@@ -6349,9 +6421,11 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Verb search input
+// Verb search input (debounced)
+let verbSearchTimer = null;
 document.getElementById('verb-search')?.addEventListener('input', e => {
-  renderVerbBrowser('all', e.target.value);
+  clearTimeout(verbSearchTimer);
+  verbSearchTimer = setTimeout(() => renderVerbBrowser('all', e.target.value), 150);
 });
 
 // Vocab search input (debounced for 30k entries)
@@ -6476,11 +6550,9 @@ function updateOnlineStatus() {
   if (badge) badge.classList.toggle('hidden', isOnline);
   const banner = document.getElementById('offline-banner');
   if (banner) banner.classList.toggle('visible', !isOnline);
-  // Show toast on transition
+  // Show toast only when coming back online (offline state shown via banner)
   if (isOnline && !_previousOnlineState) {
     showToast('\u2705', 'Back online');
-  } else if (!isOnline && _previousOnlineState) {
-    showToast('\u26A0\uFE0F', 'You are offline — progress is saved locally');
   }
   _previousOnlineState = isOnline;
 }
