@@ -1328,7 +1328,7 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
 <tr><td>tener</td><td><strong>ten</strong></td><td>¡Ten cuidado! (Be careful!)</td></tr>
 <tr><td>venir</td><td><strong>ven</strong></td><td>¡Ven aquí! (Come here!)</td></tr></table>
 
-<p><strong>Mnemonic:</strong> "Vin Diesel has ten weapons: <em>sal, pon, ve, di, haz, sé, ten, ven</em>"</p>
+<p><strong>Mnemonic:</strong> The eight irregular forms are <em>di, haz, sal, sé, ten, ve, ven, pon</em>. A popular memory trick rearranges them into a silly sentence: "<strong>Ven</strong>, <strong>di</strong>, <strong>sal</strong>, <strong>haz</strong>, <strong>ten</strong>, <strong>ve</strong>, <strong>pon</strong>, <strong>sé</strong>" — which sounds like "Come, say, leave, do, have, go, put, be." Try chanting them in rhythm until they stick!</p>
 
 <h4>Negative Imperatives Use the Subjunctive</h4>
 <p>All negative tú imperatives use the <strong>present subjunctive</strong> — there are no exceptions:</p>
