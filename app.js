@@ -2593,12 +2593,12 @@ function renderGrammarHome() {
     const lessons = GRAMMAR_DATA.filter(l => l.level === level);
     if (!lessons.length) return;
     html += `<h3 class="text-sm text-muted mt-2 mb-1">${level}</h3>`;
-    lessons.forEach(l => {
+    lessons.forEach((l, i) => {
       const done = progress.grammarDone[l.id];
       html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
         <div class="flex justify-between items-center">
           <div>
-            <div class="card-title">${l.order}. ${esc(l.titleEn || l.title)}</div>
+            <div class="card-title">${i + 1}. ${esc(l.titleEn || l.title)}</div>
             <div class="card-subtitle">${esc(l.shortDesc || '')}</div>
           </div>
           ${done ? `<span class="mastery-badge mastery-4">${tBtn('done')}</span>` : ''}
