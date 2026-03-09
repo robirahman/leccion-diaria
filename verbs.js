@@ -203,6 +203,21 @@ const VERB_DATA = [
   { infinitive: 'insistir', english: 'to insist', type: 'regular', group: 'ir', stemChange: null, level: 'B1', frequency: 153 },
 
   // ---------------------------------------------------------------------------
+  // COMPOUND IRREGULAR VERBS — B2
+  // ---------------------------------------------------------------------------
+  { infinitive: 'producir', english: 'to produce', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 155 },
+  { infinitive: 'reducir', english: 'to reduce', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 156 },
+  { infinitive: 'traducir', english: 'to translate', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 157 },
+  { infinitive: 'describir', english: 'to describe', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 158 },
+  { infinitive: 'descubrir', english: 'to discover', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 159 },
+  { infinitive: 'devolver', english: 'to return, give back', type: 'irregular', group: 'er', stemChange: 'o>ue', level: 'B2', frequency: 160 },
+  { infinitive: 'atraer', english: 'to attract', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 161 },
+  { infinitive: 'componer', english: 'to compose, make up', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 162 },
+  { infinitive: 'mantener', english: 'to maintain, keep', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 163 },
+  { infinitive: 'obtener', english: 'to obtain, get', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 164 },
+  { infinitive: 'contener', english: 'to contain, hold', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 165 },
+
+  // ---------------------------------------------------------------------------
   // C1 VERBS — Advanced (25)
   // ---------------------------------------------------------------------------
   { infinitive: 'abarcar', english: 'to encompass, to cover', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 170 },
@@ -231,6 +246,26 @@ const VERB_DATA = [
   { infinitive: 'surgir', english: 'to arise, emerge', type: 'regular', group: 'ir', stemChange: null, level: 'C1', frequency: 193 },
   { infinitive: 'suponer', english: 'to suppose, assume', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 194 },
 
+  // COMPOUND IRREGULAR VERBS — C1
+  { infinitive: 'introducir', english: 'to introduce, insert', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 195 },
+  { infinitive: 'inscribir', english: 'to inscribe, register', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 196 },
+  { infinitive: 'prescribir', english: 'to prescribe', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 197 },
+  { infinitive: 'envolver', english: 'to wrap, envelop', type: 'irregular', group: 'er', stemChange: 'o>ue', level: 'C1', frequency: 198 },
+  { infinitive: 'revolver', english: 'to stir, mix, rummage', type: 'irregular', group: 'er', stemChange: 'o>ue', level: 'C1', frequency: 199 },
+  { infinitive: 'contraer', english: 'to contract, catch (illness)', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 215 },
+  { infinitive: 'distraer', english: 'to distract', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 216 },
+  { infinitive: 'extraer', english: 'to extract', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 217 },
+  { infinitive: 'imponer', english: 'to impose', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 218 },
+  { infinitive: 'proponer', english: 'to propose', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 219 },
+  { infinitive: 'sostener', english: 'to sustain, support', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 220 },
+  { infinitive: 'convenir', english: 'to agree, be suitable', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 221 },
+  { infinitive: 'intervenir', english: 'to intervene', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 222 },
+  { infinitive: 'deshacer', english: 'to undo, destroy', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 223 },
+  { infinitive: 'rehacer', english: 'to redo, remake', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 224 },
+  { infinitive: 'satisfacer', english: 'to satisfy', type: 'irregular', group: 'er', stemChange: null, level: 'C1', frequency: 225 },
+  { infinitive: 'bendecir', english: 'to bless', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 226 },
+  { infinitive: 'maldecir', english: 'to curse', type: 'irregular', group: 'ir', stemChange: null, level: 'C1', frequency: 227 },
+
   // ---------------------------------------------------------------------------
   // C2 VERBS — Mastery (15)
   // ---------------------------------------------------------------------------
@@ -249,6 +284,10 @@ const VERB_DATA = [
   { infinitive: 'versar', english: 'to deal with, be about', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 212 },
   { infinitive: 'yacer', english: 'to lie, rest', type: 'irregular', group: 'er', stemChange: null, level: 'C2', frequency: 213 },
   { infinitive: 'zanjar', english: 'to settle, resolve', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 214 },
+
+  // COMPOUND IRREGULAR VERBS — C2
+  { infinitive: 'sustraer', english: 'to subtract, steal', type: 'irregular', group: 'er', stemChange: null, level: 'C2', frequency: 228 },
+  { infinitive: 'encubrir', english: 'to cover up, conceal', type: 'irregular', group: 'ir', stemChange: null, level: 'C2', frequency: 229 },
 ];
 
 // =============================================================================

@@ -1391,13 +1391,91 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
 <tr><td>Present (yo)</td><td>digo</td><td>predigo</td><td>contradigo</td></tr>
 <tr><td>Preterite (yo)</td><td>dije</td><td>predije</td><td>contradije</td></tr>
 <tr><td>Future (yo)</td><td><strong>diré</strong></td><td><strong>predeciré</strong></td><td><strong>contradeciré</strong></td></tr></table>
-<p><strong>Important exception:</strong> Unlike <em>decir</em> (diré), the compounds <em>predecir</em> and <em>contradecir</em> have a <strong>regular future</strong>: <em>predeciré</em> (NOT *prediré), <em>contradeciré</em> (NOT *contrediré). This is one of the few cases where a compound verb does NOT follow the base verb's pattern.</p>`,
+<p><strong>Important exception:</strong> Unlike <em>decir</em> (diré), the compounds <em>predecir</em> and <em>contradecir</em> have a <strong>regular future</strong>: <em>predeciré</em> (NOT *prediré), <em>contradeciré</em> (NOT *contrediré). This is one of the few cases where a compound verb does NOT follow the base verb's pattern.</p>
+
+<h4>Traer → Compound Verbs</h4>
+<p><em>atraer, contraer, distraer, extraer, sustraer</em></p>
+<table><tr><th>Tense</th><th>traer</th><th>atraer</th><th>extraer</th></tr>
+<tr><td>Present (yo)</td><td>traigo</td><td>atraigo</td><td>extraigo</td></tr>
+<tr><td>Preterite (yo)</td><td>traje</td><td>atraje</td><td>extraje</td></tr>
+<tr><td>Subj. present (yo)</td><td>traiga</td><td>atraiga</td><td>extraiga</td></tr></table>
+
+<h4>-ducir Verbs (like conducir)</h4>
+<p><em>producir, reducir, traducir, introducir</em></p>
+<table><tr><th>Tense</th><th>conducir</th><th>producir</th><th>traducir</th></tr>
+<tr><td>Present (yo)</td><td>conduzco</td><td>produzco</td><td>traduzco</td></tr>
+<tr><td>Preterite (yo)</td><td>conduje</td><td>produje</td><td>traduje</td></tr>
+<tr><td>Subj. present (yo)</td><td>conduzca</td><td>produzca</td><td>traduzca</td></tr></table>
+<p><strong>Note:</strong> All -ducir verbs share the same preterite stem pattern (-duje, -dujiste, -dujo...) and there is <strong>no accent</strong> on the yo/él preterite forms (conduje, condujo — NOT *condujé, *condujó).</p>
+
+<h4>Volver → Compound Verbs</h4>
+<p><em>devolver, envolver, revolver</em></p>
+<table><tr><th>Tense</th><th>volver</th><th>devolver</th><th>envolver</th></tr>
+<tr><td>Present (yo)</td><td>vuelvo</td><td>devuelvo</td><td>envuelvo</td></tr>
+<tr><td>Participle</td><td>vuelto</td><td>devuelto</td><td>envuelto</td></tr></table>
+
+<h4>Escribir / Cubrir → Compound Verbs</h4>
+<p><em>describir, inscribir, prescribir / descubrir, encubrir</em></p>
+<p>These are regular in conjugation but have <strong>irregular past participles</strong>:</p>
+<table><tr><th>Base verb</th><th>Participle</th><th>Compound</th><th>Participle</th></tr>
+<tr><td>escribir</td><td>escrito</td><td>describir</td><td>descrito</td></tr>
+<tr><td>cubrir</td><td>cubierto</td><td>descubrir</td><td>descubierto</td></tr></table>`,
     quiz: [
       { type: "fib", question: "Yo ___ una solución. (proponer, present)", answer: "propongo", options: null, explanation: "Proponer conjugates like poner: yo propongo." },
       { type: "mc", question: "Preterite of mantener (yo):", answer: "mantuve", options: ["mantuvo","mantuve","mantení","mantenió"], explanation: "Mantener conjugates like tener: yo mantuve (like tuve)." },
       { type: "fib", question: "Ellos ___ mañana. (prevenir, future)", answer: "prevendrán", options: null, explanation: "Prevenir conjugates like venir in the future: prevendré, prevendrás, prevendrá, prevendremos, prevendréis, prevendrán." },
       { type: "mc", question: "Future of predecir (yo):", answer: "predeciré", options: ["prediré","predigiré","predeciré","predeceré"], explanation: "Unlike decir (diré), predecir has a REGULAR future: predeciré." },
-      { type: "fib", question: "Yo ___ el error. (deshacer, preterite)", answer: "deshice", options: null, explanation: "Deshacer conjugates like hacer: yo deshice (like hice)." }
+      { type: "fib", question: "Yo ___ el error. (deshacer, preterite)", answer: "deshice", options: null, explanation: "Deshacer conjugates like hacer: yo deshice (like hice)." },
+      { type: "fib", question: "El imán ___ el metal. (atraer, present)", answer: "atrae", options: null, explanation: "Atraer conjugates like traer in irregular tenses, but present tú/él/nosotros/ellos are regular: atrae." },
+      { type: "mc", question: "Preterite of producir (yo):", answer: "produje", options: ["producí","produje","produció","produjé"], explanation: "Producir conjugates like conducir: yo produje (no accent on -je)." },
+      { type: "fib", question: "He ___ el regalo. (envolver, participle)", answer: "envuelto", options: null, explanation: "Envolver inherits volver's irregular participle: envuelto." }
+    ]
+  },
+  {
+    id: "gram-67", title: "Participios, imperativos y excepciones de compuestos", titleEn: "Compound Verbs: Participles, Imperatives & Exceptions", level: "C1", order: 67,
+    content: `<h3>Compound Verbs: Participles, Imperatives & Exceptions</h3>
+
+<h4>Irregular Past Participles</h4>
+<p>When the base verb has an irregular participle, all its compounds inherit the same pattern:</p>
+<table><tr><th>Base</th><th>Participle</th><th>Compound examples</th></tr>
+<tr><td>poner → puesto</td><td></td><td>compuesto, dispuesto, propuesto, supuesto, impuesto</td></tr>
+<tr><td>hacer → hecho</td><td></td><td>deshecho, rehecho, satisfecho</td></tr>
+<tr><td>decir → dicho</td><td></td><td>predicho, contradicho</td></tr>
+<tr><td>volver → vuelto</td><td></td><td>devuelto, envuelto, revuelto</td></tr>
+<tr><td>escribir → escrito</td><td></td><td>descrito, inscrito, prescrito</td></tr>
+<tr><td>cubrir → cubierto</td><td></td><td>descubierto, encubierto</td></tr></table>
+
+<h4>Imperative Inheritance & Accent Rule</h4>
+<p>Compound verbs inherit the base verb's irregular tú imperative, but <strong>a written accent is added</strong> when the prefix makes the word polysyllabic and it ends in <em>n</em>, <em>s</em>, or a vowel:</p>
+<table><tr><th>Base verb</th><th>Tú imperative</th><th>Compound</th><th>Tú imperative</th></tr>
+<tr><td>poner</td><td>pon</td><td>proponer</td><td>prop<strong>ó</strong>n</td></tr>
+<tr><td>tener</td><td>ten</td><td>mantener</td><td>mant<strong>é</strong>n</td></tr>
+<tr><td>venir</td><td>ven</td><td>prevenir</td><td>prev<strong>é</strong>n</td></tr>
+<tr><td>decir</td><td>di</td><td>predecir</td><td>pred<strong>í</strong></td></tr>
+<tr><td>hacer</td><td>haz</td><td>deshacer</td><td>deshaz (no accent — ends in <em>z</em>)</td></tr></table>
+<p><strong>Rule:</strong> Spanish words ending in a vowel, <em>n</em>, or <em>s</em> stress the penultimate syllable by default. Since compound imperatives need stress on the last syllable, a written accent is required. Words ending in other consonants (like <em>z</em>) already stress the last syllable by default.</p>
+
+<h4>Subjunctive Inheritance</h4>
+<p>Irregular subjunctive forms carry over to compounds the same way:</p>
+<p><em>ponga → proponga, tenga → mantenga, venga → prevenga, haga → deshaga, diga → prediga, traiga → atraiga</em></p>
+
+<h4>Exceptions</h4>
+<p><strong>Bendecir / maldecir</strong> — These inherit most of decir's irregularities (preterite: bendije, present: bendigo), but differ in two important ways:</p>
+<ul>
+<li><strong>Regular future:</strong> bendeciré, maldeciré (NOT *bendiré, *maldiré)</li>
+<li><strong>Regular participle:</strong> bendecido, maldecido (NOT *bendicho, *maldicho). Note: <em>bendito</em> and <em>maldito</em> exist only as adjectives, not as verb participles.</li>
+</ul>
+
+<p><strong>Satisfacer</strong> — Conjugates like <em>hacer</em> but with <em>h → f</em>: satisfago, satisfice, satisfaré, satisfecho. The tú imperative is <em>satisfaz</em>.</p>
+
+<p><strong>Predecir / contradecir</strong> — As covered in the previous lesson, these have a <strong>regular future</strong> (predeciré, contradeciré) unlike decir (diré).</p>`,
+    quiz: [
+      { type: "fib", question: "He ___ la carta. (componer, compound past)", answer: "compuesto", options: null, explanation: "Componer inherits poner's participle: compuesto." },
+      { type: "mc", question: "Tú imperative of proponer:", answer: "propón", options: ["propon","propón","propone","proponté"], explanation: "Pon + prefix = propón (accent on the final o because the word ends in n)." },
+      { type: "fib", question: "Tú, ¡___ la calma! (mantener, imperative)", answer: "mantén", options: null, explanation: "Ten → mantén (accent needed because the word ends in n and has more than one syllable)." },
+      { type: "mc", question: "Participle of bendecir:", answer: "bendecido", options: ["bendicho","bendecido","bendito","bendicido"], explanation: "Unlike decir (dicho), bendecir has a REGULAR participle: bendecido. Bendito is only an adjective." },
+      { type: "fib", question: "Yo ___ mañana. (satisfacer, future)", answer: "satisfaré", options: null, explanation: "Satisfacer conjugates like hacer in the future: satisfaré (like haré)." },
+      { type: "mc", question: "Tú imperative of deshacer:", answer: "deshaz", options: ["deshaz","desház","deshace","deshaga"], explanation: "Haz → deshaz. No accent needed because the word ends in z (stress naturally falls on the last syllable)." }
     ]
   }
 ];

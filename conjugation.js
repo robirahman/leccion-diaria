@@ -108,6 +108,7 @@ const IRREGULAR_FUTURE_STEMS = {
   caber: 'cabr', decir: 'dir', haber: 'habr', hacer: 'har',
   poder: 'podr', poner: 'pondr', querer: 'querr', saber: 'sabr',
   salir: 'saldr', tener: 'tendr', valer: 'valdr', venir: 'vendr',
+  satisfacer: 'satisfar',
 };
 
 // ── Haber conjugation (for compound tenses) ──
@@ -133,7 +134,53 @@ const IRREGULAR_PARTICIPLES = {
   freír: 'frito', hacer: 'hecho', imprimir: 'impreso', morir: 'muerto',
   poner: 'puesto', resolver: 'resuelto', romper: 'roto', satisfacer: 'satisfecho',
   ver: 'visto', volver: 'vuelto', devolver: 'devuelto', descubrir: 'descubierto',
+  bendecir: 'bendecido', maldecir: 'maldecido',
+  inscribir: 'inscrito', prescribir: 'prescrito',
 };
+
+// ── Compound verb resolution ──
+// When a prefix is added to an irregular verb, the compound inherits irregularities.
+// Longer suffixes listed first to prevent false matches.
+const COMPOUND_BASES = [
+  'poner', 'tener', 'venir', 'hacer', 'decir',
+  'traer', 'ducir',
+];
+const COMPOUND_FUTURE_EXCEPTIONS = new Set([
+  'predecir', 'contradecir', 'bendecir', 'maldecir',
+]);
+
+function resolveCompound(base) {
+  for (const root of COMPOUND_BASES) {
+    if (base.endsWith(root) && base.length > root.length) {
+      const prefix = base.slice(0, base.length - root.length);
+      const irregularKey = root === 'ducir' ? 'conducir' : root;
+      return { prefix, root, irregularKey };
+    }
+  }
+  return null;
+}
+
+function addImperativeAccent(word) {
+  if (word.length <= 3) return word; // monosyllabic base, no accent needed
+  const lastChar = word.slice(-1);
+  if (/[aeiouns]/.test(lastChar)) {
+    const accents = { a: 'á', e: 'é', i: 'í', o: 'ó', u: 'ú' };
+    return word.replace(/([aeiou])([^aeiou]*)$/, (m, v, rest) =>
+      (accents[v] || v) + rest
+    );
+  }
+  return word;
+}
+
+function getIrregularFutureStem(base) {
+  if (IRREGULAR_FUTURE_STEMS[base]) return IRREGULAR_FUTURE_STEMS[base];
+  if (COMPOUND_FUTURE_EXCEPTIONS.has(base)) return null;
+  const compound = resolveCompound(base);
+  if (compound && IRREGULAR_FUTURE_STEMS[compound.irregularKey]) {
+    return compound.prefix + IRREGULAR_FUTURE_STEMS[compound.irregularKey];
+  }
+  return null;
+}
 
 // ── Stem-change patterns ──
 // Affects present indicative (all except nosotros/vosotros) and present subjunctive
@@ -328,6 +375,14 @@ const FULL_IRREGULARS = {
     subjunctive_imperfect: ['condujera', 'condujeras', 'condujera', 'condujéramos', 'condujerais', 'condujeran'],
     subjunctive_imperfect_se: ['condujese', 'condujeses', 'condujese', 'condujésemos', 'condujeseis', 'condujesen'],
   },
+  satisfacer: {
+    present: ['satisfago', 'satisfaces', 'satisface', 'satisfacemos', 'satisfacéis', 'satisfacen'],
+    preterite: ['satisfice', 'satisficiste', 'satisfizo', 'satisficimos', 'satisficisteis', 'satisficieron'],
+    subjunctive_present: ['satisfaga', 'satisfagas', 'satisfaga', 'satisfagamos', 'satisfagáis', 'satisfagan'],
+    subjunctive_imperfect: ['satisficiera', 'satisficieras', 'satisficiera', 'satisficiéramos', 'satisficierais', 'satisficieran'],
+    subjunctive_imperfect_se: ['satisficiese', 'satisficieses', 'satisficiese', 'satisficiésemos', 'satisficieseis', 'satisficiesen'],
+    imperative_aff: ['—', 'satisfaz', 'satisfaga', 'satisfagamos', 'satisfaced', 'satisfagan'],
+  },
 };
 
 // ── Get past participle ──
@@ -336,7 +391,9 @@ function getParticiple(infinitive) {
   const base = infinitive.replace(/se$/, '');
   if (IRREGULAR_PARTICIPLES[base]) return IRREGULAR_PARTICIPLES[base];
   // Check compounds (e.g. describir -> descrito based on escribir)
-  for (const [k, v] of Object.entries(IRREGULAR_PARTICIPLES)) {
+  // Sort by key length descending to match longest suffix first (volver before ver)
+  const sortedParticiples = Object.entries(IRREGULAR_PARTICIPLES).sort((a, b) => b[0].length - a[0].length);
+  for (const [k, v] of sortedParticiples) {
     if (base.endsWith(k) && base.length > k.length) {
       return base.slice(0, base.length - k.length) + v;
     }
@@ -348,24 +405,23 @@ function getParticiple(infinitive) {
 }
 
 // ── Get gerund ──
+const IRREGULAR_GERUNDS = {
+  decir: 'diciendo', poder: 'pudiendo', venir: 'viniendo',
+  dormir: 'durmiendo', morir: 'muriendo', pedir: 'pidiendo',
+  sentir: 'sintiendo', seguir: 'siguiendo', ir: 'yendo',
+  leer: 'leyendo', oír: 'oyendo', traer: 'trayendo', caer: 'cayendo',
+};
 function getGerund(infinitive) {
   const base = infinitive.replace(/se$/, '');
   const group = base.slice(-2);
   const stem = base.slice(0, -2);
-  // -er/-ir verbs with stem vowel change in gerund
-  if (base === 'decir') return 'diciendo';
-  if (base === 'poder') return 'pudiendo';
-  if (base === 'venir') return 'viniendo';
-  if (base === 'dormir') return 'durmiendo';
-  if (base === 'morir') return 'muriendo';
-  if (base === 'pedir') return 'pidiendo';
-  if (base === 'sentir') return 'sintiendo';
-  if (base === 'seguir') return 'siguiendo';
-  if (base === 'ir') return 'yendo';
-  if (base === 'leer') return 'leyendo';
-  if (base === 'oír') return 'oyendo';
-  if (base === 'traer') return 'trayendo';
-  if (base === 'caer') return 'cayendo';
+  if (IRREGULAR_GERUNDS[base]) return IRREGULAR_GERUNDS[base];
+  // Compound verb gerund inheritance (e.g. predecir → prediciendo)
+  for (const [k, v] of Object.entries(IRREGULAR_GERUNDS)) {
+    if (base.endsWith(k) && base.length > k.length) {
+      return base.slice(0, base.length - k.length) + v;
+    }
+  }
   if (group === 'ar') return stem + 'ando';
   return stem + 'iendo';
 }
@@ -414,21 +470,39 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
   else if (FULL_IRREGULARS[base] && FULL_IRREGULARS[base][effectiveTense]) {
     form = FULL_IRREGULARS[base][effectiveTense][personIdx];
   }
+  // 2b. Compound verb inheritance from FULL_IRREGULARS (e.g. proponer → poner)
+  else if (resolveCompound(base)) {
+    const compound = resolveCompound(base);
+    const irrTable = FULL_IRREGULARS[compound.irregularKey];
+    if (irrTable && irrTable[effectiveTense]) {
+      const baseForm = irrTable[effectiveTense][personIdx];
+      if (baseForm === '—') {
+        form = '—';
+      } else if (compound.root === 'ducir') {
+        form = baseForm.replace(/^con/, compound.prefix);
+      } else {
+        form = compound.prefix + baseForm;
+      }
+      if (effectiveTense === 'imperative_aff' && personIdx === 1) {
+        form = addImperativeAccent(form);
+      }
+    }
+  }
   // 3. Future subjunctive: derive from imperfect subjunctive -ra form
-  else if (tense === 'future_subjunctive') {
+  if (!form && tense === 'future_subjunctive') {
     const raForm = conjugate(base, 'subjunctive_imperfect', personIdx);
     const raSuffixes = ['ra', 'ras', 'ra', 'ramos', 'rais', 'ran'];
     const reSuffixes = ['re', 'res', 're', 'remos', 'reis', 'ren'];
     form = raForm.replace(new RegExp(raSuffixes[personIdx] + '$'), reSuffixes[personIdx]);
   }
   // 4. Future and conditional with irregular stems
-  else if ((tense === 'future' || tense === 'conditional') && IRREGULAR_FUTURE_STEMS[base]) {
-    const irrStem = IRREGULAR_FUTURE_STEMS[base];
+  else if (!form && (tense === 'future' || tense === 'conditional') && getIrregularFutureStem(base)) {
+    const irrStem = getIrregularFutureStem(base);
     const endings = tense === 'future' ? FUTURE_COND_ENDINGS : CONDITIONAL_ENDINGS;
     form = irrStem + endings[personIdx];
   }
-  // 4. Regular conjugation (with possible stem change and spelling change)
-  else if (REGULAR_ENDINGS[effectiveTense] && REGULAR_ENDINGS[effectiveTense][group]) {
+  // 5. Regular conjugation (with possible stem change and spelling change)
+  if (!form && REGULAR_ENDINGS[effectiveTense] && REGULAR_ENDINGS[effectiveTense][group]) {
     let conjStem = stem;
     const ending = REGULAR_ENDINGS[effectiveTense][group][personIdx];
 
@@ -462,13 +536,13 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
 
     form = conjStem + ending;
   }
-  // 5. Future/conditional regular (use full infinitive as stem)
-  else if (tense === 'future') {
+  // 6. Future/conditional regular (use full infinitive as stem)
+  if (!form && tense === 'future') {
     form = base + FUTURE_COND_ENDINGS[personIdx];
-  } else if (tense === 'conditional') {
+  } else if (!form && tense === 'conditional') {
     form = base + CONDITIONAL_ENDINGS[personIdx];
   }
-  else {
+  if (!form) {
     form = '?';
   }
 
