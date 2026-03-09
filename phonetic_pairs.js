@@ -2,7 +2,7 @@
 
 // ════════════════════════════════════════
 //  SPANISH PHONETIC PAIR DRILLS
-//  R vs RR and other sound contrasts
+//  3 categories, 25 items
 // ════════════════════════════════════════
 
 const PHONETIC_PAIR_CATEGORIES = {
@@ -15,6 +15,26 @@ const PHONETIC_PAIR_CATEGORIES = {
     ipa: ['/ɾ/', '/r/'],
     tip: 'Single r: tongue taps the roof of the mouth once (like "tt" in American "butter"). Double rr: tongue trills with multiple taps.',
     tipEs: 'R simple: la lengua toca el paladar una vez. RR doble: la lengua vibra varias veces.',
+  },
+  n_ñ: {
+    id: 'n_ñ',
+    label: 'N vs Ñ',
+    labelEs: 'N contra Ñ',
+    description: 'Alveolar /n/ versus palatal nasal /ɲ/. The tilde (~) over the N completely changes the meaning.',
+    descriptionEs: 'Nasal alveolar /n/ contra nasal palatal /ɲ/. La virgulilla (~) sobre la N cambia completamente el significado.',
+    ipa: ['/n/', '/ɲ/'],
+    tip: 'For Ñ, press the middle of your tongue flat against the roof of your mouth (like "ny" in "canyon").',
+    tipEs: 'Para la Ñ, presiona el centro de la lengua contra el paladar (como el sonido "ni" en "unión").',
+  },
+  ll_y: {
+    id: 'll_y',
+    label: 'LL vs Y',
+    labelEs: 'LL contra Y',
+    description: 'In non-yeísta dialects, LL is a palatal lateral /ʎ/ and Y is a palatal fricative /ʝ/. Many speakers merge them (yeísmo), but the spelling distinction changes meaning.',
+    descriptionEs: 'En dialectos no yeístas, LL es lateral palatal /ʎ/ e Y es fricativa palatal /ʝ/. Muchos hablantes los fusionan (yeísmo), pero la ortografía cambia el significado.',
+    ipa: ['/ʎ/', '/ʝ/'],
+    tip: 'Even if you pronounce them the same (yeísmo), knowing the spelling difference is essential. LL pairs often share pronunciation but never meaning.',
+    tipEs: 'Aunque los pronuncies igual (yeísmo), la diferencia ortográfica es fundamental. Los pares con LL comparten pronunciación pero nunca significado.',
   },
 };
 
@@ -198,5 +218,148 @@ const PHONETIC_PAIRS = [
     exampleAEn: 'The shepherd carried a wooden rod.',
     exampleB: 'Nos sentamos en la ___ del café.',
     exampleBEn: 'We sat at the bar of the café.',
+  },
+
+  // ──────────────────────────────────────
+  //  N vs Ñ  (8 pairs)
+  // ──────────────────────────────────────
+  {
+    id: 'pp-11', category: 'n_ñ', level: 'A1',
+    wordA: 'ano', wordB: 'año',
+    ipaA: '/ˈa.no/', ipaB: '/ˈa.ɲo/',
+    meaningA: 'anus', meaningAEs: 'parte del cuerpo (anatomía)',
+    meaningB: 'year', meaningBEs: 'período de doce meses',
+    exampleA: 'El médico examinó el ___ del paciente.', exampleAEn: 'The doctor examined the patient\'s anus.',
+    exampleB: 'Este ___ vamos a la playa.', exampleBEn: 'This year we are going to the beach.',
+  },
+  {
+    id: 'pp-12', category: 'n_ñ', level: 'A1',
+    wordA: 'pena', wordB: 'peña',
+    ipaA: '/ˈpe.na/', ipaB: '/ˈpe.ɲa/',
+    meaningA: 'sorrow, pity', meaningAEs: 'tristeza, lástima',
+    meaningB: 'rock, cliff; group of friends', meaningBEs: 'roca grande; grupo de amigos',
+    exampleA: 'Me da ___ ver eso.', exampleAEn: 'It makes me sad to see that.',
+    exampleB: 'La ___ del pueblo se reúne los viernes.', exampleBEn: 'The group of friends from town meets on Fridays.',
+  },
+  {
+    id: 'pp-13', category: 'n_ñ', level: 'A1',
+    wordA: 'cana', wordB: 'caña',
+    ipaA: '/ˈka.na/', ipaB: '/ˈka.ɲa/',
+    meaningA: 'gray hair', meaningAEs: 'pelo blanco por la edad',
+    meaningB: 'cane, reed; small draft beer', meaningBEs: 'caña de azúcar; cerveza pequeña de barril',
+    exampleA: 'Mi abuela tiene muchas ___s.', exampleAEn: 'My grandmother has many gray hairs.',
+    exampleB: 'Quiero una ___ de cerveza, por favor.', exampleBEn: 'I\'d like a small draft beer, please.',
+  },
+  {
+    id: 'pp-14', category: 'n_ñ', level: 'A2',
+    wordA: 'una', wordB: 'uña',
+    ipaA: '/ˈu.na/', ipaB: '/ˈu.ɲa/',
+    meaningA: 'a, one (feminine)', meaningAEs: 'artículo indefinido femenino',
+    meaningB: 'fingernail', meaningBEs: 'parte dura al final del dedo',
+    exampleA: 'Tengo ___ idea.', exampleAEn: 'I have an idea.',
+    exampleB: 'Me rompí una ___ jugando fútbol.', exampleBEn: 'I broke a fingernail playing soccer.',
+  },
+  {
+    id: 'pp-15', category: 'n_ñ', level: 'A2',
+    wordA: 'mono', wordB: 'moño',
+    ipaA: '/ˈmo.no/', ipaB: '/ˈmo.ɲo/',
+    meaningA: 'monkey; cute', meaningAEs: 'primate; bonito (coloquial)',
+    meaningB: 'hair bun', meaningBEs: 'recogido del pelo',
+    exampleA: 'El ___ está en el árbol.', exampleAEn: 'The monkey is in the tree.',
+    exampleB: 'Ella se hizo un ___ para la fiesta.', exampleBEn: 'She put her hair in a bun for the party.',
+  },
+  {
+    id: 'pp-16', category: 'n_ñ', level: 'A2',
+    wordA: 'sonar', wordB: 'soñar',
+    ipaA: '/so.ˈnaɾ/', ipaB: '/so.ˈɲaɾ/',
+    meaningA: 'to ring, to sound', meaningAEs: 'producir un sonido',
+    meaningB: 'to dream', meaningBEs: 'tener sueños',
+    exampleA: 'El teléfono no para de ___.', exampleAEn: 'The phone won\'t stop ringing.',
+    exampleB: 'Me gusta ___ en grande.', exampleBEn: 'I like to dream big.',
+  },
+  {
+    id: 'pp-17', category: 'n_ñ', level: 'B1',
+    wordA: 'ceno', wordB: 'ceño',
+    ipaA: '/ˈse.no/', ipaB: '/ˈse.ɲo/',
+    meaningA: 'I dine (from cenar)', meaningAEs: 'primera persona de cenar',
+    meaningB: 'frown, brow', meaningBEs: 'gesto de fruncir las cejas',
+    exampleA: 'Yo ___ a las nueve.', exampleAEn: 'I dine at nine.',
+    exampleB: 'Frunció el ___ al oír la noticia.', exampleBEn: 'He frowned upon hearing the news.',
+  },
+  {
+    id: 'pp-18', category: 'n_ñ', level: 'B1',
+    wordA: 'tino', wordB: 'tiño',
+    ipaA: '/ˈti.no/', ipaB: '/ˈti.ɲo/',
+    meaningA: 'good aim, good judgment', meaningAEs: 'buen juicio, buena puntería',
+    meaningB: 'I dye (from teñir)', meaningBEs: 'primera persona de teñir',
+    exampleA: 'Tiene buen ___ para los negocios.', exampleAEn: 'He has good judgment for business.',
+    exampleB: 'Yo me ___ el pelo cada mes.', exampleBEn: 'I dye my hair every month.',
+  },
+
+  // ──────────────────────────────────────
+  //  LL vs Y  (7 pairs)
+  // ──────────────────────────────────────
+  {
+    id: 'pp-19', category: 'll_y', level: 'A2',
+    wordA: 'callo', wordB: 'cayo',
+    ipaA: '/ˈka.ʝo/', ipaB: '/ˈka.ʝo/',
+    meaningA: 'callus; I am silent (from callar)', meaningAEs: 'dureza en la piel; primera persona de callar',
+    meaningB: 'small island, key', meaningBEs: 'islote pequeño',
+    exampleA: 'Tengo un ___ en el pie.', exampleAEn: 'I have a callus on my foot.',
+    exampleB: 'El ___ tiene una playa hermosa.', exampleBEn: 'The key has a beautiful beach.',
+  },
+  {
+    id: 'pp-20', category: 'll_y', level: 'A2',
+    wordA: 'halla', wordB: 'haya',
+    ipaA: '/ˈa.ʝa/', ipaB: '/ˈa.ʝa/',
+    meaningA: 'finds (from hallar)', meaningAEs: 'tercera persona de hallar',
+    meaningB: 'subjunctive of haber; beech tree', meaningBEs: 'subjuntivo de haber; tipo de árbol',
+    exampleA: 'Ella siempre ___ la solución.', exampleAEn: 'She always finds the solution.',
+    exampleB: 'Espero que ___ tiempo para hablar.', exampleBEn: 'I hope there is time to talk.',
+  },
+  {
+    id: 'pp-21', category: 'll_y', level: 'B1',
+    wordA: 'rallar', wordB: 'rayar',
+    ipaA: '/ra.ˈʝaɾ/', ipaB: '/ra.ˈʝaɾ/',
+    meaningA: 'to grate (cheese, etc.)', meaningAEs: 'desmenuzar con rallador',
+    meaningB: 'to scratch, to draw lines', meaningBEs: 'hacer rayas, arañar',
+    exampleA: 'Voy a ___ el queso para la pasta.', exampleAEn: 'I\'m going to grate the cheese for the pasta.',
+    exampleB: 'Cuidado, vas a ___ la mesa.', exampleBEn: 'Careful, you\'re going to scratch the table.',
+  },
+  {
+    id: 'pp-22', category: 'll_y', level: 'B1',
+    wordA: 'valla', wordB: 'vaya',
+    ipaA: '/ˈba.ʝa/', ipaB: '/ˈba.ʝa/',
+    meaningA: 'fence, billboard', meaningAEs: 'cerca, cartel publicitario',
+    meaningB: 'go (subjunctive); wow', meaningBEs: 'subjuntivo de ir; exclamación de sorpresa',
+    exampleA: 'Hay que arreglar la ___ del jardín.', exampleAEn: 'We need to fix the garden fence.',
+    exampleB: 'Ojalá ___ bien el examen.', exampleBEn: 'I hope the exam goes well.',
+  },
+  {
+    id: 'pp-23', category: 'll_y', level: 'B1',
+    wordA: 'malla', wordB: 'maya',
+    ipaA: '/ˈma.ʝa/', ipaB: '/ˈma.ʝa/',
+    meaningA: 'mesh, chain mail', meaningAEs: 'tejido de red, malla metálica',
+    meaningB: 'Mayan', meaningBEs: 'relativo a la civilización maya',
+    exampleA: 'La ___ del portero detuvo el balón.', exampleAEn: 'The goalkeeper\'s net stopped the ball.',
+    exampleB: 'La cultura ___ es fascinante.', exampleBEn: 'Mayan culture is fascinating.',
+  },
+  {
+    id: 'pp-24', category: 'll_y', level: 'B1',
+    wordA: 'pollo', wordB: 'poyo',
+    ipaA: '/ˈpo.ʝo/', ipaB: '/ˈpo.ʝo/',
+    meaningA: 'chicken', meaningAEs: 'ave de corral para comer',
+    meaningB: 'stone bench', meaningBEs: 'banco de piedra adosado a la pared',
+    exampleA: 'El ___ asado está delicioso.', exampleAEn: 'The roast chicken is delicious.',
+    exampleB: 'Se sentó en el ___ de la entrada.', exampleBEn: 'He sat on the stone bench at the entrance.',
+  },
+  {
+    id: 'pp-25', category: 'll_y', level: 'B2',
+    wordA: 'olla', wordB: 'hoya',
+    ipaA: '/ˈo.ʝa/', ipaB: '/ˈo.ʝa/',
+    meaningA: 'pot (cooking)', meaningAEs: 'recipiente para cocinar',
+    meaningB: 'valley, basin', meaningBEs: 'depresión geográfica del terreno',
+    exampleA: 'La ___ de sopa está en el fuego.', exampleAEn: 'The soup pot is on the stove.',
+    exampleB: 'La ___ del río es muy fértil.', exampleBEn: 'The river basin is very fertile.',
   },
 ];

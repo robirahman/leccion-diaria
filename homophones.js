@@ -2,6 +2,7 @@
 
 // ════════════════════════════════════════
 //  SPANISH HOMOPHONE DRILLS
+//  4 categories, 22 items
 //  Words that sound the same but differ
 //  in spelling and meaning
 // ════════════════════════════════════════
@@ -29,6 +30,13 @@ const HOMOPHONE_CATEGORIES = {
     descriptionEs: 'En la mayor parte de Latinoamérica, S, C (antes de e/i) y Z suenan igual.',
     regionalNote: 'These are homophones in seseo regions (most of Latin America). In parts of Spain, they sound different.',
     regionalNoteEs: 'Son homófonos en regiones de seseo (la mayor parte de Latinoamérica). En partes de España suenan diferente.',
+  },
+  accent_meaning: {
+    id: 'accent_meaning',
+    label: 'Accent Changes Meaning',
+    labelEs: 'La tilde cambia el significado',
+    description: 'Word pairs spelled almost identically — only the written accent (tilde) distinguishes them. They sound very similar but have completely different grammatical functions.',
+    descriptionEs: 'Pares de palabras que se escriben casi igual — solo la tilde las distingue. Suenan muy parecido pero tienen funciones gramaticales completamente distintas.',
   },
 };
 
@@ -217,6 +225,209 @@ const HOMOPHONES = [
     examples: [
       { sentence: 'La bandera ondea en el ___.', answer: 'asta', english: 'The flag waves on the flagpole.' },
       { sentence: 'Trabajé ___ las diez de la noche.', answer: 'hasta', english: 'I worked until ten at night.' },
+    ],
+  },
+
+  // ──────────────────────────────────────
+  //  ACCENT CHANGES MEANING  (12 sets)
+  // ──────────────────────────────────────
+
+  // A1
+  {
+    id: 'hom-11',
+    category: 'accent_meaning',
+    level: 'A1',
+    words: [
+      { word: 'el', meaning: 'the (masculine article)', meaningEs: 'artículo definido masculino', pos: 'article' },
+      { word: 'él', meaning: 'he, him', meaningEs: 'pronombre personal de tercera persona', pos: 'pronoun' },
+    ],
+    pronunciation: '/el/',
+    tip: '"El" is the masculine article (the). "Él" with an accent is the pronoun "he/him".',
+    tipEs: '"El" es el artículo masculino. "Él" con tilde es el pronombre personal.',
+    examples: [
+      { sentence: '___ libro es nuevo.', answer: 'El', english: 'The book is new.' },
+      { sentence: '___ es mi mejor amigo.', answer: 'Él', english: 'He is my best friend.' },
+    ],
+  },
+  {
+    id: 'hom-12',
+    category: 'accent_meaning',
+    level: 'A1',
+    words: [
+      { word: 'tu', meaning: 'your (informal possessive)', meaningEs: 'posesivo informal de segunda persona', pos: 'adjective' },
+      { word: 'tú', meaning: 'you (subject pronoun)', meaningEs: 'pronombre personal de segunda persona', pos: 'pronoun' },
+    ],
+    pronunciation: '/tu/',
+    tip: '"Tu" without accent is possessive "your". "Tú" with accent is the subject pronoun "you".',
+    tipEs: '"Tu" sin tilde es posesivo. "Tú" con tilde es pronombre personal.',
+    examples: [
+      { sentence: '___ casa es muy bonita.', answer: 'Tu', english: 'Your house is very pretty.' },
+      { sentence: '___ eres muy amable.', answer: 'Tú', english: 'You are very kind.' },
+    ],
+  },
+  {
+    id: 'hom-13',
+    category: 'accent_meaning',
+    level: 'A1',
+    words: [
+      { word: 'mi', meaning: 'my (possessive)', meaningEs: 'posesivo de primera persona', pos: 'adjective' },
+      { word: 'mí', meaning: 'me (prepositional pronoun)', meaningEs: 'pronombre preposicional de primera persona', pos: 'pronoun' },
+    ],
+    pronunciation: '/mi/',
+    tip: '"Mi" without accent is possessive "my". "Mí" with accent is used after prepositions: "para mí", "a mí".',
+    tipEs: '"Mi" sin tilde es posesivo. "Mí" con tilde va después de preposiciones: "para mí", "a mí".',
+    examples: [
+      { sentence: '___ gato duerme mucho.', answer: 'Mi', english: 'My cat sleeps a lot.' },
+      { sentence: 'Este regalo es para ___.', answer: 'mí', english: 'This gift is for me.' },
+    ],
+  },
+  {
+    id: 'hom-14',
+    category: 'accent_meaning',
+    level: 'A1',
+    words: [
+      { word: 'si', meaning: 'if (conjunction)', meaningEs: 'conjunción condicional', pos: 'conjunction' },
+      { word: 'sí', meaning: 'yes; oneself (reflexive)', meaningEs: 'afirmación; pronombre reflexivo', pos: 'adverb' },
+    ],
+    pronunciation: '/si/',
+    tip: '"Si" without accent means "if". "Sí" with accent means "yes" or reflexive "oneself" (e.g., "para sí mismo").',
+    tipEs: '"Si" sin tilde significa "si condicional". "Sí" con tilde es afirmación o pronombre reflexivo.',
+    examples: [
+      { sentence: '___ llueve, no vamos al parque.', answer: 'Si', english: 'If it rains, we\'re not going to the park.' },
+      { sentence: '___,  quiero ir contigo.', answer: 'Sí', english: 'Yes, I want to go with you.' },
+    ],
+  },
+
+  // A2
+  {
+    id: 'hom-15',
+    category: 'accent_meaning',
+    level: 'A2',
+    words: [
+      { word: 'de', meaning: 'of, from (preposition)', meaningEs: 'preposición de origen o pertenencia', pos: 'preposition' },
+      { word: 'dé', meaning: 'give (subjunctive/imperative of dar)', meaningEs: 'subjuntivo/imperativo de dar', pos: 'verb' },
+    ],
+    pronunciation: '/de/',
+    tip: '"De" is the preposition "of/from". "Dé" with accent is the subjunctive or command form of "dar" (to give).',
+    tipEs: '"De" es preposición. "Dé" con tilde es el subjuntivo o imperativo de "dar".',
+    examples: [
+      { sentence: 'La casa ___ mi abuela es grande.', answer: 'de', english: 'My grandmother\'s house is big.' },
+      { sentence: 'Espero que me ___ una oportunidad.', answer: 'dé', english: 'I hope he gives me an opportunity.' },
+    ],
+  },
+  {
+    id: 'hom-16',
+    category: 'accent_meaning',
+    level: 'A2',
+    words: [
+      { word: 'se', meaning: 'reflexive pronoun (himself, herself, itself)', meaningEs: 'pronombre reflexivo de tercera persona', pos: 'pronoun' },
+      { word: 'sé', meaning: 'I know (saber); be! (ser imperative)', meaningEs: 'primera persona de saber; imperativo de ser', pos: 'verb' },
+    ],
+    pronunciation: '/se/',
+    tip: '"Se" is the reflexive pronoun. "Sé" means "I know" (from saber) or "be!" (imperative of ser).',
+    tipEs: '"Se" es pronombre reflexivo. "Sé" es primera persona de saber o imperativo de ser.',
+    examples: [
+      { sentence: 'Ella ___ levanta temprano.', answer: 'se', english: 'She gets up early.' },
+      { sentence: 'No ___ la respuesta.', answer: 'sé', english: 'I don\'t know the answer.' },
+      { sentence: '___ amable con todos.', answer: 'Sé', english: 'Be kind to everyone.' },
+    ],
+  },
+  {
+    id: 'hom-17',
+    category: 'accent_meaning',
+    level: 'A2',
+    words: [
+      { word: 'mas', meaning: 'but (literary synonym for pero)', meaningEs: 'conjunción adversativa literaria (sinónimo de pero)', pos: 'conjunction' },
+      { word: 'más', meaning: 'more', meaningEs: 'adverbio de cantidad', pos: 'adverb' },
+    ],
+    pronunciation: '/mas/',
+    tip: '"Mas" without accent is a literary/formal word for "but" (rarely used in speech). "Más" with accent means "more".',
+    tipEs: '"Mas" sin tilde es sinónimo literario de "pero". "Más" con tilde significa "more".',
+    examples: [
+      { sentence: 'Lo intenté, ___ no pude.', answer: 'mas', english: 'I tried, but I couldn\'t.' },
+      { sentence: 'Quiero ___ café, por favor.', answer: 'más', english: 'I want more coffee, please.' },
+    ],
+  },
+  {
+    id: 'hom-18',
+    category: 'accent_meaning',
+    level: 'A2',
+    words: [
+      { word: 'te', meaning: 'you (object/reflexive pronoun)', meaningEs: 'pronombre de objeto o reflexivo de segunda persona', pos: 'pronoun' },
+      { word: 'té', meaning: 'tea', meaningEs: 'bebida caliente de hojas', pos: 'noun' },
+    ],
+    pronunciation: '/te/',
+    tip: '"Te" is the object/reflexive pronoun "you" (e.g., "te quiero"). "Té" with accent is the drink "tea".',
+    tipEs: '"Te" es pronombre de objeto o reflexivo. "Té" con tilde es la bebida.',
+    examples: [
+      { sentence: '___ quiero mucho.', answer: 'Te', english: 'I love you very much.' },
+      { sentence: '¿Quieres una taza de ___?', answer: 'té', english: 'Do you want a cup of tea?' },
+    ],
+  },
+  {
+    id: 'hom-19',
+    category: 'accent_meaning',
+    level: 'A2',
+    words: [
+      { word: 'aun', meaning: 'even, including', meaningEs: 'incluso, hasta', pos: 'adverb' },
+      { word: 'aún', meaning: 'still, yet', meaningEs: 'todavía', pos: 'adverb' },
+    ],
+    pronunciation: '/a.ˈun/',
+    tip: '"Aun" (one syllable, means "even/including") vs "aún" (two syllables, means "still/yet"). This pair also differs in stress.',
+    tipEs: '"Aun" (una sílaba, significa "incluso") vs "aún" (dos sílabas, significa "todavía"). Este par también difiere en acentuación.',
+    examples: [
+      { sentence: '___ los expertos se equivocan a veces.', answer: 'Aun', english: 'Even experts make mistakes sometimes.' },
+      { sentence: '___ no ha llegado el paquete.', answer: 'Aún', english: 'The package hasn\'t arrived yet.' },
+    ],
+  },
+  {
+    id: 'hom-20',
+    category: 'accent_meaning',
+    level: 'A2',
+    words: [
+      { word: 'que', meaning: 'that (conjunction/relative pronoun)', meaningEs: 'conjunción o pronombre relativo', pos: 'conjunction' },
+      { word: 'qué', meaning: 'what, how (interrogative/exclamatory)', meaningEs: 'pronombre interrogativo o exclamativo', pos: 'pronoun' },
+    ],
+    pronunciation: '/ke/',
+    tip: '"Que" without accent is a conjunction ("creo que...") or relative pronoun. "Qué" with accent is used in questions and exclamations.',
+    tipEs: '"Que" sin tilde es conjunción o relativo. "Qué" con tilde se usa en preguntas y exclamaciones.',
+    examples: [
+      { sentence: 'Creo ___ tienes razón.', answer: 'que', english: 'I think that you\'re right.' },
+      { sentence: '¡___ bonito día!', answer: 'Qué', english: 'What a beautiful day!' },
+    ],
+  },
+
+  // B1
+  {
+    id: 'hom-21',
+    category: 'accent_meaning',
+    level: 'B1',
+    words: [
+      { word: 'como', meaning: 'like, as; I eat (from comer)', meaningEs: 'comparación; primera persona de comer', pos: 'conjunction/verb' },
+      { word: 'cómo', meaning: 'how (interrogative/exclamatory)', meaningEs: 'adverbio interrogativo o exclamativo', pos: 'adverb' },
+    ],
+    pronunciation: '/ˈko.mo/',
+    tip: '"Como" without accent means "like/as" or "I eat". "Cómo" with accent is used in questions and exclamations: "¿Cómo estás?"',
+    tipEs: '"Como" sin tilde es comparación o primera persona de comer. "Cómo" con tilde es interrogativo o exclamativo.',
+    examples: [
+      { sentence: 'Cocino ___ mi mamá.', answer: 'como', english: 'I cook like my mom.' },
+      { sentence: '¿___ se llama tu perro?', answer: 'Cómo', english: 'What is your dog\'s name?' },
+    ],
+  },
+  {
+    id: 'hom-22',
+    category: 'accent_meaning',
+    level: 'B1',
+    words: [
+      { word: 'donde', meaning: 'where (relative adverb)', meaningEs: 'adverbio relativo de lugar', pos: 'adverb' },
+      { word: 'dónde', meaning: 'where (interrogative)', meaningEs: 'adverbio interrogativo de lugar', pos: 'adverb' },
+    ],
+    pronunciation: '/ˈdon.de/',
+    tip: '"Donde" without accent is a relative adverb ("la ciudad donde nací"). "Dónde" with accent is for questions: "¿Dónde estás?"',
+    tipEs: '"Donde" sin tilde es relativo ("la ciudad donde nací"). "Dónde" con tilde es interrogativo: "¿Dónde estás?"',
+    examples: [
+      { sentence: 'La ciudad ___ nací es pequeña.', answer: 'donde', english: 'The city where I was born is small.' },
+      { sentence: '¿___ está el baño?', answer: 'Dónde', english: 'Where is the bathroom?' },
     ],
   },
 ];
