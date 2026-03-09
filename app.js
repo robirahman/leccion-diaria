@@ -2596,15 +2596,20 @@ function renderGrammarHome() {
     const lessons = GRAMMAR_DATA.filter(l => l.level === level);
     if (!lessons.length) return;
     html += `<h3 class="text-sm text-muted mt-2 mb-1">${level}</h3>`;
+    const masteryLabels = ['', 'Learning', 'Familiar', 'Intermediate', 'Mastered'];
     lessons.forEach((l, i) => {
-      const done = progress.grammarDone[l.id];
+      const raw = progress.grammarDone[l.id];
+      const level = raw === true ? 4 : (raw || 0);
+      const badge = level > 0
+        ? `<span class="mastery-badge mastery-${level}">${masteryLabels[level]}</span>`
+        : '';
       html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
         <div class="flex justify-between items-center">
           <div>
             <div class="card-title">${i + 1}. ${esc(l.titleEn || l.title)}</div>
             <div class="card-subtitle">${esc(l.shortDesc || '')}</div>
           </div>
-          ${done ? `<span class="mastery-badge mastery-4">${tBtn('done')}</span>` : ''}
+          ${badge}
         </div>
       </div>`;
     });
@@ -2640,7 +2645,7 @@ function openGrammarLesson(id) {
 
 function startGrammarQuiz() {
   if (!currentLesson || !currentLesson.quiz || !currentLesson.quiz.length) return;
-  grammarQuizQueue = [...currentLesson.quiz];
+  grammarQuizQueue = shuffle([...currentLesson.quiz]);
   grammarQuizIdx = 0;
   grammarQuizScore = 0;
   showScreen('grammar-quiz');
@@ -2649,8 +2654,9 @@ function startGrammarQuiz() {
 
 function renderGrammarQuizQuestion() {
   if (grammarQuizIdx >= grammarQuizQueue.length) {
-    progress.grammarDone[currentLesson.id] = true;
-    saveProgress();
+    const pct = grammarQuizScore / grammarQuizQueue.length;
+    const rating = pct >= 1.0 ? FSRS_EASY : pct >= 0.8 ? FSRS_GOOD : pct >= 0.6 ? FSRS_HARD : FSRS_AGAIN;
+    reviewItem(progress.grammarFsrs, progress.grammarDone, currentLesson.id, rating);
     showResults(grammarQuizScore, grammarQuizQueue.length, 'grammar-quiz', `${tBtn('grammar')}: ${currentLesson.titleEn || currentLesson.title}`);
     return;
   }
@@ -3933,11 +3939,12 @@ function applyPlacementResults(levels) {
   const grammarCheck = perfectFull ? levelAtOrBelow : levelBelow;
   const vocabCheck = perfectFull ? levelAtOrBelow : levelBelow;
 
-  // Mark grammar lessons as done (uses grammar level) — skip in vocab-only mode
+  // Mark grammar lessons as mastered (uses grammar level) — skip in vocab-only mode
   if (mode !== 'vocab' && typeof GRAMMAR_DATA !== 'undefined') {
     GRAMMAR_DATA.forEach(l => {
       if (grammarCheck(l.level, grammarLevel)) {
-        progress.grammarDone[l.id] = true;
+        seedMatureFsrs(progress.grammarFsrs, l.id);
+        progress.grammarDone[l.id] = 4;
       }
     });
   }
