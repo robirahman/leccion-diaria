@@ -1,11 +1,12 @@
-const CACHE_NAME = 'leccion-diaria-v18';
+const CACHE_NAME = 'leccion-diaria-cb3edca2';
 const ASSETS = [
-  './', './index.html', './styles.css', './app.js', './fsrs.js',
+  './', './index.html', './styles.css', './app-core.js', './app-learn.js',
+  './app-practice.js', './app-init.js', './fsrs.js',
   './conjugation.js', './verbs.js', './vocab.js', './grammar.js',
   './phrases.js', './conversations.js', './recipes.js', './music.js',
   './movies.js', './poetry.js', './sports.js', './proverbs.js',
   './folktales.js', './festivals.js', './history.js', './travel.js',
-  './trivia.js', './idioms.js', './placement_questions.js',
+  './trivia.js', './idioms.js', './placement_questions.js', './quiz-engine.js',
   './minimal_pairs.js', './sentence_construction.js', './cloze_passages.js',
   './translation_drills.js', './dictation.js', './jokes.js',
   './reading.js', './reading_sat.js', './themed_vocab.js',

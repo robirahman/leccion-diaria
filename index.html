@@ -1144,7 +1144,6 @@
   <div class="screen" id="screen-themed-quiz">
     <div class="quiz-progress" id="tvq-progress"></div>
     <div id="tvq-container"></div>
-    <button class="btn btn-primary btn-block mt-1" data-action="submit-themed-quiz-mc" id="tvq-submit" style="display:none">Check</button>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-themed-quiz" style="display:none" id="tvq-next">Next</button>
   </div>
 
@@ -1271,11 +1270,14 @@
 <script defer src="fsrs.js"></script>
 <script defer src="conjugation.js"></script>
 <script defer src="verbs.js"></script>
-<script defer src="vocab.js"></script>
 <script defer src="grammar.js"></script>
 <script defer src="phrases.js"></script>
 <script defer src="placement_questions.js"></script>
-<script defer src="app.js"></script>
-<!-- Secondary content modules are lazy-loaded by app.js after init -->
+<script defer src="quiz-engine.js"></script>
+<script defer src="app-core.js"></script>
+<script defer src="app-learn.js"></script>
+<script defer src="app-practice.js"></script>
+<script defer src="app-init.js"></script>
+<!-- Secondary content modules are lazy-loaded by app-init.js after init -->
 </body>
 </html>

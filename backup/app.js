@@ -37,16 +37,19 @@ const quizStates = {
   tr: createQuizState(),
   dict: createQuizState(),
 };
-// Backward-compatible accessors (these are used extensively throughout)
-let mpQueue = quizStates.mp.queue, mpIdx = 0, mpScore = 0, mpAnswered = false;
-let ppQueue = quizStates.pp.queue, ppIdx = 0, ppScore = 0, ppAnswered = false;
-let homQueue = quizStates.hom.queue, homIdx = 0, homScore = 0, homAnswered = false;
-let connQueue = quizStates.conn.queue, connIdx = 0, connScore = 0, connAnswered = false;
+// Quiz state accessors — using quizStates directly
+let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
+let ppQueue = [], ppIdx = 0, ppScore = 0, ppAnswered = false;
+let homQueue = [], homIdx = 0, homScore = 0, homAnswered = false;
+let connQueue = [], connIdx = 0, connScore = 0, connAnswered = false;
 let adminTaps = 0, adminTapTimer = null;
-let sbQueue = quizStates.sb.queue, sbIdx = 0, sbScore = 0;
-let clozeQueue = quizStates.cloze.queue, clozeIdx = 0, clozeScore = 0;
-let trQueue = quizStates.tr.queue, trIdx = 0, trScore = 0;
-let dictQueue = quizStates.dict.queue, dictIdx = 0, dictScore = 0;
+let sbQueue = [], sbIdx = 0, sbScore = 0;
+let clozeQueue = [], clozeIdx = 0, clozeScore = 0;
+let trQueue = [], trIdx = 0, trScore = 0;
+let dictQueue = [], dictIdx = 0, dictScore = 0;
+
+// Track whether a quiz is currently in progress (for navigation guards)
+let _activeQuizScreen = null;
 
 // Tense name constants
 const TENSE_FUTURE_SUBJUNCTIVE = 'future_subjunctive';
@@ -348,6 +351,8 @@ function newProgress() {
     themedVocabDone: {},
     achievements: {},
     errorCounts: {},
+    perfectQuizCount: 0,
+    nightOwlUnlocked: false,
     placementLevel: null,
     placementDate: null,
     settings: {
@@ -385,8 +390,8 @@ const ACHIEVEMENTS = [
   { id: 'grammar-5',  icon: '📐', name: 'Grammar Student',  desc: '5 grammar lessons',      check: p => Object.values(p.grammarDone).filter(Boolean).length >= 5 },
   { id: 'grammar-20', icon: '🎓', name: 'Grammar Pro',      desc: '20 grammar lessons',     check: p => Object.values(p.grammarDone).filter(Boolean).length >= 20 },
   // Perfect scores
-  { id: 'perfect-1', icon: '💯', name: 'Perfectionist',     desc: 'Score 100% on any quiz', check: p => (p._perfectQuizCount || 0) >= 1 },
-  { id: 'perfect-5', icon: '🎯', name: 'Flawless Five',     desc: '5 perfect quizzes',      check: p => (p._perfectQuizCount || 0) >= 5 },
+  { id: 'perfect-1', icon: '💯', name: 'Perfectionist',     desc: 'Score 100% on any quiz', check: p => (p.perfectQuizCount || 0) >= 1 },
+  { id: 'perfect-5', icon: '🎯', name: 'Flawless Five',     desc: '5 perfect quizzes',      check: p => (p.perfectQuizCount || 0) >= 5 },
   // Level
   { id: 'level-a1', icon: '🌱', name: 'Beginner',          desc: 'Reach A1',               check: p => p.placementLevel },
   { id: 'level-b1', icon: '🌿', name: 'Intermediate',      desc: 'Reach B1+',              check: p => (LEVEL_ORDER[p.placementLevel] || 0) >= 2 },
@@ -396,13 +401,13 @@ const ACHIEVEMENTS = [
     const stores = ['mpMastery','ppMastery','homMastery','connMastery','sentenceMastery','clozeMastery','translationMastery','dictMastery','readingMastery','verbMastery','vocabMastery'];
     return stores.every(s => Object.keys(p[s] || {}).length > 0);
   }},
-  { id: 'night-owl', icon: '🦉', name: 'Night Owl',        desc: 'Practice after 9 PM',    check: p => p._nightOwl },
+  { id: 'night-owl', icon: '🦉', name: 'Night Owl',        desc: 'Practice after 9 PM',    check: p => p.nightOwlUnlocked },
 ];
 
 function checkAchievements() {
   if (!progress) return;
-  // Compute transient counters
-  if (new Date().getHours() >= 21) progress._nightOwl = true;
+  // Track night practice for achievement
+  if (new Date().getHours() >= 21) progress.nightOwlUnlocked = true;
   const newBadges = [];
   for (const badge of ACHIEVEMENTS) {
     if (progress.achievements[badge.id]) continue;
@@ -768,13 +773,35 @@ function getProfiles() {
 }
 function saveProfiles(list) { localStorage.setItem('ld_profiles', JSON.stringify(list)); }
 
+function migrateProgress(p) {
+  if (!p.achievements) p.achievements = {};
+  if (!p.errorCounts) p.errorCounts = {};
+  if (p._perfectQuizCount != null && p.perfectQuizCount == null) {
+    p.perfectQuizCount = p._perfectQuizCount;
+    delete p._perfectQuizCount;
+  }
+  if (p._nightOwl != null && p.nightOwlUnlocked == null) {
+    p.nightOwlUnlocked = p._nightOwl;
+    delete p._nightOwl;
+  }
+  if (p.perfectQuizCount == null) p.perfectQuizCount = 0;
+  if (p.nightOwlUnlocked == null) p.nightOwlUnlocked = false;
+  return p;
+}
+
 function loadProgress(name) {
   try {
-    const p = JSON.parse(localStorage.getItem('ld_progress_' + name)) || newProgress();
-    // Ensure new fields exist for older saves
-    if (!p.achievements) p.achievements = {};
-    if (!p.errorCounts) p.errorCounts = {};
-    return p;
+    const raw = localStorage.getItem('ld_progress_' + name);
+    if (raw) return migrateProgress(JSON.parse(raw));
+    // localStorage empty — try IDB backup recovery
+    restoreFromIDB(name).then(data => {
+      if (data && currentProfile === name) {
+        progress = migrateProgress(data);
+        saveProgress();
+        showToast('✅', 'Progress restored from backup.');
+      }
+    });
+    return newProgress();
   }
   catch (e) {
     showToast('⚠️', 'Could not load progress. Starting fresh.');
@@ -794,6 +821,50 @@ function saveProgress() {
     }
     console.error('saveProgress error:', e);
   }
+  // Redundant backup to IndexedDB (fire-and-forget)
+  backupToIDB();
+
+}
+
+// ════════════════════════════════════════
+//  IndexedDB backup (redundant data safety)
+// ════════════════════════════════════════
+
+let _idbReady = false;
+let _idb = null;
+
+function openIDB() {
+  return new Promise((resolve, reject) => {
+    if (_idb) { resolve(_idb); return; }
+    const req = indexedDB.open('leccion-diaria-backup', 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains('progress')) {
+        db.createObjectStore('progress', { keyPath: 'profile' });
+      }
+    };
+    req.onsuccess = () => { _idb = req.result; _idbReady = true; resolve(_idb); };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function backupToIDB() {
+  if (!currentProfile || !progress) return;
+  openIDB().then(db => {
+    const tx = db.transaction('progress', 'readwrite');
+    tx.objectStore('progress').put({ profile: currentProfile, data: progress, ts: Date.now() });
+  }).catch(() => { /* silent — IDB is optional redundancy */ });
+}
+
+function restoreFromIDB(profileName) {
+  return openIDB().then(db => {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('progress', 'readonly');
+      const req = tx.objectStore('progress').get(profileName);
+      req.onsuccess = () => resolve(req.result ? req.result.data : null);
+      req.onerror = () => reject(req.error);
+    });
+  }).catch(() => null);
 }
 
 // ════════════════════════════════════════
@@ -828,6 +899,10 @@ function showScreen(id, pushStack = true) {
     el.classList.add('fade-in');
     setTimeout(() => el.classList.remove('fade-in'), 250);
     window.scrollTo(0, 0);
+    // Accessibility: move focus to screen heading or container
+    const focusTarget = el.querySelector('h2, h3, [tabindex="-1"]') || el;
+    if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
+    focusTarget.focus({ preventScroll: true });
   }
   if (pushStack && screenStack[screenStack.length - 1] !== id) screenStack.push(id);
 
@@ -858,8 +933,34 @@ function goBack() {
   }
 }
 
+// Screens that represent active quizzes (navigating away loses progress)
+const QUIZ_SCREENS = new Set([
+  'verb-learn', 'verb-drill', 'verb-quiz', 'vocab-quiz', 'vocab-learn',
+  'grammar-quiz', 'phrase-quiz', 'phrase-learn', 'culture-quiz', 'dialogue-practice',
+  'placement', 'mp-drill', 'pp-drill', 'hom-drill', 'conn-drill',
+  'sentence-build', 'cloze', 'translation', 'dictation', 'reading',
+  'themed-quiz', 'review',
+]);
+let _pendingNavTab = null;
+
+function confirmLeaveQuiz(callback) {
+  const currentScreen = screenStack[screenStack.length - 1];
+  if (QUIZ_SCREENS.has(currentScreen)) {
+    showModal('Leave Quiz?', '<p>You have a quiz in progress. Your progress will be lost.</p>', [
+      { label: tBtn('cancel'), action: 'close-modal', cls: 'btn-secondary' },
+      { label: 'Leave', action: 'confirm-leave-quiz', cls: 'btn-primary' },
+    ]);
+    _pendingNavTab = callback;
+    return true; // blocked
+  }
+  return false; // proceed
+}
+
 function switchTab(tab) {
   closeDropdowns();
+
+  // Guard: confirm navigation away from active quiz
+  if (confirmLeaveQuiz(() => switchTab(tab))) return;
 
   // Map sub-tabs to their parent tab for highlighting
   const TAB_PARENT = { verbs: 'learn', vocab: 'learn', grammar: 'learn', numbers: 'learn', phrases: 'practice' };
@@ -1367,16 +1468,29 @@ function getDueItems(fsrsStore, allKeys) {
 //  TEXT-TO-SPEECH
 // ════════════════════════════════════════
 
+let _ttsWarningShown = false;
 function speak(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'es-ES';
-  u.rate = progress?.settings?.ttsRate || 1;
-  const voices = window.speechSynthesis.getVoices();
-  const esVoice = voices.find(v => v.lang.startsWith('es'));
-  if (esVoice) u.voice = esVoice;
-  window.speechSynthesis.speak(u);
+  if (!window.speechSynthesis) {
+    if (!_ttsWarningShown) { _ttsWarningShown = true; showToast('🔇', 'Text-to-speech is not available in this browser.'); }
+    return;
+  }
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'es-ES';
+    u.rate = progress?.settings?.ttsRate || 1;
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => v.lang.startsWith('es'));
+    if (esVoice) u.voice = esVoice;
+    else if (!_ttsWarningShown && voices.length > 0) {
+      _ttsWarningShown = true;
+      showToast('🔇', 'No Spanish voice found. Using default voice.');
+    }
+    u.onerror = () => {}; // suppress errors silently
+    window.speechSynthesis.speak(u);
+  } catch (e) {
+    console.warn('TTS error:', e);
+  }
 }
 
 // ════════════════════════════════════════
@@ -1405,7 +1519,7 @@ function checkAnswer(input, correct) {
 //  UTILITY
 // ════════════════════════════════════════
 
-function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 // Generic MC option selection helper
 function selectMCOption(containerSelector, idx) {
@@ -2184,6 +2298,8 @@ function buildVocabIndexes() {
     (VOCAB_BY_CATEGORY[cat] ??= []).push(v);
     (VOCAB_BY_LEVEL[v.level] ??= []).push(v);
     VOCAB_BY_WORD[v.word.toLowerCase()] = v;
+    // Pre-compute cognate flag to avoid levenshtein in placement loops
+    if (v._cognate === undefined) v._cognate = isCognate(v.word, v.english);
   }
   for (const [cat, arr] of Object.entries(VOCAB_BY_CATEGORY)) {
     VOCAB_CATEGORY_COUNTS[cat] = arr.length;
@@ -2627,11 +2743,17 @@ function openGrammarLesson(id) {
   document.getElementById('gl-level').textContent = `${lesson.level} — ${t('lesson')} ${lesson.order}`;
   document.getElementById('gl-title').textContent = lesson.titleEn || lesson.title;
 
-  // Render lesson content (sanitized — strip script tags and event handlers)
+  // Render lesson content (sanitized — strip dangerous tags and attributes)
   const rawContent = lesson.content || '';
   const sanitizedContent = rawContent
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, '');
+    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, '')
+    .replace(/<embed\b[^>]*>/gi, '')
+    .replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/\bon\w+\s*=\s*\S+/gi, '')
+    .replace(/href\s*=\s*["']javascript:[^"']*["']/gi, 'href="#"')
+    .replace(/src\s*=\s*["']javascript:[^"']*["']/gi, 'src=""');
   document.getElementById('gl-content').innerHTML = sanitizedContent;
 
   // Examples
@@ -3049,9 +3171,6 @@ const CULTURE_MODULES = {
 
 let currentCultureModule = null;
 let currentCultureItem = null;
-let cultureQuizQueue = [];
-let cultureQuizIdx = 0;
-let cultureQuizScore = 0;
 
 function openCultureModule(module) {
   const mod = CULTURE_MODULES[module];
@@ -3106,26 +3225,17 @@ function openCultureItem(id) {
   ` : '';
 }
 
-function startCultureQuiz() {
-  if (!currentCultureItem || !currentCultureItem.quiz || !currentCultureItem.quiz.length) return;
-  cultureQuizQueue = [...currentCultureItem.quiz];
-  cultureQuizIdx = 0;
-  cultureQuizScore = 0;
-  showScreen('culture-quiz');
-  renderCultureQuizQuestion();
-}
-
-function renderCultureQuizQuestion() {
-  if (cultureQuizIdx >= cultureQuizQueue.length) {
-    showResults(cultureQuizScore, cultureQuizQueue.length, 'culture-quiz', t('cultureQuizLabel'));
-    return;
-  }
-  const q = cultureQuizQueue[cultureQuizIdx];
-  document.getElementById('cq-progress').textContent = `${cultureQuizIdx + 1} / ${cultureQuizQueue.length}`;
-  const container = document.getElementById('cq-container');
-  document.getElementById('cq-next').style.display = 'none';
-
-  container.innerHTML = `
+// Culture quiz — powered by createQuizFlow
+const cultureQuizFlow = createQuizFlow({
+  containerId: 'cq-container',
+  nextBtnId: 'cq-next',
+  progressId: 'cq-progress',
+  getCorrectIdx: q => q.correct,
+  onCorrect: () => addXP(5),
+  onIncorrect: () => addXP(1),
+  getExplanation: q => q.explanation || null,
+  onComplete: (score, total) => showResults(score, total, 'culture-quiz', t('cultureQuizLabel')),
+  renderQuestion: (q) => `
     <div class="quiz-question">${esc(q.prompt)}</div>
     <div class="quiz-options">
       ${q.options.map((opt, i) =>
@@ -3133,61 +3243,63 @@ function renderCultureQuizQuestion() {
       ).join('')}
     </div>
     <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-culture-quiz-mc" style="display:none">${tBtn('submit')}</button>
-  `;
+  `,
+});
+
+function startCultureQuiz() {
+  if (!currentCultureItem || !currentCultureItem.quiz || !currentCultureItem.quiz.length) return;
+  showScreen('culture-quiz');
+  cultureQuizFlow.start([...currentCultureItem.quiz]);
 }
+function answerCultureQuizMC(idx) { cultureQuizFlow.selectOption(idx); }
+function submitCultureQuizMC() { cultureQuizFlow.submit(); }
+function nextCultureQuiz() { cultureQuizFlow.next(); }
 
-function answerCultureQuizMC(idx) {
-  selectMCOption('#cq-container', idx);
-}
+// ── Dialogue Practice — powered by createQuizFlow ──
 
-function submitCultureQuizMC() {
-  const selectedBtn = document.querySelector('#cq-container .quiz-option.selected');
-  if (!selectedBtn) return;
-  const idx = parseInt(selectedBtn.dataset.idx);
-  const q = cultureQuizQueue[cultureQuizIdx];
-  const btns = document.querySelectorAll('#cq-container .quiz-option');
-  btns.forEach((btn, i) => {
-    btn.classList.add('disabled');
-    if (i === q.correct) btn.classList.add('correct');
-    if (i === idx && idx !== q.correct) btn.classList.add('incorrect');
-  });
-  if (idx === q.correct) { cultureQuizScore++; addXP(5); }
-  else { addXP(1); }
-  const submitBtn = document.querySelector('#cq-container .mc-submit');
-  if (submitBtn) submitBtn.style.display = 'none';
-  if (q.explanation) {
-    const expDiv = document.createElement('div');
-    expDiv.className = 'quiz-feedback text-muted';
-    expDiv.style.fontSize = '0.85rem';
-    expDiv.textContent = q.explanation;
-    document.getElementById('cq-container').appendChild(expDiv);
-  }
-  document.getElementById('cq-next').style.display = 'flex';
-}
-
-function nextCultureQuiz() {
-  cultureQuizIdx++;
-  renderCultureQuizQuestion();
-}
-
-// ── Dialogue Practice ──
-
-let dialogueQueue = [];
-let dialogueIdx = 0;
-let dialogueScore = 0;
+const dialogueQuizFlow = createQuizFlow({
+  containerId: 'dp-container',
+  nextBtnId: 'dp-next',
+  progressId: 'dp-progress',
+  getCorrectValue: q => q.correct.spanish,
+  onCorrect: () => addXP(5),
+  onIncorrect: () => addXP(1),
+  getExplanation: q => `"${q.correct.english}"`,
+  onComplete: (score, total) => showResults(score, total, 'dialogue', 'Dialogue Practice'),
+  renderQuestion: (q, idx, total) => {
+    // Also render transcript above the quiz container
+    const transcript = document.getElementById('dp-transcript');
+    if (transcript) {
+      transcript.innerHTML = q.context.map(line => {
+        const speaker = q.conv.speakers[line.speaker];
+        const isPlayer = speaker?.role === 'player';
+        return `<div class="dialogue-line${isPlayer ? ' player' : ''}">
+          <strong>${esc(speaker?.name || '?')}:</strong> ${esc(line.spanish)}
+          <div class="text-muted text-sm">${esc(line.english)}</div>
+        </div>`;
+      }).join('');
+    }
+    return `
+      <div class="quiz-question">What would you say next?</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) =>
+          `<button class="quiz-option" data-action="answer-dialogue" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
+        ).join('')}
+      </div>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-dialogue-mc" style="display:none">${tBtn('submit')}</button>
+    `;
+  },
+});
 
 function startDialoguePractice() {
   if (typeof CONVERSATIONS_DATA === 'undefined' || CONVERSATIONS_DATA.length === 0) return;
-  // Pick a random conversation
   const conv = CONVERSATIONS_DATA[Math.floor(Math.random() * CONVERSATIONS_DATA.length)];
-  // Find all player turns (indices where speaker role is 'player')
   const playerIndices = [];
   conv.dialogue.forEach((line, i) => {
     if (conv.speakers[line.speaker]?.role === 'player') playerIndices.push(i);
   });
   if (playerIndices.length === 0) return;
 
-  // Collect all player lines from all conversations for distractors
   const allPlayerLines = [];
   for (const c of CONVERSATIONS_DATA) {
     for (const line of c.dialogue) {
@@ -3195,11 +3307,9 @@ function startDialoguePractice() {
     }
   }
 
-  // Build quiz queue — each item is a choice point in the dialogue
-  dialogueQueue = playerIndices.map(idx => {
+  const queue = playerIndices.map(idx => {
     const correctLine = conv.dialogue[idx];
-    const context = conv.dialogue.slice(0, idx); // lines before this point
-    // Pick 3 wrong options from other player lines
+    const context = conv.dialogue.slice(0, idx);
     const wrongPool = allPlayerLines.filter(s => s !== correctLine.spanish);
     const wrongs = pickN(wrongPool, 3);
     return {
@@ -3209,82 +3319,12 @@ function startDialoguePractice() {
       options: shuffle([correctLine.spanish, ...wrongs]),
     };
   });
-  dialogueIdx = 0;
-  dialogueScore = 0;
   showScreen('dialogue-practice');
-  renderDialoguePractice();
+  dialogueQuizFlow.start(queue);
 }
-
-function renderDialoguePractice() {
-  if (dialogueIdx >= dialogueQueue.length) {
-    showResults(dialogueScore, dialogueQueue.length, 'dialogue', 'Dialogue Practice');
-    return;
-  }
-  const item = dialogueQueue[dialogueIdx];
-  document.getElementById('dp-progress').textContent = `${dialogueIdx + 1} / ${dialogueQueue.length}`;
-  document.getElementById('dp-next').style.display = 'none';
-
-  // Render conversation transcript up to this point
-  const transcript = document.getElementById('dp-transcript');
-  transcript.innerHTML = item.context.map(line => {
-    const speaker = item.conv.speakers[line.speaker];
-    const isPlayer = speaker?.role === 'player';
-    return `<div class="dialogue-line${isPlayer ? ' player' : ''}">
-      <strong>${esc(speaker?.name || '?')}:</strong> ${esc(line.spanish)}
-      <div class="text-muted text-sm">${esc(line.english)}</div>
-    </div>`;
-  }).join('');
-
-  // Render the choice prompt
-  const container = document.getElementById('dp-container');
-  container.innerHTML = `
-    <div class="quiz-question">What would you say next?</div>
-    <div class="quiz-options">
-      ${item.options.map((opt, i) =>
-        `<button class="quiz-option" data-action="answer-dialogue" data-idx="${i}">${esc(opt)}</button>`
-      ).join('')}
-    </div>
-    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-dialogue-mc" style="display:none">${tBtn('submit')}</button>
-  `;
-}
-
-function answerDialogueMC(idx) {
-  selectMCOption('#dp-container', idx);
-}
-
-function submitDialogueMC() {
-  const selectedBtn = document.querySelector('#dp-container .quiz-option.selected');
-  if (!selectedBtn) return;
-  const idx = parseInt(selectedBtn.dataset.idx);
-  const item = dialogueQueue[dialogueIdx];
-  const selected = item.options[idx];
-  const btns = document.querySelectorAll('#dp-container .quiz-option');
-  btns.forEach((btn, i) => {
-    btn.classList.add('disabled');
-    if (item.options[i] === item.correct.spanish) btn.classList.add('correct');
-    if (i === idx && selected !== item.correct.spanish) btn.classList.add('incorrect');
-  });
-  if (selected === item.correct.spanish) {
-    dialogueScore++;
-    addXP(5);
-  } else {
-    addXP(1);
-  }
-  // Show the English translation of the correct answer
-  const fb = document.createElement('div');
-  fb.className = 'text-muted text-sm mt-1';
-  fb.textContent = `"${item.correct.english}"`;
-  document.querySelector('#dp-container').appendChild(fb);
-
-  const submitBtn = document.querySelector('#dp-container .mc-submit');
-  if (submitBtn) submitBtn.style.display = 'none';
-  document.getElementById('dp-next').style.display = 'flex';
-}
-
-function nextDialogue() {
-  dialogueIdx++;
-  renderDialoguePractice();
-}
+function answerDialogueMC(idx) { dialogueQuizFlow.selectOption(idx); }
+function submitDialogueMC() { dialogueQuizFlow.submit(); }
+function nextDialogue() { dialogueQuizFlow.next(); }
 
 // ════════════════════════════════════════
 //  RESULTS SCREEN
@@ -3299,7 +3339,7 @@ function showResults(score, total, module, label) {
 
   // Track perfect quizzes for achievements
   if (pct === 100 && total >= 3) {
-    progress._perfectQuizCount = (progress._perfectQuizCount || 0) + 1;
+    progress.perfectQuizCount = (progress.perfectQuizCount || 0) + 1;
     saveProgress();
   }
   checkAchievements();
@@ -3374,7 +3414,7 @@ function buildPlacementVocabQs(level, count) {
   // Exclude cognates from B1+ — they're trivially guessable at higher levels
   const levelIdx = LEVEL_ORDER[level] || 0;
   const words = (VOCAB_BY_LEVEL[level] || []).filter(w =>
-    levelIdx < 3 || !isCognate(w.word, w.english));
+    levelIdx < 3 || !w._cognate);
   if (words.length < 4) return [];
   const picked = pickN(words, count);
   return picked.map(w => {
@@ -5676,7 +5716,7 @@ function nextReading() { readingQIdx++; renderReadingQuestion(); }
 //  THEMED VOCABULARY
 // ════════════════════════════════════════
 
-let currentTheme = null, themedQuizIdx = 0, themedQuizScore = 0, themedQuizSelected = -1;
+let currentTheme = null;
 
 function renderThemedVocabList() {
   if (typeof THEMED_VOCAB_DATA === 'undefined') {
@@ -5738,67 +5778,47 @@ function openThemedDetail(id) {
   ).join('');
 }
 
+// Themed vocab quiz — powered by createQuizFlow
+const themedQuizFlow = createQuizFlow({
+  containerId: 'tvq-container',
+  nextBtnId: 'tvq-next',
+  getCorrectIdx: q => q.correct,
+  onCorrect: () => {},
+  onIncorrect: () => {},
+  getExplanation: q => q.explanation || null,
+  onComplete: (score, total) => {
+    if (currentTheme) {
+      progress.themedVocabDone[currentTheme.id] = true;
+      saveProgress();
+    }
+    showResults(score, total, 'themed-quiz', currentTheme ? currentTheme.theme : 'Themed Vocab');
+  },
+  renderQuestion: (q, idx, total) => {
+    // Update progress bar
+    const tvqPct = total > 0 ? (idx / total * 100) : 0;
+    const progEl = document.getElementById('tvq-progress');
+    if (progEl) progEl.innerHTML = progressBarHTML(idx, total);
+    return `
+      <div class="card">
+        <div class="text-muted text-sm">${idx + 1} / ${total}</div>
+        <div class="quiz-question mt-1">${esc(q.prompt)}</div>
+        <div class="quiz-options mt-1">
+          ${q.options.map((opt, i) => `<button class="quiz-option" data-action="answer-themed-quiz" data-idx="${i}">${esc(opt)}</button>`).join('')}
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-themed-quiz-mc" style="display:none">${tBtn('submit')}</button>
+    `;
+  },
+});
+
 function startThemedQuiz() {
   if (!currentTheme || !currentTheme.quiz || !currentTheme.quiz.length) return;
-  themedQuizIdx = 0; themedQuizScore = 0; themedQuizSelected = -1;
   showScreen('themed-quiz');
-  renderThemedQuizQuestion();
+  themedQuizFlow.start([...currentTheme.quiz]);
 }
-
-function renderThemedQuizQuestion() {
-  if (!currentTheme || themedQuizIdx >= currentTheme.quiz.length) {
-    progress.themedVocabDone[currentTheme.id] = true;
-    saveProgress();
-    showResults(themedQuizScore, currentTheme.quiz.length, 'themed-quiz', currentTheme.theme);
-    return;
-  }
-  const q = currentTheme.quiz[themedQuizIdx];
-  const total = currentTheme.quiz.length;
-  const tvqPct = total > 0 ? (themedQuizIdx / total * 100) : 0;
-  document.getElementById('tvq-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(tvqPct)}" aria-valuemin="0" aria-valuemax="100" style="width:${tvqPct}%"></div>`;
-  themedQuizSelected = -1;
-  document.getElementById('tvq-container').innerHTML = `
-    <div class="card">
-      <div class="text-muted text-sm">${themedQuizIdx + 1} / ${total}</div>
-      <div class="quiz-question mt-1">${esc(q.prompt)}</div>
-      <div class="quiz-options mt-1" id="tvq-options">
-        ${q.options.map((opt, i) => `<button class="quiz-option" data-action="answer-themed-quiz" data-idx="${i}">${esc(opt)}</button>`).join('')}
-      </div>
-      <div class="quiz-feedback mt-1" id="tvq-feedback" style="display:none"></div>
-    </div>
-  `;
-  document.getElementById('tvq-submit').style.display = 'none';
-  document.getElementById('tvq-next').style.display = 'none';
-}
-
-function answerThemedQuizMC(idx) {
-  selectMCOption('#tvq-container', idx);
-  themedQuizSelected = idx;
-  document.getElementById('tvq-submit').style.display = 'block';
-}
-
-function submitThemedQuizMC() {
-  if (!currentTheme || themedQuizSelected < 0) return;
-  const q = currentTheme.quiz[themedQuizIdx];
-  const opts = document.querySelectorAll('#tvq-options .quiz-option');
-  opts.forEach((o, i) => {
-    o.classList.add('disabled');
-    if (i === q.correct) o.classList.add('correct');
-    else if (i === themedQuizSelected && i !== q.correct) o.classList.add('incorrect');
-  });
-  const correct = themedQuizSelected === q.correct;
-  if (correct) themedQuizScore++;
-  const fb = document.getElementById('tvq-feedback');
-  fb.setAttribute('role', 'alert');
-  fb.innerHTML = correct ? `<span class="text-correct">${t('correct')}</span>` :
-    `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(q.options[q.correct])}</span>`;
-  if (q.explanation) fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
-  fb.style.display = 'block';
-  document.getElementById('tvq-submit').style.display = 'none';
-  document.getElementById('tvq-next').style.display = 'flex';
-}
-
-function nextThemedQuiz() { themedQuizIdx++; renderThemedQuizQuestion(); }
+function answerThemedQuizMC(idx) { themedQuizFlow.selectOption(idx); }
+function submitThemedQuizMC() { themedQuizFlow.submit(); }
+function nextThemedQuiz() { themedQuizFlow.next(); }
 
 // ════════════════════════════════════════
 //  CURRICULUM TRACKS
@@ -5972,7 +5992,8 @@ document.addEventListener('click', e => {
     case 'confirm-create-profile': confirmCreateProfile(); break;
 
     // Modal
-    case 'close-modal': closeModal(); break;
+    case 'close-modal': closeModal(); _pendingNavTab = null; break;
+    case 'confirm-leave-quiz': closeModal(); if (_pendingNavTab) { const fn = _pendingNavTab; _pendingNavTab = null; fn(); } break;
 
     // Settings
     case 'set-display': setSetting('display', target.dataset.val); break;
@@ -6101,11 +6122,7 @@ document.addEventListener('click', e => {
       break;
     }
     case 'submit-vocab-quiz-produce': submitVocabQuizProduce(); break;
-    case 'insert-accent-vocq': {
-      const input = document.getElementById('vocq-produce-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
+    // insert-accent-vocq handled by unified accent handler below
     case 'next-vocab-quiz': {
       vocabQuizIdx++;
       const nextItem = vocabQuizQueue[vocabQuizIdx];
@@ -6157,11 +6174,7 @@ document.addEventListener('click', e => {
     case 'next-review': nextReviewItem(); break;
     case 'check-review-drill': checkReviewDrill(); break;
     case 'flip-review-card': flipReviewCard(); break;
-    case 'insert-accent-rev': {
-      const input = document.getElementById('rev-drill-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
+    // insert-accent-rev handled by unified accent handler below
 
     // Stats / Progress Dashboard
     case 'open-stats': showScreen('stats'); renderStats(); break;
@@ -6297,40 +6310,34 @@ document.addEventListener('click', e => {
     // TTS
     case 'speak': speak(target.dataset.text); break;
 
-    // Accent insertion
-    case 'insert-accent': {
-      const input = document.getElementById('vd-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
-    case 'insert-accent-vq': {
-      const input = document.getElementById('vq-fib-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
-    case 'insert-accent-gq': {
-      const input = document.getElementById('gq-fib-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
-    case 'insert-accent-pt': {
-      const input = document.getElementById('pt-fib-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
-    case 'insert-accent-cloze': {
-      const focused = document.activeElement;
-      if (focused?.classList.contains('cloze-blank')) insertCharAtCursor(focused, target.dataset.char);
-      break;
-    }
-    case 'insert-accent-tr': {
-      const input = document.getElementById('tr-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
-      break;
-    }
-    case 'insert-accent-dict': {
-      const input = document.getElementById('dict-input');
-      if (input) insertCharAtCursor(input, target.dataset.char);
+    // Unified accent insertion — maps action suffix to input ID
+    case 'insert-accent':
+    case 'insert-accent-vq':
+    case 'insert-accent-gq':
+    case 'insert-accent-pt':
+    case 'insert-accent-cloze':
+    case 'insert-accent-tr':
+    case 'insert-accent-dict':
+    case 'insert-accent-vocq':
+    case 'insert-accent-rev': {
+      const accentInputMap = {
+        'insert-accent': 'vd-input',
+        'insert-accent-vq': 'vq-fib-input',
+        'insert-accent-gq': 'gq-fib-input',
+        'insert-accent-pt': 'pt-fib-input',
+        'insert-accent-tr': 'tr-input',
+        'insert-accent-dict': 'dict-input',
+        'insert-accent-vocq': 'vocq-produce-input',
+        'insert-accent-rev': 'rev-drill-input',
+      };
+      if (action === 'insert-accent-cloze') {
+        const focused = document.activeElement;
+        if (focused?.classList.contains('cloze-blank')) insertCharAtCursor(focused, target.dataset.char);
+      } else {
+        const inputId = target.dataset.inputId || accentInputMap[action];
+        const input = inputId ? document.getElementById(inputId) : null;
+        if (input) insertCharAtCursor(input, target.dataset.char);
+      }
       break;
     }
   }
@@ -6494,6 +6501,7 @@ function insertCharAtCursor(input, char) {
 
 // ── Lazy-load secondary content modules after init ──
 const LAZY_SCRIPTS = [
+  'vocab.js',  // loaded early among lazy scripts — 28K entries deferred from initial load
   'conversations.js', 'recipes.js', 'music.js', 'movies.js', 'poetry.js',
   'sports.js', 'proverbs.js', 'folktales.js', 'festivals.js', 'history.js',
   'travel.js', 'trivia.js', 'idioms.js', 'minimal_pairs.js',
