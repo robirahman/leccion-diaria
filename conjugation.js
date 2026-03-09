@@ -307,11 +307,15 @@ const FULL_IRREGULARS = {
     present: ['caigo', 'caes', 'cae', 'caemos', 'caéis', 'caen'],
     preterite: ['caí', 'caíste', 'cayó', 'caímos', 'caísteis', 'cayeron'],
     subjunctive_present: ['caiga', 'caigas', 'caiga', 'caigamos', 'caigáis', 'caigan'],
+    subjunctive_imperfect: ['cayera', 'cayeras', 'cayera', 'cayéramos', 'cayerais', 'cayeran'],
+    subjunctive_imperfect_se: ['cayese', 'cayeses', 'cayese', 'cayésemos', 'cayeseis', 'cayesen'],
   },
   oír: {
     present: ['oigo', 'oyes', 'oye', 'oímos', 'oís', 'oyen'],
     preterite: ['oí', 'oíste', 'oyó', 'oímos', 'oísteis', 'oyeron'],
     subjunctive_present: ['oiga', 'oigas', 'oiga', 'oigamos', 'oigáis', 'oigan'],
+    subjunctive_imperfect: ['oyera', 'oyeras', 'oyera', 'oyéramos', 'oyerais', 'oyeran'],
+    subjunctive_imperfect_se: ['oyese', 'oyeses', 'oyese', 'oyésemos', 'oyeseis', 'oyesen'],
   },
   conocer: {
     present: ['conozco', 'conoces', 'conoce', 'conocemos', 'conocéis', 'conocen'],
@@ -321,6 +325,8 @@ const FULL_IRREGULARS = {
     present: ['conduzco', 'conduces', 'conduce', 'conducimos', 'conducís', 'conducen'],
     preterite: ['conduje', 'condujiste', 'condujo', 'condujimos', 'condujisteis', 'condujeron'],
     subjunctive_present: ['conduzca', 'conduzcas', 'conduzca', 'conduzcamos', 'conduzcáis', 'conduzcan'],
+    subjunctive_imperfect: ['condujera', 'condujeras', 'condujera', 'condujéramos', 'condujerais', 'condujeran'],
+    subjunctive_imperfect_se: ['condujese', 'condujeses', 'condujese', 'condujésemos', 'condujeseis', 'condujesen'],
   },
 };
 
@@ -408,7 +414,14 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
   else if (FULL_IRREGULARS[base] && FULL_IRREGULARS[base][effectiveTense]) {
     form = FULL_IRREGULARS[base][effectiveTense][personIdx];
   }
-  // 3. Future and conditional with irregular stems
+  // 3. Future subjunctive: derive from imperfect subjunctive -ra form
+  else if (tense === 'future_subjunctive') {
+    const raForm = conjugate(base, 'subjunctive_imperfect', personIdx);
+    const raSuffixes = ['ra', 'ras', 'ra', 'ramos', 'rais', 'ran'];
+    const reSuffixes = ['re', 'res', 're', 'remos', 'reis', 'ren'];
+    form = raForm.replace(new RegExp(raSuffixes[personIdx] + '$'), reSuffixes[personIdx]);
+  }
+  // 4. Future and conditional with irregular stems
   else if ((tense === 'future' || tense === 'conditional') && IRREGULAR_FUTURE_STEMS[base]) {
     const irrStem = IRREGULAR_FUTURE_STEMS[base];
     const endings = tense === 'future' ? FUTURE_COND_ENDINGS : CONDITIONAL_ENDINGS;
@@ -428,6 +441,14 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
       }
       // Preterite stem change for -ir stem-changers (e>i, o>u in 3rd person)
       if (tense === 'preterite' && group === 'ir' && (personIdx === 2 || personIdx === 5)) {
+        if (pattern === 'e>ie' || pattern === 'e>i') {
+          conjStem = applyStemChange(conjStem, 'e>i');
+        } else if (pattern === 'o>ue') {
+          conjStem = applyStemChange(stem, 'o>ue').replace('ue', 'u');
+        }
+      }
+      // Imperfect subjunctive stem change for -ir stem-changers (all persons)
+      if ((effectiveTense === 'subjunctive_imperfect' || effectiveTense === 'subjunctive_imperfect_se') && group === 'ir') {
         if (pattern === 'e>ie' || pattern === 'e>i') {
           conjStem = applyStemChange(conjStem, 'e>i');
         } else if (pattern === 'o>ue') {
