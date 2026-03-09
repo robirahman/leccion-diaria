@@ -1745,7 +1745,8 @@ function startVerbLearn() {
   const verbs = pickN(VERB_DATA, 10);
   verbs.forEach(v => {
     const tense = pick(tenses);
-    const person = Math.floor(Math.random() * 6);
+    const isImperative = tense === TENSE_IMPERATIVE_AFF || tense === TENSE_IMPERATIVE_NEG;
+    const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
     const useSeForm = (tense === TENSE_SUBJUNCTIVE_IMPERFECT) && shouldUseSeForm();
     verbLearnQueue.push({ verb: v, tense, person, useSeForm });
   });
@@ -1805,7 +1806,8 @@ function startVerbDrill() {
   for (let i = 0; i < 10; i++) {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
-    const person = Math.floor(Math.random() * 6);
+    const isImperative = tense === TENSE_IMPERATIVE_AFF || tense === TENSE_IMPERATIVE_NEG;
+    const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
     const useSeForm = (tense === TENSE_SUBJUNCTIVE_IMPERFECT) && shouldUseSeForm();
     const answer = conjugate(verb.infinitive, tense, person, useSeForm);
     if (!answer || answer === '—' || answer === '?') { i--; continue; }
@@ -1936,7 +1938,8 @@ function startVerbQuiz() {
   for (let i = 0; i < 10; i++) {
     const verb = pick(VERB_DATA);
     const tense = pick(tenses);
-    const person = Math.floor(Math.random() * 6);
+    const isImperative = tense === TENSE_IMPERATIVE_AFF || tense === TENSE_IMPERATIVE_NEG;
+    const person = isImperative ? (1 + Math.floor(Math.random() * 5)) : Math.floor(Math.random() * 6);
     const useSeForm = (tense === TENSE_SUBJUNCTIVE_IMPERFECT || TENSE_META[tense]?.auxTense === TENSE_SUBJUNCTIVE_IMPERFECT) && shouldUseSeForm();
     const correct = conjugate(verb.infinitive, tense, person, useSeForm);
     if (!correct || correct === '—' || correct === '?') { i--; continue; }
