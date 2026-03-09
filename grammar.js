@@ -69,7 +69,7 @@ const GRAMMAR_DATA = [
     content: `<h3>Subject Pronouns</h3>
 <table><tr><th>Person</th><th>Singular</th><th>Plural</th></tr>
 <tr><td>1st</td><td><strong>yo</strong> (I)</td><td><strong>nosotros/as</strong> (we)</td></tr>
-<tr><td>2nd informal</td><td><strong>tú</strong> (you)</td><td><strong>vosotros/as</strong> (you all, Spain)</td></tr>
+<tr class="spain-only"><td>2nd informal</td><td><strong>tú</strong> (you)</td><td><strong>vosotros/as</strong> (you all)</td></tr>
 <tr><td>2nd formal</td><td><strong>usted (Ud.)</strong></td><td><strong>ustedes (Uds.)</strong></td></tr>
 <tr><td>3rd</td><td><strong>él/ella</strong> (he/she)</td><td><strong>ellos/ellas</strong> (they)</td></tr></table>
 <p>In Latin America, <strong>ustedes</strong> is used for both formal and informal "you all" (vosotros is not used). Subject pronouns are often omitted because the verb ending indicates the subject: <em>Hablo español</em> = I speak Spanish.</p>`,
@@ -152,7 +152,7 @@ const GRAMMAR_DATA = [
 <tr><td>tú</td><td>-as</td><td>hablas</td></tr>
 <tr><td>él/ella/Ud.</td><td>-a</td><td>habla</td></tr>
 <tr><td>nosotros</td><td>-amos</td><td>hablamos</td></tr>
-<tr><td>vosotros</td><td>-áis</td><td>habláis</td></tr>
+<tr class="spain-only"><td>vosotros</td><td>-áis</td><td>habláis</td></tr>
 <tr><td>ellos/Uds.</td><td>-an</td><td>hablan</td></tr></table>
 <p>Common -ar verbs: <em>hablar</em> (speak), <em>estudiar</em> (study), <em>trabajar</em> (work), <em>caminar</em> (walk), <em>cocinar</em> (cook), <em>bailar</em> (dance), <em>comprar</em> (buy), <em>viajar</em> (travel).</p>`,
     quiz: [
@@ -171,7 +171,7 @@ const GRAMMAR_DATA = [
 <tr><td>tú</td><td>comes</td><td>vives</td></tr>
 <tr><td>él/ella/Ud.</td><td>come</td><td>vive</td></tr>
 <tr><td>nosotros</td><td>comemos</td><td>vivimos</td></tr>
-<tr><td>vosotros</td><td>coméis</td><td>vivís</td></tr>
+<tr class="spain-only"><td>vosotros</td><td>coméis</td><td>vivís</td></tr>
 <tr><td>ellos/Uds.</td><td>comen</td><td>viven</td></tr></table>
 <p>Notice: -er and -ir verbs share the same endings except for <strong>nosotros</strong> (-emos vs. -imos) and <strong>vosotros</strong> (-éis vs. -ís).</p>
 <p>Common -er verbs: <em>comer</em> (eat), <em>beber</em> (drink), <em>leer</em> (read), <em>correr</em> (run), <em>aprender</em> (learn).</p>
@@ -210,7 +210,7 @@ const GRAMMAR_DATA = [
 <tr><td>your (tú)</td><td><strong>tu / tus</strong></td><td>tu casa, tus amigos</td></tr>
 <tr><td>his/her/your (Ud.)</td><td><strong>su / sus</strong></td><td>su perro, sus perros</td></tr>
 <tr><td>our</td><td><strong>nuestro/a/os/as</strong></td><td>nuestro coche, nuestra casa</td></tr>
-<tr><td>your (vosotros)</td><td><strong>vuestro/a/os/as</strong></td><td>vuestro libro</td></tr>
+<tr class="spain-only"><td>your (vosotros)</td><td><strong>vuestro/a/os/as</strong></td><td>vuestro libro</td></tr>
 <tr><td>their/your (Uds.)</td><td><strong>su / sus</strong></td><td>su casa, sus casas</td></tr></table>
 <p>Note: <em>mi, tu, su</em> agree only in number (not gender). <em>Nuestro</em> and <em>vuestro</em> agree in both gender and number.</p>
 <p>To clarify ambiguous <em>su</em>: <em>su libro</em> → <em>el libro <strong>de él / de ella / de usted</strong></em>.</p>`,
@@ -307,6 +307,7 @@ const GRAMMAR_DATA = [
 <tr><td>him/it (masc.)</td><td><strong>lo</strong></td><td>Lo compro. (I buy it.)</td></tr>
 <tr><td>her/it (fem.)</td><td><strong>la</strong></td><td>La veo. (I see her.)</td></tr>
 <tr><td>us</td><td><strong>nos</strong></td><td>Nos invitan. (They invite us.)</td></tr>
+<tr class="spain-only"><td>you all</td><td><strong>os</strong></td><td>Os llamo luego. (I'll call you all later.)</td></tr>
 <tr><td>them (masc.)</td><td><strong>los</strong></td><td>Los necesito. (I need them.)</td></tr>
 <tr><td>them (fem.)</td><td><strong>las</strong></td><td>Las conozco. (I know them.)</td></tr></table>
 <p>Placement: <strong>before</strong> conjugated verbs, or <strong>attached</strong> to infinitives/gerunds: <em>Quiero <strong>verlo</strong></em> = <em><strong>Lo</strong> quiero ver</em>.</p>`,
@@ -326,6 +327,7 @@ const GRAMMAR_DATA = [
 <tr><td>to you (tú)</td><td><strong>te</strong></td><td>Te digo la verdad. (I tell you the truth.)</td></tr>
 <tr><td>to him/her/you</td><td><strong>le</strong></td><td>Le escribo una carta. (I write him/her a letter.)</td></tr>
 <tr><td>to us</td><td><strong>nos</strong></td><td>Nos enseña español. (She teaches us Spanish.)</td></tr>
+<tr class="spain-only"><td>to you all</td><td><strong>os</strong></td><td>Os traigo café. (I bring you all coffee.)</td></tr>
 <tr><td>to them/you all</td><td><strong>les</strong></td><td>Les compro regalos. (I buy them gifts.)</td></tr></table>
 <p>These pronouns indicate <strong>to/for whom</strong> an action is done. Use <em>a + name/pronoun</em> for clarity: <em><strong>Le</strong> doy el libro <strong>a María</strong></em>.</p>`,
     quiz: [
@@ -783,7 +785,7 @@ const GRAMMAR_DATA = [
     ]
   },
   {
-    id: "gram-41", title: "Las preposiciones", titleEn: "Prepositions (a, de, en, con)", level: "B2", order: 41,
+    id: "gram-41", title: "Las preposiciones", titleEn: "Prepositions (a, de, en, con)", level: "A1", order: 41,
     content: `<h3>Key Prepositions</h3>
 <p><strong>A:</strong> direction/destination (<em>Voy <strong>a</strong> Madrid</em>), personal a (<em>Veo <strong>a</strong> María</em>), time (<em><strong>a</strong> las 3</em>), after ir/venir/llegar.</p>
 <p><strong>De:</strong> origin (<em>Soy <strong>de</strong> Chile</em>), possession (<em>el libro <strong>de</strong> Juan</em>), material (<em><strong>de</strong> madera</em>), time (<em><strong>de</strong> noche</em>).</p>
@@ -1242,7 +1244,7 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
 <tr><td><strong>tú</strong></td><td>tienes</td><td>haces</td><td>dices</td><td>vienes</td><td>pones</td></tr>
 <tr><td><strong>él/ella</strong></td><td>tiene</td><td>hace</td><td>dice</td><td>viene</td><td>pone</td></tr>
 <tr><td><strong>nosotros</strong></td><td>tenemos</td><td>hacemos</td><td>decimos</td><td>venimos</td><td>ponemos</td></tr>
-<tr><td><strong>vosotros</strong></td><td>tenéis</td><td>hacéis</td><td>decís</td><td>venís</td><td>ponéis</td></tr>
+<tr class="spain-only"><td><strong>vosotros</strong></td><td>tenéis</td><td>hacéis</td><td>decís</td><td>venís</td><td>ponéis</td></tr>
 <tr><td><strong>ellos</strong></td><td>tienen</td><td>hacen</td><td>dicen</td><td>vienen</td><td>ponen</td></tr></table>
 
 <h4>"Oy" Verbs (yo form ends in -oy)</h4>
@@ -1251,7 +1253,7 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
 <tr><td><strong>tú</strong></td><td>eres</td><td>estás</td><td>vas</td><td>das</td></tr>
 <tr><td><strong>él/ella</strong></td><td>es</td><td>está</td><td>va</td><td>da</td></tr>
 <tr><td><strong>nosotros</strong></td><td>somos</td><td>estamos</td><td>vamos</td><td>damos</td></tr>
-<tr><td><strong>vosotros</strong></td><td>sois</td><td>estáis</td><td>vais</td><td>dais</td></tr>
+<tr class="spain-only"><td><strong>vosotros</strong></td><td>sois</td><td>estáis</td><td>vais</td><td>dais</td></tr>
 <tr><td><strong>ellos</strong></td><td>son</td><td>están</td><td>van</td><td>dan</td></tr></table>
 
 <h4>Truly Unique Verbs</h4>
@@ -1260,7 +1262,7 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
 <tr><td><strong>tú</strong></td><td>ves</td><td>sabes</td><td>conoces</td></tr>
 <tr><td><strong>él/ella</strong></td><td>ve</td><td>sabe</td><td>conoce</td></tr>
 <tr><td><strong>nosotros</strong></td><td>vemos</td><td>sabemos</td><td>conocemos</td></tr>
-<tr><td><strong>vosotros</strong></td><td>veis</td><td>sabéis</td><td>conocéis</td></tr>
+<tr class="spain-only"><td><strong>vosotros</strong></td><td>veis</td><td>sabéis</td><td>conocéis</td></tr>
 <tr><td><strong>ellos</strong></td><td>ven</td><td>saben</td><td>conocen</td></tr></table>
 <p><strong>Note:</strong> <em>Conocer</em> represents a large group of <strong>-zco</strong> verbs (also: <em>parecer → parezco</em>, <em>traducir → traduzco</em>, <em>producir → produzco</em>).</p>`,
     quiz: [

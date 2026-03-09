@@ -42,6 +42,9 @@
   --yellow-text: #ffc107;
 }
 
+/* ── Region-based visibility ── */
+[data-region="latam"] .spain-only { display: none; }
+
 /* ── Light theme ── */
 [data-theme="light"] {
   --bg: #f5f0eb;

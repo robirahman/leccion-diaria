@@ -1030,6 +1030,7 @@ function applySettings() {
   const s = progress.settings;
   document.documentElement.setAttribute('data-theme', s.theme || 'dark');
   document.documentElement.setAttribute('data-palette', s.palette || 'alhambra');
+  document.documentElement.setAttribute('data-region', s.region || 'latam');
   // Highlight active pills
   document.querySelectorAll('[data-action^="set-"]').forEach(pill => {
     const act = pill.dataset.action;
