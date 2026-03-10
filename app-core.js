@@ -943,8 +943,10 @@ const QUIZ_SCREENS = new Set([
   'themed-quiz', 'review',
 ]);
 let _pendingNavTab = null;
+let _leaveConfirmed = false;
 
 function confirmLeaveQuiz(callback) {
+  if (_leaveConfirmed) { _leaveConfirmed = false; return false; }
   const currentScreen = screenStack[screenStack.length - 1];
   if (QUIZ_SCREENS.has(currentScreen)) {
     showModal('Leave Quiz?', '<p>You have a quiz in progress. Your progress will be lost.</p>', [

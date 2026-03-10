@@ -35,7 +35,7 @@ document.addEventListener('click', e => {
 
     // Modal
     case 'close-modal': closeModal(); _pendingNavTab = null; break;
-    case 'confirm-leave-quiz': closeModal(); if (_pendingNavTab) { const fn = _pendingNavTab; _pendingNavTab = null; fn(); } break;
+    case 'confirm-leave-quiz': closeModal(); if (_pendingNavTab) { const fn = _pendingNavTab; _pendingNavTab = null; _leaveConfirmed = true; fn(); } break;
 
     // Settings
     case 'set-display': setSetting('display', target.dataset.val); break;
