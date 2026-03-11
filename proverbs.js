@@ -207,6 +207,7 @@ const PROVERBS_DATA = [
     id: "proverb-18",
     spanishName: "No por mucho madrugar amanece más temprano",
     englishName: "You can't rush things / Patience is a virtue",
+    level: "B2",
     content: "<p><strong>\"No por mucho madrugar amanece más temprano\"</strong> enseña que algunas cosas requieren su tiempo natural y no se pueden apresurar por más esfuerzo que pongamos. Aunque te levantes muy temprano, el sol saldrá a su hora. Es un llamado a la paciencia y a entender que hay procesos que no dependen de nosotros.</p><p>Este refrán es particularmente interesante porque contradice parcialmente a otro refrán famoso: \"A quien madruga, Dios le ayuda.\" Juntos, forman una pareja de sabiduría equilibrada: hay que ser diligente (madrugar), pero también hay que ser paciente (no todo se puede apresurar). Esta dualidad es típica de los refranes españoles, que a menudo tienen un \"contra-refrán\".</p><p><strong>Ejemplo de uso:</strong> \"Ya enviaste todos los documentos para la visa. Ahora solo queda esperar. No por mucho madrugar amanece más temprano.\" Se usa para calmar a personas ansiosas que quieren forzar resultados inmediatos.</p>",
     quiz: [
       { question: "¿Qué virtud promueve este refrán?", options: ["La velocidad", "La paciencia", "La puntualidad", "La diligencia"], answer: "La paciencia", explanation: "Promueve la paciencia, enseñando que algunos procesos requieren su tiempo natural." },
@@ -218,6 +219,7 @@ const PROVERBS_DATA = [
     id: "proverb-19",
     spanishName: "Quien siembra vientos, recoge tempestades",
     englishName: "You reap what you sow",
+    level: "C1",
     content: "<p><strong>\"Quien siembra vientos, recoge tempestades\"</strong> es un refrán que advierte que las malas acciones tienen consecuencias amplificadas. Si siembras viento (haces el mal), cosecharás tempestades (sufrirás consecuencias aún peores). Es una versión más dramática y poética de \"cosechas lo que siembras\".</p><p>Este refrán tiene origen bíblico, basado en el libro de Oseas 8:7. Su presencia en la Biblia lo ha hecho popular en toda la cultura occidental. En español, se utiliza para señalar que las acciones negativas de una persona inevitablemente volverán a ella con mayor fuerza. Es una reflexión sobre la justicia moral y las consecuencias de nuestros actos.</p><p><strong>Ejemplo de uso:</strong> \"El empresario trató mal a todos sus empleados durante años, y ahora nadie quiere trabajar para él. Quien siembra vientos, recoge tempestades.\" Se usa como advertencia o como comentario sobre alguien que está sufriendo las consecuencias de sus propias acciones.</p>",
     quiz: [
       { question: "¿Cuál es el origen de este refrán?", options: ["La mitología griega", "La Biblia (libro de Oseas)", "Don Quijote de la Mancha", "Un poema de Neruda"], answer: "La Biblia (libro de Oseas)", explanation: "Tiene origen bíblico, en el libro de Oseas 8:7." },
@@ -229,6 +231,7 @@ const PROVERBS_DATA = [
     id: "proverb-20",
     spanishName: "A falta de pan, buenas son tortas",
     englishName: "Beggars can't be choosers",
+    level: "B2",
     content: "<p><strong>\"A falta de pan, buenas son tortas\"</strong> enseña que cuando no podemos tener lo que queremos, debemos conformarnos y apreciar lo que está disponible. Si no hay pan (lo ideal), las tortas (la alternativa) también son buenas. Es una lección de adaptabilidad, gratitud y practicidad.</p><p>En la tradición española, el pan era el alimento básico por excelencia. Las tortas eran un pan más simple y rústico, considerado inferior. Sin embargo, cuando no había pan disponible, las tortas cumplían la misma función. Este refrán nos recuerda que la perfección no siempre es posible y que debemos ser flexibles con nuestras expectativas.</p><p><strong>Ejemplo de uso:</strong> \"Queríamos ir a la playa, pero está lloviendo. Vamos al cine en vez. A falta de pan, buenas son tortas.\" También: \"No encontré el libro que quería, pero este otro sobre el mismo tema también está interesante. A falta de pan, buenas son tortas.\"</p>",
     quiz: [
       { question: "¿Qué enseña este refrán?", options: ["Que las tortas son mejores que el pan", "Que hay que adaptarse y apreciar las alternativas", "Que no hay que comer pan", "Que siempre hay que buscar lo mejor"], answer: "Que hay que adaptarse y apreciar las alternativas", explanation: "Enseña que cuando no tenemos lo ideal, debemos conformarnos con lo disponible y apreciarlo." },
