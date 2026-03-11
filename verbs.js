@@ -1,13 +1,13 @@
 // =============================================================================
 // verbs.js - Spanish Verb Database
 // =============================================================================
-// Contains 200+ verbs organized by type:
+// Contains 220+ verbs organized by type:
 //   - 100 regular verbs (from verbos regulares.csv)
 //   - 20  irregular verbs
 //   - 22  stem-changing verbs
 //   - 11  reflexive verbs (some also stem-changing)
-//   - 25  C1 verbs (advanced)
-//   - 15  C2 verbs (mastery)
+//   - 58  C1 verbs (advanced)
+//   - 29  C2 verbs (mastery)
 //
 // Fields:
 //   infinitive  - Spanish infinitive form
@@ -288,6 +288,41 @@ const VERB_DATA = [
   // COMPOUND IRREGULAR VERBS — C2
   { infinitive: 'sustraer', english: 'to subtract, steal', type: 'irregular', group: 'er', stemChange: null, level: 'C2', frequency: 228 },
   { infinitive: 'encubrir', english: 'to cover up, conceal', type: 'irregular', group: 'ir', stemChange: null, level: 'C2', frequency: 229 },
+
+  // ---------------------------------------------------------------------------
+  // C1 VERBS — Advanced (additional 15)
+  // ---------------------------------------------------------------------------
+  { infinitive: 'acatar', english: 'to comply with, obey', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 230 },
+  { infinitive: 'acotar', english: 'to delimit, annotate', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 231 },
+  { infinitive: 'albergar', english: 'to harbor, house', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 232 },
+  { infinitive: 'concatenar', english: 'to concatenate, link', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 233 },
+  { infinitive: 'desacatar', english: 'to defy, disobey', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 234 },
+  { infinitive: 'desarticular', english: 'to dismantle, break up', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 235 },
+  { infinitive: 'dirimir', english: 'to settle, resolve', type: 'regular', group: 'ir', stemChange: null, level: 'C1', frequency: 236 },
+  { infinitive: 'enarbolar', english: 'to hoist, brandish', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 237 },
+  { infinitive: 'exacerbar', english: 'to exacerbate', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 238 },
+  { infinitive: 'incurrir', english: 'to incur', type: 'regular', group: 'ir', stemChange: null, level: 'C1', frequency: 239 },
+  { infinitive: 'recabar', english: 'to obtain, gather', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 240 },
+  { infinitive: 'socavar', english: 'to undermine', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 241 },
+  { infinitive: 'subsanar', english: 'to rectify, remedy', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 242 },
+  { infinitive: 'suscitar', english: 'to provoke, arouse', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 243 },
+  { infinitive: 'tipificar', english: 'to classify, typify', type: 'regular', group: 'ar', stemChange: null, level: 'C1', frequency: 244 },
+
+  // ---------------------------------------------------------------------------
+  // C2 VERBS — Mastery (additional 12)
+  // ---------------------------------------------------------------------------
+  { infinitive: 'abjurar', english: 'to abjure, renounce', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 245 },
+  { infinitive: 'apostatar', english: 'to apostatize', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 246 },
+  { infinitive: 'circunscribir', english: 'to circumscribe', type: 'irregular', group: 'ir', stemChange: null, level: 'C2', frequency: 247 },
+  { infinitive: 'conminar', english: 'to urge forcefully, threaten', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 248 },
+  { infinitive: 'denostar', english: 'to revile, insult', type: 'stem-changing', group: 'ar', stemChange: 'o>ue', level: 'C2', frequency: 249 },
+  { infinitive: 'enajenar', english: 'to alienate, transfer', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 250 },
+  { infinitive: 'fustigar', english: 'to castigate, lash', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 251 },
+  { infinitive: 'holgar', english: 'to be idle, be unnecessary', type: 'stem-changing', group: 'ar', stemChange: 'o>ue', level: 'C2', frequency: 252 },
+  { infinitive: 'interpolar', english: 'to interpolate', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 253 },
+  { infinitive: 'preconizar', english: 'to advocate, recommend', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 254 },
+  { infinitive: 'refrendar', english: 'to endorse, countersign', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 255 },
+  { infinitive: 'vindicar', english: 'to vindicate', type: 'regular', group: 'ar', stemChange: null, level: 'C2', frequency: 256 },
 ];
 
 // =============================================================================

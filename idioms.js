@@ -7,6 +7,7 @@ const IDIOMS_DATA = [
     example: "El profesor le hizo una pregunta, pero Juan estaba en las nubes y no escuchó nada.",
     exampleEn: "The teacher asked him a question, but Juan had his head in the clouds and didn't hear anything.",
     category: "weather",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'estar en las nubes'?",
@@ -36,6 +37,7 @@ const IDIOMS_DATA = [
     example: "Ese coche nuevo le costó un ojo de la cara, pero estaba muy ilusionado.",
     exampleEn: "That new car cost him an arm and a leg, but he was very excited.",
     category: "body",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'costar un ojo de la cara'?",
@@ -65,6 +67,7 @@ const IDIOMS_DATA = [
     example: "Metí la pata cuando le pregunté por su esposo; resulta que se divorciaron hace un mes.",
     exampleEn: "I put my foot in it when I asked about her husband; turns out they divorced a month ago.",
     category: "animals",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'meter la pata'?",
@@ -94,6 +97,7 @@ const IDIOMS_DATA = [
     example: "Cada vez que la ve, tiene mariposas en el estómago.",
     exampleEn: "Every time he sees her, he gets butterflies in his stomach.",
     category: "animals",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'tener mariposas en el estómago'?",
@@ -123,6 +127,7 @@ const IDIOMS_DATA = [
     example: "El examen de matemáticas fue pan comido; lo terminé en diez minutos.",
     exampleEn: "The math exam was a piece of cake; I finished it in ten minutes.",
     category: "food",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'ser pan comido'?",
@@ -152,6 +157,7 @@ const IDIOMS_DATA = [
     example: "Mi abuela no tiene pelos en la lengua; siempre dice exactamente lo que piensa.",
     exampleEn: "My grandmother doesn't mince words; she always says exactly what she thinks.",
     category: "body",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'no tener pelos en la lengua'?",
@@ -181,6 +187,7 @@ const IDIOMS_DATA = [
     example: "Mi vecino sale a correr a las cinco de la mañana en invierno. ¡Está como una cabra!",
     exampleEn: "My neighbor goes running at five in the morning in winter. He's totally nuts!",
     category: "animals",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'estar como una cabra'?",
@@ -210,6 +217,7 @@ const IDIOMS_DATA = [
     example: "Si no te pones las pilas, vas a reprobar el curso.",
     exampleEn: "If you don't get your act together, you're going to fail the course.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'ponerse las pilas'?",
@@ -239,6 +247,7 @@ const IDIOMS_DATA = [
     example: "Cuando dijiste que el problema era el motor, diste en el clavo.",
     exampleEn: "When you said the problem was the engine, you hit the nail on the head.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'dar en el clavo'?",
@@ -268,6 +277,7 @@ const IDIOMS_DATA = [
     example: "Estoy hasta las narices de su actitud negativa.",
     exampleEn: "I'm fed up with his negative attitude.",
     category: "body",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'estar hasta las narices'?",
@@ -297,6 +307,7 @@ const IDIOMS_DATA = [
     example: "El negocio va viento en popa; hemos triplicado las ventas este año.",
     exampleEn: "The business is going great guns; we've tripled sales this year.",
     category: "weather",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'ir viento en popa'?",
@@ -326,6 +337,7 @@ const IDIOMS_DATA = [
     example: "¿Me estás tomando el pelo? ¡No puede ser verdad!",
     exampleEn: "Are you pulling my leg? That can't be true!",
     category: "body",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'tomar el pelo'?",
@@ -355,6 +367,7 @@ const IDIOMS_DATA = [
     example: "En una familia de abogados, él es la oveja negra porque quiso ser artista.",
     exampleEn: "In a family of lawyers, he's the black sheep because he wanted to be an artist.",
     category: "animals",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'ser la oveja negra'?",
@@ -384,6 +397,7 @@ const IDIOMS_DATA = [
     example: "Darle consejos a él es como echar agua al mar; nunca escucha.",
     exampleEn: "Giving him advice is like pouring water into the sea; he never listens.",
     category: "weather",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'echar agua al mar'?",
@@ -413,6 +427,7 @@ const IDIOMS_DATA = [
     example: "Con tantas deudas, están con el agua al cuello.",
     exampleEn: "With so many debts, they're in over their heads.",
     category: "weather",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'estar con el agua al cuello'?",
@@ -442,6 +457,7 @@ const IDIOMS_DATA = [
     example: "Le pidió que saliera con él, pero ella le dio calabazas.",
     exampleEn: "He asked her out, but she turned him down.",
     category: "food",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'dar calabazas'?",
@@ -471,6 +487,7 @@ const IDIOMS_DATA = [
     example: "Cuando la profesora lo elogió delante de todos, se puso rojo como un tomate.",
     exampleEn: "When the teacher praised him in front of everyone, he turned red as a beet.",
     category: "food",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'ponerse rojo como un tomate'?",
@@ -500,6 +517,7 @@ const IDIOMS_DATA = [
     example: "No le hables ahora; tiene muy mala leche hoy.",
     exampleEn: "Don't talk to him now; he's in a really bad mood today.",
     category: "food",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'tener mala leche'?",
@@ -529,6 +547,7 @@ const IDIOMS_DATA = [
     example: "Después de correr el maratón, estaba hecho polvo.",
     exampleEn: "After running the marathon, I was completely wiped out.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'estar hecho polvo'?",
@@ -558,6 +577,7 @@ const IDIOMS_DATA = [
     example: "Cuando me dijeron que había ganado el premio, me quedé de piedra.",
     exampleEn: "When they told me I had won the prize, I was stunned.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'quedarse de piedra'?",
@@ -587,6 +607,7 @@ const IDIOMS_DATA = [
     example: "Primero perdió el trabajo y ahora se le rompió el coche. Llueve sobre mojado.",
     exampleEn: "First he lost his job and now his car broke down. When it rains, it pours.",
     category: "weather",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'llover sobre mojado'?",
@@ -616,6 +637,7 @@ const IDIOMS_DATA = [
     example: "No seas gallina y tírate del trampolín.",
     exampleEn: "Don't be a chicken and jump off the diving board.",
     category: "animals",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'ser un gallina'?",
@@ -645,6 +667,7 @@ const IDIOMS_DATA = [
     example: "Después del viaje tan largo, dormí a pierna suelta toda la noche.",
     exampleEn: "After such a long trip, I slept like a log all night.",
     category: "body",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'dormir a pierna suelta'?",
@@ -674,6 +697,7 @@ const IDIOMS_DATA = [
     example: "Lo que piensen los demás me importa un pepino.",
     exampleEn: "I couldn't care less about what others think.",
     category: "food",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'importar un pepino'?",
@@ -703,6 +727,7 @@ const IDIOMS_DATA = [
     example: "Desde que perdió su trabajo, lo ve todo negro.",
     exampleEn: "Since he lost his job, he sees everything in a negative light.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'verlo todo negro'?",

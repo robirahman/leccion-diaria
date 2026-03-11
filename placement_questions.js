@@ -1363,6 +1363,308 @@ const PLACEMENT_QUESTIONS = [
     ],
     explanation: 'Only this option uses correct conditional structure, possessive relative "cuya," and the preposition "a" with "asistir."',
   },
+
+  // ──────────────────────────────────────────────────────────
+  //  C1 — Advanced (extended set, difficulty 5.0–6.0)
+  // ──────────────────────────────────────────────────────────
+
+  // C1 Grammar: pluperfect subjunctive
+  {
+    id: 'pq-c1-21',
+    level: 'C1',
+    difficulty: 5.0,
+    domain: 'grammar',
+    type: 'mc',
+    prompt: 'Si los delegados ___ las condiciones antes de firmar, habrían evitado el litigio. (revisar)',
+    answer: 'hubieran revisado',
+    options: ['habrían revisado', 'hubieran revisado', 'revisaran', 'hubiesen de revisar'],
+    explanation: 'The si-clause of a third conditional requires the pluperfect subjunctive: "hubieran revisado." "Habrían revisado" is the conditional perfect and cannot appear in the si-clause.',
+  },
+  // C1 Grammar: mixed conditional
+  {
+    id: 'pq-c1-22',
+    level: 'C1',
+    difficulty: 5.2,
+    domain: 'grammar',
+    type: 'mc',
+    prompt: 'Si no hubiera aceptado aquel puesto en el extranjero, ahora no ___ bilingüe. (ser)',
+    answer: 'sería',
+    options: ['habría sido', 'fuera', 'sería', 'hubiese sido'],
+    explanation: 'This is a mixed conditional: past hypothesis (pluperfect subjunctive) with a present consequence (simple conditional). "Sería" is the correct present-result form; "habría sido" would imply a past result.',
+  },
+  // C1 Grammar: passive voice (ser vs. estar; passive reflex)
+  {
+    id: 'pq-c1-23',
+    level: 'C1',
+    difficulty: 5.4,
+    domain: 'grammar',
+    type: 'mc',
+    prompt: 'Choose the sentence that correctly uses the passive voice in formal written Spanish:',
+    answer: 'Se han adoptado nuevas medidas para paliar la crisis.',
+    options: [
+      'Nuevas medidas han sido adoptadas para paliar la crisis.',
+      'Se han adoptado nuevas medidas para paliar la crisis.',
+      'Nuevas medidas se las han adoptado para paliar la crisis.',
+      'Fueron adoptándose nuevas medidas para paliar la crisis.',
+    ],
+    explanation: 'In formal written Spanish the pasiva refleja ("se han adoptado") is strongly preferred over the perifrastic passive ("han sido adoptadas") for inanimate subjects. The other options contain grammatical errors.',
+  },
+  // C1 Vocabulary: academic/formal vocabulary in context
+  {
+    id: 'pq-c1-24',
+    level: 'C1',
+    difficulty: 5.1,
+    domain: 'vocab',
+    type: 'mc',
+    prompt: '"El ponente esgrimió argumentos contundentes durante la mesa redonda." "Esgrimir" in this context means:',
+    answer: 'to wield / to put forward (arguments)',
+    options: ['to fence with swords', 'to wield / to put forward (arguments)', 'to demolish', 'to conceal strategically'],
+    explanation: '"Esgrimir" literally means to fence, but in academic discourse it means to brandish or put forward arguments forcefully.',
+  },
+  {
+    id: 'pq-c1-25',
+    level: 'C1',
+    difficulty: 5.3,
+    domain: 'vocab',
+    type: 'mc',
+    prompt: '"La propuesta fue desestimada por falta de fundamento jurídico." "Desestimar" means:',
+    answer: 'to reject / to dismiss (a petition or claim)',
+    options: ['to underestimate', 'to reject / to dismiss (a petition or claim)', 'to disrespect publicly', 'to reconsider after review'],
+    explanation: '"Desestimar" in legal and formal usage means to reject or dismiss, not to underestimate. This is a common error even among advanced learners.',
+  },
+  {
+    id: 'pq-c1-26',
+    level: 'C1',
+    difficulty: 5.5,
+    domain: 'vocab',
+    type: 'mc',
+    prompt: '"El informe puso de manifiesto las carencias del sistema sanitario." "Poner de manifiesto" means:',
+    answer: 'to reveal / to make evident',
+    options: ['to exaggerate', 'to protest against', 'to cover up', 'to reveal / to make evident'],
+    explanation: '"Poner de manifiesto" is a formal fixed expression meaning to bring to light, to make evident.',
+  },
+  // C1 Discourse/pragmatics: register and formality
+  {
+    id: 'pq-c1-27',
+    level: 'C1',
+    difficulty: 5.6,
+    domain: 'discourse',
+    type: 'mc',
+    prompt: 'In a formal letter to a government ministry, which closing is most appropriate?',
+    answer: 'Quedo a su entera disposición para cuantas aclaraciones estimen oportunas.',
+    options: [
+      'Bueno, espero su respuesta pronto.',
+      'Quedo a su entera disposición para cuantas aclaraciones estimen oportunas.',
+      'Sin más, me despido atentamente.',
+      'Espero que me contesten lo antes posible, por favor.',
+    ],
+    explanation: 'The formula "Quedo a su entera disposición para cuantas aclaraciones estimen oportunas" is the standard high-register closing for official correspondence. "Sin más, me despido" is acceptable but less formal. The others are too colloquial.',
+  },
+  // C1 Discourse/pragmatics: connectors
+  {
+    id: 'pq-c1-28',
+    level: 'C1',
+    difficulty: 5.7,
+    domain: 'discourse',
+    type: 'mc',
+    prompt: '"Las cifras de desempleo descendieron en el último trimestre. ___, sería prematuro hablar de una recuperación consolidada." Which connector best fills the blank?',
+    answer: 'Con todo',
+    options: ['Por consiguiente', 'En efecto', 'Con todo', 'Es decir'],
+    explanation: '"Con todo" introduces a concessive counterpoint (nonetheless). "Por consiguiente" would signal consequence; "en efecto" confirms; "es decir" reformulates. The sentence requires a concession.',
+  },
+  // C1 Reading comprehension: sentence completion with nuance
+  {
+    id: 'pq-c1-29',
+    level: 'C1',
+    difficulty: 5.8,
+    domain: 'reading',
+    type: 'mc',
+    prompt: '"La autora no pretende tanto refutar la tesis de sus detractores cuanto ___." Which completion best maintains the rhetorical balance of "no tanto… cuanto"?',
+    answer: 'matizar sus implicaciones más problemáticas',
+    options: [
+      'destruir por completo sus argumentos',
+      'ignorar la controversia que suscitó su obra',
+      'matizar sus implicaciones más problemáticas',
+      'aceptar sin reservas las críticas recibidas',
+    ],
+    explanation: '"No tanto… cuanto" establishes a contrast between degrees, not a total rejection. "Matizar" (to nuance/qualify) preserves the moderated tone; the other options imply extremes that break the rhetorical balance.',
+  },
+  {
+    id: 'pq-c1-30',
+    level: 'C1',
+    difficulty: 6.0,
+    domain: 'reading',
+    type: 'mc',
+    prompt: '"A pesar de que el autor recurre a un tono aparentemente desenfadado, subyace en su discurso una crítica mordaz a las estructuras de poder." The word "mordaz" suggests the critique is:',
+    answer: 'biting and sharply sarcastic',
+    options: [
+      'gentle and well-intentioned',
+      'biting and sharply sarcastic',
+      'humorous but ultimately supportive',
+      'indifferent and detached',
+    ],
+    explanation: '"Mordaz" (from Latin mordax, biting) means caustic, biting, acerbically critical. It contrasts sharply with the "aparentemente desenfadado" (apparently carefree) tone, highlighting the author\'s deliberate irony.',
+  },
+
+  // ──────────────────────────────────────────────────────────
+  //  C2 — Mastery (extended set, difficulty 6.0–7.0)
+  // ──────────────────────────────────────────────────────────
+
+  // C2 Grammar: future subjunctive
+  {
+    id: 'pq-c2-21',
+    level: 'C2',
+    difficulty: 6.0,
+    domain: 'grammar',
+    type: 'mc',
+    prompt: '"Donde fueres, haz lo que vieres." This proverb uses the future subjunctive. What is the modern equivalent?',
+    answer: 'Donde vayas, haz lo que veas.',
+    options: [
+      'Donde irás, haz lo que verás.',
+      'Donde fueras, haz lo que vieras.',
+      'Donde vayas, haz lo que veas.',
+      'Donde hubieras ido, haz lo que hubieras visto.',
+    ],
+    explanation: 'The future subjunctive ("fueres," "vieres") has been replaced in modern Spanish by the present subjunctive ("vayas," "veas") in all but legal and proverbial contexts.',
+  },
+  // C2 Grammar: preterite anterior
+  {
+    id: 'pq-c2-22',
+    level: 'C2',
+    difficulty: 6.2,
+    domain: 'grammar',
+    type: 'mc',
+    prompt: '"Apenas hubo terminado de hablar, el auditorio prorrumpió en aplausos." Which statement about the preterite anterior ("hubo terminado") is correct?',
+    answer: 'It marks an action completed immediately before another past action, and is restricted to literary and formal written registers.',
+    options: [
+      'It is interchangeable with the preterite ("terminó") in all registers.',
+      'It marks an action completed immediately before another past action, and is restricted to literary and formal written registers.',
+      'It functions identically to the pluperfect ("había terminado") with no stylistic difference.',
+      'It is a grammatical archaism no longer considered correct by the RAE.',
+    ],
+    explanation: 'The preterite anterior (pretérito anterior) signals immediate anteriority and is confined to literary/formal writing, typically after conjunctions like "apenas," "no bien," "en cuanto." The RAE still recognizes it as correct.',
+  },
+  // C2 Grammar: clitic placement
+  {
+    id: 'pq-c2-23',
+    level: 'C2',
+    difficulty: 6.4,
+    domain: 'grammar',
+    type: 'mc',
+    prompt: 'Which sentence places the clitics correctly?',
+    answer: 'Se lo quiero dar. / Quiero dárselo.',
+    options: [
+      'Lo se quiero dar.',
+      'Se lo quiero dar. / Quiero dárselo.',
+      'Quiero se lo dar.',
+      'Dárselo quiero.',
+    ],
+    explanation: 'With a conjugated verb + infinitive, clitics either precede the conjugated verb as a cluster ("se lo quiero dar") or attach to the infinitive ("quiero dárselo"). "Lo se" violates the fixed order se > te > me > lo; "se lo" between verbs is ungrammatical; "dárselo quiero" is archaic and unacceptable in modern standard Spanish.',
+  },
+  // C2 Vocabulary: literary/archaic vocabulary
+  {
+    id: 'pq-c2-24',
+    level: 'C2',
+    difficulty: 6.1,
+    domain: 'vocab',
+    type: 'mc',
+    prompt: '"El menesteroso impetró clemencia ante el tribunal." "Impetrar" means:',
+    answer: 'to beseech / to entreat formally',
+    options: ['to impede', 'to impeach', 'to beseech / to entreat formally', 'to perpetrate'],
+    explanation: '"Impetrar" is a literary/legal verb meaning to formally entreat or beg for something, especially from an authority. It is unrelated to "impedir" or "imperar."',
+  },
+  // C2 Vocabulary: false cognates
+  {
+    id: 'pq-c2-25',
+    level: 'C2',
+    difficulty: 6.3,
+    domain: 'vocab',
+    type: 'mc',
+    prompt: '"Constipado" in Spanish means:',
+    answer: 'having a cold (nasal congestion)',
+    options: ['constipated (digestive issue)', 'having a cold (nasal congestion)', 'feeling conspicuous', 'being constantly tired'],
+    explanation: '"Constipado" is a classic false cognate. In Spanish it means a common cold, not constipation (which is "estreñimiento"). This trips up even advanced English-speaking learners.',
+  },
+  // C2 Vocabulary: literary register
+  {
+    id: 'pq-c2-26',
+    level: 'C2',
+    difficulty: 6.5,
+    domain: 'vocab',
+    type: 'mc',
+    prompt: '"En la penumbra del aposento, se vislumbraba apenas la silueta del ayo." "Ayo" refers to:',
+    answer: 'a private tutor or guardian of a noble child',
+    options: ['an elderly servant', 'a military officer', 'a private tutor or guardian of a noble child', 'a court jester'],
+    explanation: '"Ayo" is an archaic/literary term for a tutor or governor charged with the upbringing of a young nobleman. It appears frequently in Golden Age literature.',
+  },
+  // C2 Discourse: stylistic inversion
+  {
+    id: 'pq-c2-27',
+    level: 'C2',
+    difficulty: 6.5,
+    domain: 'discourse',
+    type: 'mc',
+    prompt: '"Bien sabido es que la lengua evoluciona, mas no por ello han de desdeñarse las normas que la vertebran." The inverted structure "Bien sabido es" serves to:',
+    answer: 'topicalize the known information for rhetorical emphasis, a hallmark of elevated prose',
+    options: [
+      'signal an error — the correct order is "Es bien sabido"',
+      'create a question in disguise',
+      'topicalize the known information for rhetorical emphasis, a hallmark of elevated prose',
+      'indicate that the speaker is uncertain about the claim',
+    ],
+    explanation: 'Subject-predicate inversion ("Bien sabido es" instead of "Es bien sabido") is a marked stylistic device in formal/literary Spanish that fronts the complement for emphasis. It is not an error but a deliberate rhetorical choice.',
+  },
+  // C2 Discourse: discourse cohesion
+  {
+    id: 'pq-c2-28',
+    level: 'C2',
+    difficulty: 6.6,
+    domain: 'discourse',
+    type: 'mc',
+    prompt: '"La tesis, a todas luces endeble, fue defendida con vehemencia. Así las cosas, el tribunal optó por solicitar una revisión exhaustiva." "Así las cosas" functions as:',
+    answer: 'a discourse marker that summarizes the preceding situation and introduces a consequence',
+    options: [
+      'a temporal marker meaning "at the same time"',
+      'a causal connector meaning "because of this"',
+      'a discourse marker that summarizes the preceding situation and introduces a consequence',
+      'an adversative connector meaning "on the contrary"',
+    ],
+    explanation: '"Así las cosas" (things being as they are / given the situation) is a discourse-organizing expression that recapitulates the state of affairs and bridges to a resulting action. It is neither purely causal nor temporal.',
+  },
+  // C2 Dialectal awareness
+  {
+    id: 'pq-c2-29',
+    level: 'C2',
+    difficulty: 6.7,
+    domain: 'usage',
+    type: 'mc',
+    prompt: 'In Rioplatense Spanish, "vos tenés" replaces "tú tienes." Which of the following verb forms is also part of standard Rioplatense voseo?',
+    answer: 'vos podés (present indicative)',
+    options: [
+      'vos tienerís (present indicative)',
+      'vos podés (present indicative)',
+      'vos habís (present perfect auxiliary)',
+      'vos sois (present indicative of ser)',
+    ],
+    explanation: 'Rioplatense voseo forms the present indicative by stressing the final syllable: tenés, podés, querés, sos (not sois, which is Peninsular vosotros). "Habís" belongs to Chilean voseo, and "tienerís" is not a real form.',
+  },
+  // C2 Literary register
+  {
+    id: 'pq-c2-30',
+    level: 'C2',
+    difficulty: 7.0,
+    domain: 'usage',
+    type: 'mc',
+    prompt: '"Yo soy aquel que ayer no más decía / el verso azul y la canción profana." These opening lines by Rubén Darío illustrate which literary device?',
+    answer: 'A self-referential exordium that establishes the poetic persona through temporal contrast',
+    options: [
+      'Hyperbaton: the syntax is distorted beyond comprehension',
+      'A self-referential exordium that establishes the poetic persona through temporal contrast',
+      'Synesthesia: "blue verse" blends sight and hearing',
+      'Antithesis: "azul" and "profana" are strict opposites',
+    ],
+    explanation: 'The opening of "Cantos de vida y esperanza" is a famous exordium in which Darío revisits his earlier poetic self ("ayer no más") to signal evolution. While "verso azul" contains synesthesia, the primary device is the self-referential framing across time. "Profana" and "azul" are not antithetical; the hyperbaton is mild, not distorting.',
+  },
 ];
 
 // Export for use in other modules

@@ -2,7 +2,7 @@
 
 // ════════════════════════════════════════════════════════════
 //  TRANSLATION DRILLS — English → Spanish translation practice
-//  45+ items across A1-C2
+//  60+ items across A1-C2
 // ════════════════════════════════════════════════════════════
 
 const TRANSLATION_DRILLS = [
@@ -424,5 +424,135 @@ const TRANSLATION_DRILLS = [
     acceptable: ['Si no fuera por su ayuda, habríamos fracasado.', 'Si no hubiera sido por su ayuda, habríamos fracasado.', 'A no ser por su ayuda, habríamos fracasado.'],
     keyWords: ['ayuda', 'habríamos', 'fracasado'],
     explanation: "'De no ser por' is an elegant construction for 'were it not for.' It avoids the heavier si-clause structure."
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C1 — Additional advanced entries (tr-49 to tr-56)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'tr-49', level: 'C1', topic: 'subjunctive',
+    english: 'I wish they had consulted us before making the decision.',
+    primary: 'Ojalá nos hubieran consultado antes de tomar la decisión.',
+    acceptable: ['Ojalá nos hubiesen consultado antes de tomar la decisión.', 'Ojalá que nos hubieran consultado antes de tomar la decisión.', 'Desearía que nos hubieran consultado antes de tomar la decisión.'],
+    keyWords: ['ojalá', 'hubieran', 'consultado', 'decisión'],
+    explanation: "'Ojalá' + pluperfect subjunctive expresses an unfulfilled wish about the past. Both '-ra' and '-se' endings are valid."
+  },
+  {
+    id: 'tr-50', level: 'C1', topic: 'formal_writing',
+    english: 'As stated in the previous report, the situation requires immediate action.',
+    primary: 'Tal y como se indicó en el informe anterior, la situación requiere medidas inmediatas.',
+    acceptable: ['Como se señaló en el informe anterior, la situación requiere medidas inmediatas.', 'Según se indicó en el informe previo, la situación requiere acción inmediata.', 'De acuerdo con lo indicado en el informe anterior, la situación exige medidas inmediatas.'],
+    keyWords: ['indicó', 'informe', 'requiere', 'medidas'],
+    explanation: "'Tal y como se indicó' is a formal discourse marker for referencing prior statements. 'Medidas' is preferred over 'acción' in formal registers."
+  },
+  {
+    id: 'tr-51', level: 'C1', topic: 'literary',
+    english: 'No sooner had the sun set than the city came alive.',
+    primary: 'Apenas se hubo puesto el sol, la ciudad cobró vida.',
+    acceptable: ['Apenas se puso el sol, la ciudad cobró vida.', 'Nada más ponerse el sol, la ciudad cobró vida.', 'En cuanto se puso el sol, la ciudad cobró vida.'],
+    keyWords: ['apenas', 'hubo', 'puesto', 'cobró', 'vida'],
+    explanation: "'Apenas + pretérito anterior' (se hubo puesto) is a literary tense expressing immediate succession. In modern usage the simple preterite often replaces it."
+  },
+  {
+    id: 'tr-52', level: 'C1', topic: 'subjunctive',
+    english: 'It is imperative that all parties reach an agreement before the deadline.',
+    primary: 'Es imperativo que todas las partes lleguen a un acuerdo antes del plazo.',
+    acceptable: ['Es imprescindible que todas las partes alcancen un acuerdo antes del plazo.', 'Resulta imperativo que todas las partes lleguen a un acuerdo antes de la fecha límite.', 'Es necesario que todas las partes lleguen a un acuerdo antes del plazo.'],
+    keyWords: ['imperativo', 'partes', 'lleguen', 'acuerdo', 'plazo'],
+    explanation: "'Es imperativo que' triggers the present subjunctive: llegar → lleguen. 'Plazo' and 'fecha límite' both work for 'deadline.'"
+  },
+  {
+    id: 'tr-53', level: 'C1', topic: 'formal_writing',
+    english: 'Despite the evidence to the contrary, the defendant maintained his innocence.',
+    primary: 'Pese a las pruebas en su contra, el acusado mantuvo su inocencia.',
+    acceptable: ['A pesar de las pruebas en su contra, el acusado mantuvo su inocencia.', 'Pese a la evidencia en contrario, el acusado sostuvo su inocencia.', 'No obstante las pruebas en su contra, el acusado mantuvo su inocencia.'],
+    keyWords: ['pese', 'pruebas', 'acusado', 'mantuvo', 'inocencia'],
+    explanation: "'Pese a' is a formal synonym of 'a pesar de' (despite). 'Mantener' and 'sostener' both convey 'maintained' in this legal context."
+  },
+  {
+    id: 'tr-54', level: 'C1', topic: 'literary',
+    english: 'The landscape stretched before us as if painted by a master.',
+    primary: 'El paisaje se extendía ante nosotros como si lo hubiera pintado un maestro.',
+    acceptable: ['El paisaje se extendía ante nosotros como si hubiese sido pintado por un maestro.', 'El paisaje se desplegaba ante nosotros cual si lo hubiera pintado un maestro.', 'Ante nosotros se extendía el paisaje como si lo hubiera pintado un maestro.'],
+    keyWords: ['paisaje', 'extendía', 'como si', 'hubiera', 'pintado'],
+    explanation: "'Como si' always triggers the subjunctive: here the pluperfect subjunctive (hubiera pintado) for a past hypothetical comparison."
+  },
+  {
+    id: 'tr-55', level: 'C1', topic: 'periphrasis',
+    english: 'They have been trying to solve this problem for months.',
+    primary: 'Llevan meses intentando resolver este problema.',
+    acceptable: ['Llevan meses tratando de resolver este problema.', 'Hace meses que intentan resolver este problema.', 'Llevan meses intentando solucionar este problema.'],
+    keyWords: ['llevan', 'meses', 'intentando', 'resolver'],
+    explanation: "'Llevar + time + gerund' is the Spanish periphrasis for 'have been doing something for.' It is far more natural than translating with present perfect continuous."
+  },
+  {
+    id: 'tr-56', level: 'C1', topic: 'formal_writing',
+    english: 'In light of recent events, the committee has decided to postpone the hearing.',
+    primary: 'A la luz de los recientes acontecimientos, el comité ha decidido aplazar la audiencia.',
+    acceptable: ['En vista de los recientes acontecimientos, el comité ha decidido posponer la audiencia.', 'A la luz de los últimos sucesos, el comité ha resuelto aplazar la audiencia.', 'Habida cuenta de los recientes acontecimientos, el comité ha decidido aplazar la audiencia.'],
+    keyWords: ['a la luz', 'acontecimientos', 'comité', 'aplazar', 'audiencia'],
+    explanation: "'A la luz de' is a formal phrase meaning 'in light of.' 'Aplazar' and 'posponer' both mean 'to postpone'; 'aplazar' is slightly more formal."
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C2 — Additional mastery-level entries (tr-57 to tr-63)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'tr-57', level: 'C2', topic: 'idiomatic',
+    english: 'He went from bad to worse after losing his job.',
+    primary: 'Fue de Guatemala a Guatepeor después de perder el empleo.',
+    acceptable: ['Fue de mal en peor después de perder el empleo.', 'Todo fue cuesta abajo después de perder el trabajo.', 'Las cosas fueron de Guatemala a Guatepeor tras perder el empleo.'],
+    keyWords: ['Guatemala', 'Guatepeor', 'perder', 'empleo'],
+    explanation: "'De Guatemala a Guatepeor' is a uniquely Spanish wordplay idiom (Guatemala → Guate-peor, 'worse'). 'De mal en peor' is the standard non-idiomatic equivalent."
+  },
+  {
+    id: 'tr-58', level: 'C2', topic: 'academic',
+    english: 'The aforementioned paradigm shift has rendered previous models obsolete.',
+    primary: 'El susodicho cambio de paradigma ha dejado obsoletos los modelos anteriores.',
+    acceptable: ['El mencionado cambio de paradigma ha vuelto obsoletos los modelos anteriores.', 'Dicho cambio de paradigma ha dejado obsoletos los modelos previos.', 'El referido cambio de paradigma ha convertido en obsoletos los modelos anteriores.'],
+    keyWords: ['susodicho', 'paradigma', 'obsoletos', 'modelos'],
+    explanation: "'Susodicho' (aforementioned) is a highly formal/legalistic term. 'Dejar obsoleto' is the natural rendering of 'render obsolete.'"
+  },
+  {
+    id: 'tr-59', level: 'C2', topic: 'dialectal',
+    english: 'The kids were running around the park all afternoon.',
+    primary: 'Los pibes estuvieron correteando por el parque toda la tarde.',
+    acceptable: ['Los chamos estuvieron correteando por el parque toda la tarde.', 'Los chamacos anduvieron correteando por el parque toda la tarde.', 'Los niños estuvieron correteando por el parque toda la tarde.'],
+    keyWords: ['pibes', 'correteando', 'parque', 'tarde'],
+    explanation: "'Pibes' is Rioplatense (Argentina/Uruguay) for 'kids.' 'Chamos' is Venezuelan, 'chamacos' is Mexican. The voseo register is implied in the dialectal choice."
+  },
+  {
+    id: 'tr-60', level: 'C2', topic: 'literary',
+    english: 'Scarcely had he uttered those words when silence fell upon the room.',
+    primary: 'Apenas hubo pronunciado aquellas palabras, el silencio se apoderó de la sala.',
+    acceptable: ['Apenas hubo pronunciado aquellas palabras, un silencio se cernió sobre la sala.', 'No bien hubo pronunciado aquellas palabras, el silencio cayó sobre la sala.', 'Apenas pronunció aquellas palabras, el silencio se adueñó de la sala.'],
+    keyWords: ['apenas', 'hubo', 'pronunciado', 'silencio', 'apoderó'],
+    explanation: "The pretérito anterior (hubo pronunciado) is a literary tense expressing an action immediately before another past action. It is virtually extinct in spoken Spanish."
+  },
+  {
+    id: 'tr-61', level: 'C2', topic: 'legal',
+    english: 'Whoever may violate these provisions shall be subject to the penalties herein established.',
+    primary: 'Quien contraviniere estas disposiciones quedará sujeto a las sanciones aquí establecidas.',
+    acceptable: ['Quien contraviniere las presentes disposiciones quedará sujeto a las sanciones aquí previstas.', 'Quienquiera que contravenga estas disposiciones quedará sujeto a las sanciones aquí establecidas.', 'Todo aquel que contraviniere estas disposiciones será objeto de las sanciones aquí establecidas.'],
+    keyWords: ['contraviniere', 'disposiciones', 'sujeto', 'sanciones', 'establecidas'],
+    explanation: "The future subjunctive (contraviniere) survives almost exclusively in legal and legislative texts. It conveys a hypothetical future condition with formal gravity."
+  },
+  {
+    id: 'tr-62', level: 'C2', topic: 'idiomatic',
+    english: 'She always beats around the bush when you ask her directly.',
+    primary: 'Siempre se anda por las ramas cuando le preguntas directamente.',
+    acceptable: ['Siempre se va por las ramas cuando le preguntas directamente.', 'Siempre anda con rodeos cuando le haces una pregunta directa.', 'Siempre se anda con evasivas cuando le preguntas de frente.'],
+    keyWords: ['anda', 'ramas', 'preguntas', 'directamente'],
+    explanation: "'Andarse por las ramas' (to walk among the branches) means to avoid getting to the point. 'Andar con rodeos' (to go in detours) is a close synonym."
+  },
+  {
+    id: 'tr-63', level: 'C2', topic: 'academic',
+    english: 'The empirical evidence, albeit limited, corroborates the initial hypothesis.',
+    primary: 'La evidencia empírica, si bien limitada, corrobora la hipótesis inicial.',
+    acceptable: ['Los datos empíricos, aunque limitados, corroboran la hipótesis inicial.', 'La evidencia empírica, pese a ser limitada, corrobora la hipótesis inicial.', 'La evidencia empírica, aun siendo limitada, confirma la hipótesis inicial.'],
+    keyWords: ['evidencia', 'empírica', 'limitada', 'corrobora', 'hipótesis'],
+    explanation: "'Si bien' is a formal concessive connector equivalent to 'albeit/although.' 'Corroborar' is the academic standard for 'to corroborate/confirm.'"
   },
 ];
