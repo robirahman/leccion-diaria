@@ -1509,6 +1509,446 @@ const READING_DATA = [
         explanation: '"Anatema" means something deeply reviled or rejected. The performance-driven culture has made genuine vulnerability — which is necessary for authentic human connection — into something people actively avoid and reject.'
       }
     ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C1  —  Additional passages (200-250 words)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'read-26',
+    level: 'C1',
+    title: 'La arquitectura sostenible en Latinoamérica',
+    titleEn: 'Sustainable Architecture in Latin America',
+    text: 'En las últimas décadas, Latinoamérica se ha convertido en un laboratorio vivo de arquitectura sostenible. Arquitectos de México, Colombia, Chile y Brasil han empezado a recuperar técnicas constructivas autóctonas —como el uso de adobe, bambú y techos verdes— y a fusionarlas con tecnologías contemporáneas de eficiencia energética. El resultado es una corriente arquitectónica que no solo reduce la huella ecológica de los edificios, sino que también revaloriza el patrimonio cultural de las comunidades indígenas y rurales. En Oaxaca, por ejemplo, cooperativas de arquitectos jóvenes construyen viviendas con materiales vernáculos que regulan la temperatura interior sin necesidad de climatización artificial. En Medellín, los llamados "edificios verdes" incorporan jardines verticales y sistemas de captación de agua lluvia que disminuyen el consumo hídrico hasta en un cuarenta por ciento. No obstante, la sostenibilidad en la construcción enfrenta obstáculos significativos: la falta de normativas claras, el encarecimiento de ciertos materiales ecológicos y la resistencia de promotores inmobiliarios que priorizan la rentabilidad a corto plazo. Para que este movimiento alcance una escala transformadora, será imprescindible que los gobiernos establezcan incentivos fiscales y que las universidades integren la sostenibilidad como eje transversal en los programas de ingeniería y diseño. Solo así la arquitectura dejará de ser parte del problema climático para convertirse en parte de la solución.',
+    vocab: [
+      { word: 'sostenibilidad', english: 'sustainability' },
+      { word: 'autóctono', english: 'indigenous / native' },
+      { word: 'huella ecológica', english: 'ecological footprint' },
+      { word: 'materiales vernáculos', english: 'vernacular / local materials' },
+      { word: 'eficiencia energética', english: 'energy efficiency' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál es la idea principal del texto?',
+        options: [
+          'Que Latinoamérica tiene los mejores arquitectos del mundo',
+          'Que la arquitectura sostenible en Latinoamérica combina técnicas ancestrales con tecnología moderna para reducir el impacto ambiental',
+          'Que los materiales indígenas son superiores a los modernos',
+          'Que los gobiernos latinoamericanos apoyan plenamente la arquitectura verde'
+        ],
+        correct: 1,
+        explanation: 'The text argues that Latin American architects are fusing indigenous building techniques with modern sustainability technology to reduce the ecological footprint of buildings.'
+      },
+      {
+        prompt: '¿Qué ejemplo concreto se da sobre Medellín?',
+        options: [
+          'Que se construyen casas de adobe',
+          'Que los edificios verdes incorporan jardines verticales y sistemas de captación de agua lluvia',
+          'Que hay cooperativas de arquitectos jóvenes',
+          'Que se usa bambú en todas las construcciones'
+        ],
+        correct: 1,
+        explanation: 'The text specifically mentions that in Medellín, "green buildings" incorporate vertical gardens and rainwater collection systems that reduce water consumption by up to forty percent.'
+      },
+      {
+        prompt: '¿Qué significa "materiales vernáculos" en el contexto del texto?',
+        options: [
+          'Materiales importados de Europa',
+          'Materiales de construcción muy caros',
+          'Materiales locales y tradicionales de la región',
+          'Materiales sintéticos modernos'
+        ],
+        correct: 2,
+        explanation: 'In context, "materiales vernáculos" refers to local, traditional building materials like adobe and bamboo that naturally regulate interior temperature.'
+      },
+      {
+        prompt: '¿Cuál de los siguientes NO se menciona como obstáculo para la arquitectura sostenible?',
+        options: [
+          'La falta de normativas claras',
+          'La escasez de mano de obra cualificada',
+          'El encarecimiento de ciertos materiales ecológicos',
+          'La resistencia de promotores inmobiliarios'
+        ],
+        correct: 1,
+        explanation: 'The text mentions lack of clear regulations, cost of ecological materials, and developer resistance, but never mentions a shortage of skilled labor.'
+      },
+      {
+        prompt: '¿Qué se puede inferir sobre la postura del autor?',
+        options: [
+          'Es pesimista sobre el futuro de la arquitectura sostenible',
+          'Considera que la arquitectura sostenible es una moda pasajera',
+          'Es cautelosamente optimista, reconociendo avances pero también desafíos pendientes',
+          'Cree que solo los gobiernos pueden resolver el problema climático'
+        ],
+        correct: 2,
+        explanation: 'The author highlights promising examples but also acknowledges significant obstacles, concluding with a conditional statement about what is needed for the movement to achieve transformative scale — a cautiously optimistic stance.'
+      }
+    ]
+  },
+
+  {
+    id: 'read-27',
+    level: 'C1',
+    title: 'El fenómeno de la posverdad',
+    titleEn: 'The Post-Truth Phenomenon',
+    text: 'El término "posverdad" fue elegido palabra del año en 2016 por el diccionario Oxford, y desde entonces no ha dejado de ganar relevancia. Se define como la circunstancia en la que los hechos objetivos tienen menos influencia en la opinión pública que las apelaciones a la emoción y las creencias personales. En la era digital, las redes sociales actúan como amplificadores de la desinformación: los algoritmos priorizan el contenido que genera mayor interacción, lo cual favorece los titulares sensacionalistas y las noticias falsas frente al análisis riguroso. Este mecanismo crea las llamadas "cámaras de eco", espacios virtuales donde los usuarios solo reciben información que confirma sus ideas previas, reforzando así el sesgo de confirmación. El resultado es una sociedad cada vez más polarizada, en la que el diálogo constructivo se vuelve casi imposible. Algunos expertos sostienen que la solución pasa por fomentar el pensamiento crítico desde la educación primaria, enseñando a los ciudadanos a verificar fuentes, contrastar datos y distinguir entre opinión y hecho. Otros abogan por una regulación más estricta de las plataformas digitales, obligándolas a etiquetar contenido no verificado y a reducir la viralización de la desinformación. Lo cierto es que, en un mundo donde cualquier persona puede difundir información a escala global con un solo clic, la responsabilidad individual y colectiva frente a la verdad se ha convertido en uno de los grandes desafíos de nuestro tiempo.',
+    vocab: [
+      { word: 'posverdad', english: 'post-truth' },
+      { word: 'sesgo de confirmación', english: 'confirmation bias' },
+      { word: 'desinformación', english: 'disinformation / misinformation' },
+      { word: 'cámara de eco', english: 'echo chamber' },
+      { word: 'pensamiento crítico', english: 'critical thinking' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cómo define el texto la "posverdad"?',
+        options: [
+          'Como la mentira deliberada de los medios de comunicación',
+          'Como la circunstancia en que los hechos objetivos influyen menos que las emociones y creencias personales',
+          'Como la ausencia total de verdad en la política',
+          'Como un fenómeno exclusivo de las redes sociales'
+        ],
+        correct: 1,
+        explanation: 'The text defines post-truth as the circumstance where "los hechos objetivos tienen menos influencia en la opinión pública que las apelaciones a la emoción y las creencias personales".'
+      },
+      {
+        prompt: '¿Qué papel desempeñan los algoritmos de redes sociales según el texto?',
+        options: [
+          'Filtran y eliminan las noticias falsas',
+          'Promueven el pensamiento crítico entre los usuarios',
+          'Priorizan contenido que genera más interacción, favoreciendo el sensacionalismo',
+          'Son neutrales y no afectan la información que vemos'
+        ],
+        correct: 2,
+        explanation: 'The text explains that algorithms prioritize content that generates more engagement, which favors sensationalist headlines and fake news over rigorous analysis.'
+      },
+      {
+        prompt: '¿Qué es una "cámara de eco" según el contexto?',
+        options: [
+          'Un estudio de grabación de sonido',
+          'Un tipo de red social nueva',
+          'Un espacio virtual donde solo se recibe información que confirma las ideas previas del usuario',
+          'Un programa educativo para verificar noticias'
+        ],
+        correct: 2,
+        explanation: 'In context, echo chambers are virtual spaces "donde los usuarios solo reciben información que confirma sus ideas previas", reinforcing confirmation bias.'
+      },
+      {
+        prompt: '¿Cuál de las siguientes soluciones NO se menciona en el texto?',
+        options: [
+          'Fomentar el pensamiento crítico desde la educación primaria',
+          'Prohibir completamente las redes sociales',
+          'Regular más estrictamente las plataformas digitales',
+          'Enseñar a verificar fuentes y contrastar datos'
+        ],
+        correct: 1,
+        explanation: 'The text mentions promoting critical thinking, regulating platforms, and teaching source verification, but never suggests banning social media entirely.'
+      },
+      {
+        prompt: '¿Qué se puede inferir sobre la visión del autor acerca de la responsabilidad frente a la desinformación?',
+        options: [
+          'Que es únicamente responsabilidad de los gobiernos',
+          'Que la responsabilidad recae solo en las empresas tecnológicas',
+          'Que es tanto individual como colectiva, y requiere múltiples enfoques simultáneos',
+          'Que no hay solución posible al problema'
+        ],
+        correct: 2,
+        explanation: 'The author concludes by emphasizing "la responsabilidad individual y colectiva" and presents multiple complementary approaches (education, regulation), suggesting a multifaceted solution is needed.'
+      }
+    ]
+  },
+
+  {
+    id: 'read-28',
+    level: 'C1',
+    title: 'La economía circular',
+    titleEn: 'The Circular Economy',
+    text: 'Durante más de un siglo, el modelo económico predominante ha seguido un esquema lineal: extraer, producir, usar y desechar. Este paradigma, que impulsó la industrialización y el crecimiento del siglo XX, se revela hoy insostenible ante la evidencia del agotamiento de los recursos naturales y la acumulación de residuos que superan la capacidad de absorción del planeta. Frente a esta realidad, la economía circular propone un cambio de paradigma radical: diseñar productos pensando en su ciclo de vida completo, de modo que los materiales puedan ser reutilizados, reparados o reciclados indefinidamente. Uno de los blancos principales de este modelo es la obsolescencia programada, esa práctica mediante la cual los fabricantes diseñan productos con una vida útil artificialmente limitada para estimular el consumo. La economía circular desafía esta lógica al promover la durabilidad, la modularidad y la reparabilidad como valores esenciales de la cadena de valor. Países como Países Bajos, Finlandia y Francia ya han implementado legislaciones que obligan a las empresas a informar sobre la durabilidad de sus productos y a facilitar el acceso a piezas de repuesto. En Latinoamérica, iniciativas comunitarias de reutilización y cooperativas de recicladores están demostrando que la circularidad no es solo una teoría académica, sino una práctica viable que genera empleo y reduce la contaminación. Sin embargo, la transición hacia una economía verdaderamente circular exige repensar no solo la producción, sino también los hábitos de consumo de toda la sociedad.',
+    vocab: [
+      { word: 'economía circular', english: 'circular economy' },
+      { word: 'obsolescencia programada', english: 'planned obsolescence' },
+      { word: 'residuos', english: 'waste / residues' },
+      { word: 'reutilización', english: 'reuse' },
+      { word: 'cadena de valor', english: 'value chain' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál es el esquema del modelo económico lineal según el texto?',
+        options: [
+          'Diseñar, reutilizar, reciclar y reparar',
+          'Extraer, producir, usar y desechar',
+          'Producir, vender, comprar y almacenar',
+          'Investigar, desarrollar, distribuir y reciclar'
+        ],
+        correct: 1,
+        explanation: 'The text explicitly states the linear model follows the scheme: "extraer, producir, usar y desechar".'
+      },
+      {
+        prompt: '¿Qué es la "obsolescencia programada"?',
+        options: [
+          'Un programa gubernamental para renovar productos viejos',
+          'La práctica de diseñar productos con una vida útil artificialmente limitada',
+          'Un sistema de reciclaje automatizado',
+          'La caducidad natural de los materiales'
+        ],
+        correct: 1,
+        explanation: 'The text defines it as "esa práctica mediante la cual los fabricantes diseñan productos con una vida útil artificialmente limitada para estimular el consumo".'
+      },
+      {
+        prompt: '¿Qué países se mencionan como ejemplos de legislación a favor de la economía circular?',
+        options: [
+          'Alemania, España y Portugal',
+          'Países Bajos, Finlandia y Francia',
+          'México, Colombia y Chile',
+          'Estados Unidos, Canadá y Japón'
+        ],
+        correct: 1,
+        explanation: 'The text mentions "Países Bajos, Finlandia y Francia" as countries that have implemented legislation requiring companies to report on product durability.'
+      },
+      {
+        prompt: '¿Qué valores promueve la economía circular en la cadena de valor?',
+        options: [
+          'Velocidad, bajo costo y producción masiva',
+          'Innovación, competitividad y exportación',
+          'Durabilidad, modularidad y reparabilidad',
+          'Estética, funcionalidad y precio'
+        ],
+        correct: 2,
+        explanation: 'The text states the circular economy promotes "la durabilidad, la modularidad y la reparabilidad como valores esenciales de la cadena de valor".'
+      },
+      {
+        prompt: '¿Qué se puede inferir sobre la posición del autor respecto a la transición hacia la economía circular?',
+        options: [
+          'Que es imposible de lograr en la práctica',
+          'Que depende exclusivamente de los gobiernos',
+          'Que requiere cambios tanto en la producción como en los hábitos de consumo de toda la sociedad',
+          'Que ya se ha completado en Europa'
+        ],
+        correct: 2,
+        explanation: 'The final sentence makes clear the transition "exige repensar no solo la producción, sino también los hábitos de consumo de toda la sociedad", indicating systemic change on both the supply and demand sides.'
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C2  —  Additional passages (250-300 words)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'read-29',
+    level: 'C2',
+    title: 'El Quijote como espejo de la modernidad',
+    titleEn: 'Don Quixote as a Mirror of Modernity',
+    text: 'Cuatro siglos después de su publicación, "El ingenioso hidalgo don Quijote de la Mancha" sigue interpelando al lector contemporáneo con una vigencia que trasciende la mera curiosidad anticuaria. Cervantes no escribió simplemente una parodia de los libros de caballerías; inauguró, acaso sin proponérselo, la novela moderna y sus procedimientos más audaces: la metaficción, el perspectivismo narrativo, el desdoblamiento del yo. Cuando don Quijote y Sancho descubren, en la segunda parte, que sus aventuras ya han sido publicadas y que otros personajes los reconocen por haberlas leído, asistimos a un vértigo autorreferencial que anticipa experimentos literarios del siglo XX como los de Borges, Pirandello o Unamuno. La genialidad de Cervantes reside también en la ambigüedad moral de su protagonista: ¿es don Quijote un loco que confunde la realidad con la ficción, o un visionario que se niega a aceptar un mundo desprovisto de ideales? Esta pregunta sobre la verosimilitud —sobre los límites entre lo real y lo imaginado— resuena con particular intensidad en nuestra era de realidades virtuales y relatos construidos. El desdoblamiento entre Quijote y Sancho, entre idealismo y pragmatismo, entre locura y cordura, configura un espejo en el que cada generación proyecta sus propias contradicciones. La trascendencia del Quijote no se agota en su condición de obra literaria; funciona como una metáfora epistemológica sobre cómo construimos sentido en un universo que se resiste a ofrecerlo. Leer el Quijote hoy no es un ejercicio de erudición, sino un acto de autoconocimiento: en su locura luminosa seguimos reconociéndonos, incapaces aún de resolver el dilema entre el mundo como es y el mundo como debería ser.',
+    vocab: [
+      { word: 'metaficción', english: 'metafiction (fiction that self-consciously addresses its own nature)' },
+      { word: 'desdoblamiento', english: 'doubling / splitting (of the self or narrative)' },
+      { word: 'verosimilitud', english: 'verisimilitude / plausibility' },
+      { word: 'parodia', english: 'parody' },
+      { word: 'trascendencia', english: 'transcendence / lasting significance' }
+    ],
+    questions: [
+      {
+        prompt: '¿Por qué afirma el autor que Cervantes inauguró la novela moderna?',
+        options: [
+          'Porque escribió la novela más larga de su época',
+          'Porque introdujo procedimientos como la metaficción, el perspectivismo narrativo y el desdoblamiento del yo',
+          'Porque fue el primer autor en escribir en castellano',
+          'Porque criticó directamente a la monarquía española'
+        ],
+        correct: 1,
+        explanation: 'The text credits Cervantes with inaugurating the modern novel through techniques like "la metaficción, el perspectivismo narrativo, el desdoblamiento del yo".'
+      },
+      {
+        prompt: '¿Qué momento de la novela se cita como ejemplo de "vértigo autorreferencial"?',
+        options: [
+          'La batalla contra los molinos de viento',
+          'La muerte de don Quijote al final de la novela',
+          'Cuando Quijote y Sancho descubren que sus aventuras ya han sido publicadas y otros personajes los reconocen',
+          'La primera salida de don Quijote de su aldea'
+        ],
+        correct: 2,
+        explanation: 'The text highlights the moment in Part Two when Quixote and Sancho discover their adventures have been published and other characters recognize them from having read the book — a self-referential vertigo anticipating 20th-century metafiction.'
+      },
+      {
+        prompt: '¿Qué función cumple el Quijote según la expresión "metáfora epistemológica"?',
+        options: [
+          'Enseña gramática castellana a través de metáforas',
+          'Funciona como una reflexión sobre cómo construimos sentido y conocimiento en un mundo que no lo ofrece espontáneamente',
+          'Demuestra que la epistemología es una rama de la literatura',
+          'Prueba que las metáforas son la base de todo conocimiento científico'
+        ],
+        correct: 1,
+        explanation: 'The text says the Quixote works as "una metáfora epistemológica sobre cómo construimos sentido en un universo que se resiste a ofrecerlo" — a reflection on how we create meaning in a world that does not readily provide it.'
+      },
+      {
+        prompt: '¿Qué ambigüedad moral del protagonista destaca el autor?',
+        options: [
+          'Si don Quijote es héroe o villano',
+          'Si don Quijote es un loco que confunde realidad y ficción, o un visionario que rechaza un mundo sin ideales',
+          'Si don Quijote es español o de otra nacionalidad',
+          'Si Sancho es más inteligente que don Quijote'
+        ],
+        correct: 1,
+        explanation: 'The text poses the central ambiguity: "¿es don Quijote un loco que confunde la realidad con la ficción, o un visionario que se niega a aceptar un mundo desprovisto de ideales?"'
+      },
+      {
+        prompt: '¿Qué conexión establece el autor entre el Quijote y la era contemporánea?',
+        options: [
+          'Que las novelas de caballerías han vuelto a estar de moda',
+          'Que la inteligencia artificial se basa en el Quijote',
+          'Que la cuestión de los límites entre lo real y lo imaginado resuena en la era de realidades virtuales y relatos construidos',
+          'Que los jóvenes leen más el Quijote que nunca'
+        ],
+        correct: 2,
+        explanation: 'The author argues that the question of verisimilitude — the boundary between real and imagined — "resuena con particular intensidad en nuestra era de realidades virtuales y relatos construidos".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-30',
+    level: 'C2',
+    title: 'Neurolingüística y bilingüismo',
+    titleEn: 'Neurolinguistics and Bilingualism',
+    text: 'La investigación neurolingüística de las últimas dos décadas ha transformado radicalmente nuestra comprensión del cerebro bilingüe. Lejos de la concepción tradicional que consideraba el bilingüismo como una suerte de interferencia cognitiva —un lastre que retardaba el desarrollo lingüístico—, los estudios actuales revelan que gestionar dos sistemas lingüísticos simultáneamente confiere ventajas cognitivas mensurables. El cerebro bilingüe exhibe una mayor neuroplasticidad, es decir, una capacidad superior para reorganizar sus conexiones neuronales en respuesta a nuevas demandas. Este fenómeno se manifiesta de manera particularmente notable en el córtex prefrontal, región asociada con las funciones ejecutivas: la planificación, la inhibición de respuestas automáticas y la alternancia atencional. Precisamente, la alternancia de códigos —el acto de cambiar fluidamente entre dos lenguas dentro de una misma conversación o incluso de una misma oración— constituye un ejercicio cognitivo que fortalece estas funciones ejecutivas de manera análoga a como el entrenamiento físico fortalece la musculatura. No obstante, la competencia lingüística del bilingüe no es un fenómeno monolítico. El procesamiento cognitivo varía significativamente según la edad de adquisición de la segunda lengua, el contexto de uso, el grado de exposición y la distancia tipológica entre los idiomas involucrados. Un hispanohablante que adquiere el portugués experimentará patrones de interferencia lingüística cualitativamente distintos de los que enfrenta al aprender el mandarín. Investigaciones recientes sugieren, además, que el bilingüismo sostenido a lo largo de la vida podría retrasar la aparición de síntomas de deterioro cognitivo asociados con el envejecimiento, lo que abre perspectivas prometedoras tanto para la política educativa como para la neurología clínica.',
+    vocab: [
+      { word: 'neuroplasticidad', english: 'neuroplasticity (the brain\'s ability to reorganize neural connections)' },
+      { word: 'alternancia de códigos', english: 'code-switching (switching between languages)' },
+      { word: 'competencia lingüística', english: 'linguistic competence' },
+      { word: 'procesamiento cognitivo', english: 'cognitive processing' },
+      { word: 'interferencia lingüística', english: 'linguistic interference (transfer between languages)' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál era la concepción tradicional del bilingüismo que el texto refuta?',
+        options: [
+          'Que el bilingüismo era una ventaja económica',
+          'Que gestionar dos lenguas constituía una interferencia cognitiva que retardaba el desarrollo lingüístico',
+          'Que los bilingües eran más inteligentes que los monolingües',
+          'Que el bilingüismo solo era posible en la infancia'
+        ],
+        correct: 1,
+        explanation: 'The text states that the traditional view considered bilingualism "una suerte de interferencia cognitiva — un lastre que retardaba el desarrollo lingüístico", which current research contradicts.'
+      },
+      {
+        prompt: '¿Qué analogía utiliza el autor para explicar el efecto de la alternancia de códigos?',
+        options: [
+          'Lo compara con un ordenador que ejecuta dos programas',
+          'Lo compara con un músico que toca dos instrumentos',
+          'Lo compara con el entrenamiento físico que fortalece la musculatura',
+          'Lo compara con un equilibrista que mantiene el balance'
+        ],
+        correct: 2,
+        explanation: 'The text says code-switching strengthens executive functions "de manera análoga a como el entrenamiento físico fortalece la musculatura".'
+      },
+      {
+        prompt: '¿Qué región del cerebro se asocia particularmente con las ventajas del bilingüismo?',
+        options: [
+          'El hipocampo',
+          'El cerebelo',
+          'El córtex prefrontal',
+          'El lóbulo temporal'
+        ],
+        correct: 2,
+        explanation: 'The text specifies that neuroplasticity is particularly notable "en el córtex prefrontal, región asociada con las funciones ejecutivas".'
+      },
+      {
+        prompt: '¿Por qué menciona el autor el ejemplo de un hispanohablante que aprende portugués versus mandarín?',
+        options: [
+          'Para demostrar que el portugués es más fácil que el mandarín',
+          'Para ilustrar que la distancia tipológica entre idiomas afecta los patrones de interferencia lingüística',
+          'Para recomendar qué idioma deberían aprender los hispanohablantes',
+          'Para probar que solo se pueden aprender lenguas cercanas'
+        ],
+        correct: 1,
+        explanation: 'The example illustrates how "la distancia tipológica entre los idiomas involucrados" produces qualitatively different patterns of linguistic interference, showing that bilingual processing is not uniform.'
+      },
+      {
+        prompt: '¿Qué implicación práctica sugieren las investigaciones recientes sobre bilingüismo y envejecimiento?',
+        options: [
+          'Que los bilingües nunca desarrollan enfermedades cerebrales',
+          'Que aprender idiomas en la vejez es imposible',
+          'Que el bilingüismo sostenido podría retrasar síntomas de deterioro cognitivo, con implicaciones para la política educativa y la neurología clínica',
+          'Que solo el bilingüismo infantil protege contra el deterioro'
+        ],
+        correct: 2,
+        explanation: 'The text concludes that sustained bilingualism "podría retrasar la aparición de síntomas de deterioro cognitivo asociados con el envejecimiento", opening promising perspectives for both educational policy and clinical neurology.'
+      }
+    ]
+  },
+
+  {
+    id: 'read-31',
+    level: 'C2',
+    title: 'El exilio republicano español',
+    titleEn: 'The Spanish Republican Exile',
+    text: 'Tras la caída de la Segunda República en 1939, cerca de medio millón de españoles cruzaron la frontera francesa en lo que constituyó uno de los mayores éxodos políticos del siglo XX. Aquella diáspora, compuesta por intelectuales, artistas, científicos, maestros y obreros, transformó irreversiblemente el panorama cultural de los países que les brindaron acogida, muy especialmente México, donde el presidente Lázaro Cárdenas abrió las puertas a miles de refugiados con una generosidad que la historia aún no ha terminado de reconocer. El patrimonio intelectual que los exiliados aportaron a su nueva patria fue extraordinario: fundaron editoriales como el Fondo de Cultura Económica y Siglo XXI, revitalizaron universidades, crearon centros de investigación y enriquecieron la vida artística y literaria mexicana con figuras como Luis Buñuel, Remedios Varo, Luis Cernuda y Emilio Prados. No obstante, el exilio no fue únicamente una historia de logros profesionales; fue también una experiencia marcada por el desarraigo, la nostalgia incurable de una patria perdida y la dolorosa conciencia de que el regreso —cuando finalmente fue posible tras la muerte de Franco— significaba volver a un país irreconocible que había seguido su curso sin ellos. Muchos exiliados vivieron suspendidos entre dos identidades, sin pertenecer ya plenamente a ningún lugar. Esta condición de extranjería perpetua generó una literatura del exilio de hondura excepcional, en la que autores como Max Aub y María Zambrano exploraron la fractura entre memoria e identidad, entre el país recordado y el país real. El exilio republicano nos recuerda que toda diáspora es, simultáneamente, una pérdida irreparable para la nación que expulsa y un don involuntario para la que recibe.',
+    vocab: [
+      { word: 'exilio', english: 'exile' },
+      { word: 'diáspora', english: 'diaspora (mass dispersion of a people)' },
+      { word: 'acogida', english: 'reception / welcome / shelter' },
+      { word: 'patrimonio intelectual', english: 'intellectual heritage / legacy' },
+      { word: 'desarraigo', english: 'uprooting / rootlessness' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué papel desempeñó México en el exilio republicano según el texto?',
+        options: [
+          'Rechazó a los exiliados por razones políticas',
+          'Aceptó solo a los intelectuales y rechazó a los obreros',
+          'Bajo la presidencia de Lázaro Cárdenas, acogió generosamente a miles de refugiados',
+          'Ofreció asilo temporal pero luego los deportó'
+        ],
+        correct: 2,
+        explanation: 'The text states that President Lázaro Cárdenas "abrió las puertas a miles de refugiados con una generosidad que la historia aún no ha terminado de reconocer".'
+      },
+      {
+        prompt: '¿Qué significa que muchos exiliados vivieron "suspendidos entre dos identidades"?',
+        options: [
+          'Que tenían doble nacionalidad legal',
+          'Que no pertenecían plenamente ni a España ni a su país de acogida, atrapados entre la memoria del origen y la realidad del destierro',
+          'Que cambiaban frecuentemente de nombre',
+          'Que hablaban dos idiomas con la misma fluidez'
+        ],
+        correct: 1,
+        explanation: 'The text describes exiles as living between two identities, "sin pertenecer ya plenamente a ningún lugar" — a condition of perpetual foreignness between the remembered homeland and the adopted country.'
+      },
+      {
+        prompt: '¿Por qué el regreso a España tras la muerte de Franco no resolvió el desarraigo?',
+        options: [
+          'Porque el gobierno español les prohibió regresar',
+          'Porque ya no hablaban español correctamente',
+          'Porque España se había convertido en un país irreconocible que había seguido su curso sin ellos',
+          'Porque México no les permitió salir'
+        ],
+        correct: 2,
+        explanation: 'The text explains that returning meant "volver a un país irreconocible que había seguido su curso sin ellos" — Spain had changed beyond recognition during the decades of exile.'
+      },
+      {
+        prompt: '¿Cuál es la paradoja central que plantea la frase final del texto?',
+        options: [
+          'Que los exiliados eran más felices fuera de España',
+          'Que toda diáspora es simultáneamente una pérdida irreparable para el país que expulsa y un don involuntario para el que recibe',
+          'Que México se benefició más que España de la Guerra Civil',
+          'Que el exilio produce mejor literatura que la vida en la patria'
+        ],
+        correct: 1,
+        explanation: 'The closing paradox is that "toda diáspora es, simultáneamente, una pérdida irreparable para la nación que expulsa y un don involuntario para la que recibe" — diaspora simultaneously represents loss and gift.'
+      },
+      {
+        prompt: '¿Qué exploraron autores como Max Aub y María Zambrano en la literatura del exilio?',
+        options: [
+          'Las ventajas económicas de vivir en México',
+          'La superioridad cultural de España sobre Latinoamérica',
+          'La fractura entre memoria e identidad, entre el país recordado y el país real',
+          'Las diferencias lingüísticas entre el español peninsular y el mexicano'
+        ],
+        correct: 2,
+        explanation: 'The text states these authors "exploraron la fractura entre memoria e identidad, entre el país recordado y el país real" — the rupture between remembered and actual homeland that defined the exile experience.'
+      }
+    ]
   }
 
 ];

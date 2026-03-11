@@ -951,6 +951,190 @@ const CONVERSATIONS_DATA = [
     ],
   },
 
+  // ============================================================
+  // 22. DEBATE MEDIOAMBIENTAL (C1)
+  // ============================================================
+  {
+    id: 'debate-medioambiental-c1',
+    title: 'Debate Medioambiental',
+    titleEn: 'Environmental Policy Debate',
+    icon: '🌿',
+    desc: 'Debate urban environmental policy with a city councilwoman',
+    level: 'C1',
+    speakers: [
+      { name: 'Concejala Reyes', nameEn: 'Councilwoman Reyes', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Buenas tardes. Antes de que entremos en materia, quisiera subrayar que el ayuntamiento ha aprobado un plan de reducción de emisiones de carbono del treinta por ciento para 2030. ¿Considera usted que esa meta es suficiente?', english: 'Good afternoon. Before we get into the matter, I would like to emphasize that the city council has approved a plan to reduce carbon emissions by thirty percent by 2030. Do you consider that target sufficient?' },
+      { speaker: 1, spanish: 'Con todo respeto, concejala, considero que se queda corto. Los informes del IPCC sugieren que necesitamos reducciones del cincuenta por ciento para evitar los escenarios más catastróficos. Deberíamos ser más ambiciosos.', english: 'With all due respect, councilwoman, I believe it falls short. IPCC reports suggest we need fifty percent reductions to avoid the most catastrophic scenarios. We should be more ambitious.' },
+      { speaker: 0, spanish: 'Entiendo su postura, pero debemos equilibrar la sostenibilidad con la viabilidad económica. Una transición demasiado abrupta podría perjudicar a los sectores industriales que sostienen el empleo en nuestra ciudad.', english: 'I understand your position, but we must balance sustainability with economic viability. A transition that is too abrupt could harm the industrial sectors that sustain employment in our city.' },
+      { speaker: 1, spanish: 'Precisamente ahí discrepo. La inversión en energías renovables no destruye empleo, sino que lo transforma. Alemania ha demostrado que la transición energética puede ser un motor económico si se gestiona adecuadamente.', english: 'That is precisely where I disagree. Investment in renewable energy does not destroy jobs; rather, it transforms them. Germany has shown that the energy transition can be an economic driver if managed properly.' },
+      { speaker: 0, spanish: 'Es un argumento válido, aunque no del todo extrapolable a nuestro contexto. Nuestro tejido industrial es muy distinto al alemán. ¿Qué medidas concretas propondría usted para la planificación urbana?', english: 'That is a valid argument, though not entirely applicable to our context. Our industrial fabric is very different from Germany\'s. What concrete measures would you propose for urban planning?' },
+      { speaker: 1, spanish: 'En primer lugar, habría que ampliar la red de carriles bici y restringir el tráfico privado en el centro. En segundo lugar, propondría incentivos fiscales para la rehabilitación energética de edificios antiguos.', english: 'First of all, the bicycle lane network should be expanded and private traffic restricted in the city center. Secondly, I would propose tax incentives for the energy renovation of old buildings.' },
+      { speaker: 0, spanish: 'La restricción del tráfico es una cuestión políticamente delicada. Hemos recibido fuertes críticas de las asociaciones de comerciantes que temen una caída de ventas.', english: 'Traffic restriction is a politically sensitive issue. We have received strong criticism from merchant associations that fear a drop in sales.' },
+      { speaker: 1, spanish: 'Sin embargo, los datos de ciudades como Pontevedra y Barcelona demuestran que la peatonalización incrementa el comercio local a medio plazo. El miedo al cambio no debería paralizar la acción política.', english: 'However, data from cities like Pontevedra and Barcelona show that pedestrianization increases local commerce in the medium term. Fear of change should not paralyze political action.' },
+      { speaker: 0, spanish: 'Tiene razón en que los datos respaldan esa tesis. No obstante, ¿cómo abordamos la cuestión de las emisiones industriales, que representan el cuarenta por ciento de nuestra huella de carbono?', english: 'You are right that the data supports that thesis. However, how do we address the issue of industrial emissions, which represent forty percent of our carbon footprint?' },
+      { speaker: 1, spanish: 'Propondría establecer un sistema de auditorías ambientales obligatorias y sanciones progresivas para las empresas que excedan los límites de emisión. Además, se podrían crear fondos de ayuda para que las pymes adopten tecnologías limpias.', english: 'I would propose establishing a system of mandatory environmental audits and progressive penalties for companies that exceed emission limits. Additionally, aid funds could be created to help SMEs adopt clean technologies.' },
+      { speaker: 0, spanish: 'Es una propuesta razonable. Reconozco que debemos acelerar el ritmo. ¿Estaría dispuesto a participar en la comisión de medio ambiente para asesorarnos en la elaboración de estas políticas?', english: 'That is a reasonable proposal. I acknowledge that we need to accelerate the pace. Would you be willing to participate in the environmental committee to advise us in developing these policies?' },
+      { speaker: 1, spanish: 'Por supuesto. Creo firmemente en que la colaboración entre la sociedad civil y las instituciones es la única vía para lograr una transición ecológica justa y eficaz. Cuente con mi compromiso.', english: 'Of course. I firmly believe that collaboration between civil society and institutions is the only way to achieve a just and effective ecological transition. Count on my commitment.' },
+    ],
+    vocab: [
+      { word: 'emisiones de carbono', english: 'carbon emissions' },
+      { word: 'sostenibilidad', english: 'sustainability' },
+      { word: 'viabilidad económica', english: 'economic viability' },
+      { word: 'planificación urbana', english: 'urban planning' },
+      { word: 'peatonalización', english: 'pedestrianization' },
+      { word: 'huella de carbono', english: 'carbon footprint' },
+      { word: 'auditoría ambiental', english: 'environmental audit' },
+      { word: 'transición ecológica', english: 'ecological transition' },
+    ],
+    quiz: [
+      { prompt: 'What does "viabilidad económica" mean?', options: ['Economic crisis', 'Economic viability', 'Economic development', 'Economic inequality'], correct: 1, explanation: "\"Viabilidad\" comes from \"viable\" (feasible/viable) and refers to the quality of being economically practical or achievable. It is commonly used in policy debates to weigh environmental goals against economic realities." },
+      { prompt: 'What does "peatonalización" refer to?', options: ['Building highways', 'Pedestrianization of streets', 'Public transport expansion', 'Parking construction'], correct: 1, explanation: "\"Peatonalización\" derives from \"peatón\" (pedestrian) and refers to the process of converting streets into pedestrian-only zones, a key urban planning strategy for reducing emissions and improving city livability." },
+      { prompt: 'What is a "huella de carbono"?', options: ['A carbon tax', 'A carbon footprint', 'A carbon credit', 'A carbon filter'], correct: 1, explanation: "\"Huella de carbono\" literally translates to \"carbon footprint\" and measures the total greenhouse gas emissions caused by an individual, organization, or city. \"Huella\" means footprint or trace." },
+    ],
+  },
+
+  // ============================================================
+  // 23. CONSULTA MÉDICA (C1)
+  // ============================================================
+  {
+    id: 'consulta-medica-c1',
+    title: 'Consulta Médica Especializada',
+    titleEn: 'Specialist Medical Consultation',
+    icon: '🏥',
+    desc: 'Describe complex symptoms to a specialist and discuss treatment options',
+    level: 'C1',
+    speakers: [
+      { name: 'Dra. Navarro', nameEn: 'Dr. Navarro', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Buenos días. Soy la doctora Navarro, especialista en neurología. He revisado el informe de su médico de cabecera. Cuénteme, ¿cuándo comenzaron los síntomas exactamente?', english: 'Good morning. I am Dr. Navarro, a neurology specialist. I have reviewed the report from your general practitioner. Tell me, when exactly did the symptoms begin?' },
+      { speaker: 1, spanish: 'Hace aproximadamente tres meses empecé a notar un hormigueo persistente en las extremidades superiores, sobre todo al despertar. Al principio lo atribuí al estrés, pero ha ido en aumento.', english: 'Approximately three months ago I began to notice a persistent tingling in my upper extremities, especially upon waking. At first I attributed it to stress, but it has been increasing.' },
+      { speaker: 0, spanish: '¿El hormigueo se localiza en alguna zona específica de las manos o se extiende por todo el brazo? ¿Ha notado pérdida de fuerza o dificultad para agarrar objetos?', english: 'Is the tingling localized in a specific area of the hands, or does it extend throughout the entire arm? Have you noticed any loss of strength or difficulty gripping objects?' },
+      { speaker: 1, spanish: 'Se concentra principalmente en los dedos índice, corazón y pulgar de ambas manos. En cuanto a la fuerza, sí he notado que se me caen objetos con más frecuencia de lo habitual, especialmente por las mañanas.', english: 'It is concentrated mainly in the index, middle, and thumb fingers of both hands. As for strength, yes, I have noticed that I drop objects more frequently than usual, especially in the mornings.' },
+      { speaker: 0, spanish: 'Entiendo. La distribución que describe es bastante indicativa. ¿Tiene usted antecedentes familiares de enfermedades neurológicas o autoinmunes?', english: 'I see. The distribution you describe is quite indicative. Do you have any family history of neurological or autoimmune diseases?' },
+      { speaker: 1, spanish: 'Mi madre fue diagnosticada con artritis reumatoide a los cincuenta años, y un tío paterno padeció esclerosis múltiple. ¿Podría haber un componente hereditario?', english: 'My mother was diagnosed with rheumatoid arthritis at fifty, and a paternal uncle suffered from multiple sclerosis. Could there be a hereditary component?' },
+      { speaker: 0, spanish: 'Los antecedentes autoinmunes familiares son relevantes, aunque no determinantes. Voy a solicitar una electromiografía y una resonancia magnética cervical para descartar un síndrome del túnel carpiano bilateral o una posible radiculopatía cervical.', english: 'The family autoimmune history is relevant, though not determinative. I am going to request an electromyography and a cervical MRI to rule out bilateral carpal tunnel syndrome or a possible cervical radiculopathy.' },
+      { speaker: 1, spanish: '¿En qué consiste la electromiografía? Le confieso que me genera cierta aprensión someterme a pruebas invasivas.', english: 'What does the electromyography involve? I confess that I feel some apprehension about undergoing invasive tests.' },
+      { speaker: 0, spanish: 'Es comprensible. La electromiografía mide la actividad eléctrica de los músculos y los nervios mediante pequeños impulsos. Puede resultar levemente molesta, pero no es dolorosa en sentido estricto y es fundamental para un diagnóstico preciso.', english: 'That is understandable. The electromyography measures the electrical activity of the muscles and nerves through small impulses. It may be slightly uncomfortable, but it is not painful in the strict sense, and it is essential for an accurate diagnosis.' },
+      { speaker: 1, spanish: 'De acuerdo. ¿Y mientras esperamos los resultados, hay algo que pueda hacer para aliviar las molestias? El hormigueo nocturno me impide conciliar el sueño adecuadamente.', english: 'All right. And while we wait for the results, is there anything I can do to relieve the discomfort? The nighttime tingling prevents me from falling asleep properly.' },
+      { speaker: 0, spanish: 'Le recetaré un antiinflamatorio no esteroideo y una férula nocturna para mantener las muñecas en posición neutra. Además, le recomiendo evitar movimientos repetitivos y aplicar frío local cuando sienta las molestias más intensas.', english: 'I will prescribe a nonsteroidal anti-inflammatory and a nighttime splint to keep the wrists in a neutral position. Additionally, I recommend avoiding repetitive movements and applying local cold when you feel the discomfort more intensely.' },
+      { speaker: 1, spanish: 'Perfecto, doctora. Agradezco mucho su exhaustividad. ¿Cuándo debería volver para revisar los resultados y valorar el siguiente paso del tratamiento?', english: 'Perfect, doctor. I greatly appreciate your thoroughness. When should I return to review the results and assess the next step in the treatment?' },
+    ],
+    vocab: [
+      { word: 'hormigueo', english: 'tingling / pins and needles' },
+      { word: 'extremidades superiores', english: 'upper extremities / arms' },
+      { word: 'antecedentes familiares', english: 'family medical history' },
+      { word: 'electromiografía', english: 'electromyography (EMG)' },
+      { word: 'radiculopatía cervical', english: 'cervical radiculopathy' },
+      { word: 'férula nocturna', english: 'nighttime splint' },
+      { word: 'antiinflamatorio no esteroideo', english: 'nonsteroidal anti-inflammatory (NSAID)' },
+      { word: 'conciliar el sueño', english: 'to fall asleep' },
+    ],
+    quiz: [
+      { prompt: 'What does "hormigueo" mean?', options: ['Swelling', 'Bruising', 'Tingling / pins and needles', 'Itching'], correct: 2, explanation: "\"Hormigueo\" derives from \"hormiga\" (ant) and describes the sensation of tingling or pins and needles, as if ants were crawling on the skin. It is a key term in neurological consultations." },
+      { prompt: 'What are "antecedentes familiares"?', options: ['Family traditions', 'Family medical history', 'Previous treatments', 'Genetic mutations'], correct: 1, explanation: "\"Antecedentes familiares\" literally means \"family antecedents\" and refers to the medical history of a patient's blood relatives. Doctors ask about them to identify hereditary risk factors." },
+      { prompt: 'What is a "férula nocturna"?', options: ['A sleeping pill', 'A nighttime splint', 'A type of bandage', 'A heating pad'], correct: 1, explanation: "\"Férula\" means splint or brace, and \"nocturna\" means nighttime. A \"férula nocturna\" is a device worn while sleeping to immobilize a joint in a neutral position, commonly used for carpal tunnel syndrome." },
+    ],
+  },
+
+  // ============================================================
+  // 24. TERTULIA LITERARIA (C2)
+  // ============================================================
+  {
+    id: 'tertulia-literaria-c2',
+    title: 'Tertulia Literaria',
+    titleEn: 'Literary Salon Discussion',
+    icon: '🎭',
+    desc: 'Discuss narrative technique and literary tradition with a literary critic',
+    level: 'C2',
+    speakers: [
+      { name: 'Crítico Mendoza', nameEn: 'Critic Mendoza', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'He leído su última novela con sumo detenimiento. Me parece que hay una tensión deliberada entre la voz narrativa y la estructura fragmentaria. ¿Pretendía usted socavar la linealidad del relato convencional?', english: 'I have read your latest novel with great care. It seems to me there is a deliberate tension between the narrative voice and the fragmentary structure. Did you intend to undermine the linearity of the conventional narrative?' },
+      { speaker: 1, spanish: 'En efecto. Me interesaba explorar cómo la memoria no opera de manera cronológica, sino por constelaciones de imágenes y afectos. El hilo argumental, si es que lo hay, se subordina a esa lógica emocional.', english: 'Indeed. I was interested in exploring how memory does not operate chronologically but through constellations of images and affects. The plot thread, if there is one, is subordinated to that emotional logic.' },
+      { speaker: 0, spanish: 'Percibo ecos de Proust en ese planteamiento, aunque tamizados por una sensibilidad inequívocamente latinoamericana. ¿Reconoce usted esa filiación o le resulta reduccionista?', english: 'I perceive echoes of Proust in that approach, though filtered through an unmistakably Latin American sensibility. Do you acknowledge that affiliation, or do you find it reductive?' },
+      { speaker: 1, spanish: 'Toda filiación es a la vez justa e insuficiente. Proust está ahí, sin duda, pero también lo están María Luisa Bombal y Felisberto Hernández. Mi genealogía literaria es más mestiza de lo que parece a simple vista.', english: 'Every affiliation is at once fair and insufficient. Proust is there, without a doubt, but so are María Luisa Bombal and Felisberto Hernández. My literary genealogy is more hybrid than it appears at first glance.' },
+      { speaker: 0, spanish: 'Fascinante. Hay un pasaje en el capítulo séptimo donde el protagonista se desdobla en una suerte de alter ego onírico. ¿Podríamos hablar de una poética del doble?', english: 'Fascinating. There is a passage in the seventh chapter where the protagonist splits into a sort of dreamlike alter ego. Could we speak of a poetics of the double?' },
+      { speaker: 1, spanish: 'Más que del doble, yo hablaría de una poética del espejismo. El personaje no se duplica; se difumina. La identidad en mi narrativa es siempre provisional, una construcción que se deshace en cuanto uno la examina de cerca.', english: 'Rather than of the double, I would speak of a poetics of the mirage. The character does not duplicate; he blurs. Identity in my narrative is always provisional, a construction that unravels the moment one examines it closely.' },
+      { speaker: 0, spanish: 'Esa noción conecta con ciertos postulados del posmodernismo: la muerte del sujeto unitario, la desconfianza hacia las grandes narrativas. ¿Se considera usted un escritor posmoderno?', english: 'That notion connects with certain postmodernist postulates: the death of the unitary subject, the distrust of grand narratives. Do you consider yourself a postmodern writer?' },
+      { speaker: 1, spanish: 'Las etiquetas me producen una incomodidad casi física. Diría que bebo de esas aguas sin ahogarme en ellas. Mi escritura aspira a desbordar las categorías, no a confirmarlas. Si hay posmodernismo, es un posmodernismo a regañadientes.', english: 'Labels make me feel an almost physical discomfort. I would say I drink from those waters without drowning in them. My writing aspires to overflow categories, not to confirm them. If there is postmodernism, it is a reluctant postmodernism.' },
+      { speaker: 0, spanish: 'Hablando de desbordar categorías, su uso del lenguaje es particularmente llamativo. Hay neologismos, rupturas sintácticas, incluso pasajes que rozan la prosa poética. ¿Hasta qué punto es eso una estrategia consciente?', english: 'Speaking of overflowing categories, your use of language is particularly striking. There are neologisms, syntactic ruptures, even passages that border on prose poetry. To what extent is that a conscious strategy?' },
+      { speaker: 1, spanish: 'Es consciente en la medida en que reviso obsesivamente cada frase, pero no parte de un programa teórico previo. Escribo al oído, como un músico que afina su instrumento en busca de un timbre que aún no existe. La lengua es materia viva, y yo intento dejarla respirar.', english: 'It is conscious insofar as I obsessively revise every sentence, but it does not stem from a prior theoretical program. I write by ear, like a musician tuning an instrument in search of a timbre that does not yet exist. Language is living matter, and I try to let it breathe.' },
+      { speaker: 0, spanish: 'Permítame abordar el desenlace, que me dejó deliberadamente insatisfecho. El protagonista desaparece sin resolución alguna. ¿Es una provocación al lector o una declaración de principios narrativos?', english: 'Allow me to address the ending, which left me deliberately unsatisfied. The protagonist vanishes without any resolution. Is it a provocation to the reader or a declaration of narrative principles?' },
+      { speaker: 1, spanish: 'Ambas cosas, y ninguna. Quise que el lector experimentase la misma incertidumbre que el personaje. Cerrar la historia habría sido traicionarla. A veces la honestidad narrativa exige dejar las heridas abiertas.', english: 'Both, and neither. I wanted the reader to experience the same uncertainty as the character. Closing the story would have been to betray it. Sometimes narrative honesty demands leaving the wounds open.' },
+      { speaker: 0, spanish: 'Hay quienes le reprocharán esa apertura radical. La crítica convencional sigue anclada en la expectativa del cierre aristotélico.', english: 'There will be those who reproach you for that radical openness. Conventional criticism remains anchored in the expectation of Aristotelian closure.' },
+      { speaker: 1, spanish: 'Que me lo reprochen. La literatura que vale la pena siempre incomoda. Prefiero un lector desconcertado que piensa a un lector satisfecho que olvida. Al fin y al cabo, la buena literatura no da respuestas; formula las preguntas que nadie se atrevía a hacer.', english: 'Let them reproach me. Literature that is worthwhile always unsettles. I prefer a bewildered reader who thinks to a satisfied reader who forgets. After all, good literature does not give answers; it formulates the questions no one dared to ask.' },
+    ],
+    vocab: [
+      { word: 'socavar', english: 'to undermine / to subvert' },
+      { word: 'filiación', english: 'affiliation / lineage' },
+      { word: 'poética del espejismo', english: 'poetics of the mirage' },
+      { word: 'neologismo', english: 'neologism (newly coined word)' },
+      { word: 'ruptura sintáctica', english: 'syntactic rupture / break' },
+      { word: 'a regañadientes', english: 'reluctantly / grudgingly' },
+      { word: 'desenlace', english: 'ending / denouement' },
+      { word: 'prosa poética', english: 'prose poetry' },
+    ],
+    quiz: [
+      { prompt: 'What does "socavar" mean?', options: ['To build upon', 'To undermine / subvert', 'To celebrate', 'To describe'], correct: 1, explanation: "\"Socavar\" literally means to dig underneath (\"so-\" under + \"cavar\" to dig) and figuratively means to undermine or subvert. In literary criticism it often describes how a text challenges or destabilizes conventional structures." },
+      { prompt: 'What does the expression "a regañadientes" mean?', options: ['Enthusiastically', 'Reluctantly / grudgingly', 'Intellectually', 'Poetically'], correct: 1, explanation: "\"A regañadientes\" literally evokes someone gritting their teeth (\"regañar\" + \"dientes\") and means doing something reluctantly or grudgingly. It is a highly idiomatic expression common in elevated Spanish." },
+      { prompt: 'What is a "neologismo"?', options: ['An ancient word', 'A grammatical error', 'A newly coined word', 'A foreign loanword'], correct: 2, explanation: "\"Neologismo\" comes from Greek \"neo-\" (new) and \"logos\" (word). It refers to a newly created word or expression, or an existing word used with a new meaning. Writers often create neologisms to expand the expressive capacity of language." },
+    ],
+  },
+
+  // ============================================================
+  // 25. MEDIACIÓN DIPLOMÁTICA (C2)
+  // ============================================================
+  {
+    id: 'mediacion-diplomatica-c2',
+    title: 'Mediación Diplomática',
+    titleEn: 'Diplomatic Mediation',
+    icon: '🕊️',
+    desc: 'Negotiate a treaty in ultra-formal diplomatic register with an ambassador',
+    level: 'C2',
+    speakers: [
+      { name: 'Embajador Castillo', nameEn: 'Ambassador Castillo', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Excelentísimo señor ministro, permítame expresarle mi gratitud por acceder a esta reunión extraordinaria. Las circunstancias que nos convocan revisten una gravedad que no admite dilación alguna.', english: 'Most Excellent Minister, allow me to express my gratitude for agreeing to this extraordinary meeting. The circumstances that bring us together are of a gravity that admits no delay whatsoever.' },
+      { speaker: 1, spanish: 'El agradecimiento es mutuo, señor embajador. Mi gobierno comparte plenamente la urgencia que usted señala. Confiamos en que el diálogo constructivo nos permita alcanzar un acuerdo que preserve los intereses legítimos de ambas naciones.', english: 'The gratitude is mutual, Mr. Ambassador. My government fully shares the urgency you point out. We trust that constructive dialogue will allow us to reach an agreement that preserves the legitimate interests of both nations.' },
+      { speaker: 0, spanish: 'Como punto de partida, mi gobierno desea reiterar su adhesión inquebrantable a los principios del derecho internacional y a la resolución pacífica de controversias. Dicho esto, la cuestión fronteriza exige una renegociación del tratado vigente.', english: 'As a starting point, my government wishes to reiterate its unwavering adherence to the principles of international law and the peaceful resolution of disputes. That said, the border issue demands a renegotiation of the current treaty.' },
+      { speaker: 1, spanish: 'Tomamos nota de su posición. No obstante, quisiera matizar que cualquier renegociación ha de respetar el acervo jurídico acumulado y los precedentes sentados por el Tribunal Internacional de Justicia.', english: 'We take note of your position. Nevertheless, I would like to clarify that any renegotiation must respect the accumulated body of law and the precedents set by the International Court of Justice.' },
+      { speaker: 0, spanish: 'Naturalmente. Nuestro propósito no es socavar el marco jurídico existente, sino actualizarlo a la luz de las nuevas realidades geopolíticas. Proponemos la creación de una comisión bilateral paritaria que examine las cláusulas susceptibles de revisión.', english: 'Naturally. Our purpose is not to undermine the existing legal framework but to update it in light of new geopolitical realities. We propose the creation of a bilateral commission with equal representation to examine the clauses subject to revision.' },
+      { speaker: 1, spanish: 'La propuesta nos parece razonable en principio, siempre y cuando dicha comisión opere bajo la supervisión de un mediador designado de común acuerdo, preferiblemente bajo los auspicios de las Naciones Unidas.', english: 'The proposal seems reasonable to us in principle, provided that said commission operates under the supervision of a mutually agreed-upon mediator, preferably under the auspices of the United Nations.' },
+      { speaker: 0, spanish: 'Aceptamos la figura del mediador. Sin embargo, insistimos en que el calendario de negociaciones no se prolongue indefinidamente. Propondríamos un plazo máximo de dieciocho meses para la conclusión de las deliberaciones.', english: 'We accept the figure of the mediator. However, we insist that the negotiation timeline not be extended indefinitely. We would propose a maximum period of eighteen months for the conclusion of deliberations.' },
+      { speaker: 1, spanish: 'Dieciocho meses es un plazo ambicioso dada la complejidad de los asuntos en cuestión. Mi delegación estaría dispuesta a aceptarlo únicamente si se establecen cláusulas de salvaguardia que permitan prorrogar las negociaciones en caso de fuerza mayor.', english: 'Eighteen months is an ambitious timeframe given the complexity of the matters at hand. My delegation would be willing to accept it only if safeguard clauses are established that allow for an extension of negotiations in cases of force majeure.' },
+      { speaker: 0, spanish: 'Concedemos ese punto. Permítame ahora abordar la cuestión de los recursos naturales compartidos. Es imperativo que el nuevo acuerdo contemple mecanismos equitativos de explotación y distribución de los recursos hídricos transfronterizos.', english: 'We concede that point. Allow me now to address the question of shared natural resources. It is imperative that the new agreement include equitable mechanisms for the exploitation and distribution of transboundary water resources.' },
+      { speaker: 1, spanish: 'Coincidimos plenamente en esa necesidad. Nuestra propuesta incluye la creación de una autoridad conjunta de gestión hídrica, dotada de competencias vinculantes y financiada proporcionalmente por ambos estados.', english: 'We fully agree on that need. Our proposal includes the creation of a joint water management authority, endowed with binding powers and funded proportionally by both states.' },
+      { speaker: 0, spanish: 'Es una propuesta constructiva. Quedaría pendiente definir los mecanismos de resolución de conflictos dentro de dicha autoridad. ¿Contemplaría su gobierno la inclusión de un arbitraje internacional obligatorio?', english: 'That is a constructive proposal. It would remain to define the conflict resolution mechanisms within said authority. Would your government consider the inclusion of mandatory international arbitration?' },
+      { speaker: 1, spanish: 'El arbitraje internacional obligatorio es aceptable, siempre que ambas partes conserven el derecho de apelación ante la Corte Internacional de Justicia. La soberanía jurisdiccional de nuestros respectivos estados no debe verse menoscabada.', english: 'Mandatory international arbitration is acceptable, provided that both parties retain the right of appeal before the International Court of Justice. The jurisdictional sovereignty of our respective states must not be diminished.' },
+      { speaker: 0, spanish: 'Entendido. Creo que hemos sentado las bases para un protocolo de entendimiento. Propongo que nuestros equipos jurídicos redacten un borrador de memorándum que recoja los puntos aquí acordados antes de la próxima sesión plenaria.', english: 'Understood. I believe we have laid the groundwork for a protocol of understanding. I propose that our legal teams draft a memorandum outline that captures the points agreed upon here before the next plenary session.' },
+      { speaker: 1, spanish: 'Convenido. Instruiré a mi equipo para que se ponga en contacto con el suyo a la mayor brevedad. Permítame concluir reafirmando la voluntad inequívoca de mi gobierno de alcanzar un acuerdo duradero, fundamentado en la equidad y el respeto mutuo.', english: 'Agreed. I will instruct my team to contact yours at the earliest opportunity. Allow me to conclude by reaffirming the unequivocal will of my government to reach a lasting agreement, grounded in equity and mutual respect.' },
+    ],
+    vocab: [
+      { word: 'adhesión inquebrantable', english: 'unwavering adherence' },
+      { word: 'acervo jurídico', english: 'accumulated body of law / legal heritage' },
+      { word: 'cláusula de salvaguardia', english: 'safeguard clause' },
+      { word: 'fuerza mayor', english: 'force majeure / unforeseeable circumstances' },
+      { word: 'recursos hídricos transfronterizos', english: 'transboundary water resources' },
+      { word: 'competencias vinculantes', english: 'binding powers / authority' },
+      { word: 'soberanía jurisdiccional', english: 'jurisdictional sovereignty' },
+      { word: 'memorándum de entendimiento', english: 'memorandum of understanding' },
+    ],
+    quiz: [
+      { prompt: 'What does "acervo jurídico" mean?', options: ['A legal dispute', 'Accumulated body of law / legal heritage', 'A court ruling', 'A legal representative'], correct: 1, explanation: "\"Acervo\" means a body of accumulated assets or heritage, and \"jurídico\" means legal. Together, \"acervo jurídico\" refers to the totality of laws, treaties, and legal precedents that form a legal tradition or framework." },
+      { prompt: 'What is a "cláusula de salvaguardia"?', options: ['A penalty clause', 'A confidentiality agreement', 'A safeguard clause', 'A termination clause'], correct: 2, explanation: "\"Salvaguardia\" means safeguard or protection. A \"cláusula de salvaguardia\" is a contractual or treaty provision that protects parties against unforeseen circumstances, allowing for flexibility in exceptional situations." },
+      { prompt: 'What does "competencias vinculantes" mean?', options: ['Competitive advantages', 'Binding powers / authority', 'Voluntary guidelines', 'Advisory opinions'], correct: 1, explanation: "\"Competencias\" here means powers or authority (not competitions), and \"vinculantes\" means binding (from \"vincular,\" to bind). Together they describe powers that produce legally obligatory results that parties must comply with." },
+    ],
+  },
+
 ];
 
 // Make available for module systems and browser global scope
