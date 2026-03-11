@@ -5,6 +5,7 @@ const POETRY_DATA = [
     englishName: "Pablo Neruda - Poem 20",
     icon: "📝",
     tags: ["Chile", "Nobel", "amor", "naturaleza", "siglo XX"],
+    level: "B2",
     descEs: "Pablo Neruda (1904-1973) es uno de los poetas más importantes del siglo XX, ganador del Premio Nobel de Literatura en 1971. Nacido en Chile como Neftalí Reyes, adoptó el seudónimo Pablo Neruda. Su obra abarca desde la poesía amorosa de 'Veinte poemas de amor y una canción desesperada' hasta la épica social de 'Canto general'. También fue diplomático y senador. Su Poema 20 es uno de los poemas de amor más conocidos en español.",
     descEn: "Pablo Neruda (1904-1973) is one of the most important poets of the 20th century, winner of the Nobel Prize in Literature in 1971. Born in Chile as Neftalí Reyes, he adopted the pseudonym Pablo Neruda. His work ranges from the love poetry of 'Twenty Love Poems and a Song of Despair' to the social epic of 'Canto General.' He was also a diplomat and senator. His Poem 20 is one of the most famous love poems in Spanish.",
     vocab: [
@@ -42,6 +43,7 @@ const POETRY_DATA = [
     englishName: "Federico García Lorca - Sleepwalking Ballad",
     icon: "🌙",
     tags: ["España", "Generación del 27", "romance", "Andalucía", "gitano"],
+    level: "C1",
     descEs: "Federico García Lorca (1898-1936) fue un poeta y dramaturgo español de la Generación del 27, nacido en Granada. Su 'Romancero gitano' fusiona la tradición popular andaluza con imágenes surrealistas. 'Romance sonámbulo' comienza con los célebres versos 'Verde que te quiero verde. / Verde viento. Verdes ramas.' Lorca fue asesinado al inicio de la Guerra Civil Española, convirtiéndose en símbolo de la libertad artística. También escribió obras teatrales como 'Bodas de sangre' y 'La casa de Bernarda Alba'.",
     descEn: "Federico García Lorca (1898-1936) was a Spanish poet and playwright of the Generation of '27, born in Granada. His 'Romancero Gitano' fuses Andalusian folk tradition with surrealist imagery. 'Romance sonámbulo' begins with the famous verses 'Verde que te quiero verde. / Verde viento. Verdes ramas.' (Green, how I want you green. / Green wind. Green branches.) Lorca was killed at the start of the Spanish Civil War, becoming a symbol of artistic freedom.",
     vocab: [
@@ -79,6 +81,7 @@ const POETRY_DATA = [
     englishName: "Sor Juana Inés de la Cruz - Foolish Men",
     icon: "✝️",
     tags: ["México", "colonial", "feminismo", "barroco", "siglo XVII"],
+    level: "C1",
     descEs: "Sor Juana Inés de la Cruz (1648-1695) fue una monja, escritora y poeta mexicana del período barroco, considerada la primera feminista de América. Su poema 'Hombres necios que acusáis' critica la hipocresía masculina: 'Hombres necios que acusáis / a la mujer sin razón, / sin ver que sois la ocasión / de lo mismo que culpáis.' Defendió el derecho de las mujeres a la educación y al conocimiento en su 'Respuesta a Sor Filotea'. Aparece en el billete de doscientos pesos mexicanos.",
     descEn: "Sor Juana Inés de la Cruz (1648-1695) was a Mexican nun, writer, and poet of the Baroque period, considered the first feminist of the Americas. Her poem 'Hombres necios que acusáis' criticizes male hypocrisy: 'Foolish men who accuse / women without reason, / not seeing you are the cause / of the very thing you blame.' She defended women's right to education and knowledge in her 'Response to Sor Filotea.' She appears on the Mexican two-hundred peso bill.",
     vocab: [
@@ -116,6 +119,7 @@ const POETRY_DATA = [
     englishName: "Octavio Paz - Sunstone",
     icon: "☀️",
     tags: ["México", "Nobel", "ensayo", "surrealismo", "siglo XX"],
+    level: "C2",
     descEs: "Octavio Paz (1914-1998) fue un poeta y ensayista mexicano, ganador del Premio Nobel de Literatura en 1990. 'Piedra de sol' es su poema más ambicioso, con 584 versos endecasílabos que corresponden al calendario azteca. También escribió 'El laberinto de la soledad', ensayo fundamental sobre la identidad mexicana. Su poesía fusiona tradición mexicana con surrealismo europeo y filosofía oriental. Fue embajador de México en la India.",
     descEn: "Octavio Paz (1914-1998) was a Mexican poet and essayist, winner of the Nobel Prize in Literature in 1990. 'Sunstone' is his most ambitious poem, with 584 hendecasyllabic verses corresponding to the Aztec calendar. He also wrote 'The Labyrinth of Solitude,' a fundamental essay on Mexican identity. His poetry fuses Mexican tradition with European surrealism and Eastern philosophy. He served as Mexico's ambassador to India.",
     vocab: [
@@ -153,6 +157,7 @@ const POETRY_DATA = [
     englishName: "Jorge Luis Borges - Moments",
     icon: "📚",
     tags: ["Argentina", "metafísica", "laberintos", "espejos", "siglo XX"],
+    level: "C1",
     descEs: "Jorge Luis Borges (1899-1986) fue un escritor argentino, considerado uno de los autores más importantes de la literatura universal. Aunque es más conocido por sus cuentos como 'El Aleph' y 'Ficciones', su poesía explora temas como el tiempo, los espejos, los laberintos y el infinito. Su estilo combina erudición con imaginación desbordante. A pesar de quedar ciego en su madurez, continuó creando obras maestras dictándolas. Buenos Aires es un tema recurrente en sus poemas.",
     descEn: "Jorge Luis Borges (1899-1986) was an Argentine writer, considered one of the most important authors in world literature. Though best known for his stories like 'The Aleph' and 'Ficciones,' his poetry explores themes such as time, mirrors, labyrinths, and infinity. His style combines erudition with boundless imagination. Despite going blind in his maturity, he continued creating masterpieces by dictating them. Buenos Aires is a recurring theme in his poems.",
     vocab: [
@@ -190,6 +195,7 @@ const POETRY_DATA = [
     englishName: "Gabriela Mistral - Little Feet",
     icon: "🏔️",
     tags: ["Chile", "Nobel", "infancia", "maternidad", "educación"],
+    level: "B2",
     descEs: "Gabriela Mistral (1889-1957), nacida Lucila Godoy Alcayaga, fue una poeta y educadora chilena, la primera latinoamericana en ganar el Premio Nobel de Literatura (1945). Su poema 'Piececitos' comienza: 'Piececitos de niño, / azulosos de frío, / ¡cómo os ven y no os cubren, / Dios mío!' Su poesía aborda la maternidad, la infancia, la naturaleza y el dolor. También fue cónsul y educadora rural, luchando por la educación de los niños pobres de América Latina.",
     descEn: "Gabriela Mistral (1889-1957), born Lucila Godoy Alcayaga, was a Chilean poet and educator, the first Latin American to win the Nobel Prize in Literature (1945). Her poem 'Piececitos' begins: 'Little feet of children, / blue with cold, / how can they see you and not cover you, / my God!' Her poetry addresses motherhood, childhood, nature, and sorrow. She was also a consul and rural educator, fighting for the education of poor children in Latin America.",
     vocab: [
@@ -227,6 +233,7 @@ const POETRY_DATA = [
     englishName: "César Vallejo - The Black Heralds",
     icon: "⚫",
     tags: ["Perú", "vanguardia", "sufrimiento", "existencial", "siglo XX"],
+    level: "C1",
     descEs: "César Vallejo (1892-1938) fue un poeta peruano considerado uno de los más grandes innovadores de la poesía en español. Su poema 'Los heraldos negros' comienza: 'Hay golpes en la vida, tan fuertes... ¡Yo no sé! / Golpes como del odio de Dios.' Su obra evoluciona desde el modernismo de 'Los heraldos negros' hasta la experimentación radical de 'Trilce' y el compromiso social de 'Poemas humanos'. Vivió sus últimos años en París, donde murió en la pobreza.",
     descEn: "César Vallejo (1892-1938) was a Peruvian poet considered one of the greatest innovators of poetry in Spanish. His poem 'The Black Heralds' begins: 'There are blows in life, so powerful... I don't know! / Blows like God's hatred.' His work evolves from the modernism of 'The Black Heralds' to the radical experimentation of 'Trilce' and the social commitment of 'Human Poems.' He lived his last years in Paris, where he died in poverty.",
     vocab: [
@@ -264,6 +271,7 @@ const POETRY_DATA = [
     englishName: "Rubén Darío - Blue",
     icon: "💎",
     tags: ["Nicaragua", "modernismo", "preciosismo", "renovación", "siglo XIX"],
+    level: "C1",
     descEs: "Rubén Darío (1867-1916) fue un poeta nicaragüense considerado el padre del modernismo literario hispanoamericano. Con la publicación de 'Azul...' en 1888 y 'Prosas profanas' en 1896, renovó completamente la poesía en español, introduciendo nuevos ritmos, vocabulario exótico y una musicalidad sin precedentes. De 'Lo fatal' son estos versos: 'Dichoso el árbol, que es apenas sensitivo, / y más la piedra dura, porque esa ya no siente.' Su influencia alcanzó a toda una generación de poetas en España y América.",
     descEn: "Rubén Darío (1867-1916) was a Nicaraguan poet considered the father of Hispanic American literary modernism. With the publication of 'Azul...' in 1888 and 'Prosas Profanas' in 1896, he completely renewed poetry in Spanish, introducing new rhythms, exotic vocabulary, and unprecedented musicality. From 'Lo fatal': 'Happy the tree, barely sentient, / and happier the hard stone, for it no longer feels.' His influence reached an entire generation of poets in Spain and the Americas.",
     vocab: [
@@ -301,6 +309,7 @@ const POETRY_DATA = [
     englishName: "Antonio Machado - Traveler There Is No Path",
     icon: "🛤️",
     tags: ["España", "Generación del 98", "Castilla", "filosofía", "camino"],
+    level: "B2",
     descEs: "Antonio Machado (1875-1939) fue un poeta español de la Generación del 98. Sus versos más célebres son: 'Caminante, son tus huellas / el camino y nada más; / Caminante, no hay camino, / se hace camino al andar.' Estos versos, del poema 'Proverbios y cantares', expresan una filosofía existencial profunda. Su poesía refleja el paisaje de Castilla, el paso del tiempo y la meditación sobre España. Murió exiliado en Francia tras la Guerra Civil.",
     descEn: "Antonio Machado (1875-1939) was a Spanish poet of the Generation of '98. His most famous verses are: 'Traveler, your footsteps are / the path and nothing more; / Traveler, there is no path, / the path is made by walking.' These verses, from the poem 'Proverbs and Songs,' express a profound existential philosophy. His poetry reflects the landscape of Castile, the passage of time, and meditation on Spain. He died in exile in France after the Civil War.",
     vocab: [
@@ -338,6 +347,7 @@ const POETRY_DATA = [
     englishName: "Alfonsina Storni - You Want Me White",
     icon: "🌊",
     tags: ["Argentina", "feminismo", "mar", "modernismo", "siglo XX"],
+    level: "B2",
     descEs: "Alfonsina Storni (1892-1938) fue una poeta argentina de origen suizo, pionera del feminismo en la literatura hispanoamericana. Su poema 'Tú me quieres blanca' desafía las expectativas patriarcales: 'Tú me quieres alba, / me quieres de espumas, / me quieres de nácar.' Storni luchó contra los prejuicios de su época siendo madre soltera y mujer independiente. Diagnosticada con cáncer, se suicidó entrando al mar en Mar del Plata. La canción 'Alfonsina y el mar' inmortalizó su historia.",
     descEn: "Alfonsina Storni (1892-1938) was an Argentine poet of Swiss origin, a pioneer of feminism in Hispanic American literature. Her poem 'You Want Me White' challenges patriarchal expectations: 'You want me dawn-white, / you want me made of foam, / you want me made of mother-of-pearl.' Storni fought against the prejudices of her era as a single mother and independent woman. Diagnosed with cancer, she died by walking into the sea at Mar del Plata. The song 'Alfonsina y el mar' immortalized her story.",
     vocab: [

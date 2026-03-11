@@ -476,5 +476,87 @@ const SENTENCE_CONSTRUCTION = [
     acceptable: ['No habría terminado a tiempo de no ser por tu ayuda.'],
     hint: '"De no ser por" is a formal conditional meaning "were it not for".',
     distractors: ['sin']
+  },
+
+  // ============================================================
+  //  C2 — literary_register  (7 items)
+  // ============================================================
+
+  {
+    id: 'sc-42',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'Had I but known the truth, none of this would have happened.',
+    sentence: 'De haber sabido la verdad, nada de esto habría ocurrido.',
+    words: ['la', 'nada', 'sabido', 'De', 'esto', 'haber', 'ocurrido.', 'habría', 'de', 'verdad,'],
+    acceptable: ['Nada de esto habría ocurrido de haber sabido la verdad.'],
+    hint: '"De haber + past participle" is a literary conditional that replaces "si hubiera/hubiese + past participle", omitting "si" entirely.',
+    distractors: ['si']
+  },
+  {
+    id: 'sc-43',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'Not only did she refuse, but she also left without saying a word.',
+    sentence: 'No solo se negó, sino que además se marchó sin mediar palabra.',
+    words: ['sino', 'se', 'que', 'No', 'palabra.', 'mediar', 'negó,', 'solo', 'sin', 'además', 'se', 'marchó'],
+    acceptable: ['No solo se negó, sino que se marchó además sin mediar palabra.'],
+    hint: '"No solo... sino que además..." is an emphatic correlative structure meaning "not only... but furthermore...". "Sin mediar palabra" is a fixed literary expression.',
+    distractors: ['también']
+  },
+  {
+    id: 'sc-44',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'So great was his despair that he could not utter a single word.',
+    sentence: 'Tal era su desesperación que no pudo articular palabra alguna.',
+    words: ['su', 'que', 'era', 'no', 'Tal', 'alguna.', 'palabra', 'pudo', 'articular', 'desesperación'],
+    acceptable: ['Era tal su desesperación que no pudo articular palabra alguna.'],
+    hint: '"Tal era... que..." uses stylistic inversion with "tal" to create an elevated, literary emphasis on the degree of the noun that follows.',
+    distractors: ['tan']
+  },
+  {
+    id: 'sc-45',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'Whoever may have said such a thing was mistaken.',
+    sentence: 'Quienquiera que haya dicho tal cosa estaba equivocado.',
+    words: ['que', 'tal', 'haya', 'Quienquiera', 'equivocado.', 'estaba', 'dicho', 'cosa'],
+    acceptable: ['Estaba equivocado quienquiera que haya dicho tal cosa.'],
+    hint: '"Quienquiera que + subjunctive" is an indefinite pronoun construction meaning "whoever". The subjunctive is required because the identity is unknown.',
+    distractors: ['quien']
+  },
+  {
+    id: 'sc-46',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'The more they tried to silence him, the louder he spoke.',
+    sentence: 'Cuanto más intentaban silenciarlo, más alto hablaba.',
+    words: ['más', 'más', 'Cuanto', 'hablaba.', 'alto', 'silenciarlo,', 'intentaban'],
+    acceptable: [],
+    hint: '"Cuanto más... más..." is a correlative comparative structure. The first clause uses "cuanto" to set proportion, and the second mirrors it with "más".',
+    distractors: ['mientras']
+  },
+  {
+    id: 'sc-47',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'Be that as it may, we must press forward.',
+    sentence: 'Sea como fuere, debemos seguir adelante.',
+    words: ['como', 'seguir', 'Sea', 'adelante.', 'debemos', 'fuere,'],
+    acceptable: ['Debemos seguir adelante, sea como fuere.'],
+    hint: '"Sea como fuere" uses the future subjunctive ("fuere"), a rare form preserved in fixed legal and literary expressions meaning "be that as it may".',
+    distractors: ['sea']
+  },
+  {
+    id: 'sc-48',
+    level: 'C2',
+    topic: 'literary_register',
+    english: 'It was not until midnight that the storm finally subsided.',
+    sentence: 'No fue sino hasta la medianoche que la tormenta amainó por fin.',
+    words: ['sino', 'la', 'que', 'No', 'la', 'fue', 'fin.', 'por', 'hasta', 'tormenta', 'amainó', 'medianoche'],
+    acceptable: ['No fue sino hasta la medianoche cuando la tormenta amainó por fin.'],
+    hint: '"No fue sino hasta" is an emphatic construction for expressing "it was not until", focusing attention on the delayed timing of the event.',
+    distractors: ['cuando']
   }
 ];

@@ -19,6 +19,10 @@ const PHRASES_SITUATIONS = [
   { slug: 'academic', title: 'Presentaciones Académicas', titleEn: 'Academic Presentations', icon: '🎓', desc: 'Present research and handle Q&A (C1)' },
   { slug: 'negotiations', title: 'Negociaciones', titleEn: 'Negotiations', icon: '🤝', desc: 'Diplomatic language, compromise, and deal-making (C2)' },
   { slug: 'literary', title: 'Discusión Literaria', titleEn: 'Literary Discussion', icon: '📚', desc: 'Analyze themes, characters, and literary style (C2)' },
+  { slug: 'diplomacy', title: 'Lenguaje Diplomático', titleEn: 'Diplomatic Language', icon: '🏛️', desc: 'Formal diplomatic and institutional language (C1)' },
+  { slug: 'journalism', title: 'Periodismo', titleEn: 'Journalism', icon: '📰', desc: 'Media, reporting, and press conference language (C1)' },
+  { slug: 'philosophy', title: 'Discurso Filosófico', titleEn: 'Philosophical Discourse', icon: '🤔', desc: 'Abstract reasoning and philosophical argumentation (C2)' },
+  { slug: 'legal', title: 'Lenguaje Jurídico', titleEn: 'Legal Language', icon: '⚖️', desc: 'Legal terminology and courtroom language (C2)' },
 ];
 
 const PHRASES_DATA = [

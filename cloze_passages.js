@@ -260,4 +260,149 @@ const CLOZE_PASSAGES = [
       { id: 8, answer: 'enseñe',    acceptable: [], explanation: 'Subjunctive after "merece la pena que" — impersonal value judgment.' },
     ]
   },
+
+  // ─────────────────────────────────────────────────────────
+  //  C1 ADVANCED  (5 passages)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'cloze-19', level: 'C1', topic: 'subjunctive',
+    title: 'El debate sobre la educación', titleEn: 'The Debate on Education',
+    passage: 'Si el gobierno {1} invertido más en educación, los resultados {2} sido diferentes. Los expertos dudan de que la reforma {3} los problemas de fondo. Habría sido preferible que se {4} consultado a los docentes antes de que se {5} la ley. Es imprescindible que las autoridades {6} en cuenta la diversidad regional. No es que el sistema anterior {7} perfecto, sino que los cambios se implementaron sin que nadie {8} las consecuencias.',
+    blanks: [
+      { id: 1, answer: 'hubiera',    acceptable: ['hubiese'], explanation: 'Pluperfect subjunctive in a past contrary-to-fact si-clause: si hubiera invertido.' },
+      { id: 2, answer: 'habrían',    acceptable: ['habrian', 'hubieran', 'hubiesen'], explanation: 'Conditional perfect in the result clause of an unreal past condition. Colloquially the pluperfect subjunctive also appears.' },
+      { id: 3, answer: 'resuelva',   acceptable: [], explanation: 'Present subjunctive after "dudan de que" — doubt about present/future.' },
+      { id: 4, answer: 'hubiera',    acceptable: ['hubiese'], explanation: 'Pluperfect subjunctive after "habría sido preferible que" — unrealized past preference.' },
+      { id: 5, answer: 'aprobara',   acceptable: ['aprobase'], explanation: 'Imperfect subjunctive after "antes de que" — always requires subjunctive, past context.' },
+      { id: 6, answer: 'tengan',     acceptable: [], explanation: 'Present subjunctive after "es imprescindible que" — impersonal necessity.' },
+      { id: 7, answer: 'fuera',      acceptable: ['fuese'], explanation: 'Imperfect subjunctive in "no es que … fuera" — negated assertion with subjunctive.' },
+      { id: 8, answer: 'midiera',    acceptable: ['midiese'], explanation: 'Imperfect subjunctive after "sin que" — always subjunctive, past narrative.' },
+    ]
+  },
+  {
+    id: 'cloze-20', level: 'C1', topic: 'passive_voice',
+    title: 'Avances científicos', titleEn: 'Scientific Advances',
+    passage: 'El nuevo fármaco {1} desarrollado por un equipo internacional. Se {2} que los resultados preliminares son prometedores. La vacuna fue {3} a más de diez mil voluntarios. Se {4} publicado los datos en una revista de prestigio. Los efectos secundarios no {5} sido confirmados todavía. Se {6} nuevas pruebas el próximo trimestre. La comunidad científica espera que se {7} los hallazgos de forma independiente.',
+    blanks: [
+      { id: 1, answer: 'fue',          acceptable: [], explanation: 'Passive voice with ser: el fármaco fue desarrollado (preterite passive).' },
+      { id: 2, answer: 'estima',       acceptable: ['considera'], explanation: 'Impersonal se + third person singular: se estima que (it is estimated that).' },
+      { id: 3, answer: 'administrada', acceptable: [], explanation: 'Past participle agreeing with feminine subject in ser-passive: fue administrada.' },
+      { id: 4, answer: 'han',          acceptable: [], explanation: 'Passive se with present perfect: se han publicado los datos (the data have been published).' },
+      { id: 5, answer: 'han',          acceptable: [], explanation: 'Ser-passive present perfect: no han sido confirmados.' },
+      { id: 6, answer: 'realizarán',   acceptable: ['realizaran'], explanation: 'Impersonal/passive se with future: se realizarán nuevas pruebas.' },
+      { id: 7, answer: 'verifiquen',   acceptable: [], explanation: 'Present subjunctive after "espera que se" — hope + passive se construction.' },
+    ]
+  },
+  {
+    id: 'cloze-21', level: 'C1', topic: 'nominalizations',
+    title: 'Análisis económico', titleEn: 'Economic Analysis',
+    passage: '{1} preocupante es que la inflación siga subiendo. {2} que invierten en tecnología obtienen mejores resultados. La {3} de los recursos ha sido desigual. {4} difícil de aceptar es la pérdida de poder adquisitivo. Los analistas afirman que {5} de la crisis dependerá de las políticas fiscales. {6} proponen recortes no consideran el impacto social. Es fundamental el {7} de los mercados emergentes. {8} más urgente sería reformar el sistema tributario.',
+    blanks: [
+      { id: 1, answer: 'Lo',            acceptable: [], explanation: 'Lo + adjective as nominalization: lo preocupante (the worrying thing).' },
+      { id: 2, answer: 'Los que',       acceptable: ['Quienes'], explanation: 'Los que / Quienes as nominalized relative: those who invest.' },
+      { id: 3, answer: 'distribución',  acceptable: ['distribucion'], explanation: 'Nominalization from distribuir: the distribution of resources.' },
+      { id: 4, answer: 'Lo',            acceptable: [], explanation: 'Lo + adjective nominalization: lo difícil de aceptar (the hard thing to accept).' },
+      { id: 5, answer: 'la salida',     acceptable: [], explanation: 'Nominalized expression: la salida de la crisis (the way out of the crisis).' },
+      { id: 6, answer: 'Quienes',       acceptable: ['Los que'], explanation: 'Quienes / Los que as subject: those who propose cuts.' },
+      { id: 7, answer: 'fortalecimiento', acceptable: [], explanation: 'Nominalization from fortalecer: el fortalecimiento (the strengthening).' },
+      { id: 8, answer: 'Lo',            acceptable: [], explanation: 'Lo + adjective: lo más urgente (the most urgent thing).' },
+    ]
+  },
+  {
+    id: 'cloze-22', level: 'C1', topic: 'periphrasis',
+    title: 'La vida moderna', titleEn: 'Modern Life',
+    passage: 'María {1} trabajando en la misma empresa desde hace diez años. El mes pasado se {2} a buscar un nuevo empleo. Aunque {3} de fumar hace tiempo, a veces siente la tentación. Sus hijos {4} a pedirle que descanse más. Ella {5} por aceptar un puesto con menos presión. En cuanto {6} a tener tiempo libre, piensa viajar. El estrés {7} afectando su salud desde hace meses. Sus amigos le dicen que {8} a pensar en sí misma.',
+    blanks: [
+      { id: 1, answer: 'lleva',     acceptable: [], explanation: 'Llevar + gerund: ongoing action with duration — lleva trabajando (has been working).' },
+      { id: 2, answer: 'puso',      acceptable: [], explanation: 'Ponerse a + infinitive: beginning of action — se puso a buscar (she started looking).' },
+      { id: 3, answer: 'dejó',      acceptable: ['dejo'], explanation: 'Dejar de + infinitive: cessation — dejó de fumar (she quit smoking).' },
+      { id: 4, answer: 'vuelven',   acceptable: [], explanation: 'Volver a + infinitive: repetition — vuelven a pedirle (they ask her again).' },
+      { id: 5, answer: 'acabó',     acceptable: ['acabo', 'terminó', 'termino'], explanation: 'Acabar por + infinitive: eventual outcome — acabó por aceptar (she ended up accepting).' },
+      { id: 6, answer: 'vuelva',    acceptable: [], explanation: 'Volver a + infinitive with subjunctive after "en cuanto" — future trigger.' },
+      { id: 7, answer: 'viene',     acceptable: [], explanation: 'Venir + gerund: progressive accumulation — viene afectando (has been increasingly affecting).' },
+      { id: 8, answer: 'tiene',     acceptable: [], explanation: 'Tener que + infinitive: obligation — tiene que pensar (she has to think). The "que" follows in the passage.' },
+    ]
+  },
+  {
+    id: 'cloze-23', level: 'C1', topic: 'conditional',
+    title: 'Decisiones políticas', titleEn: 'Political Decisions',
+    passage: 'Si el parlamento {1} la propuesta ayer, hoy {2} más estabilidad. Los ciudadanos habrían preferido que se {3} un referéndum. De haber {4} otra opción, el presidente no habría firmado el decreto. Si se invirtiera más en sanidad, {5} menos desigualdad. En caso de que {6} nuevas protestas, el gobierno tendría que negociar. Yo que tú, {7} la posición de la oposición. Si bien la economía {8} mejorado, queda mucho por hacer.',
+    blanks: [
+      { id: 1, answer: 'hubiera aprobado',   acceptable: ['hubiese aprobado'], explanation: 'Pluperfect subjunctive in past unreal si-clause.' },
+      { id: 2, answer: 'habría',             acceptable: ['habria'], explanation: 'Conditional in result clause of mixed conditional (past cause → present result): hoy habría más estabilidad.' },
+      { id: 3, answer: 'convocara',          acceptable: ['convocase'], explanation: 'Imperfect subjunctive after "habrían preferido que" — past unrealized wish.' },
+      { id: 4, answer: 'tenido',             acceptable: [], explanation: 'De haber + past participle: alternative to si-clause for past unreal — de haber tenido.' },
+      { id: 5, answer: 'habría',             acceptable: ['habria'], explanation: 'Standard conditional result clause: si se invirtiera … habría menos desigualdad.' },
+      { id: 6, answer: 'hubiera',            acceptable: ['hubiese', 'haya'], explanation: 'Subjunctive after "en caso de que" — always requires subjunctive.' },
+      { id: 7, answer: 'reconsideraría',     acceptable: ['reconsideraria'], explanation: 'Conditional after "yo que tú" — colloquial conditional advice structure.' },
+      { id: 8, answer: 'ha',                 acceptable: [], explanation: 'Indicative after "si bien" — concessive clause stating a fact, not a hypothesis.' },
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C2 MASTERY  (4 passages)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'cloze-24', level: 'C2', topic: 'literary',
+    title: 'Realismo mágico', titleEn: 'Magical Realism',
+    passage: 'Apenas {1} terminado de llover, el anciano salió a la calle. Jamás {2} visto cosa semejante: del cielo {3} mariposas amarillas. Tan absorto {4} el pueblo que nadie {5} palabra. No bien {6} el sol, las mariposas se desvanecieron. Mucho se {7} después sobre aquel prodigio; nunca {8} nadie dar una explicación racional. Dijérase que la naturaleza misma {9} querido recordarles que lo imposible no es sino lo todavía no comprendido.',
+    blanks: [
+      { id: 1, answer: 'hubo',          acceptable: [], explanation: 'Preterite anterior (pretérito anterior): apenas hubo terminado — literary tense for immediate anteriority.' },
+      { id: 2, answer: 'habían',        acceptable: ['habian'], explanation: 'Pluperfect indicative: jamás habían visto — background experience before the main event.' },
+      { id: 3, answer: 'caían',         acceptable: ['caian'], explanation: 'Imperfect for ongoing descriptive scene: del cielo caían mariposas.' },
+      { id: 4, answer: 'estaba',        acceptable: [], explanation: 'Stylistic inversion with tan … que: tan absorto estaba el pueblo — literary word order.' },
+      { id: 5, answer: 'pronunció',     acceptable: ['pronuncio'], explanation: 'Preterite in the result of the correlative tan … que construction.' },
+      { id: 6, answer: 'asomó',         acceptable: ['asomo'], explanation: 'Preterite after "no bien" — literary temporal connector meaning "as soon as".' },
+      { id: 7, answer: 'habló',         acceptable: ['hablo'], explanation: 'Impersonal se + preterite: se habló (people talked / it was talked about).' },
+      { id: 8, answer: 'pudo',          acceptable: [], explanation: 'Preterite of poder with negative: nunca pudo nadie — stylistic subject-verb inversion.' },
+      { id: 9, answer: 'hubiera',       acceptable: ['hubiese'], explanation: 'Imperfect subjunctive after "dijérase que" — literary fixed expression (as if to say).' },
+    ]
+  },
+  {
+    id: 'cloze-25', level: 'C2', topic: 'academic',
+    title: 'Lingüística aplicada', titleEn: 'Applied Linguistics',
+    passage: 'El presente estudio {1} analizar la interferencia pragmática en hablantes bilingües. {2} lo anterior, se hace necesario revisar las teorías previas. Cabe {3} que los datos recabados no son extrapolables a todos los contextos. {4} se ha señalado en la literatura, la competencia comunicativa trasciende lo meramente gramatical. Los resultados, {5} provisionales, sugieren una correlación significativa. No {6}, quedan por resolver diversas cuestiones metodológicas. Habida {7} de las limitaciones muestrales, se propone ampliar el corpus. Es menester que futuras investigaciones {8} estas hipótesis con muestras más amplias.',
+    blanks: [
+      { id: 1, answer: 'pretende',      acceptable: [], explanation: 'Academic register: el estudio pretende (the study aims to) — formal purpose statement.' },
+      { id: 2, answer: 'Dado',          acceptable: [], explanation: 'Discourse cohesion marker: dado lo anterior (given the above) — academic connector.' },
+      { id: 3, answer: 'señalar',       acceptable: ['destacar'], explanation: 'Cabe + infinitive: academic hedging expression — cabe señalar (it is worth noting).' },
+      { id: 4, answer: 'Tal como',      acceptable: ['Como', 'Según'], explanation: 'Academic discourse marker: tal como se ha señalado (as has been noted).' },
+      { id: 5, answer: 'si bien',       acceptable: ['aunque'], explanation: 'Concessive connector in academic register: si bien provisionales (although provisional).' },
+      { id: 6, answer: 'obstante',      acceptable: [], explanation: 'No obstante: formal adversative connector (nevertheless).' },
+      { id: 7, answer: 'cuenta',        acceptable: [], explanation: 'Habida cuenta de: fixed academic/legal expression meaning "taking into account".' },
+      { id: 8, answer: 'corroboren',    acceptable: ['verifiquen', 'confirmen'], explanation: 'Present subjunctive after "es menester que" — formal impersonal necessity.' },
+    ]
+  },
+  {
+    id: 'cloze-26', level: 'C2', topic: 'legal',
+    title: 'Derecho internacional', titleEn: 'International Law',
+    passage: 'Si un Estado {1} sus obligaciones bajo el tratado, será sometido a arbitraje. Quien {2} los términos del acuerdo deberá indemnizar a la parte afectada. Donde {3} conflicto entre normas, prevalecerá la de rango superior. Sea {4} fuere el resultado de la mediación, las partes quedan obligadas a acatar la resolución. Cualquiera que {5} la jurisdicción competente, el procedimiento se regirá por el derecho internacional. Los signatarios se comprometen a que se {6} las disposiciones en un plazo no mayor de seis meses. {7} cuenta de lo estipulado en el artículo tercero, no se admitirán reservas unilaterales. En caso de que se {8} la cláusula de salvaguarda, el tratado quedará sin efecto.',
+    blanks: [
+      { id: 1, answer: 'incumpliere',     acceptable: ['incumpliera', 'incumpliese'], explanation: 'Future subjunctive (legal register): si incumpliere — archaic form preserved in legal/formal Spanish.' },
+      { id: 2, answer: 'contraviniese',   acceptable: ['contraviniere', 'contraviniera'], explanation: 'Imperfect or future subjunctive after "quien" in legal register — whoever should contravene.' },
+      { id: 3, answer: 'hubiere',         acceptable: ['hubiera', 'hubiese'], explanation: 'Future subjunctive in legal conditional: donde hubiere conflicto (where there be conflict).' },
+      { id: 4, answer: 'cual',            acceptable: [], explanation: 'Fixed legal expression: sea cual fuere — whatever it may be (concessive formula).' },
+      { id: 5, answer: 'fuere',           acceptable: ['fuera', 'fuese', 'sea'], explanation: 'Future subjunctive: cualquiera que fuere — legal style for "whichever may be".' },
+      { id: 6, answer: 'implementen',     acceptable: ['apliquen'], explanation: 'Present subjunctive after "se comprometen a que" — commitment to future action.' },
+      { id: 7, answer: 'Habida',          acceptable: [], explanation: 'Habida cuenta de: fixed legal/formal expression meaning "in consideration of".' },
+      { id: 8, answer: 'invocara',        acceptable: ['invocase', 'invocare'], explanation: 'Imperfect subjunctive after "en caso de que" — hypothetical legal scenario.' },
+    ]
+  },
+  {
+    id: 'cloze-27', level: 'C2', topic: 'dialectal',
+    title: 'Variación lingüística', titleEn: 'Linguistic Variation',
+    passage: 'En el Río de la Plata, los hablantes {1} "vos" en lugar de "tú". Mientras que en España se {2} el pretérito perfecto para acciones recientes, en Hispanoamérica {3} preferirse el indefinido. Lo que en Madrid llaman "{4}", en México se conoce como "computadora". No es que una variante {5} más correcta que otra, sino que cada dialecto responde a su propia evolución. Si se {6} con detenimiento la fonética del español andino, se apreciarían rasgos del contacto con el quechua. El voseo, lejos de ser un {7}, constituye una forma legítima y arraigada. Convendría que los manuales de enseñanza {8} esta riqueza dialectal en lugar de imponer un único modelo.',
+    blanks: [
+      { id: 1, answer: 'emplean',       acceptable: ['usan', 'utilizan'], explanation: 'Present indicative: factual statement about Rioplatense usage of vos.' },
+      { id: 2, answer: 'emplea',        acceptable: ['usa', 'utiliza'], explanation: 'Impersonal se + singular: se emplea el pretérito perfecto — describing Peninsular Spanish usage.' },
+      { id: 3, answer: 'suele',         acceptable: [], explanation: 'Soler + infinitive: habitual periphrasis — suele preferirse (it tends to be preferred).' },
+      { id: 4, answer: 'ordenador',     acceptable: [], explanation: 'Dialectal vocabulary: "ordenador" is the Peninsular Spanish term for computer.' },
+      { id: 5, answer: 'sea',           acceptable: [], explanation: 'Present subjunctive after "no es que" — negated assertion requires subjunctive.' },
+      { id: 6, answer: 'analizara',     acceptable: ['analizase'], explanation: 'Imperfect subjunctive in si-clause: si se analizara — hypothetical condition.' },
+      { id: 7, answer: 'vulgarismo',    acceptable: ['error'], explanation: 'Appropriate noun: vulgarismo (vulgarism) — the passage argues voseo is not a substandard form.' },
+      { id: 8, answer: 'reflejaran',    acceptable: ['reflejasen', 'reflejen'], explanation: 'Imperfect subjunctive after "convendría que" — conditional wish about textbooks.' },
+    ]
+  },
 ];

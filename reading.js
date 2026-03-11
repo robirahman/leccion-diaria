@@ -2,7 +2,7 @@
 
 // ════════════════════════════════════════════════════════════
 //  READING COMPREHENSION — Graded passages with vocabulary
-//  25 passages: 5 A1, 5 A2, 5 B1, 4 B2, 3 C1, 3 C2
+//  31 passages: 5 A1, 5 A2, 5 B1, 4 B2, 6 C1, 6 C2
 // ════════════════════════════════════════════════════════════
 
 const READING_DATA = [
