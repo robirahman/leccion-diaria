@@ -195,6 +195,7 @@ const PROVERBS_DATA = [
     id: "proverb-17",
     spanishName: "Al pan, pan, y al vino, vino",
     englishName: "Call a spade a spade",
+    level: "B2",
     content: "<p><strong>\"Al pan, pan, y al vino, vino\"</strong> es un refrán que aboga por la honestidad directa y la claridad al hablar. Significa que hay que llamar a las cosas por su nombre verdadero, sin rodeos, eufemismos ni adornos. El pan es pan y el vino es vino; no hay que disfrazar la realidad con palabras bonitas.</p><p>Este refrán tiene una larga tradición en la cultura española, donde la franqueza es valorada como una virtud. Se usa especialmente cuando alguien está siendo evasivo o está tratando de adornar una situación desagradable con palabras suaves. Es una llamada a la autenticidad y la transparencia en la comunicación.</p><p><strong>Ejemplo de uso:</strong> \"Deja de darle vueltas al asunto. Al pan, pan, y al vino, vino: te despidieron porque llegabas tarde todos los días.\" También: \"No me vengas con excusas. Al pan, pan, y al vino, vino: ¿me vas a pagar o no?\"</p>",
     quiz: [
       { question: "¿Qué promueve este refrán?", options: ["La buena alimentación", "La honestidad y la franqueza al hablar", "El consumo de pan y vino", "La cortesía"], answer: "La honestidad y la franqueza al hablar", explanation: "Promueve llamar a las cosas por su nombre, sin rodeos ni eufemismos." },

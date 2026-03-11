@@ -517,6 +517,7 @@ const IDIOMS_DATA = [
     example: "No le hables ahora; tiene muy mala leche hoy.",
     exampleEn: "Don't talk to him now; he's in a really bad mood today.",
     category: "food",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'tener mala leche'?",
@@ -546,6 +547,7 @@ const IDIOMS_DATA = [
     example: "Después de correr el maratón, estaba hecho polvo.",
     exampleEn: "After running the marathon, I was completely wiped out.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'estar hecho polvo'?",
@@ -575,6 +577,7 @@ const IDIOMS_DATA = [
     example: "Cuando me dijeron que había ganado el premio, me quedé de piedra.",
     exampleEn: "When they told me I had won the prize, I was stunned.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'quedarse de piedra'?",
@@ -604,6 +607,7 @@ const IDIOMS_DATA = [
     example: "Primero perdió el trabajo y ahora se le rompió el coche. Llueve sobre mojado.",
     exampleEn: "First he lost his job and now his car broke down. When it rains, it pours.",
     category: "weather",
+    level: "B2",
     quiz: [
       {
         prompt: "¿Qué significa 'llover sobre mojado'?",
@@ -633,6 +637,7 @@ const IDIOMS_DATA = [
     example: "No seas gallina y tírate del trampolín.",
     exampleEn: "Don't be a chicken and jump off the diving board.",
     category: "animals",
+    level: "A2",
     quiz: [
       {
         prompt: "¿Qué significa 'ser un gallina'?",
@@ -662,6 +667,7 @@ const IDIOMS_DATA = [
     example: "Después del viaje tan largo, dormí a pierna suelta toda la noche.",
     exampleEn: "After such a long trip, I slept like a log all night.",
     category: "body",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'dormir a pierna suelta'?",
@@ -691,6 +697,7 @@ const IDIOMS_DATA = [
     example: "Lo que piensen los demás me importa un pepino.",
     exampleEn: "I couldn't care less about what others think.",
     category: "food",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'importar un pepino'?",
@@ -720,6 +727,7 @@ const IDIOMS_DATA = [
     example: "Desde que perdió su trabajo, lo ve todo negro.",
     exampleEn: "Since he lost his job, he sees everything in a negative light.",
     category: "emotions",
+    level: "B1",
     quiz: [
       {
         prompt: "¿Qué significa 'verlo todo negro'?",
