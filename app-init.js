@@ -300,6 +300,14 @@ document.addEventListener('click', e => {
     // Verb Reference
     case 'open-verb-reference': showScreen('verb-reference'); break;
     case 'select-vref': renderVerbReference(target.dataset.verb); break;
+    case 'vref-tab': {
+      const tab = target.dataset.tab;
+      document.querySelectorAll('#vref-tabs .btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.getElementById('vref-tab-lookup').style.display = tab === 'lookup' ? '' : 'none';
+      document.getElementById('vref-tab-rules').style.display = tab === 'rules' ? '' : 'none';
+      if (tab === 'rules') renderConjugationRules();
+      break;
+    }
 
     // Pronunciation Guide
     case 'open-pronunciation': showScreen('pronunciation'); renderPronunciation(); break;

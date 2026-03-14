@@ -1180,6 +1180,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .conj-table td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); }
 .conj-table td:first-child { color: var(--text2); }
 .conj-table td.irreg { color: var(--accent); font-weight: 600; }
+.conj-table th { padding: 0.3rem 0.5rem; border-bottom: 2px solid var(--border); color: var(--text2); font-weight: 600; text-align: left; font-size: 0.8rem; }
 .mood-header { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.5rem; padding-bottom: 0.25rem; border-bottom: 2px solid; }
 .mood-indicative { border-color: var(--blue); color: var(--blue); }
 .mood-subjunctive { border-color: var(--accent); color: var(--accent); }

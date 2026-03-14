@@ -1131,12 +1131,19 @@
   <!-- ════════ VERB CONJUGATION REFERENCE ════════ -->
   <div class="screen" id="screen-verb-reference">
     <h2 class="mb-1">Conjugation Reference</h2>
-    <div class="search-box">
-      <span class="search-icon">&#128269;</span>
-      <input type="text" id="vref-search" placeholder="Search verb..." aria-label="Search verb">
+    <div class="flex gap-1 mb-1" id="vref-tabs">
+      <button class="btn btn-sm btn-outline active" data-action="vref-tab" data-tab="lookup">Look Up Verb</button>
+      <button class="btn btn-sm btn-outline" data-action="vref-tab" data-tab="rules">Endings &amp; Rules</button>
     </div>
-    <div id="vref-suggestions"></div>
-    <div id="vref-content"></div>
+    <div id="vref-tab-lookup">
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="vref-search" placeholder="Search verb..." aria-label="Search verb">
+      </div>
+      <div id="vref-suggestions"></div>
+      <div id="vref-content"></div>
+    </div>
+    <div id="vref-tab-rules" style="display:none"></div>
   </div>
 
   <!-- ════════ READING COMPREHENSION LIST ════════ -->

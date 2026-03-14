@@ -2105,6 +2105,184 @@ function showVrefSuggestions(query) {
 }
 
 // ════════════════════════════════════════
+//  CONJUGATION RULES / ENDINGS REFERENCE
+// ════════════════════════════════════════
+
+function renderConjugationRules() {
+  const container = document.getElementById('vref-tab-rules');
+  if (!container) return;
+  if (container.innerHTML) return; // already rendered
+
+  const groups = ['ar', 'er', 'ir'];
+  const personLabels = ['yo', 'tú', 'él/ella/Ud.', 'nosotros', 'vosotros', 'ellos/Uds.'];
+
+  function endingsTable(tenseKey, caption) {
+    const endings = REGULAR_ENDINGS[tenseKey];
+    if (!endings) return '';
+    const meta = TENSE_META[tenseKey];
+    const label = caption || (meta ? tenseLabel(meta) : tenseKey);
+    let rows = personLabels.map((p, i) => {
+      const cells = groups.map(g => {
+        const e = endings[g][i];
+        return `<td>${e === '—' ? '<span style="color:var(--text3)">—</span>' : '<strong>' + esc(e) + '</strong>'}</td>`;
+      }).join('');
+      return `<tr><td>${p}</td>${cells}</tr>`;
+    }).join('');
+    return `<div class="card mb-1">
+      <div class="card-title text-sm">${label}</div>
+      ${meta ? `<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">${meta.level}</span>` : ''}
+      <div class="conj-table-scroll"><table class="conj-table mt-1">
+        <tr><th></th><th>-ar</th><th>-er</th><th>-ir</th></tr>
+        ${rows}
+      </table></div>
+    </div>`;
+  }
+
+  let html = '';
+
+  // ── Non-finite forms ──
+  html += '<div class="mood-header mood-indicative">Non-Finite Forms</div>';
+  html += `<div class="card mb-1">
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th></th><th>-ar</th><th>-er</th><th>-ir</th></tr>
+      <tr><td>Past Participle</td><td><strong>-ado</strong></td><td><strong>-ido</strong></td><td><strong>-ido</strong></td></tr>
+      <tr><td>Gerund</td><td><strong>-ando</strong></td><td><strong>-iendo</strong></td><td><strong>-iendo</strong></td></tr>
+    </table></div>
+  </div>`;
+
+  // ── Indicative mood ──
+  html += '<div class="mood-header mood-indicative">Indicative</div>';
+  const indicativeSimple = ['present', 'preterite', 'imperfect'];
+  for (const t of indicativeSimple) html += endingsTable(t);
+
+  // Future & conditional use full infinitive as stem
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">${tenseLabel(TENSE_META.future)}</div>
+    <span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">A2</span>
+    <p class="text-muted text-sm mt-1">Add endings to the <strong>full infinitive</strong> (e.g. hablar + é = hablaré).</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th></th><th>Ending</th></tr>
+      ${['é','ás','á','emos','éis','án'].map((e,i) => `<tr><td>${personLabels[i]}</td><td><strong>-${e}</strong></td></tr>`).join('')}
+    </table></div>
+  </div>`;
+
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">${tenseLabel(TENSE_META.conditional)}</div>
+    <span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">B1</span>
+    <p class="text-muted text-sm mt-1">Add endings to the <strong>full infinitive</strong> (e.g. hablar + ía = hablaría).</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th></th><th>Ending</th></tr>
+      ${['ía','ías','ía','íamos','íais','ían'].map((e,i) => `<tr><td>${personLabels[i]}</td><td><strong>-${e}</strong></td></tr>`).join('')}
+    </table></div>
+  </div>`;
+
+  // Compound tenses
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Compound Tenses (Indicative)</div>
+    <p class="text-muted text-sm mt-1">Formed with <strong>haber</strong> (conjugated) + <strong>past participle</strong> (-ado/-ido).</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Tense</th><th>Haber form</th><th>Example</th></tr>
+      <tr><td>Present Perfect</td><td>he, has, ha, hemos, habéis, han</td><td>he hablado</td></tr>
+      <tr><td>Pluperfect</td><td>había, habías, había…</td><td>había comido</td></tr>
+      <tr><td>Future Perfect</td><td>habré, habrás, habrá…</td><td>habrá vivido</td></tr>
+      <tr><td>Conditional Perfect</td><td>habría, habrías, habría…</td><td>habría dicho</td></tr>
+    </table></div>
+  </div>`;
+
+  // Progressive
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Progressive Tenses</div>
+    <p class="text-muted text-sm mt-1">Formed with <strong>estar</strong> (conjugated) + <strong>gerund</strong> (-ando/-iendo).</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Tense</th><th>Estar form</th><th>Example</th></tr>
+      <tr><td>Present Progressive</td><td>estoy, estás, está…</td><td>estoy hablando</td></tr>
+      <tr><td>Preterite Progressive</td><td>estuve, estuviste, estuvo…</td><td>estuvo comiendo</td></tr>
+      <tr><td>Imperfect Progressive</td><td>estaba, estabas, estaba…</td><td>estaba viviendo</td></tr>
+    </table></div>
+  </div>`;
+
+  // ── Subjunctive mood ──
+  html += '<div class="mood-header mood-subjunctive">Subjunctive</div>';
+  html += endingsTable('subjunctive_present');
+  html += endingsTable('subjunctive_imperfect', tenseLabel(TENSE_META.subjunctive_imperfect) + ' (-ra)');
+  html += endingsTable('subjunctive_imperfect_se', tenseLabel(TENSE_META.subjunctive_imperfect) + ' (-se)');
+
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Compound Tenses (Subjunctive)</div>
+    <p class="text-muted text-sm mt-1">Formed with <strong>haber</strong> (subjunctive) + <strong>past participle</strong>.</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Tense</th><th>Haber form</th><th>Example</th></tr>
+      <tr><td>Present Perfect Subj.</td><td>haya, hayas, haya…</td><td>haya hablado</td></tr>
+      <tr><td>Pluperfect Subj.</td><td>hubiera, hubieras, hubiera…</td><td>hubiera dicho</td></tr>
+    </table></div>
+  </div>`;
+
+  html += endingsTable('future_subjunctive');
+
+  // ── Imperative mood ──
+  html += '<div class="mood-header mood-imperative">Imperative</div>';
+  html += endingsTable('imperative_aff');
+  html += endingsTable('imperative_neg');
+
+  // ── Key rules ──
+  html += '<div class="mood-header" style="border-color:var(--text2)">Key Rules</div>';
+
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Stem Changes (Boot Pattern)</div>
+    <p class="text-muted text-sm mt-1">Affect yo, tú, él/ella, ellos/ellas in present indicative &amp; subjunctive. Nosotros and vosotros keep the regular stem.</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Pattern</th><th>Example</th><th>Present yo</th></tr>
+      <tr><td>e → ie</td><td>pensar</td><td>pienso</td></tr>
+      <tr><td>o → ue</td><td>poder</td><td>puedo</td></tr>
+      <tr><td>e → i</td><td>pedir</td><td>pido</td></tr>
+      <tr><td>u → ue</td><td>jugar</td><td>juego</td></tr>
+    </table></div>
+  </div>`;
+
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Spelling Changes</div>
+    <p class="text-muted text-sm mt-1">Preserve pronunciation when the following vowel changes.</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Change</th><th>When</th><th>Example</th></tr>
+      <tr><td>c → qu</td><td>-ar verb before e</td><td>buscar → busqué</td></tr>
+      <tr><td>g → gu</td><td>-ar verb before e</td><td>pagar → pagué</td></tr>
+      <tr><td>z → c</td><td>before e</td><td>empezar → empecé</td></tr>
+      <tr><td>g → j</td><td>-er/-ir verb before a, o</td><td>coger → cojo</td></tr>
+    </table></div>
+  </div>`;
+
+  const futStems = Object.entries(IRREGULAR_FUTURE_STEMS).map(([verb, stem]) =>
+    `<tr><td>${esc(verb)}</td><td>${esc(stem)}-</td></tr>`
+  ).join('');
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Irregular Future/Conditional Stems</div>
+    <p class="text-muted text-sm mt-1">These verbs use a modified stem instead of the full infinitive for future and conditional.</p>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Verb</th><th>Stem</th></tr>
+      ${futStems}
+    </table></div>
+  </div>`;
+
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Irregular Past Participles</div>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Verb</th><th>Participle</th></tr>
+      ${Object.entries(IRREGULAR_PARTICIPLES).map(([v, p]) => `<tr><td>${esc(v)}</td><td>${esc(p)}</td></tr>`).join('')}
+    </table></div>
+  </div>`;
+
+  html += `<div class="card mb-1">
+    <div class="card-title text-sm">Irregular Gerunds</div>
+    <div class="conj-table-scroll"><table class="conj-table mt-1">
+      <tr><th>Verb</th><th>Gerund</th></tr>
+      ${Object.entries(IRREGULAR_GERUNDS).map(([v, g]) => `<tr><td>${esc(v)}</td><td>${esc(g)}</td></tr>`).join('')}
+    </table></div>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+// ════════════════════════════════════════
 //  PRONUNCIATION GUIDE
 // ════════════════════════════════════════
 
