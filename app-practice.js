@@ -2111,7 +2111,10 @@ function showVrefSuggestions(query) {
 function renderConjugationRules() {
   const container = document.getElementById('vref-tab-rules');
   if (!container) return;
-  if (container.innerHTML) return; // already rendered
+
+  const seFormPref = progress?.settings?.subjunctiveForm || 'ra';
+  if (container.dataset.rendered === seFormPref) return; // already rendered with current setting
+  container.dataset.rendered = seFormPref;
 
   const groups = ['ar', 'er', 'ir'];
   const personLabels = ['yo', 'tú', 'él/ella/Ud.', 'nosotros', 'vosotros', 'ellos/Uds.'];
@@ -2204,8 +2207,10 @@ function renderConjugationRules() {
   // ── Subjunctive mood ──
   html += '<div class="mood-header mood-subjunctive">Subjunctive</div>';
   html += endingsTable('subjunctive_present');
-  html += endingsTable('subjunctive_imperfect', tenseLabel(TENSE_META.subjunctive_imperfect) + ' (-ra)');
-  html += endingsTable('subjunctive_imperfect_se', tenseLabel(TENSE_META.subjunctive_imperfect) + ' (-se)');
+  if (seFormPref === 'ra' || seFormPref === 'both')
+    html += endingsTable('subjunctive_imperfect', tenseLabel(TENSE_META.subjunctive_imperfect) + ' (-ra)');
+  if (seFormPref === 'se' || seFormPref === 'both')
+    html += endingsTable('subjunctive_imperfect_se', tenseLabel(TENSE_META.subjunctive_imperfect) + ' (-se)');
 
   html += `<div class="card mb-1">
     <div class="card-title text-sm">Compound Tenses (Subjunctive)</div>
@@ -2213,7 +2218,9 @@ function renderConjugationRules() {
     <div class="conj-table-scroll"><table class="conj-table mt-1">
       <tr><th>Tense</th><th>Haber form</th><th>Example</th></tr>
       <tr><td>Present Perfect Subj.</td><td>haya, hayas, haya…</td><td>haya hablado</td></tr>
-      <tr><td>Pluperfect Subj.</td><td>hubiera, hubieras, hubiera…</td><td>hubiera dicho</td></tr>
+      ${seFormPref === 'se'
+        ? '<tr><td>Pluperfect Subj.</td><td>hubiese, hubieses, hubiese…</td><td>hubiese dicho</td></tr>'
+        : '<tr><td>Pluperfect Subj.</td><td>hubiera, hubieras, hubiera…</td><td>hubiera dicho</td></tr>'}
     </table></div>
   </div>`;
 
