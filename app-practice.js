@@ -914,11 +914,15 @@ function levenshtein(a, b) {
 
 function renderMinimalPairCategories() {
   const container = document.getElementById('mp-categories');
-  if (!container || typeof MINIMAL_PAIR_CATEGORIES === 'undefined') return;
+  if (!container) return;
+  if (typeof MINIMAL_PAIR_CATEGORIES === 'undefined') {
+    container.innerHTML = '<p class="text-muted" style="text-align:center">Loading…</p>';
+    return;
+  }
   container.innerHTML = Object.entries(MINIMAL_PAIR_CATEGORIES).map(([key, cat]) => `
     <div class="card" data-action="start-mp" data-cat="${key}">
-      <div class="card-title">${esc(cat.titleEn || cat.title)}</div>
-      <div class="card-subtitle">${esc(cat.options?.join(' vs ') || '')}</div>
+      <div class="card-title">${esc(cat.label || cat.titleEn || cat.title)}</div>
+      <div class="card-subtitle">${esc((cat.optionLabels || cat.options)?.join(' vs ') || '')}</div>
     </div>
   `).join('');
 }
@@ -1271,7 +1275,10 @@ function nextConn() { connIdx++; renderConnQuestion(); }
 // ── Sentence Construction ──
 
 function startSentenceBuild() {
-  if (typeof SENTENCE_CONSTRUCTION === 'undefined') return;
+  if (typeof SENTENCE_CONSTRUCTION === 'undefined') {
+    showToast('⏳', 'Still loading — please try again in a moment.');
+    return;
+  }
   let items = shuffle([...SENTENCE_CONSTRUCTION]).slice(0, 10);
   if (items.length === 0) return;
   sbQueue = items; sbIdx = 0; sbScore = 0;

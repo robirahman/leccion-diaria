@@ -417,8 +417,9 @@ function getGerund(infinitive) {
   const stem = base.slice(0, -2);
   if (IRREGULAR_GERUNDS[base]) return IRREGULAR_GERUNDS[base];
   // Compound verb gerund inheritance (e.g. predecir → prediciendo)
+  // Skip short keys like 'ir' to avoid false matches (e.g. recibir ≠ re+c+ib+ir)
   for (const [k, v] of Object.entries(IRREGULAR_GERUNDS)) {
-    if (base.endsWith(k) && base.length > k.length) {
+    if (k.length > 2 && base.endsWith(k) && base.length > k.length) {
       return base.slice(0, base.length - k.length) + v;
     }
   }
@@ -531,10 +532,13 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
       }
     }
 
-    // Apply spelling change
-    conjStem = applySpellingChange(conjStem, group, ending);
-
-    form = conjStem + ending;
+    // Non-existent person for this tense (e.g. imperative yo)
+    if (ending === '—') { form = '—'; }
+    else {
+      // Apply spelling change
+      conjStem = applySpellingChange(conjStem, group, ending);
+      form = conjStem + ending;
+    }
   }
   // 6. Future/conditional regular (use full infinitive as stem)
   if (!form && tense === 'future') {
