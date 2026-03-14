@@ -1467,6 +1467,188 @@ function getDueItems(fsrsStore, allKeys) {
   return allKeys.filter(k => isDue(fsrsStore, k));
 }
 
+function getRecallPct(fsrsStore, key) {
+  const rec = fsrsStore[key];
+  if (!rec || !rec.s) return null;
+  return Math.round(fsrsR(rec.s, (Date.now() - rec.lastRev) / 86400000) * 100);
+}
+
+function computeTenseMastery() {
+  if (typeof TENSE_META === 'undefined') return [];
+  const now = Date.now();
+  const fsrs = progress.verbFsrs || {};
+  const mastery = progress.verbMastery || {};
+  const result = [];
+
+  for (const [tense, meta] of Object.entries(TENSE_META)) {
+    let practiced = 0, totalR = 0, rCount = 0;
+    let levels = [0, 0, 0, 0, 0]; // mastery 0-4
+    for (const [key, val] of Object.entries(mastery)) {
+      const parts = key.split(':');
+      if (parts[1] !== tense) continue;
+      practiced++;
+      levels[val] = (levels[val] || 0) + 1;
+    }
+    for (const [key, rec] of Object.entries(fsrs)) {
+      const parts = key.split(':');
+      if (parts[1] !== tense || !rec?.s) continue;
+      totalR += fsrsR(rec.s, (now - rec.lastRev) / 86400000);
+      rCount++;
+    }
+    if (practiced > 0) {
+      result.push({
+        tense, label: meta.labelEn || meta.label, level: meta.level,
+        compound: !!meta.compound, progressive: !!meta.progressive,
+        practiced, avgRecall: rCount ? Math.round(totalR / rCount * 100) : null,
+        levels,
+      });
+    }
+  }
+  return result;
+}
+
+function computeGrammarProgress() {
+  if (typeof GRAMMAR_DATA === 'undefined') return [];
+  const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const result = [];
+  for (const lv of levels) {
+    const lessons = GRAMMAR_DATA.filter(l => l.level === lv);
+    if (!lessons.length) continue;
+    let done = 0, totalR = 0, rCount = 0;
+    const now = Date.now();
+    for (const l of lessons) {
+      if (progress.grammarDone[l.id]) done++;
+      const rec = progress.grammarFsrs?.[l.id];
+      if (rec?.s) {
+        totalR += fsrsR(rec.s, (now - rec.lastRev) / 86400000);
+        rCount++;
+      }
+    }
+    result.push({
+      level: lv, total: lessons.length, done,
+      avgRecall: rCount ? Math.round(totalR / rCount * 100) : null,
+    });
+  }
+  return result;
+}
+
+function computeCefrMastery() {
+  const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const LEVEL_IDX = { A1: 0, A2: 1, B1: 2, B2: 3, C1: 4, C2: 5 };
+  const result = [];
+
+  for (const lv of levels) {
+    const li = LEVEL_IDX[lv];
+    const pillars = [];
+
+    // ── Vocabulary pillar ──
+    if (typeof VOCAB_DATA !== 'undefined' && typeof buildVocabIndexes === 'function') {
+      buildVocabIndexes();
+      const words = VOCAB_BY_LEVEL[lv] || [];
+      const total = words.length;
+      const done = total ? words.filter(w => progress.vocabMastery?.[w.word]).length : 0;
+      if (total > 0) pillars.push({ name: 'Vocab', done, total, pct: done / total });
+    }
+
+    // ── Verb conjugation pillar ──
+    // A verb form belongs to a level if max(verb.level, tense.level) == lv
+    if (typeof VERB_DATA !== 'undefined' && typeof TENSE_META !== 'undefined') {
+      let vTotal = 0, vDone = 0;
+      const simpleTenses = Object.keys(TENSE_META).filter(t =>
+        !TENSE_META[t].compound && !TENSE_META[t].progressive
+      );
+      for (const v of VERB_DATA) {
+        const vli = LEVEL_IDX[v.level] ?? 99;
+        for (const tense of simpleTenses) {
+          const tli = LEVEL_IDX[TENSE_META[tense].level] ?? 99;
+          if (Math.max(vli, tli) !== li) continue;
+          const persons = tense.startsWith('imperative') ? 5 : 6;
+          for (let p = 0; p < 6; p++) {
+            if (tense.startsWith('imperative') && p === 0) continue;
+            vTotal++;
+            const key = `${v.infinitive}:${tense}:${p}`;
+            if (progress.verbMastery?.[key]) vDone++;
+          }
+        }
+      }
+      if (vTotal > 0) pillars.push({ name: 'Verbs', done: vDone, total: vTotal, pct: vDone / vTotal });
+    }
+
+    // ── Grammar pillar ──
+    if (typeof GRAMMAR_DATA !== 'undefined') {
+      const lessons = GRAMMAR_DATA.filter(l => l.level === lv);
+      const total = lessons.length;
+      const done = total ? lessons.filter(l => progress.grammarDone?.[l.id]).length : 0;
+      if (total > 0) pillars.push({ name: 'Grammar', done, total, pct: done / total });
+    }
+
+    // ── Overall: equal-weight average of pillars ──
+    const overall = pillars.length
+      ? Math.round(pillars.reduce((s, p) => s + p.pct, 0) / pillars.length * 100)
+      : 0;
+
+    result.push({ level: lv, overall, pillars });
+  }
+  return result;
+}
+
+function cefrColor(pct) {
+  if (pct >= 80) return 'var(--green)';
+  if (pct >= 50) return 'var(--yellow)';
+  if (pct > 0) return 'var(--red)';
+  return 'var(--text3)';
+}
+
+function renderCefrMasteryCompact(el) {
+  if (!el) return;
+  const data = computeCefrMastery();
+  if (!data.length || data.every(d => d.overall === 0)) { el.innerHTML = ''; return; }
+
+  let html = '<div class="card" style="padding:0.75rem">';
+  html += '<div class="card-title mb-1" style="font-size:0.85rem">Level Mastery</div>';
+  html += '<div style="display:flex;gap:0.4rem;flex-wrap:wrap">';
+  for (const d of data) {
+    const c = cefrColor(d.overall);
+    html += `<div style="text-align:center;min-width:3rem">
+      <div style="font-weight:700;font-size:0.9rem;color:${c}">${d.overall}%</div>
+      <div style="font-size:0.65rem;color:var(--text3)">${d.level}</div>
+    </div>`;
+  }
+  html += '</div></div>';
+  el.innerHTML = html;
+}
+
+function renderCefrMasteryDetailed(el) {
+  if (!el) return;
+  const data = computeCefrMastery();
+  if (!data.length || data.every(d => d.overall === 0)) {
+    el.innerHTML = '<p class="text-muted text-sm">Start learning to see your level mastery.</p>';
+    return;
+  }
+
+  let html = '';
+  for (const d of data) {
+    const c = cefrColor(d.overall);
+    html += `<div style="margin-bottom:0.75rem">
+      <div class="stat-row" style="margin-bottom:0.2rem">
+        <span style="font-weight:700;min-width:2rem">${d.level}</span>
+        <div style="flex:1;margin:0 0.5rem;background:var(--bg3);height:10px;border-radius:5px;overflow:hidden">
+          <div style="width:${d.overall}%;height:100%;background:${c};transition:width 0.3s"></div>
+        </div>
+        <span style="font-weight:700;color:${c};min-width:2.5rem;text-align:right">${d.overall}%</span>
+      </div>`;
+    if (d.pillars.length) {
+      html += '<div style="display:flex;gap:0.75rem;padding-left:2.5rem;font-size:0.7rem;color:var(--text3)">';
+      for (const p of d.pillars) {
+        html += `<span>${p.name}: ${p.done}/${p.total}</span>`;
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
 // ════════════════════════════════════════
 //  TEXT-TO-SPEECH
 // ════════════════════════════════════════

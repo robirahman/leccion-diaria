@@ -148,6 +148,7 @@ document.addEventListener('click', e => {
     case 'start-vocab-learn': startVocabLearn(); break;
     case 'start-vocab-quiz': startVocabQuiz(); break;
     case 'start-quick-vocab': startQuickVocab(); break;
+    case 'start-learn-new': startLearnNewWords(); break;
     case 'start-gender-quiz': startGenderQuiz(); break;
     case 'flip-vocab-card': flipVocabCard(); break;
     case 'rate-vocab': rateVocab(parseInt(target.dataset.rating)); break;
@@ -347,6 +348,10 @@ document.addEventListener('click', e => {
     case 'answer-themed-quiz': answerThemedQuizMC(parseInt(target.dataset.idx)); break;
     case 'submit-themed-quiz-mc': submitThemedQuizMC(); break;
     case 'next-themed-quiz': nextThemedQuiz(); break;
+
+    // CEFR Curriculum
+    case 'open-curriculum': renderCurriculumOverview(); showScreen('curriculum'); break;
+    case 'open-curriculum-level': renderCurriculumLevel(target.dataset.level || target.closest('[data-level]')?.dataset.level); showScreen('curriculum-level'); break;
 
     // Curriculum Tracks
     case 'open-tracks': renderTrackList(); showScreen('tracks'); break;

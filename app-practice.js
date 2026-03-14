@@ -1740,9 +1740,136 @@ function renderStats() {
     cal.innerHTML = calHtml;
   }
 
-  // Render achievements and weak areas
+  // Render achievements, weak areas, and recall health
   renderAchievements();
   renderWeakAreas();
+  renderRecallHealth();
+  renderCefrMasteryDetailed(document.getElementById('stats-cefr-mastery'));
+  renderStatsTenseMastery();
+  renderStatsGrammarProgress();
+}
+
+function renderStatsTenseMastery() {
+  const el = document.getElementById('stats-tense-mastery');
+  if (!el) return;
+  const data = computeTenseMastery();
+  if (!data.length) { el.innerHTML = '<p class="text-muted text-sm">No verb forms practiced yet.</p>'; return; }
+
+  let html = '';
+  for (const t of data) {
+    const rc = t.avgRecall !== null
+      ? (t.avgRecall >= 90 ? 'var(--green)' : t.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+      : 'var(--text3)';
+    const recallText = t.avgRecall !== null ? `${t.avgRecall}%` : '—';
+    const total = t.levels.reduce((a, b) => a + b, 0) || 1;
+    html += `<div style="margin-bottom:0.5rem">
+      <div class="stat-row" style="margin-bottom:0.15rem">
+        <span class="stat-label" style="font-size:0.8rem">${t.label}</span>
+        <span style="font-size:0.65rem;color:var(--text3)">${t.level}</span>
+        <span style="font-size:0.75rem;color:${rc};min-width:2.5rem;text-align:right">${recallText}</span>
+      </div>
+      <div class="mastery-bar" title="L1:${t.levels[1]} L2:${t.levels[2]} L3:${t.levels[3]} L4:${t.levels[4]}">
+        <div style="width:${t.levels[1]/total*100}%;background:var(--red)"></div>
+        <div style="width:${t.levels[2]/total*100}%;background:var(--yellow)"></div>
+        <div style="width:${t.levels[3]/total*100}%;background:var(--green)"></div>
+        <div style="width:${t.levels[4]/total*100}%;background:var(--blue)"></div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderStatsGrammarProgress() {
+  const el = document.getElementById('stats-grammar-progress');
+  if (!el) return;
+  const data = computeGrammarProgress();
+  if (!data.length) { el.innerHTML = '<p class="text-muted text-sm">No grammar lessons completed yet.</p>'; return; }
+
+  let html = '';
+  for (const lv of data) {
+    const pct = Math.round(lv.done / lv.total * 100);
+    const rc = lv.avgRecall !== null
+      ? (lv.avgRecall >= 90 ? 'var(--green)' : lv.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+      : '';
+    const recallText = lv.avgRecall !== null ? ` &middot; ${lv.avgRecall}% recall` : '';
+    html += `<div class="stat-row" style="margin-bottom:0.4rem">
+      <span class="stat-label" style="min-width:2rem;font-weight:600">${lv.level}</span>
+      <div style="flex:1;margin:0 0.5rem;background:var(--bg3);height:8px;border-radius:4px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:var(--accent)"></div>
+      </div>
+      <span class="text-muted text-sm">${lv.done}/${lv.total}${recallText}</span>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderRecallHealth() {
+  const el = document.getElementById('stats-recall');
+  if (!el || !progress) return;
+  const stores = [
+    { name: 'Verbs', fsrs: progress.verbFsrs },
+    { name: 'Vocab', fsrs: progress.vocabFsrs },
+    { name: 'Grammar', fsrs: progress.grammarFsrs },
+    { name: 'Phrases', fsrs: progress.phraseFsrs },
+  ];
+  let totalR = 0, count = 0, due = 0, strong = 0, fading = 0, weak = 0;
+  const now = Date.now();
+  const perStore = [];
+
+  for (const { name, fsrs } of stores) {
+    let sR = 0, sN = 0, sDue = 0;
+    for (const rec of Object.values(fsrs || {})) {
+      if (!rec || !rec.s) continue;
+      const elapsed = (now - rec.lastRev) / 86400000;
+      const r = fsrsR(rec.s, elapsed);
+      totalR += r; count++;
+      sR += r; sN++;
+      if (r < 0.7) { weak++; sDue++; }
+      else if (r < 0.9) { fading++; sDue++; }
+      else strong++;
+      if (r < 0.9) due++;
+    }
+    if (sN > 0) perStore.push({ name, avg: Math.round(sR / sN * 100), count: sN, due: sDue });
+  }
+
+  if (count === 0) {
+    el.innerHTML = '<p class="text-muted text-sm">No items studied yet.</p>';
+    return;
+  }
+
+  const avgPct = Math.round(totalR / count * 100);
+  const total = count || 1;
+  const avgColor = avgPct >= 90 ? 'var(--green)' : avgPct >= 70 ? 'var(--yellow)' : 'var(--red)';
+
+  let html = `<div class="stat-row" style="margin-bottom:0.5rem">
+    <span class="stat-label">Average Recall</span>
+    <span style="font-weight:700;color:${avgColor}">${avgPct}%</span>
+  </div>
+  <div class="stat-row" style="margin-bottom:0.5rem">
+    <span class="stat-label">Due for review</span>
+    <span class="stat-value">${due} of ${count}</span>
+  </div>
+  <div class="mastery-bar" style="margin-bottom:0.75rem" title="Strong:${strong} Fading:${fading} Weak:${weak}">
+    <div style="width:${strong/total*100}%;background:var(--green)"></div>
+    <div style="width:${fading/total*100}%;background:var(--yellow)"></div>
+    <div style="width:${weak/total*100}%;background:var(--red)"></div>
+  </div>
+  <div style="display:flex;gap:1rem;font-size:0.75rem;color:var(--text3);margin-bottom:0.5rem">
+    <span style="color:var(--green)">&#9632; Strong ${strong}</span>
+    <span style="color:var(--yellow)">&#9632; Fading ${fading}</span>
+    <span style="color:var(--red)">&#9632; Weak ${weak}</span>
+  </div>`;
+
+  for (const s of perStore) {
+    const c = s.avg >= 90 ? 'var(--green)' : s.avg >= 70 ? 'var(--yellow)' : 'var(--red)';
+    html += `<div class="stat-row">
+      <span class="stat-label">${s.name}</span>
+      <span class="text-muted text-sm">${s.count} items</span>
+      <span style="font-weight:600;color:${c};min-width:3rem;text-align:right">${s.avg}%</span>
+    </div>`;
+  }
+
+  el.innerHTML = html;
 }
 
 // ════════════════════════════════════════
@@ -2004,6 +2131,20 @@ function renderVerbReference(infinitive) {
   document.getElementById('vref-suggestions').innerHTML = '';
   let html = '';
 
+  // Compute overall verb recall
+  const verbFsrsKeys = Object.keys(progress.verbFsrs || {}).filter(k => k.startsWith(infinitive + ':'));
+  let verbRecallBadge = '';
+  if (verbFsrsKeys.length) {
+    const now = Date.now();
+    const sum = verbFsrsKeys.reduce((s, k) => {
+      const rec = progress.verbFsrs[k];
+      return s + (rec?.s ? fsrsR(rec.s, (now - rec.lastRev) / 86400000) : 0);
+    }, 0);
+    const avgR = Math.round(sum / verbFsrsKeys.length * 100);
+    const rc = avgR >= 90 ? 'var(--green)' : avgR >= 70 ? 'var(--yellow)' : 'var(--red)';
+    verbRecallBadge = `<span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:${rc}20;color:${rc};border-radius:4px">Recall ${avgR}%</span>`;
+  }
+
   // Header
   html += `<div class="card mb-1">
     <h2 style="margin:0">${esc(verb.infinitive)}</h2>
@@ -2013,6 +2154,7 @@ function renderVerbReference(infinitive) {
       <span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:var(--bg3);color:var(--text2);border-radius:4px">-${verb.group}</span>
       <span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:var(--accent-bg);color:var(--accent);border-radius:4px">${verb.level}</span>
       ${verb.stemChange ? `<span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:var(--yellow-bg);color:var(--yellow);border-radius:4px">${verb.stemChange}</span>` : ''}
+      ${verbRecallBadge}
     </div>
   </div>`;
 
@@ -2067,12 +2209,25 @@ function renderRefTenseTable(infinitive, tense, useSeForm = false) {
   const lookupTense = useSeForm ? 'subjunctive_imperfect_se' : tense;
   const isIrregular = !!(FULL_IRREGULARS[infinitive] && FULL_IRREGULARS[infinitive][lookupTense]);
   const label = useSeForm ? (tenseLabel(meta) + ' (-se)') : tenseLabel(meta);
+
+  // Per-tense recall badge
+  let tenseRecallBadge = '';
+  const tenseKeys = PERSONS.map((_, i) => `${infinitive}:${lookupTense}:${i}`);
+  const tenseRecs = tenseKeys.map(k => progress.verbFsrs?.[k]).filter(r => r?.s);
+  if (tenseRecs.length) {
+    const now = Date.now();
+    const avg = Math.round(tenseRecs.reduce((s, r) => s + fsrsR(r.s, (now - r.lastRev) / 86400000), 0) / tenseRecs.length * 100);
+    const tc = avg >= 90 ? 'var(--green)' : avg >= 70 ? 'var(--yellow)' : 'var(--red)';
+    tenseRecallBadge = `<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:${tc}20;color:${tc};border-radius:3px">${avg}%</span>`;
+  }
+
   return `<div class="card mb-1">
     <div class="flex" style="justify-content:space-between;align-items:center">
       <div class="card-title text-sm">${label}</div>
       <div style="display:flex;gap:0.25rem">
         <span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">${meta.level}</span>
         ${isIrregular ? '<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--accent-bg);color:var(--accent);border-radius:3px">irregular</span>' : ''}
+        ${tenseRecallBadge}
       </div>
     </div>
     ${meta.compound ? `<div class="text-muted" style="font-size:0.7rem">haber (${meta.auxTense}) + past participle</div>` : ''}
@@ -2623,6 +2778,336 @@ function nextThemedQuiz() { themedQuizFlow.next(); }
 // ════════════════════════════════════════
 //  CURRICULUM TRACKS
 // ════════════════════════════════════════
+
+// ════════════════════════════════════════
+//  CEFR CURRICULUM
+// ════════════════════════════════════════
+
+const CEFR_DESCRIPTIONS = {
+  A1: {
+    name: 'Principiante', nameEn: 'Beginner',
+    desc: 'Understand and use familiar everyday expressions. Introduce yourself, ask and answer basic personal questions. Interact in a simple way if the other person speaks slowly.',
+    conversations: 'Basic greetings, ordering food, asking for directions, introductions, telling time',
+  },
+  A2: {
+    name: 'Elemental', nameEn: 'Elementary',
+    desc: 'Understand frequently used expressions (personal info, shopping, local geography, employment). Communicate in simple routine tasks. Describe aspects of your background and immediate environment.',
+    conversations: 'Shopping, transport, health, social chat, restaurant ordering, emergencies',
+  },
+  B1: {
+    name: 'Intermedio', nameEn: 'Intermediate',
+    desc: 'Understand main points on familiar matters (work, school, leisure). Deal with most situations while travelling. Produce simple connected text. Describe experiences, events, dreams, and briefly give reasons and explanations.',
+    conversations: 'Work and meetings, expressing opinions, travel planning, describing experiences, romance',
+  },
+  B2: {
+    name: 'Intermedio Alto', nameEn: 'Upper Intermediate',
+    desc: 'Understand main ideas of complex text on both concrete and abstract topics. Interact with fluency and spontaneity. Produce clear, detailed text on a wide range of subjects and explain viewpoints.',
+    conversations: 'Debates, nuanced opinion, detailed narratives, hypothetical situations, formal correspondence',
+  },
+  C1: {
+    name: 'Avanzado', nameEn: 'Advanced',
+    desc: 'Understand a wide range of demanding, longer texts and recognize implicit meaning. Express ideas fluently and spontaneously. Use language flexibly and effectively for social, academic, and professional purposes.',
+    conversations: 'Academic presentations, journalism, diplomacy, complex negotiations, abstract discussions',
+  },
+  C2: {
+    name: 'Maestría', nameEn: 'Mastery',
+    desc: 'Understand with ease virtually everything heard or read. Summarize information from different sources, reconstructing arguments coherently. Express yourself spontaneously, very fluently, and precisely, differentiating finer shades of meaning.',
+    conversations: 'Literary analysis, philosophical discourse, legal argumentation, simultaneous interpretation, any professional domain',
+  },
+};
+
+const CEFR_COLORS = { A1: '#4CAF50', A2: '#8BC34A', B1: '#FF9800', B2: '#F44336', C1: '#9C27B0', C2: '#311B92' };
+
+function getCefrContentCounts(lv) {
+  const counts = {};
+  if (typeof VOCAB_DATA !== 'undefined' && typeof buildVocabIndexes === 'function') {
+    buildVocabIndexes();
+    counts.vocab = (VOCAB_BY_LEVEL[lv] || []).length;
+  }
+  if (typeof VERB_DATA !== 'undefined') {
+    counts.verbs = VERB_DATA.filter(v => v.level === lv).length;
+  }
+  if (typeof TENSE_META !== 'undefined') {
+    counts.tenses = Object.values(TENSE_META).filter(t => t.level === lv).length;
+  }
+  if (typeof GRAMMAR_DATA !== 'undefined') {
+    counts.grammar = GRAMMAR_DATA.filter(l => l.level === lv).length;
+  }
+  if (typeof CONVERSATIONS_DATA !== 'undefined') {
+    counts.conversations = CONVERSATIONS_DATA.filter(c => c.level === lv).length;
+  }
+  if (typeof READING_DATA !== 'undefined') {
+    counts.reading = READING_DATA.filter(r => r.level === lv).length;
+  }
+  if (typeof SENTENCE_CONSTRUCTION !== 'undefined') {
+    counts.sentences = SENTENCE_CONSTRUCTION.filter(s => s.level === lv).length;
+  }
+  if (typeof TRANSLATION_DRILLS !== 'undefined') {
+    counts.translations = TRANSLATION_DRILLS.filter(t => t.level === lv).length;
+  }
+  return counts;
+}
+
+function renderCurriculumOverview() {
+  const el = document.getElementById('curriculum-levels');
+  if (!el) return;
+  const mastery = computeCefrMastery();
+  const masteryMap = {};
+  for (const m of mastery) masteryMap[m.level] = m;
+
+  let html = '';
+  for (const lv of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
+    const info = CEFR_DESCRIPTIONS[lv];
+    const color = CEFR_COLORS[lv];
+    const m = masteryMap[lv] || { overall: 0, pillars: [] };
+    const counts = getCefrContentCounts(lv);
+    const c = cefrColor(m.overall);
+
+    html += `<div class="card mb-1" data-action="open-curriculum-level" data-level="${lv}" style="border-left:4px solid ${color};cursor:pointer">
+      <div class="flex justify-between items-center mb-1">
+        <div>
+          <span style="font-weight:700;font-size:1.1rem;color:${color}">${lv}</span>
+          <span class="text-muted" style="margin-left:0.5rem">${info.nameEn}</span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:700;font-size:1.1rem;color:${c}">${m.overall}%</div>
+        </div>
+      </div>
+      <div class="mastery-bar" style="margin-bottom:0.5rem;height:8px">
+        <div style="width:${m.overall}%;background:${color}"></div>
+      </div>
+      <p class="text-muted" style="font-size:0.75rem;margin:0 0 0.4rem">${info.desc}</p>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;font-size:0.65rem;color:var(--text3)">
+        ${counts.vocab ? `<span>${counts.vocab} words</span>` : ''}
+        ${counts.verbs ? `<span>${counts.verbs} verbs</span>` : ''}
+        ${counts.tenses ? `<span>${counts.tenses} tenses</span>` : ''}
+        ${counts.grammar ? `<span>${counts.grammar} lessons</span>` : ''}
+        ${counts.conversations ? `<span>${counts.conversations} dialogues</span>` : ''}
+        ${counts.reading ? `<span>${counts.reading} readings</span>` : ''}
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderCurriculumLevel(lv) {
+  if (!lv) return;
+  const info = CEFR_DESCRIPTIONS[lv];
+  const color = CEFR_COLORS[lv];
+  if (!info) return;
+
+  const mastery = computeCefrMastery();
+  const m = mastery.find(x => x.level === lv) || { overall: 0, pillars: [] };
+  const counts = getCefrContentCounts(lv);
+  const c = cefrColor(m.overall);
+
+  // Header
+  let headerHtml = `
+    <div style="border-left:4px solid ${color};padding-left:0.75rem;margin-bottom:1rem">
+      <h2 style="margin:0"><span style="color:${color}">${lv}</span> — ${info.nameEn}</h2>
+      <p class="text-muted" style="font-size:0.85rem;margin:0.25rem 0">${info.name}</p>
+    </div>
+    <div class="card mb-1">
+      <div class="flex justify-between items-center mb-1">
+        <span style="font-weight:600">Overall Mastery</span>
+        <span style="font-weight:700;font-size:1.2rem;color:${c}">${m.overall}%</span>
+      </div>
+      <div class="mastery-bar" style="height:12px;margin-bottom:0.5rem">
+        <div style="width:${m.overall}%;background:${color}"></div>
+      </div>
+      ${m.pillars.map(p => {
+        const pp = p.total ? Math.round(p.pct * 100) : 0;
+        const pc = cefrColor(pp);
+        return `<div class="stat-row" style="margin-bottom:0.2rem">
+          <span class="stat-label" style="font-size:0.8rem">${p.name}</span>
+          <div style="flex:1;margin:0 0.5rem;background:var(--bg3);height:6px;border-radius:3px;overflow:hidden">
+            <div style="width:${pp}%;height:100%;background:${pc}"></div>
+          </div>
+          <span style="font-size:0.75rem;color:${pc}">${p.done}/${p.total}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card mb-1">
+      <div class="card-title mb-1" style="font-size:0.85rem">What you can do at ${lv}</div>
+      <p style="font-size:0.8rem;margin:0 0 0.4rem">${info.desc}</p>
+      <div class="text-muted" style="font-size:0.75rem"><strong>Conversations:</strong> ${info.conversations}</div>
+    </div>`;
+
+  document.getElementById('curriculum-level-header').innerHTML = headerHtml;
+
+  // Content sections
+  let contentHtml = '';
+
+  // Grammar lessons
+  if (typeof GRAMMAR_DATA !== 'undefined') {
+    const lessons = GRAMMAR_DATA.filter(l => l.level === lv);
+    if (lessons.length) {
+      contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Grammar (${lessons.length} lessons)</div>`;
+      for (const l of lessons) {
+        const done = !!progress.grammarDone?.[l.id];
+        const r = getRecallPct(progress.grammarFsrs, l.id);
+        const icon = done ? '<span style="color:var(--green)">&#10003;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
+        const recall = r !== null ? (() => { const rc = r >= 90 ? 'var(--green)' : r >= 70 ? 'var(--yellow)' : 'var(--red)'; return `<span style="font-size:0.65rem;color:${rc}">${r}%</span>`; })() : '';
+        contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem;cursor:pointer" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
+          <span style="min-width:1.2rem">${icon}</span>
+          <span style="flex:1;font-size:0.8rem">${esc(l.titleEn || l.title)}</span>
+          ${recall}
+        </div>`;
+      }
+      contentHtml += '</div>';
+    }
+  }
+
+  // Verb tenses at this level
+  if (typeof TENSE_META !== 'undefined') {
+    const tenses = Object.entries(TENSE_META).filter(([, m]) => m.level === lv);
+    if (tenses.length) {
+      contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Verb Tenses (${tenses.length})</div>`;
+      for (const [tKey, tMeta] of tenses) {
+        // Compute mastery across all verbs for this tense
+        let practiced = 0, total = 0;
+        if (typeof VERB_DATA !== 'undefined') {
+          for (const v of VERB_DATA) {
+            for (let p = 0; p < 6; p++) {
+              if (tKey.startsWith('imperative') && p === 0) continue;
+              total++;
+              if (progress.verbMastery?.[`${v.infinitive}:${tKey}:${p}`]) practiced++;
+            }
+          }
+        }
+        const pct = total ? Math.round(practiced / total * 100) : 0;
+        const pc = cefrColor(pct);
+        const icon = pct >= 80 ? '<span style="color:var(--green)">&#10003;</span>' : pct > 0 ? '<span style="color:var(--yellow)">&#9673;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
+        contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem">
+          <span style="min-width:1.2rem">${icon}</span>
+          <span style="flex:1;font-size:0.8rem">${tMeta.labelEn || tMeta.label}</span>
+          <span style="font-size:0.65rem;color:${pc}">${pct}%</span>
+          <span class="text-muted" style="font-size:0.65rem;min-width:3rem;text-align:right">${practiced}/${total}</span>
+        </div>`;
+      }
+      contentHtml += '</div>';
+    }
+  }
+
+  // Verbs at this level
+  if (typeof VERB_DATA !== 'undefined') {
+    const verbs = VERB_DATA.filter(v => v.level === lv);
+    if (verbs.length) {
+      const learnedVerbs = verbs.filter(v => {
+        return Object.keys(progress.verbMastery || {}).some(k => k.startsWith(v.infinitive + ':'));
+      });
+      contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Verbs (${learnedVerbs.length}/${verbs.length} practiced)</div>`;
+      contentHtml += '<div style="display:flex;flex-wrap:wrap;gap:0.3rem">';
+      for (const v of verbs) {
+        const practiced = Object.keys(progress.verbMastery || {}).some(k => k.startsWith(v.infinitive + ':'));
+        const bg = practiced ? `${color}20` : 'var(--bg3)';
+        const fg = practiced ? color : 'var(--text3)';
+        contentHtml += `<span style="font-size:0.7rem;padding:0.15rem 0.4rem;background:${bg};color:${fg};border-radius:3px">${esc(v.infinitive)}</span>`;
+      }
+      contentHtml += '</div></div>';
+    }
+  }
+
+  // Vocabulary
+  if (typeof VOCAB_DATA !== 'undefined' && typeof buildVocabIndexes === 'function') {
+    buildVocabIndexes();
+    const words = VOCAB_BY_LEVEL[lv] || [];
+    if (words.length) {
+      const learned = words.filter(w => progress.vocabMastery?.[w.word]).length;
+      // Group by category
+      const byCat = {};
+      for (const w of words) {
+        const cat = w.category || 'other';
+        (byCat[cat] ??= { total: 0, done: 0 }).total++;
+        if (progress.vocabMastery?.[w.word]) byCat[cat].done++;
+      }
+      contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Vocabulary (${learned}/${words.length} learned)</div>`;
+      const catEntries = Object.entries(byCat).sort((a, b) => b[1].total - a[1].total).slice(0, 15);
+      for (const [cat, info] of catEntries) {
+        const catPct = Math.round(info.done / info.total * 100);
+        const catTitle = typeof VOCAB_CATEGORIES !== 'undefined' && VOCAB_CATEGORIES[cat]
+          ? (VOCAB_CATEGORIES[cat].titleEn || VOCAB_CATEGORIES[cat].title)
+          : cat;
+        contentHtml += `<div class="stat-row" style="margin-bottom:0.15rem">
+          <span style="flex:1;font-size:0.75rem">${esc(catTitle)}</span>
+          <span class="text-muted" style="font-size:0.65rem">${info.done}/${info.total}</span>
+        </div>`;
+      }
+      if (Object.keys(byCat).length > 15) {
+        contentHtml += `<div class="text-muted" style="font-size:0.65rem;margin-top:0.2rem">+${Object.keys(byCat).length - 15} more categories</div>`;
+      }
+      contentHtml += '</div>';
+    }
+  }
+
+  // Conversations
+  if (typeof CONVERSATIONS_DATA !== 'undefined') {
+    const convs = CONVERSATIONS_DATA.filter(c => c.level === lv);
+    if (convs.length) {
+      contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Conversations (${convs.length})</div>`;
+      for (const c of convs) {
+        contentHtml += `<div style="font-size:0.8rem;margin-bottom:0.2rem">${c.icon || ''} ${esc(c.titleEn || c.title)}</div>`;
+      }
+      contentHtml += '</div>';
+    }
+  }
+
+  // Reading
+  if (typeof READING_DATA !== 'undefined') {
+    const readings = READING_DATA.filter(r => r.level === lv);
+    if (readings.length) {
+      contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Reading (${readings.length})</div>`;
+      for (const r of readings) {
+        const done = !!progress.readingMastery?.[r.id];
+        const icon = done ? '<span style="color:var(--green)">&#10003;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
+        contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem">
+          <span style="min-width:1.2rem">${icon}</span>
+          <span style="font-size:0.8rem">${esc(r.titleEn || r.title)}</span>
+        </div>`;
+      }
+      contentHtml += '</div>';
+    }
+  }
+
+  // Other exercises
+  const exerciseTypes = [
+    { name: 'Sentence Construction', data: typeof SENTENCE_CONSTRUCTION !== 'undefined' ? SENTENCE_CONSTRUCTION : null, store: 'sentenceMastery' },
+    { name: 'Translation Drills', data: typeof TRANSLATION_DRILLS !== 'undefined' ? TRANSLATION_DRILLS : null, store: 'translationMastery' },
+    { name: 'Cloze Passages', data: typeof CLOZE_PASSAGES !== 'undefined' ? CLOZE_PASSAGES : null, store: 'clozeMastery' },
+    { name: 'Dictation', data: typeof DICTATION_DATA !== 'undefined' ? DICTATION_DATA : null, store: 'dictMastery' },
+  ];
+  for (const ex of exerciseTypes) {
+    if (!ex.data) continue;
+    const items = ex.data.filter(i => i.level === lv);
+    if (!items.length) continue;
+    const done = items.filter(i => progress[ex.store]?.[i.id]).length;
+    const icon = done === items.length ? '<span style="color:var(--green)">&#10003;</span>'
+      : done > 0 ? '<span style="color:var(--yellow)">&#9673;</span>'
+      : '<span style="color:var(--text3)">&#9675;</span>';
+    contentHtml += `<div class="stat-row" style="margin-bottom:0.3rem">
+      <span style="min-width:1.2rem">${icon}</span>
+      <span style="flex:1;font-size:0.8rem">${ex.name}</span>
+      <span class="text-muted" style="font-size:0.7rem">${done}/${items.length}</span>
+    </div>`;
+  }
+
+  // Skills still needed
+  const todo = [];
+  for (const p of m.pillars) {
+    const remaining = p.total - p.done;
+    if (remaining > 0) todo.push(`${remaining} more ${p.name.toLowerCase()} items`);
+  }
+  if (todo.length) {
+    contentHtml += `<div class="card mb-1" style="border-left:3px solid var(--yellow)">
+      <div class="card-title mb-1" style="font-size:0.85rem">Still needed for ${lv} mastery</div>
+      <ul style="margin:0;padding-left:1.2rem;font-size:0.8rem;color:var(--text2)">
+        ${todo.map(t => `<li>${t}</li>`).join('')}
+      </ul>
+    </div>`;
+  }
+
+  document.getElementById('curriculum-level-content').innerHTML = contentHtml;
+}
 
 let currentTrack = null;
 

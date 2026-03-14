@@ -101,6 +101,9 @@ function renderToday() {
     <div class="stat-card"><div class="stat-num">${vocabLearned}</div><div class="stat-desc">${t('words')}</div></div>
   `;
 
+  // CEFR mastery
+  renderCefrMasteryCompact(document.getElementById('today-cefr-mastery'));
+
   // Word of the Day
   renderWordOfTheDay();
 
@@ -169,6 +172,10 @@ function renderToday() {
     <div class="card" data-action="start-quick-vocab">
       <div class="card-title">${t('quickVocab')}</div>
       <div class="card-subtitle">${t('quickVocabDesc')}</div>
+    </div>
+    <div class="card" data-action="start-learn-new">
+      <div class="card-title">Learn New Words</div>
+      <div class="card-subtitle">Study your weakest or unseen vocabulary</div>
     </div>
   `;
 
@@ -316,6 +323,57 @@ function renderVerbsHome() {
     <div class="stat-card"><div class="stat-num">${learned}</div><div class="stat-desc">${t('formsPracticed')}</div></div>
     <div class="stat-card"><div class="stat-num">${typeof VERB_DATA !== 'undefined' ? VERB_DATA.length : 0}</div><div class="stat-desc">${t('totalVerbs')}</div></div>
   `;
+
+  // Tense mastery breakdown
+  const el = document.getElementById('verbs-tense-mastery');
+  if (el) renderTenseMasteryBars(el, computeTenseMastery());
+}
+
+function renderTenseMasteryBars(el, tenseData) {
+  if (!tenseData.length) { el.innerHTML = ''; return; }
+
+  // Group by mood
+  const indicative = [], subjunctive = [], imperative = [], compound = [], progressive = [];
+  for (const t of tenseData) {
+    if (t.compound) compound.push(t);
+    else if (t.progressive) progressive.push(t);
+    else if (t.tense.startsWith('subjunctive')) subjunctive.push(t);
+    else if (t.tense.startsWith('imperative')) imperative.push(t);
+    else indicative.push(t);
+  }
+
+  const renderGroup = (title, items) => {
+    if (!items.length) return '';
+    let html = `<div class="text-sm text-muted" style="margin:0.5rem 0 0.25rem;font-weight:600">${title}</div>`;
+    for (const t of items) {
+      const rc = t.avgRecall !== null
+        ? (t.avgRecall >= 90 ? 'var(--green)' : t.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+        : 'var(--text3)';
+      const recallText = t.avgRecall !== null ? `${t.avgRecall}%` : '—';
+      html += `<div class="stat-row" style="margin-bottom:0.2rem">
+        <span class="stat-label" style="min-width:8rem;font-size:0.8rem">${t.label}</span>
+        <span style="font-size:0.65rem;color:var(--text3);min-width:2rem">${t.level}</span>
+        <span style="font-size:0.75rem;min-width:2.5rem;text-align:right;color:${rc}">${recallText}</span>
+        <span class="text-muted" style="font-size:0.7rem;min-width:2rem;text-align:right">${t.practiced}</span>
+      </div>`;
+    }
+    return html;
+  };
+
+  el.innerHTML = `<div class="card mt-1" style="padding:0.75rem">
+    <div class="card-title mb-1" style="font-size:0.85rem">Tense Mastery</div>
+    <div class="stat-row" style="margin-bottom:0.3rem;font-size:0.65rem;color:var(--text3)">
+      <span style="min-width:8rem">Tense</span>
+      <span style="min-width:2rem">Lvl</span>
+      <span style="min-width:2.5rem;text-align:right">Recall</span>
+      <span style="min-width:2rem;text-align:right">Forms</span>
+    </div>
+    ${renderGroup('Indicative', indicative)}
+    ${renderGroup('Subjunctive', subjunctive)}
+    ${renderGroup('Imperative', imperative)}
+    ${renderGroup('Compound', compound)}
+    ${renderGroup('Progressive', progressive)}
+  </div>`;
 }
 
 // ── Verb Learn (Flashcards) ──
@@ -849,12 +907,19 @@ function openVocabCategory(cat, page) {
   const pageItems = flat.slice(start, start + VOCAB_CAT_PAGE_SIZE);
   const hasMore = start + VOCAB_CAT_PAGE_SIZE < flat.length;
 
+  const recallBadge = w => {
+    const r = getRecallPct(progress.vocabFsrs, w.word);
+    if (r === null) return '';
+    const color = r >= 90 ? 'var(--green)' : r >= 70 ? 'var(--yellow)' : 'var(--red)';
+    return `<span style="font-size:0.65rem;padding:0.05rem 0.35rem;background:${color}20;color:${color};border-radius:3px;margin-left:0.3rem">${r}%</span>`;
+  };
+
   const renderWord = w => `
     <div class="card" style="padding:0.6rem 0.75rem">
       <div class="flex justify-between items-center">
         <div>
           ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.65rem;padding:0.05rem 0.3rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
-          <strong>${esc(w.word)}</strong>
+          <strong>${esc(w.word)}</strong>${recallBadge(w)}
           <span class="text-muted text-sm"> — ${esc(w.english)}</span>
         </div>
         <button class="tts-btn" data-action="speak" data-text="${esc(w.word)}" aria-label="Listen to ${esc(w.word)}">&#128266;</button>
@@ -990,6 +1055,33 @@ function startQuickVocab() {
   vocabQuizScore = 0;
   showScreen('vocab-quiz');
   renderVocabQuizQuestion();
+}
+
+function startLearnNewWords() {
+  if (typeof VOCAB_DATA === 'undefined' || VOCAB_DATA.length < 4) return;
+  buildVocabIndexes();
+  const level = progress.placementLevel || 'A1';
+  const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const maxIdx = Math.min(levelOrder.indexOf(level) + 1, levelOrder.length - 1);
+  let pool = [];
+  for (let i = 0; i <= maxIdx; i++) {
+    if (VOCAB_BY_LEVEL[levelOrder[i]]) pool.push(...VOCAB_BY_LEVEL[levelOrder[i]]);
+  }
+  if (pool.length < 10) pool = VOCAB_DATA;
+
+  const now = Date.now();
+  const scored = pool.map(w => {
+    const rec = progress.vocabFsrs?.[w.word];
+    const r = rec?.s ? fsrsR(rec.s, (now - rec.lastRev) / 86400000) : 0;
+    return { w, r };
+  });
+  scored.sort((a, b) => a.r - b.r);
+
+  vocabLearnQueue = scored.slice(0, 10).map(s => s.w);
+  vocabLearnIdx = 0;
+  currentVocabCategory = null;
+  showScreen('vocab-learn');
+  renderVocabLearnCard();
 }
 
 function renderVocabQuizQuestion() {
@@ -1176,6 +1268,33 @@ function renderGrammarHome() {
     showErrorState('grammar-levels', 'Grammar data is still loading. Please wait a moment and try again.', 'open-grammar');
     return;
   }
+
+  // Level summary bars
+  const summaryEl = document.getElementById('grammar-level-summary');
+  if (summaryEl) {
+    const gp = computeGrammarProgress();
+    if (gp.length) {
+      let sHtml = '';
+      for (const lv of gp) {
+        const pct = Math.round(lv.done / lv.total * 100);
+        const rc = lv.avgRecall !== null
+          ? (lv.avgRecall >= 90 ? 'var(--green)' : lv.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+          : '';
+        const recallText = lv.avgRecall !== null ? `<span style="color:${rc};font-size:0.75rem;margin-left:0.5rem">${lv.avgRecall}% recall</span>` : '';
+        sHtml += `<div class="stat-row" style="margin-bottom:0.4rem">
+          <span class="stat-label" style="min-width:2rem;font-weight:600">${lv.level}</span>
+          <div style="flex:1;margin:0 0.5rem;background:var(--bg3);height:8px;border-radius:4px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:var(--accent)"></div>
+          </div>
+          <span class="text-muted text-sm" style="min-width:4rem;text-align:right">${lv.done}/${lv.total}${recallText}</span>
+        </div>`;
+      }
+      summaryEl.innerHTML = `<div class="card mb-1" style="padding:0.75rem">${sHtml}</div>`;
+    } else {
+      summaryEl.innerHTML = '';
+    }
+  }
+
   const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   let html = '';
   levels.forEach(level => {
@@ -1189,10 +1308,14 @@ function renderGrammarHome() {
       const badge = level > 0
         ? `<span class="mastery-badge mastery-${level}">${masteryLabels[level]}</span>`
         : '';
+      const r = getRecallPct(progress.grammarFsrs, l.id);
+      const recallBadge = r !== null
+        ? (() => { const c = r >= 90 ? 'var(--green)' : r >= 70 ? 'var(--yellow)' : 'var(--red)'; return `<span style="font-size:0.65rem;padding:0.05rem 0.35rem;background:${c}20;color:${c};border-radius:3px;margin-left:0.3rem">${r}%</span>`; })()
+        : '';
       html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
         <div class="flex justify-between items-center">
           <div>
-            <div class="card-title">${i + 1}. ${esc(l.titleEn || l.title)}</div>
+            <div class="card-title">${i + 1}. ${esc(l.titleEn || l.title)}${recallBadge}</div>
             <div class="card-subtitle">${esc(l.shortDesc || '')}</div>
           </div>
           ${badge}

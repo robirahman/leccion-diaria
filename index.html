@@ -46,6 +46,7 @@
       <p class="date" id="today-date"></p>
     </div>
     <div class="stat-cards" id="today-stats" data-action="open-stats"></div>
+    <div id="today-cefr-mastery"></div>
 
     <div class="today-section" id="today-wotd-section">
       <div id="today-wotd"></div>
@@ -79,6 +80,10 @@
   <!-- ════════ LEARN HUB ════════ -->
   <div class="screen" id="screen-learn">
     <h2 class="mb-2">Learn</h2>
+    <div class="card mb-1" data-action="open-curriculum" style="background:linear-gradient(135deg,var(--accent-bg),var(--bg2))">
+      <div class="card-title">CEFR Curriculum</div>
+      <div class="card-subtitle">See what you need to learn at each level</div>
+    </div>
     <div class="card-grid">
       <div class="card" data-action="switch-tab" data-tab="verbs">
         <div class="card-icon">&#127939;</div>
@@ -167,6 +172,7 @@
   <div class="screen" id="screen-verbs">
     <h2 class="mb-2">Verb Conjugation</h2>
     <div class="stat-cards" id="verbs-stats"></div>
+    <div id="verbs-tense-mastery"></div>
 
     <div class="card" data-action="start-verb-learn">
       <div class="card-title">Learn New Verbs</div>
@@ -303,6 +309,10 @@
       <span class="search-icon">&#128269;</span>
       <input type="text" id="vocab-search" placeholder="Search vocabulary..." data-action="search-vocab" aria-label="Search vocabulary">
     </div>
+    <div class="card" data-action="start-learn-new" style="margin-bottom:0.75rem">
+      <div class="card-title">Learn New Words</div>
+      <div class="card-subtitle">10 words you're least likely to know</div>
+    </div>
     <div class="card" data-action="open-themed-vocab" style="margin-bottom:0.75rem">
       <div class="card-title">Themed Sets</div>
       <div class="card-subtitle">Situational vocabulary for real-life scenarios</div>
@@ -355,6 +365,7 @@
   <!-- ════════ GRAMMAR HOME ════════ -->
   <div class="screen" id="screen-grammar">
     <h2 class="mb-2">Grammar</h2>
+    <div id="grammar-level-summary"></div>
     <div id="grammar-levels"></div>
   </div>
 
@@ -1225,6 +1236,10 @@
     <h2 class="mb-2">Statistics</h2>
     <div class="stat-cards" id="stats-overview"></div>
     <div class="card mt-1">
+      <div class="card-title mb-1">CEFR Level Mastery</div>
+      <div id="stats-cefr-mastery"></div>
+    </div>
+    <div class="card mt-1">
       <div class="card-title mb-1">Achievements</div>
       <div class="badge-grid" id="stats-achievements"></div>
     </div>
@@ -1235,6 +1250,18 @@
     <div class="card mt-1">
       <div class="card-title mb-1">Mastery Breakdown</div>
       <div id="stats-mastery"></div>
+    </div>
+    <div class="card mt-1">
+      <div class="card-title mb-1">Recall Health</div>
+      <div id="stats-recall"></div>
+    </div>
+    <div class="card mt-1">
+      <div class="card-title mb-1">Tense Mastery</div>
+      <div id="stats-tense-mastery"></div>
+    </div>
+    <div class="card mt-1">
+      <div class="card-title mb-1">Grammar Progress</div>
+      <div id="stats-grammar-progress"></div>
     </div>
     <div class="card mt-1">
       <div class="card-title mb-1">Category Progress</div>
@@ -1269,6 +1296,18 @@
   <div class="screen" id="screen-track-detail">
     <div id="track-header"></div>
     <div id="track-modules"></div>
+  </div>
+
+  <!-- ════════ CEFR CURRICULUM ════════ -->
+  <div class="screen" id="screen-curriculum">
+    <h2 class="mb-2">CEFR Curriculum</h2>
+    <p class="text-muted text-sm mb-2">What you need to know at each level of Spanish proficiency.</p>
+    <div id="curriculum-levels"></div>
+  </div>
+
+  <div class="screen" id="screen-curriculum-level">
+    <div id="curriculum-level-header"></div>
+    <div id="curriculum-level-content"></div>
   </div>
 
 </div><!-- /app-container -->
