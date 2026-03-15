@@ -528,9 +528,8 @@ function renderReadingQuestion() {
 }
 
 function answerReadingMC(idx) {
-  selectMCOption('#read-question-card', idx);
   readingSelected = idx;
-  document.getElementById('read-submit').style.display = 'block';
+  selectMCOption('#read-question-card', idx, submitReadingMC);
 }
 
 function submitReadingMC() {

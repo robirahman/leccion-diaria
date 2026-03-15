@@ -32,10 +32,15 @@ document.addEventListener('click', e => {
     case 'select-profile': selectProfile(target.dataset.name); break;
     case 'create-profile': createProfile(); break;
     case 'confirm-create-profile': confirmCreateProfile(); break;
+    case 'onboarding-next': onboardingNext(); break;
+    case 'onboarding-skip': onboardingSkip(); break;
 
     // Modal
     case 'close-modal': closeModal(); _pendingNavTab = null; break;
     case 'confirm-leave-quiz': closeModal(); if (_pendingNavTab) { const fn = _pendingNavTab; _pendingNavTab = null; _leaveConfirmed = true; fn(); } break;
+
+    // Bookmarks
+    case 'toggle-bookmark': toggleBookmark(target.dataset.bkType, target.dataset.bkId); break;
 
     // Settings
     case 'set-display': setSetting('display', target.dataset.val); break;
@@ -505,8 +510,65 @@ document.getElementById('verb-search')?.addEventListener('input', e => {
   verbSearchTimer = setTimeout(() => renderVerbBrowser('all', e.target.value), 150);
 });
 
-// Vocab search input (debounced for 30k entries)
+// Vocab search — uses Web Worker for non-blocking search on 28K entries
 let vocabSearchTimer = null;
+let _vocabWorker = null;
+let _vocabSearchId = 0;
+
+function _getVocabWorker() {
+  if (!_vocabWorker) {
+    try {
+      _vocabWorker = new Worker(_resolveFile('vocab-search-worker.js'));
+      _vocabWorker.onmessage = function(e) {
+        if (e.data.type === 'results') {
+          _renderVocabSearchResults(e.data.results, e.data.id);
+        }
+      };
+      // Init worker with current data
+      if (typeof VOCAB_DATA !== 'undefined' && VOCAB_DATA.length > 0) {
+        _vocabWorker.postMessage({ type: 'init', data: VOCAB_DATA });
+      }
+    } catch (err) {
+      // Worker not supported or blocked — fall back to main thread
+      _vocabWorker = null;
+    }
+  }
+  return _vocabWorker;
+}
+
+// Keep worker in sync when vocab data loads progressively
+const _origBuildVocabIndexes = typeof buildVocabIndexes === 'function' ? buildVocabIndexes : null;
+function _updateVocabWorker() {
+  if (_vocabWorker && typeof VOCAB_DATA !== 'undefined') {
+    _vocabWorker.postMessage({ type: 'update', data: VOCAB_DATA });
+  }
+}
+
+function _renderVocabSearchResults(results, id) {
+  // Ignore stale results
+  if (id !== _vocabSearchId) return;
+  document.getElementById('vocab-categories').innerHTML = results.map(w => `
+    <div class="card" style="padding:0.5rem 0.75rem;text-align:left">
+      ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
+      <strong>${esc(w.word)}</strong>
+      <span class="text-muted text-sm"> — ${esc(w.english)}</span>
+    </div>
+  `).join('') || emptyState('🔍', t('noResults'));
+  hideLoading();
+}
+
+function _searchVocabMainThread(q) {
+  buildVocabIndexes();
+  const results = [];
+  for (let i = 0; i < VOCAB_DATA.length && results.length < 50; i++) {
+    const v = VOCAB_DATA[i];
+    if (v.word.includes(q) || v.english.toLowerCase().includes(q)) {
+      results.push(v);
+    }
+  }
+  _renderVocabSearchResults(results, _vocabSearchId);
+}
+
 document.getElementById('vocab-search')?.addEventListener('input', e => {
   if (typeof VOCAB_DATA === 'undefined') return;
   const q = e.target.value.toLowerCase();
@@ -514,26 +576,14 @@ document.getElementById('vocab-search')?.addEventListener('input', e => {
   clearTimeout(vocabSearchTimer);
   vocabSearchTimer = setTimeout(() => {
     showLoading();
-    requestAnimationFrame(() => {
-      buildVocabIndexes();
-      // Early-break search: collect up to 50 results without scanning entire array
-      const results = [];
-      for (let i = 0; i < VOCAB_DATA.length && results.length < 50; i++) {
-        const v = VOCAB_DATA[i];
-        if (v.word.includes(q) || v.english.toLowerCase().includes(q)) {
-          results.push(v);
-        }
-      }
-      document.getElementById('vocab-categories').innerHTML = results.map(w => `
-        <div class="card" style="padding:0.5rem 0.75rem;text-align:left">
-          ${w.gender ? `<span class="word-gender ${w.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${w.gender === 'f' ? 'la' : 'el'}</span>` : ''}
-          <strong>${esc(w.word)}</strong>
-          <span class="text-muted text-sm"> — ${esc(w.english)}</span>
-        </div>
-      `).join('') || emptyState('🔍', t('noResults'));
-      hideLoading();
-    });
-  }, 200);
+    _vocabSearchId++;
+    const worker = _getVocabWorker();
+    if (worker) {
+      worker.postMessage({ type: 'search', query: q, limit: 50, id: _vocabSearchId });
+    } else {
+      requestAnimationFrame(() => _searchVocabMainThread(q));
+    }
+  }, 150);
 });
 
 // Grammar search input
@@ -587,40 +637,69 @@ const LAZY_SCRIPTS = [
   'homophones.js', 'connectors.js'
 ];
 let _lazyLoaded = false;
+function _resolveFile(name) {
+  // In production builds, window.__fileHash maps original names to hashed names
+  return (window.__fileHash && window.__fileHash[name]) || name;
+}
 function lazyLoadSecondaryScripts() {
   if (_lazyLoaded) return;
   _lazyLoaded = true;
-  // Load vocab data via fetch + JSON.parse (2-3x faster than JS eval for large data)
+  // Load vocab data via fetch + JSON.parse (progressive: A1-A2 first, then rest)
   loadVocabData();
   LAZY_SCRIPTS.forEach(src => {
     const s = document.createElement('script');
-    s.src = src;
+    s.src = _resolveFile(src);
     s.async = true;
     document.body.appendChild(s);
   });
 }
 
-// Load vocab from JSON, caching in IndexedDB for instant subsequent loads
+// Load vocab from split JSON files, progressively by CEFR level.
+// A1+A2 loads first (~500KB) for immediate use, then B1/B2/C1/C2 follow.
+const VOCAB_CHUNKS = ['vocab-a1a2.json', 'vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'];
+const _IDB_VOCAB_KEY = 'vocab-data-v2'; // versioned key for split format
+
 function loadVocabData() {
-  if (typeof VOCAB_DATA !== 'undefined') return; // already loaded
-  // Try IndexedDB cache first
-  _idbGet('vocab-data').then(cached => {
-    if (cached) {
+  if (typeof VOCAB_DATA !== 'undefined' && VOCAB_DATA.length > 0) return;
+  window.VOCAB_DATA = [];
+
+  // Try IndexedDB cache first (full dataset)
+  _idbGet(_IDB_VOCAB_KEY).then(cached => {
+    if (cached && cached.length > 1000) {
       window.VOCAB_DATA = cached;
       if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
       return;
     }
-    // Fetch JSON, parse, and cache
-    return fetch('vocab-data.json').then(r => r.json()).then(data => {
-      window.VOCAB_DATA = data;
-      if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
-      _idbPut('vocab-data', data);
-    });
+    _fetchVocabProgressive();
+  }).catch(() => _fetchVocabProgressive());
+}
+
+function _fetchVocabProgressive() {
+  // Load A1+A2 first for immediate use
+  fetch('vocab-a1a2.json').then(r => r.json()).then(data => {
+    window.VOCAB_DATA = data;
+    if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+    _updateVocabWorker();
+
+    // Then load remaining levels in background
+    const remaining = ['vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'];
+    return remaining.reduce((chain, file) =>
+      chain.then(() => fetch(file).then(r => r.json()).then(chunk => {
+        window.VOCAB_DATA = window.VOCAB_DATA.concat(chunk);
+        if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+        _updateVocabWorker();
+      })),
+      Promise.resolve()
+    );
+  }).then(() => {
+    // Cache the full dataset in IndexedDB
+    _idbPut(_IDB_VOCAB_KEY, window.VOCAB_DATA);
   }).catch(() => {
-    // Fallback: fetch without IndexedDB
+    // Fallback: try loading the monolithic file
     fetch('vocab-data.json').then(r => r.json()).then(data => {
       window.VOCAB_DATA = data;
       if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+      _updateVocabWorker();
     }).catch(err => console.warn('Failed to load vocab data:', err));
   });
 }

@@ -186,6 +186,9 @@ function renderToday() {
     </div>
   `;
 
+  // Bookmarks
+  if (typeof renderBookmarks === 'function') renderBookmarks();
+
   // Focus areas (weak items)
   renderTodayFocus();
 }
@@ -657,7 +660,7 @@ function renderVerbQuizQuestion() {
 }
 
 function answerVerbQuizMC(idx) {
-  selectMCOption('#vq-container', idx);
+  selectMCOption('#vq-container', idx, submitVerbQuizMC);
 }
 
 function submitVerbQuizMC() {
@@ -1015,7 +1018,7 @@ function renderGrammarQuizQuestion() {
 }
 
 function answerGrammarQuizMC(idx) {
-  selectMCOption('#gq-container', idx);
+  selectMCOption('#gq-container', idx, submitGrammarQuizMC);
 }
 
 function submitGrammarQuizMC() {
@@ -1238,7 +1241,7 @@ function renderPhraseQuizQuestion() {
 }
 
 function answerPhraseQuizMC(idx) {
-  selectMCOption('#pq-container', idx);
+  selectMCOption('#pq-container', idx, submitPhraseQuizMC);
 }
 
 function submitPhraseQuizMC() {
@@ -1499,7 +1502,7 @@ function showResults(score, total, module, label) {
   document.getElementById('res-stats').innerHTML = `
     <div class="stat-card"><div class="stat-num" style="color:var(--green)">${score}</div><div class="stat-desc">${t('correctLabel')}</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--red)">${total - score}</div><div class="stat-desc">${t('incorrectLabel')}</div></div>
-    <div class="stat-card"><div class="stat-num">+${score * 5 + (total - score)}</div><div class="stat-desc">${t('xpEarned')}</div></div>
+    <div class="stat-card"><div class="stat-num">${score * 5 + (total - score)}</div><div class="stat-desc">${t('xpEarned')}</div></div>
   `;
 }
 

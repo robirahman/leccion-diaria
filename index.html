@@ -71,6 +71,11 @@
       <div id="today-practice"></div>
     </div>
 
+    <div class="today-section" id="today-bookmarks-section" style="display:none">
+      <h2>Bookmarks</h2>
+      <div id="today-bookmarks"></div>
+    </div>
+
     <div class="today-section" id="today-focus-section" style="display:none">
       <h2>Focus Areas</h2>
       <div id="today-focus"></div>
@@ -1257,6 +1262,10 @@
     <h2 class="mb-2">Statistics</h2>
     <div class="stat-cards" id="stats-overview"></div>
     <div class="card mt-1">
+      <div class="card-title mb-1">SRS Card Distribution</div>
+      <div id="stats-srs-dashboard"></div>
+    </div>
+    <div class="card mt-1">
       <div class="card-title mb-1">CEFR Level Mastery</div>
       <div id="stats-cefr-mastery"></div>
     </div>
@@ -1386,6 +1395,20 @@
     <div class="loading-text" id="loading-text">Loading...</div>
     <div class="loading-progress" id="loading-progress" style="display:none">
       <div class="loading-progress-fill" id="loading-progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ ONBOARDING OVERLAY ════════ -->
+<div class="modal-overlay" id="onboarding-overlay" style="display:none">
+  <div class="modal" style="max-width:340px;text-align:center">
+    <div id="onboarding-content"></div>
+    <div style="display:flex;justify-content:center;gap:0.5rem;margin-top:0.5rem">
+      <span id="onboarding-dots"></span>
+    </div>
+    <div class="modal-actions" style="justify-content:center;margin-top:1rem">
+      <button class="btn btn-secondary" id="onboarding-skip" data-action="onboarding-skip">Skip</button>
+      <button class="btn btn-primary" id="onboarding-next" data-action="onboarding-next">Next</button>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leccion-diaria-v17';
+const CACHE_NAME = 'leccion-diaria-v18';
 
 // App shell — precached on install (~500KB)
 const APP_SHELL = [
@@ -6,12 +6,14 @@ const APP_SHELL = [
   './fsrs.js', './conjugation.js', './quiz-engine.js',
   './app-core.js', './learn-vocab.js', './app-learn.js',
   './placement.js', './app-practice.js', './practice-reference.js',
-  './app-init.js', './vocab-categories.js',
+  './app-init.js', './vocab-categories.js', './vocab-search-worker.js',
 ];
 
 // Data files — cached on first use (stale-while-revalidate)
 const DATA_FILES = new Set([
   './verbs.js', './vocab-data.json', './grammar.js',
+  './vocab-a1a2.json', './vocab-b1.json', './vocab-b2.json',
+  './vocab-c1.json', './vocab-c2.json',
   './phrases.js', './conversations.js', './placement_questions.js',
   './recipes.js', './music.js', './movies.js', './poetry.js',
   './sports.js', './proverbs.js', './folktales.js', './festivals.js',

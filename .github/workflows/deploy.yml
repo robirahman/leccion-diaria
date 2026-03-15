@@ -22,13 +22,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Copy web assets to dist
-        run: |
-          mkdir -p dist/icons
-          cp *.html *.css *.js *.json manifest.json dist/
-          cp icons/* dist/icons/ 2>/dev/null || true
-          rm -f dist/bump-version.js dist/vocab_backup.js
-          rm -f dist/package.json dist/package-lock.json 2>/dev/null || true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

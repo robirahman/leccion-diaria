@@ -340,6 +340,7 @@ function newProgress() {
     errorCounts: {},
     perfectQuizCount: 0,
     nightOwlUnlocked: false,
+    bookmarks: [],
     placementLevel: null,
     placementDate: null,
     settings: {
@@ -1031,16 +1032,88 @@ function confirmCreateProfile() {
   saveProfiles(profiles);
   closeModal();
   selectProfile(name);
-  // Offer placement test for new profiles
+  // Show onboarding for new users, then placement test
+  setTimeout(() => showOnboarding(), 300);
+}
+
+// ════════════════════════════════════════
+//  ONBOARDING CAROUSEL
+// ════════════════════════════════════════
+
+const _onboardingSteps = [
+  {
+    icon: '&#127468;&#127479;',
+    title: 'Welcome to Lecci\u00f3n Diaria!',
+    text: 'Your daily Spanish learning companion. Practice vocab, verbs, grammar, phrases and culture — all in one app.',
+  },
+  {
+    icon: '&#128218;',
+    title: 'Spaced Repetition',
+    text: 'We use FSRS (a smart spacing algorithm) to show you words and grammar at the optimal time for long-term memory.',
+  },
+  {
+    icon: '&#127919;',
+    title: 'Daily Goals & Streaks',
+    text: 'Set a daily XP goal, maintain your streak, and earn freeze tokens every 7 days to protect it.',
+  },
+  {
+    icon: '&#128736;',
+    title: 'Navigation',
+    text: 'Use the tab bar to switch between Today (your dashboard), Learn (lessons), Practice (exercises), Culture, and Stats.',
+  },
+];
+let _onboardingIdx = 0;
+
+function showOnboarding() {
+  _onboardingIdx = 0;
+  const overlay = document.getElementById('onboarding-overlay');
+  if (!overlay) { _offerPlacement(); return; }
+  overlay.style.display = 'flex';
+  _renderOnboardingStep();
+}
+
+function _renderOnboardingStep() {
+  const step = _onboardingSteps[_onboardingIdx];
+  document.getElementById('onboarding-content').innerHTML =
+    `<div style="font-size:2.5rem;margin-bottom:0.5rem">${step.icon}</div>` +
+    `<h3 style="margin-bottom:0.5rem">${step.title}</h3>` +
+    `<p class="text-muted" style="font-size:0.85rem">${step.text}</p>`;
+  document.getElementById('onboarding-dots').innerHTML = _onboardingSteps.map((_, i) =>
+    `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${i === _onboardingIdx ? 'var(--accent)' : 'var(--bg3)'};margin:0 3px"></span>`
+  ).join('');
+  const nextBtn = document.getElementById('onboarding-next');
+  if (nextBtn) nextBtn.textContent = _onboardingIdx === _onboardingSteps.length - 1 ? 'Get Started' : 'Next';
+}
+
+function onboardingNext() {
+  _onboardingIdx++;
+  if (_onboardingIdx >= _onboardingSteps.length) {
+    _closeOnboarding();
+    return;
+  }
+  _renderOnboardingStep();
+}
+
+function onboardingSkip() {
+  _closeOnboarding();
+}
+
+function _closeOnboarding() {
+  const overlay = document.getElementById('onboarding-overlay');
+  if (overlay) overlay.style.display = 'none';
+  _offerPlacement();
+}
+
+function _offerPlacement() {
   setTimeout(() => {
     showModal(t('placementTest'), `
       <p>Want to take a quick placement test to skip content you already know?</p>
-      <p class="text-muted">Adaptive test — choose your starting level and test length. As few as 10 questions.</p>
+      <p class="text-muted">Adaptive test &mdash; choose your starting level and test length. As few as 10 questions.</p>
     `, [
       { label: tBtn('skip'), action: 'close-modal', cls: 'btn-secondary' },
       { label: tBtn('takeTest'), action: 'start-placement', cls: 'btn-primary' },
     ]);
-  }, 300);
+  }, 200);
 }
 
 // ════════════════════════════════════════
@@ -1689,6 +1762,73 @@ function speak(text) {
 }
 
 // ════════════════════════════════════════
+//  BOOKMARKS
+// ════════════════════════════════════════
+
+function toggleBookmark(type, id) {
+  if (!progress) return;
+  if (!progress.bookmarks) progress.bookmarks = [];
+  const key = type + ':' + id;
+  const idx = progress.bookmarks.indexOf(key);
+  if (idx >= 0) {
+    progress.bookmarks.splice(idx, 1);
+    showToast('', 'Bookmark removed');
+  } else {
+    progress.bookmarks.push(key);
+    showToast('', 'Bookmarked');
+  }
+  saveProgress();
+}
+
+function isBookmarked(type, id) {
+  if (!progress?.bookmarks) return false;
+  return progress.bookmarks.includes(type + ':' + id);
+}
+
+function bookmarkBtnHTML(type, id) {
+  const active = isBookmarked(type, id);
+  return `<button class="btn-icon${active ? ' bookmarked' : ''}" data-action="toggle-bookmark" data-bk-type="${type}" data-bk-id="${esc(id)}" title="${active ? 'Remove bookmark' : 'Bookmark'}" aria-label="${active ? 'Remove bookmark' : 'Bookmark'}">${active ? '&#9733;' : '&#9734;'}</button>`;
+}
+
+function renderBookmarks() {
+  const section = document.getElementById('today-bookmarks-section');
+  const container = document.getElementById('today-bookmarks');
+  if (!section || !container || !progress?.bookmarks?.length) {
+    if (section) section.style.display = 'none';
+    return;
+  }
+  section.style.display = '';
+
+  let html = '';
+  for (const bk of progress.bookmarks.slice(0, 20)) {
+    const [type, id] = [bk.split(':')[0], bk.slice(bk.indexOf(':') + 1)];
+    if (type === 'vocab') {
+      const word = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.find(w => w.word === id) : null;
+      if (word) {
+        html += `<div class="card" style="padding:0.5rem 0.75rem;display:flex;align-items:center;gap:0.5rem">
+          <div style="flex:1"><strong>${esc(word.word)}</strong> <span class="text-muted text-sm">${esc(word.english)}</span></div>
+          <button class="btn-icon bookmarked" data-action="toggle-bookmark" data-bk-type="vocab" data-bk-id="${esc(id)}">&#9733;</button>
+        </div>`;
+      }
+    } else if (type === 'grammar') {
+      const lesson = typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.find(g => g.id === id) : null;
+      if (lesson) {
+        html += `<div class="card" style="padding:0.5rem 0.75rem;display:flex;align-items:center;gap:0.5rem" data-action="open-grammar-lesson" data-lesson-id="${esc(id)}">
+          <div style="flex:1"><strong>${esc(lesson.title)}</strong> <span class="badge badge-sm">${lesson.level}</span></div>
+          <button class="btn-icon bookmarked" data-action="toggle-bookmark" data-bk-type="grammar" data-bk-id="${esc(id)}">&#9733;</button>
+        </div>`;
+      }
+    } else if (type === 'phrase') {
+      html += `<div class="card" style="padding:0.5rem 0.75rem;display:flex;align-items:center;gap:0.5rem">
+        <div style="flex:1">${esc(id)}</div>
+        <button class="btn-icon bookmarked" data-action="toggle-bookmark" data-bk-type="phrase" data-bk-id="${esc(id)}">&#9733;</button>
+      </div>`;
+    }
+  }
+  container.innerHTML = html || '<p class="text-muted text-sm">No bookmarks yet.</p>';
+}
+
+// ════════════════════════════════════════
 //  ANSWER CHECKING
 // ════════════════════════════════════════
 
@@ -1717,13 +1857,18 @@ function checkAnswer(input, correct) {
 function esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 // Generic MC option selection helper
-function selectMCOption(containerSelector, idx) {
+// If autoSubmitFn is provided, auto-submits after selection (skips Submit button)
+function selectMCOption(containerSelector, idx, autoSubmitFn) {
   const btns = document.querySelectorAll(`${containerSelector} .quiz-option`);
   if (btns[0]?.classList.contains('disabled')) return;
   btns.forEach(btn => btn.classList.remove('selected'));
   if (btns[idx]) btns[idx].classList.add('selected');
-  const submitBtn = document.querySelector(`${containerSelector} .mc-submit`);
-  if (submitBtn) submitBtn.style.display = 'block';
+  if (autoSubmitFn) {
+    autoSubmitFn();
+  } else {
+    const submitBtn = document.querySelector(`${containerSelector} .mc-submit`);
+    if (submitBtn) submitBtn.style.display = 'block';
+  }
 }
 function todayStr() { return dateStr(new Date()); }
 function dateStr(d) {

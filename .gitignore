@@ -130,3 +130,7 @@ dmypy.json
 
 # JetBrains
 .idea/
+
+# Node
+node_modules/
+dist/

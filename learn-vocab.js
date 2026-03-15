@@ -375,7 +375,7 @@ function submitVocabQuizProduce() {
 }
 
 function answerVocabQuizMC(idx) {
-  selectMCOption('#vocq-container', idx);
+  selectMCOption('#vocq-container', idx, submitVocabQuizMC);
 }
 
 function submitVocabQuizMC() {

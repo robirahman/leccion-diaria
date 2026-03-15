@@ -917,6 +917,7 @@ function renderStats() {
   renderCefrMasteryDetailed(document.getElementById('stats-cefr-mastery'));
   renderStatsTenseMastery();
   renderStatsGrammarProgress();
+  renderSrsDashboard();
 }
 
 function renderStatsTenseMastery() {
@@ -971,6 +972,63 @@ function renderStatsGrammarProgress() {
     </div>`;
   }
   el.innerHTML = html;
+}
+
+function renderSrsDashboard() {
+  const el = document.getElementById('stats-srs-dashboard');
+  if (!el || !progress) return;
+
+  const domains = [
+    { name: 'Verbs', mastery: progress.verbMastery, fsrs: progress.verbFsrs },
+    { name: 'Vocab', mastery: progress.vocabMastery, fsrs: progress.vocabFsrs },
+    { name: 'Grammar', mastery: progress.grammarMastery || {}, fsrs: progress.grammarFsrs },
+    { name: 'Phrases', mastery: progress.phraseMastery, fsrs: progress.phraseFsrs },
+  ];
+
+  const now = Date.now();
+  let html = '<div style="font-size:0.7rem;display:flex;gap:0.75rem;margin-bottom:0.5rem;color:var(--text3)">'
+    + '<span style="color:var(--text2)">New</span>'
+    + '<span style="color:var(--red)">Learning</span>'
+    + '<span style="color:var(--yellow)">Review</span>'
+    + '<span style="color:var(--green)">Mature</span></div>';
+
+  for (const d of domains) {
+    // Count cards in each SRS state
+    let newCount = 0, learning = 0, review = 0, mature = 0;
+    const keys = Object.keys(d.mastery || {});
+    for (const key of keys) {
+      const fsrsState = d.fsrs?.[key];
+      if (!fsrsState || !fsrsState.s) {
+        newCount++;
+      } else {
+        const m = masteryFromFsrs(fsrsState.s);
+        if (m <= 1) learning++;
+        else if (m <= 2) review++;
+        else if (m <= 3) review++;
+        else mature++;
+      }
+    }
+    const total = keys.length || 1;
+    if (keys.length === 0) continue;
+
+    html += `<div style="margin-bottom:0.6rem">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.2rem">
+        <strong>${d.name}</strong>
+        <span class="text-muted text-sm">${keys.length} cards</span>
+      </div>
+      <div class="mastery-bar" style="height:12px" title="New:${newCount} Learning:${learning} Review:${review} Mature:${mature}">
+        <div style="width:${newCount/total*100}%;background:var(--text3)"></div>
+        <div style="width:${learning/total*100}%;background:var(--red)"></div>
+        <div style="width:${review/total*100}%;background:var(--yellow)"></div>
+        <div style="width:${mature/total*100}%;background:var(--green)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text3);margin-top:0.1rem">
+        <span>${newCount}</span><span>${learning}</span><span>${review}</span><span>${mature}</span>
+      </div>
+    </div>`;
+  }
+
+  el.innerHTML = html || '<p class="text-muted text-sm">No items studied yet.</p>';
 }
 
 function renderRecallHealth() {
@@ -1217,8 +1275,8 @@ function flipReviewCard() {
 }
 
 function answerReviewMC(idx) {
-  selectMCOption('#rev-container', idx);
   reviewSelected = idx;
+  selectMCOption('#rev-container', idx, submitReviewMC);
 }
 
 function submitReviewMC() {
