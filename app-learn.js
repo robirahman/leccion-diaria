@@ -1689,30 +1689,17 @@ function answerPhraseQuizMC(idx) {
 }
 
 function submitPhraseQuizMC() {
-  const selectedBtn = document.querySelector('#pq-container .quiz-option.selected');
-  if (!selectedBtn) return;
-  const idx = parseInt(selectedBtn.dataset.idx);
   const item = phraseQuizQueue[phraseQuizIdx];
-  const selected = item.options[idx];
-  const btns = document.querySelectorAll('#pq-container .quiz-option');
-  btns.forEach((btn, i) => {
-    btn.classList.add('disabled');
-    if (item.options[i] === item.correct) btn.classList.add('correct');
-    if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
+  const isCorrect = processMCSubmit({
+    optionsSel: '#pq-container .quiz-option',
+    isCorrectBtn: btn => item.options[parseInt(btn.dataset.idx)] === item.correct,
+    nextBtnId: 'pq-next',
+    fsrs: { store: progress.phraseFsrs, masteryStore: progress.phraseMastery, key: item.phrase.id },
   });
-  const isCorrect = selected === item.correct;
   trackError(`phrase:${item.phrase.id}`, isCorrect, 'phrase');
-  if (isCorrect) {
-    phraseQuizScore++;
-    reviewItem(progress.phraseFsrs, progress.phraseMastery, item.phrase.id, FSRS_GOOD);
-    addXP(5);
-  } else {
-    reviewItem(progress.phraseFsrs, progress.phraseMastery, item.phrase.id, FSRS_AGAIN);
-    addXP(1);
-  }
+  if (isCorrect) { phraseQuizScore++; addXP(5); } else { addXP(1); }
   const submitBtn = document.querySelector('#pq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
-  document.getElementById('pq-next').style.display = 'flex';
 }
 
 function nextPhraseQuiz() {

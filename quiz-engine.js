@@ -166,6 +166,54 @@ function createQuizFlow(config) {
 
 
 // ════════════════════════════════════════════════════════════════
+//  Shared MC submit helper — reduces boilerplate across all quiz types
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * Process an MC answer submission: disable buttons, mark correct/incorrect,
+ * update score/XP, show feedback, show next button, run FSRS review.
+ *
+ * @param {Object} opts
+ * @param {string}   opts.optionsSel     - CSS selector for option buttons (e.g. '#mp-options .quiz-option')
+ * @param {Function} opts.isCorrectBtn   - (btn) => boolean — whether this btn is the correct answer
+ * @param {string}   opts.feedbackId     - ID of the feedback element
+ * @param {string}   opts.nextBtnId      - ID of the next button
+ * @param {Function} opts.feedbackFn     - (isCorrect) => HTML string for the feedback div
+ * @param {Object}   [opts.fsrs]         - { store, masteryStore, key } for FSRS review (auto-rates GOOD/AGAIN)
+ * @returns {boolean} whether the selected answer was correct
+ */
+function processMCSubmit(opts) {
+  var selectedBtn = document.querySelector(opts.optionsSel.replace(' .quiz-option', ' .quiz-option.selected'));
+  if (!selectedBtn) return false;
+
+  var isCorrect = opts.isCorrectBtn(selectedBtn);
+
+  var btns = document.querySelectorAll(opts.optionsSel);
+  btns.forEach(function (btn) {
+    btn.classList.add('disabled');
+    if (opts.isCorrectBtn(btn)) btn.classList.add('correct');
+    else if (btn.classList.contains('selected')) btn.classList.add('incorrect');
+  });
+
+  if (opts.feedbackFn) {
+    var fb = document.getElementById(opts.feedbackId);
+    if (fb) {
+      fb.innerHTML = opts.feedbackFn(isCorrect);
+      fb.style.display = 'block';
+    }
+  }
+  var nextBtn = document.getElementById(opts.nextBtnId);
+  if (nextBtn) nextBtn.style.display = 'flex';
+
+  if (opts.fsrs) {
+    reviewItem(opts.fsrs.store, opts.fsrs.masteryStore, opts.fsrs.key, isCorrect ? FSRS_GOOD : FSRS_AGAIN);
+    saveProgress();
+  }
+
+  return isCorrect;
+}
+
+// ════════════════════════════════════════════════════════════════
 //  Shared HTML helpers
 // ════════════════════════════════════════════════════════════════
 

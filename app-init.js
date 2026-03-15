@@ -267,7 +267,6 @@ document.addEventListener('click', e => {
     case 'open-minimal-pairs': showScreen('minimal-pairs'); renderMinimalPairCategories(); break;
     case 'start-mp': startMinimalPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
     case 'answer-mp': answerMP(parseInt(target.dataset.idx)); break;
-    case 'submit-mp': submitMP(); break;
     case 'next-mp': nextMP(); break;
     case 'open-phonetic-pairs': showScreen('phonetic-pairs'); renderPhoneticPairCategories(); break;
     case 'start-pp': startPhoneticPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
@@ -452,7 +451,7 @@ document.addEventListener('keydown', e => {
       { screen: 'culture-quiz', next: 'cq-next', fib: null, submitFn: null, nextFn: nextCultureQuiz },
       { screen: 'dialogue-practice', next: 'dp-next', fib: null, submitFn: null, nextFn: nextDialogue },
       { screen: 'placement', next: 'pt-next', fib: 'pt-fib-input', submitFn: submitPlacementFIB, nextFn: nextPlacementQuestion },
-      { screen: 'mp-drill', next: 'mp-next', fib: null, submitFn: submitMP, nextFn: nextMP },
+      { screen: 'mp-drill', next: 'mp-next', fib: null, submitFn: null, nextFn: nextMP },
       { screen: 'sentence-build', next: 'sb-next', fib: null, submitFn: checkSentenceBuild, nextFn: nextSentenceBuild },
       { screen: 'cloze', next: 'cloze-next', fib: null, submitFn: checkCloze, nextFn: nextCloze },
       { screen: 'translation', next: 'tr-next', fib: 'tr-input', submitFn: checkTranslation, nextFn: nextTranslation },

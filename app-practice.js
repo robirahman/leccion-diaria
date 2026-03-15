@@ -954,53 +954,26 @@ function renderMPQuestion() {
 
 function answerMP(idx) {
   if (mpAnswered) return;
-  const btns = document.querySelectorAll('#mp-options .quiz-option');
-  btns.forEach(b => b.classList.remove('selected'));
-  btns[idx]?.classList.add('selected');
-  // Auto-submit on selection (binary choice, no need for separate submit)
-  submitMP();
-}
-
-function submitMP() {
-  if (mpAnswered) return;
-  const selectedBtn = document.querySelector('#mp-options .quiz-option.selected');
-  if (!selectedBtn) return;
+  selectMCOption('#mp-options', idx);
   mpAnswered = true;
   const item = mpQueue[mpIdx];
-  const chosen = selectedBtn.textContent.trim();
-  const correct = chosen.toLowerCase() === item.answer.toLowerCase() ||
-    stripAccents(chosen.toLowerCase()) === stripAccents(item.answer.toLowerCase());
-
-  const btns = document.querySelectorAll('#mp-options .quiz-option');
-  btns.forEach(b => {
-    b.classList.add('disabled');
-    const btnText = b.textContent.trim().toLowerCase();
-    if (btnText === item.answer.toLowerCase() || stripAccents(btnText) === stripAccents(item.answer.toLowerCase())) {
-      b.classList.add('correct');
-    } else if (b.classList.contains('selected')) {
-      b.classList.add('incorrect');
-    }
-  });
-
-  if (correct) { mpScore++; addXP(5); }
-  else { addXP(1); }
-
+  const answerLower = item.answer.toLowerCase();
+  const answerStripped = stripAccents(answerLower);
   const displayMode = progress?.settings?.display || 'standard';
   const explanation = (displayMode === 'immersion' && item.explanationEs) ? item.explanationEs : item.explanation;
-
-  const fb = document.getElementById('mp-feedback');
-  fb.innerHTML = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '✓' : '✗'} ${esc(explanation)}</div>`;
-  fb.style.display = 'block';
-
+  const correct = processMCSubmit({
+    optionsSel: '#mp-options .quiz-option',
+    isCorrectBtn: btn => {
+      const t = btn.textContent.trim().toLowerCase();
+      return t === answerLower || stripAccents(t) === answerStripped;
+    },
+    feedbackId: 'mp-feedback', nextBtnId: 'mp-next',
+    feedbackFn: ok => `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`,
+    fsrs: { store: progress.mpFsrs, masteryStore: progress.mpMastery, key: item.id },
+  });
+  if (correct) { mpScore++; addXP(5); } else { addXP(1); }
   const contrast = document.getElementById('mp-contrast');
-  if (item.contrast) {
-    contrast.innerHTML = esc(item.contrast);
-    contrast.style.display = 'block';
-  }
-
-  document.getElementById('mp-next').style.display = 'flex';
-  reviewItem(progress.mpFsrs, progress.mpMastery, item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
-  saveProgress();
+  if (item.contrast) { contrast.innerHTML = esc(item.contrast); contrast.style.display = 'block'; }
 }
 
 function nextMP() { mpIdx++; renderMPQuestion(); }
@@ -1058,43 +1031,23 @@ function renderPPQuestion() {
 
 function answerPP(idx) {
   if (ppAnswered) return;
-  const btns = document.querySelectorAll('#pp-options .quiz-option');
-  btns.forEach(b => b.classList.remove('selected'));
-  btns[idx]?.classList.add('selected');
-  submitPP();
-}
-
-function submitPP() {
-  if (ppAnswered) return;
-  const selectedBtn = document.querySelector('#pp-options .quiz-option.selected');
-  if (!selectedBtn) return;
+  selectMCOption('#pp-options', idx);
   ppAnswered = true;
   const q = ppQueue[ppIdx];
-  const chosen = selectedBtn.dataset.val;
-  const correct = chosen === q.answer;
-
-  const btns = document.querySelectorAll('#pp-options .quiz-option');
-  btns.forEach(b => {
-    b.classList.add('disabled');
-    if (b.dataset.val === q.answer) b.classList.add('correct');
-    else if (b.classList.contains('selected')) b.classList.add('incorrect');
-  });
-
-  if (correct) { ppScore++; addXP(5); } else { addXP(1); }
-
   const displayMode = progress?.settings?.display || 'standard';
   const meaningKey = q.side === 'A' ? 'meaningA' : 'meaningB';
   const meaningEsKey = q.side === 'A' ? 'meaningAEs' : 'meaningBEs';
   const wrongMeaningKey = q.side === 'A' ? 'meaningB' : 'meaningA';
   const explanation = `"${q.answer}" = ${displayMode === 'immersion' ? q.item[meaningEsKey] : q.item[meaningKey]}. ` +
     `"${q.wrong}" = ${displayMode === 'immersion' ? q.item[meaningEsKey === 'meaningAEs' ? 'meaningBEs' : 'meaningAEs'] : q.item[wrongMeaningKey]}.`;
-
-  const fb = document.getElementById('pp-feedback');
-  fb.innerHTML = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`;
-  fb.style.display = 'block';
-  document.getElementById('pp-next').style.display = 'flex';
-  reviewItem(progress.ppFsrs, progress.ppMastery, q.item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
-  saveProgress();
+  const correct = processMCSubmit({
+    optionsSel: '#pp-options .quiz-option',
+    isCorrectBtn: btn => btn.dataset.val === q.answer,
+    feedbackId: 'pp-feedback', nextBtnId: 'pp-next',
+    feedbackFn: ok => `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`,
+    fsrs: { store: progress.ppFsrs, masteryStore: progress.ppMastery, key: q.item.id },
+  });
+  if (correct) { ppScore++; addXP(5); } else { addXP(1); }
 }
 
 function nextPP() { ppIdx++; renderPPQuestion(); }
@@ -1150,49 +1103,31 @@ function renderHomQuestion() {
 
 function answerHom(idx) {
   if (homAnswered) return;
-  const btns = document.querySelectorAll('#hom-options .quiz-option');
-  btns.forEach(b => b.classList.remove('selected'));
-  btns[idx]?.classList.add('selected');
-  submitHom();
-}
-
-function submitHom() {
-  if (homAnswered) return;
-  const selectedBtn = document.querySelector('#hom-options .quiz-option.selected');
-  if (!selectedBtn) return;
+  selectMCOption('#hom-options', idx);
   homAnswered = true;
   const q = homQueue[homIdx];
-  const chosen = selectedBtn.dataset.val;
-  const correct = chosen.toLowerCase() === q.answer.toLowerCase() ||
-    stripAccents(chosen.toLowerCase()) === stripAccents(q.answer.toLowerCase());
-
-  const btns = document.querySelectorAll('#hom-options .quiz-option');
-  btns.forEach(b => {
-    b.classList.add('disabled');
-    const btnVal = b.dataset.val;
-    if (btnVal.toLowerCase() === q.answer.toLowerCase() || stripAccents(btnVal.toLowerCase()) === stripAccents(q.answer.toLowerCase())) {
-      b.classList.add('correct');
-    } else if (b.classList.contains('selected')) {
-      b.classList.add('incorrect');
-    }
-  });
-
-  if (correct) { homScore++; addXP(5); } else { addXP(1); }
-
+  const answerLower = q.answer.toLowerCase();
+  const answerStripped = stripAccents(answerLower);
   const displayMode = progress?.settings?.display || 'standard';
   const tip = (displayMode === 'immersion' && q.item.tipEs) ? q.item.tipEs : q.item.tip;
-
-  const fb = document.getElementById('hom-feedback');
-  let html = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '\u2713' : '\u2717'} ${esc(tip)}</div>`;
-  if (q.item.regionalNote) {
-    const note = (displayMode === 'immersion' && q.item.regionalNoteEs) ? q.item.regionalNoteEs : q.item.regionalNote;
-    html += `<div class="text-muted text-sm mt-half">${esc(note)}</div>`;
-  }
-  fb.innerHTML = html;
-  fb.style.display = 'block';
-  document.getElementById('hom-next').style.display = 'flex';
-  reviewItem(progress.homFsrs, progress.homMastery, q.item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
-  saveProgress();
+  const correct = processMCSubmit({
+    optionsSel: '#hom-options .quiz-option',
+    isCorrectBtn: btn => {
+      const v = btn.dataset.val.toLowerCase();
+      return v === answerLower || stripAccents(v) === answerStripped;
+    },
+    feedbackId: 'hom-feedback', nextBtnId: 'hom-next',
+    feedbackFn: ok => {
+      let html = `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(tip)}</div>`;
+      if (q.item.regionalNote) {
+        const note = (displayMode === 'immersion' && q.item.regionalNoteEs) ? q.item.regionalNoteEs : q.item.regionalNote;
+        html += `<div class="text-muted text-sm mt-half">${esc(note)}</div>`;
+      }
+      return html;
+    },
+    fsrs: { store: progress.homFsrs, masteryStore: progress.homMastery, key: q.item.id },
+  });
+  if (correct) { homScore++; addXP(5); } else { addXP(1); }
 }
 
 function nextHom() { homIdx++; renderHomQuestion(); }
@@ -1235,39 +1170,19 @@ function renderConnQuestion() {
 
 function answerConn(idx) {
   if (connAnswered) return;
-  const btns = document.querySelectorAll('#conn-options .quiz-option');
-  btns.forEach(b => b.classList.remove('selected'));
-  btns[idx]?.classList.add('selected');
-  submitConn();
-}
-
-function submitConn() {
-  if (connAnswered) return;
-  const selectedBtn = document.querySelector('#conn-options .quiz-option.selected');
-  if (!selectedBtn) return;
+  selectMCOption('#conn-options', idx);
   connAnswered = true;
   const item = connQueue[connIdx];
-  const chosen = selectedBtn.dataset.val;
-  const correct = chosen === item.answer;
-
-  const btns = document.querySelectorAll('#conn-options .quiz-option');
-  btns.forEach(b => {
-    b.classList.add('disabled');
-    if (b.dataset.val === item.answer) b.classList.add('correct');
-    else if (b.classList.contains('selected')) b.classList.add('incorrect');
-  });
-
-  if (correct) { connScore++; addXP(5); } else { addXP(1); }
-
   const displayMode = progress?.settings?.display || 'standard';
   const explanation = (displayMode === 'immersion' && item.explanationEs) ? item.explanationEs : item.explanation;
-
-  const fb = document.getElementById('conn-feedback');
-  fb.innerHTML = `<div class="${correct ? 'text-correct' : 'text-incorrect'}">${correct ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`;
-  fb.style.display = 'block';
-  document.getElementById('conn-next').style.display = 'flex';
-  reviewItem(progress.connFsrs, progress.connMastery, item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
-  saveProgress();
+  const correct = processMCSubmit({
+    optionsSel: '#conn-options .quiz-option',
+    isCorrectBtn: btn => btn.dataset.val === item.answer,
+    feedbackId: 'conn-feedback', nextBtnId: 'conn-next',
+    feedbackFn: ok => `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`,
+    fsrs: { store: progress.connFsrs, masteryStore: progress.connMastery, key: item.id },
+  });
+  if (correct) { connScore++; addXP(5); } else { addXP(1); }
 }
 
 function nextConn() { connIdx++; renderConnQuestion(); }
@@ -2647,22 +2562,20 @@ function answerReadingMC(idx) {
 function submitReadingMC() {
   if (!currentReading || readingSelected < 0) return;
   const q = currentReading.questions[readingQIdx];
-  const opts = document.querySelectorAll('#read-options .quiz-option');
-  opts.forEach((o, i) => {
-    o.classList.add('disabled');
-    if (i === q.correct) o.classList.add('correct');
-    else if (i === readingSelected && i !== q.correct) o.classList.add('incorrect');
+  const correct = processMCSubmit({
+    optionsSel: '#read-options .quiz-option',
+    isCorrectBtn: btn => parseInt(btn.dataset.idx) === q.correct,
+    feedbackId: 'read-feedback', nextBtnId: 'read-next',
+    feedbackFn: ok => {
+      let html = ok ? `<span class="text-correct">${t('correct')}</span>` :
+        `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(q.options[q.correct])}</span>`;
+      if (q.explanation) html += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
+      return html;
+    },
   });
-  const correct = readingSelected === q.correct;
+  document.getElementById('read-feedback').setAttribute('role', 'alert');
   if (correct) readingScore++;
-  const fb = document.getElementById('read-feedback');
-  fb.setAttribute('role', 'alert');
-  fb.innerHTML = correct ? `<span class="text-correct">${t('correct')}</span>` :
-    `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(q.options[q.correct])}</span>`;
-  if (q.explanation) fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
-  fb.style.display = 'block';
   document.getElementById('read-submit').style.display = 'none';
-  document.getElementById('read-next').style.display = 'flex';
 }
 
 function nextReading() { readingQIdx++; renderReadingQuestion(); }
