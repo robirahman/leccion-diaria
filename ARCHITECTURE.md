@@ -10,23 +10,26 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 |------|---------|
 | **App modules** | |
 | `index.html` | 30+ screens, nav bar, tab bar, modal system |
-| `app-init.js` | Startup, profile loading, event delegation, routing |
-| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR) |
-| `app-learn.js` | Vocab, verb, and grammar learning interfaces |
-| `app-practice.js` | Stats dashboard, quizzes, verb reference, curriculum display |
-| `quiz-engine.js` | Shared quiz rendering and answer-checking pipeline |
+| `app-init.js` | Startup, profile loading, event delegation, routing, search handlers |
+| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR), settings, TTS |
+| `app-learn.js` | Today screen, verb learning/drill/quiz, grammar lessons, phrases, numbers, culture, results |
+| `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz (MC + production + gender), Learn New Words |
+| `placement.js` | IRT-adaptive placement test (Rasch model, per-domain scoring, Newton-Raphson MLE) |
+| `app-practice.js` | Export/import, admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
+| `practice-reference.js` | Verb conjugation reference, conjugation rules/endings, pronunciation guide, reading comprehension, themed vocabulary, curriculum tracks |
+| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), HTML helpers |
 | `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters) |
-| `styles.css` | Dark/light themes, 4 color palettes, responsive mobile-first layout |
-| `sw.js` | Service worker: cache-first offline strategy |
-| `manifest.json` | PWA metadata |
+| `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout |
+| `sw.js` | Service worker: app shell precache + stale-while-revalidate for data |
+| `manifest.json` | PWA metadata (maskable icons) |
 | **Data files** | |
 | `verbs.js` | 252 verbs with type, group, stem change, level, frequency |
-| `vocab.js` | ~28K words across 45+ categories with gender, examples, level |
+| `vocab-data.json` | ~28K words as JSON (loaded async via fetch, cached in IndexedDB) |
+| `vocab-categories.js` | 55+ vocabulary category definitions with titles and icons |
 | `grammar.js` | 67 grammar lessons (A1–C2) with HTML content and quiz questions |
 | `phrases.js` | 260+ phrases across 21 situations with formality and reply |
 | `conversations.js` | 21 role-play dialogue scenarios with vocab and quiz |
-| `freq_vocab.js` | Top 30k Spanish words by frequency (auto-generated) |
 | `placement_questions.js` | 120 hand-crafted IRT-calibrated placement questions (A1–C2) |
 | `curriculum_tracks.js` | Guided curriculum tracks with leveled lesson sequences |
 | `reading.js` `reading_sat.js` | Reading comprehension passages |
@@ -36,7 +39,7 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `connectors.js` `themed_vocab.js` `jokes.js` | Additional content modules |
 | `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | Cultural content modules with descriptions, vocab, and quizzes |
 | **Utilities** | |
-| `generate_vocab.py` | Generates `freq_vocab.js` from the `wordfreq` Python library |
+| `generate_vocab.py` | Generates frequency vocabulary from the `wordfreq` Python library |
 | `serve.sh` | Local development server (Python 3) |
 
 ---
@@ -48,21 +51,48 @@ User (browser)
   │
   ▼
 app-init.js ─── Event delegation (single click listener on document)
+  │              Vocab/grammar/verb search handlers
+  │              Lazy-loading: secondary scripts + vocab JSON via IndexedDB
   │
   ├── app-core.js ──── Navigation: showScreen(id) / goBack() / switchTab(tab)
   │                     Progress state, FSRS helpers, recall/mastery computation
-  │                     Settings, persistence (localStorage per profile)
-  │                     Placement test: IRT adaptive (Rasch model), Newton-Raphson MLE
+  │                     Settings (theme auto-detect, daily goals, streak freeze)
+  │                     Persistence (localStorage per profile)
+  │                     TTS with regional voice selection (es-MX / es-ES)
   │
-  ├── app-learn.js ─── Vocab browser, flashcard learning, verb/grammar interfaces
-  │                     Learn New Words (lowest-probability flashcards)
-  │                     Tense mastery display, grammar level summaries
+  ├── learn-vocab.js ── Vocab indexes (by category, level, word)
+  │                      Vocab browser with progress indicators
+  │                      Flashcard learning, MC/production/gender quizzes
+  │                      Learn New Words (lowest-probability flashcards)
   │
-  ├── app-practice.js ─ Stats dashboard, recall health, CEFR curriculum
-  │                      Quiz modules, verb reference with conjugation tables
-  │                      Cultural content rendering
+  ├── app-learn.js ──── Today screen with daily XP goal progress
+  │                      Verb learning: flashcards, drills, pattern drills, quiz
+  │                      Grammar lessons with searchable browser
+  │                      Phrases: browser with mastery indicators, flashcards, quiz
+  │                      Numbers, culture modules, dialogue practice
+  │                      Results screen
   │
-  └── quiz-engine.js ── Shared quiz pipeline: render → answer → check → rate → FSRS update
+  ├── placement.js ──── IRT adaptive placement test (Rasch model)
+  │                      Per-domain scoring (grammar + vocab)
+  │                      Newton-Raphson MLE, question selection
+  │
+  ├── app-practice.js ── Stats dashboard, recall health
+  │                       Practice exercises: minimal pairs, phonetic pairs,
+  │                         homophones, connectors, sentence build, cloze,
+  │                         translation, dictation
+  │                       Unified review queue (multi-store FSRS)
+  │                       Export/import, admin mode
+  │
+  ├── practice-reference.js ── Verb conjugation reference & search
+  │                             Conjugation rules/endings tables
+  │                             Pronunciation guide
+  │                             Reading comprehension
+  │                             Themed vocabulary sets
+  │                             CEFR curriculum overview & tracks
+  │
+  └── quiz-engine.js ── createQuizFlow: managed MC quiz lifecycle
+                         processMCSubmit: shared submit/disable/mark helper
+                         HTML helpers (accent bar, progress bar)
 ```
 
 ### State Management
@@ -71,8 +101,9 @@ app-init.js ─── Event delegation (single click listener on document)
 - **`screenStack`** — array tracking navigation history for back button
 - **`currentProfile`** — active profile name
 - **Placement state** — `placementThetas`, `placementHistory`, etc. (session-scoped, saved to `sessionStorage` for tab-switch recovery)
+- **Practice state** — per-exercise queue/index/score variables (e.g., `mpQueue`, `mpIdx`, `mpScore`)
 
-All state is defined in `app-core.js` and accessible globally. The app modules (`app-learn.js`, `app-practice.js`) read and write this shared state.
+All state is defined in `app-core.js` and accessible globally. The app modules read and write this shared state.
 
 ### Navigation
 
@@ -81,6 +112,33 @@ All screens are `<div>` elements in `index.html` with `display:none` by default.
 ### Event Handling
 
 A single delegated click handler on `document` routes all `data-action` attributes to handler functions. Keyboard events handle Enter (submit/advance) and 1–4 (flashcard ratings).
+
+---
+
+## Data Loading
+
+### Vocabulary (async JSON)
+
+Vocabulary data (~28K entries, ~7MB) is loaded asynchronously to avoid blocking initial paint:
+
+1. `vocab-categories.js` (5KB) loads eagerly via `<script defer>` — provides `VOCAB_CATEGORIES` for rendering category cards
+2. `vocab-data.json` (7MB) loads via `fetch()` + `JSON.parse()` after init (2–3x faster than JS eval)
+3. Parsed data is cached in **IndexedDB** (`leccion-diaria` database, `cache` store) for instant loads on subsequent visits
+4. All code guards access with `typeof VOCAB_DATA === 'undefined'` checks
+
+### Other Data Files
+
+Secondary content modules (conversations, culture, exercises) are lazy-loaded via `requestIdleCallback` after app initialization. Each is appended as an async `<script>` tag.
+
+### Vocab Indexes
+
+`buildVocabIndexes()` in `learn-vocab.js` creates O(1) lookup maps on first access:
+- `VOCAB_BY_CATEGORY` — words grouped by category
+- `VOCAB_BY_LEVEL` — words grouped by CEFR level
+- `VOCAB_BY_WORD` — word string → entry object
+- `VOCAB_CATEGORY_COUNTS` — category → count
+
+Indexes rebuild automatically when `VOCAB_DATA.length` changes.
 
 ---
 
@@ -93,7 +151,7 @@ A single delegated click handler on `document` routes all `data-action` attribut
 ```
 Types: `regular`, `irregular`, `stem-changing`, `reflexive`
 
-### Vocabulary (`vocab.js`)
+### Vocabulary (`vocab-data.json`)
 ```javascript
 { word: 'gato', english: 'cat', category: 'animals', pos: 'noun',
   gender: 'm', example: '¿Dónde está el gato?',
@@ -124,13 +182,6 @@ Types: `regular`, `irregular`, `stem-changing`, `reflexive`
   vocab: [{ word, english }], quiz: [{ prompt, options, correct }] }
 ```
 
-### Frequency Vocabulary (`freq_vocab.js`)
-```javascript
-{ w: 'de', r: 1, z: 7.81, l: 'A1' }
-// w=word, r=rank, z=zipf frequency, l=CEFR level
-```
-30,000 entries. Level assigned by rank: A1 (1–500), A2 (501–1500), B1 (1501–4000), B2 (4001–8000), C1 (8001–15000), C2 (15001–30000).
-
 ### Placement Question (`placement_questions.js`)
 ```javascript
 { id: 'pq-c2-15', level: 'C2', difficulty: 5.8,
@@ -159,8 +210,8 @@ Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
   xp: 0,
   streak: 0,
   longestStreak: 0,
-  lastDate: null,          // 'YYYY-MM-DD'
-  freezeTokens: 0,
+  lastDate: null,          // 'YYYY-MM-DD' (local date, not UTC)
+  freezeTokens: 0,         // earned every 7-day streak, auto-consumed on missed days
 
   verbMastery: {},         // 'hablar:present:0' → 1|2|3|4
   verbFsrs: {},            // same key → { s, d, lastRev }
@@ -183,15 +234,32 @@ Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
   settings: {
     display: 'standard',   // standard | immersion | hints
     region: 'latam',       // latam | spain
-    theme: 'dark',         // dark | light
+    theme: 'dark',         // dark | light | auto (follows system preference)
     palette: 'alhambra',   // alhambra | oaxaca | patagonia | flamenco
     accents: 'warn',       // strict | warn | lenient
     ttsRate: 1,            // 0.7 | 1 | 1.3
+    dailyGoal: 200,        // 50 | 100 | 200 | 500 XP per day
   },
 }
 ```
 
 **Mastery levels**: 1 = learning, 2 = familiar, 3 = intermediate, 4 = mastered. Derived from FSRS stability via `masteryFromFsrs(s)`.
+
+---
+
+## Quiz Engine (`quiz-engine.js`)
+
+### `createQuizFlow(config)`
+
+Managed MC quiz lifecycle used by culture and dialogue quizzes. Handles: start → render → selectOption → submit → next → onComplete.
+
+Config: `containerId`, `nextBtnId`, `progressId`, `getCorrectIdx`/`getCorrectValue`, `onCorrect`/`onIncorrect`, `onComplete`, `renderQuestion`, `getExplanation`.
+
+### `processMCSubmit(opts)`
+
+Shared helper used by 6+ quiz types (minimal pairs, phonetic pairs, homophones, connectors, reading, phrases). Handles the common submit pattern: disable buttons, mark correct/incorrect CSS classes, render feedback, show next button, run FSRS review.
+
+Config: `optionsSel`, `isCorrectBtn(btn)`, `feedbackId`, `nextBtnId`, `feedbackFn(isCorrect)`, `fsrs: { store, masteryStore, key }`.
 
 ---
 
@@ -237,7 +305,7 @@ Supports 19 tenses across 6 persons (yo, tú, él, nosotros, vosotros, ellos).
 
 ---
 
-## Placement Test — IRT Adaptive Algorithm
+## Placement Test — IRT Adaptive Algorithm (`placement.js`)
 
 Uses a **Rasch model** (1-parameter Item Response Theory) with per-domain scoring.
 
@@ -299,7 +367,9 @@ Verb tense metadata has both `label` (Spanish) and `labelEn` (English), selected
 
 ## Theming (`styles.css`)
 
-CSS custom properties drive the theme system. Four color palettes (Alhambra, Oaxaca, Patagonia, Flamenco) and two themes (dark, light) are applied by setting CSS variables on `<body>`.
+CSS custom properties drive the theme system. Four color palettes (Alhambra, Oaxaca, Patagonia, Flamenco) and three theme modes (dark, light, auto) are applied by setting CSS variables on `<html>`.
+
+**Auto theme** resolves to dark or light based on the system's `prefers-color-scheme` media query. A `matchMedia` listener in `app-core.js` triggers instant theme switching when the system preference changes.
 
 Mobile-first responsive design with max-width 640px centered container. Safe-area insets for notched phones.
 
@@ -309,20 +379,33 @@ Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must 
 
 ## Service Worker (`sw.js`)
 
-Cache name: `leccion-diaria-v15`. Strategy: cache-first with background network update.
+Cache name: `leccion-diaria-v17`. Two-tier caching strategy:
 
-All static assets are pre-cached on install. On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache. Bump the cache version when deploying changes.
+- **App shell** (~500KB) — precached on install: HTML, CSS, core JS modules, manifest
+- **Data files** (~10MB+) — cached on first use via stale-while-revalidate: vocab JSON, grammar, phrases, all content modules
+
+On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache. Bump the cache version when deploying changes.
 
 ---
 
-## Generating Frequency Vocabulary
+## Streak & Daily Goals
 
-```bash
-pip install wordfreq
-python3 generate_vocab.py
-```
+### Streak Freeze Tokens
 
-Produces `freq_vocab.js` with 30,000 entries. Filters English stopwords, non-alphabetic entries, and single characters. Assigns CEFR levels by frequency rank.
+Users earn 1 freeze token for every 7-day streak milestone. Tokens are consumed automatically when a day is missed (preserving the streak). The freeze token count is displayed in Settings.
+
+### Daily XP Goal
+
+Configurable in Settings (50/100/200/500 XP). The Today screen shows a progress bar tracking today's XP against the goal. XP is tracked per-day in `progress.practiceLog`.
+
+---
+
+## Deployment
+
+GitHub Pages deployment via `.github/workflows/deploy.yml`. On push to `main`, the workflow:
+1. Copies only web assets (HTML, CSS, JS, JSON, icons) to a `dist/` directory
+2. Excludes Python scripts, build artifacts, and non-web files
+3. Deploys `dist/` to GitHub Pages
 
 ---
 
@@ -332,7 +415,7 @@ Produces `freq_vocab.js` with 30,000 entries. Filters English stopwords, non-alp
 Add to `GRAMMAR_DATA` in `grammar.js`. Include `id`, `title`, `titleEn`, `level`, `order`, `content` (HTML), and `quiz` (array of 5 questions with `type`, `question`, `answer`, `options`, `explanation`).
 
 ### New vocabulary
-Add to `VOCAB_DATA` in `vocab.js`. If creating a new category, also add it to `VOCAB_CATEGORIES`.
+Add entries to `vocab-data.json`. If creating a new category, also add it to `VOCAB_CATEGORIES` in `vocab-categories.js`. Re-generate `vocab-data.json` by running: `node -e "..."` or updating the source and re-exporting.
 
 ### New verbs
 Add to `VERB_DATA` in `verbs.js`. The conjugation engine handles regular verbs automatically. For irregular verbs, add overrides to `FULL_IRREGULARS` or `IRREGULAR_FUTURE_STEMS` in `conjugation.js`.
@@ -341,4 +424,4 @@ Add to `VERB_DATA` in `verbs.js`. The conjugation engine handles regular verbs a
 Add to `PLACEMENT_QUESTIONS` in `placement_questions.js`. Set `difficulty` on the IRT scale (1.0–6.5) matching the question's CEFR level range.
 
 ### New culture module
-Create a new `modulename.js` file following the culture item schema. Add the `<script>` tag to `index.html` (before the app modules), add it to the `ASSETS` array in `sw.js`, and register it in the culture module list in `app-practice.js`.
+Create a new `modulename.js` file following the culture item schema. Add the `<script>` tag to `index.html` (before the app modules), add it to the `DATA_FILES` set in `sw.js`, and register it in the `CULTURE_MODULES` object in `app-learn.js`.

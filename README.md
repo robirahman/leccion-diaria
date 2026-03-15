@@ -7,16 +7,16 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **Adaptive Placement Test** — IRT-based (Rasch model) assessment that determines your grammar and vocabulary levels independently, so practice starts at the right difficulty
 - **Spaced Repetition** — FSRS-4.5 algorithm schedules reviews at optimal intervals for long-term retention across all content types
 - **Verb Conjugation** — 252 verbs across 19 tenses (simple, compound, progressive) with a full conjugation engine handling irregulars, stem changes, and spelling rules
-- **Vocabulary** — 28,000+ words across 45+ categories with translations, example sentences, and CEFR levels
-- **Grammar** — 67 lessons from A1 to C2 with interactive quizzes
-- **Phrases & Conversations** — 260+ phrases across 21 situations, plus role-play dialogues
-- **Pronunciation** — Minimal pairs, homophones, phonetic exercises, and text-to-speech
+- **Vocabulary** — 28,000+ words across 55+ categories with translations, example sentences, and CEFR levels; searchable browser with progress indicators
+- **Grammar** — 67 lessons from A1 to C2 with interactive quizzes and searchable lesson browser
+- **Phrases & Conversations** — 260+ phrases across 21 situations with mastery tracking, plus role-play dialogues
+- **Pronunciation** — Minimal pairs, homophones, phonetic exercises, and text-to-speech with regional voice selection (Latin American / Castilian)
 - **Reading & Listening** — Cloze passages, dictation, SAT-style reading comprehension, translation drills, and sentence construction
 - **Culture** — Modules on recipes, music, movies, poetry, sports, proverbs, folktales, festivals, history, travel, trivia, and idioms
 - **CEFR Curriculum** — Comprehensive view of what you need to learn at each level with mastery tracking across vocabulary, verbs, and grammar
-- **Progress Tracking** — XP, streaks, mastery levels, recall probability display, tense/grammar mastery breakdowns, and per-level CEFR mastery percentages
-- **Offline Support** — Service worker caches all assets for fully offline use
-- **Customization** — Dark/light themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed
+- **Progress Tracking** — Daily XP goals with progress bar, streaks with freeze token protection, mastery levels, recall probability display, tense/grammar mastery breakdowns, and per-level CEFR mastery percentages
+- **Offline Support** — Service worker caches app shell on install, data files on first use
+- **Customization** — Dark/light/auto themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed, configurable daily goals
 
 ## Running Locally
 
@@ -50,18 +50,23 @@ php -S localhost:8000
 
 | File | Purpose |
 |------|---------|
+| **App modules** | |
 | `index.html` | All screens, navigation, modal system |
-| `app-init.js` | Startup, event delegation, routing |
-| `app-core.js` | Progress state, FSRS helpers, shared computation |
-| `app-learn.js` | Vocab, verb, and grammar learning interfaces |
-| `app-practice.js` | Stats dashboard, quizzes, verb reference, curriculum |
+| `app-init.js` | Startup, event delegation, routing, search handlers |
+| `app-core.js` | Progress state, FSRS helpers, settings, TTS |
+| `app-learn.js` | Today screen, verbs, grammar, phrases, culture, results |
+| `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz |
+| `placement.js` | IRT-adaptive placement test |
+| `app-practice.js` | Practice exercises, stats dashboard, review queue |
+| `practice-reference.js` | Verb reference, reading, pronunciation, curriculum |
 | `quiz-engine.js` | Shared quiz rendering and answer checking |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm |
 | `conjugation.js` | Verb conjugation engine (19 tenses, irregulars) |
-| `styles.css` | Dark/light themes, 4 palettes, responsive layout |
+| `styles.css` | Dark/light/auto themes, 4 palettes, responsive layout |
 | `sw.js` | Service worker for offline caching |
 | **Data files** | |
-| `vocab.js` | ~28K words with translations, examples, categories |
+| `vocab-data.json` | ~28K words (async-loaded, IndexedDB-cached) |
+| `vocab-categories.js` | 55+ vocabulary category definitions |
 | `verbs.js` | 252 verbs with type, group, level, frequency |
 | `grammar.js` | 67 grammar lessons (A1–C2) with quizzes |
 | `phrases.js` | 260+ phrases across 21 situations |
