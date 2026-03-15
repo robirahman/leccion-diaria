@@ -6,6 +6,16 @@
 //  Comparative Grammar, Number Practice
 // ════════════════════════════════════════════════════════════════
 
+// ── Quiz state factory ──────────────────
+function createQuizState() {
+  return { queue: [], idx: 0, score: 0 };
+}
+
+const vpQuiz = createQuizState();
+const subjQuiz = createQuizState();
+const nqQuiz = createQuizState();
+const tqQuiz = createQuizState();
+
 // ════════════════════════════════════════
 //  VERB + PREPOSITIONS
 // ════════════════════════════════════════
@@ -42,31 +52,29 @@ function renderVerbPreps() {
   el.innerHTML = html;
 }
 
-let vpQuizQueue = [], vpQuizIdx = 0, vpQuizScore = 0;
-
 function startVerbPrepsQuiz() {
   if (typeof VERB_PREPOSITIONS_DATA === 'undefined') return;
-  vpQuizQueue = partialShuffle(VERB_PREPOSITIONS_DATA, 10);
-  vpQuizIdx = 0;
-  vpQuizScore = 0;
+  vpQuiz.queue = partialShuffle(VERB_PREPOSITIONS_DATA, 10);
+  vpQuiz.idx = 0;
+  vpQuiz.score = 0;
   startSessionTimer();
   showScreen('verb-preps-quiz');
   renderVPQuizQuestion();
 }
 
 function renderVPQuizQuestion() {
-  if (vpQuizIdx >= vpQuizQueue.length) {
-    addXP(vpQuizScore * 10);
-    showSessionSummary({ type: 'Verb + Preposition', correct: vpQuizScore, total: vpQuizQueue.length, xpEarned: vpQuizScore * 10 });
+  if (vpQuiz.idx >= vpQuiz.queue.length) {
+    addXP(vpQuiz.score * 10);
+    showSessionSummary({ type: 'Verb + Preposition', correct: vpQuiz.score, total: vpQuiz.queue.length, xpEarned: vpQuiz.score * 10 });
     goBack();
     return;
   }
-  const q = vpQuizQueue[vpQuizIdx];
+  const q = vpQuiz.queue[vpQuiz.idx];
   const allPreps = [...new Set(VERB_PREPOSITIONS_DATA.map(v => v.preposition))];
   const wrongs = shuffle(allPreps.filter(p => p !== q.preposition)).slice(0, 3);
   const options = shuffle([q.preposition, ...wrongs]);
 
-  document.getElementById('vp-progress').textContent = `${vpQuizIdx + 1} / ${vpQuizQueue.length}`;
+  document.getElementById('vp-progress').textContent = `${vpQuiz.idx + 1} / ${vpQuiz.queue.length}`;
   document.getElementById('vp-next').style.display = 'none';
   document.getElementById('vp-quiz-content').innerHTML = `
     <p class="mb-1">Complete: <strong>${esc(q.verb)} ___</strong> (${esc(q.english)})</p>
@@ -81,7 +89,7 @@ function answerVPQuizMC(idx) {
 }
 
 function submitVPQuiz() {
-  const q = vpQuizQueue[vpQuizIdx];
+  const q = vpQuiz.queue[vpQuiz.idx];
   const isCorrect = processMCSubmit({
     optionsSel: '#vp-quiz-content .quiz-option',
     isCorrectBtn: btn => btn.dataset.val === q.preposition,
@@ -89,12 +97,12 @@ function submitVPQuiz() {
     nextBtnId: 'vp-next',
     feedbackFn: null,
   });
-  if (isCorrect) vpQuizScore++;
+  if (isCorrect) vpQuiz.score++;
   trackError('verb-prep:' + q.verb, isCorrect, 'verb-prep');
 }
 
 function nextVPQuiz() {
-  vpQuizIdx++;
+  vpQuiz.idx++;
   renderVPQuizQuestion();
 }
 
@@ -133,39 +141,37 @@ function renderSubjunctiveTriggers() {
   el.innerHTML = html;
 }
 
-let subjQuizQueue = [], subjQuizIdx = 0, subjQuizScore = 0;
-
 function startSubjunctiveQuiz() {
   if (typeof SUBJUNCTIVE_TRIGGERS_DATA === 'undefined') return;
   // Build quiz: given a sentence, does it require subjunctive or indicative?
   const items = partialShuffle(SUBJUNCTIVE_TRIGGERS_DATA, 10);
-  subjQuizQueue = items.map(t => ({
+  subjQuiz.queue = items.map(t => ({
     trigger: t.trigger,
     example: t.example,
     english: t.english,
     category: t.category,
   }));
-  subjQuizIdx = 0;
-  subjQuizScore = 0;
+  subjQuiz.idx = 0;
+  subjQuiz.score = 0;
   startSessionTimer();
   showScreen('subjunctive-quiz');
   renderSubjQuizQuestion();
 }
 
 function renderSubjQuizQuestion() {
-  if (subjQuizIdx >= subjQuizQueue.length) {
-    addXP(subjQuizScore * 10);
-    showSessionSummary({ type: 'Subjunctive Triggers', correct: subjQuizScore, total: subjQuizQueue.length, xpEarned: subjQuizScore * 10 });
+  if (subjQuiz.idx >= subjQuiz.queue.length) {
+    addXP(subjQuiz.score * 10);
+    showSessionSummary({ type: 'Subjunctive Triggers', correct: subjQuiz.score, total: subjQuiz.queue.length, xpEarned: subjQuiz.score * 10 });
     goBack();
     return;
   }
-  const q = subjQuizQueue[subjQuizIdx];
+  const q = subjQuiz.queue[subjQuiz.idx];
   // Quiz format: "Which expression triggers the subjunctive?"
   const allTriggers = SUBJUNCTIVE_TRIGGERS_DATA.map(t => t.trigger);
   const wrongs = shuffle(allTriggers.filter(t => t !== q.trigger)).slice(0, 3);
   const options = shuffle([q.trigger, ...wrongs]);
 
-  document.getElementById('subj-progress').textContent = `${subjQuizIdx + 1} / ${subjQuizQueue.length}`;
+  document.getElementById('subj-progress').textContent = `${subjQuiz.idx + 1} / ${subjQuiz.queue.length}`;
   document.getElementById('subj-next').style.display = 'none';
   document.getElementById('subj-quiz-content').innerHTML = `
     <p class="mb-1">Which expression means: <strong>"${esc(q.english)}"</strong>?</p>
@@ -180,7 +186,7 @@ function answerSubjQuizMC(idx) {
 }
 
 function submitSubjQuiz() {
-  const q = subjQuizQueue[subjQuizIdx];
+  const q = subjQuiz.queue[subjQuiz.idx];
   const isCorrect = processMCSubmit({
     optionsSel: '#subj-quiz-content .quiz-option',
     isCorrectBtn: btn => btn.dataset.val === q.trigger,
@@ -188,12 +194,12 @@ function submitSubjQuiz() {
     nextBtnId: 'subj-next',
     feedbackFn: null,
   });
-  if (isCorrect) subjQuizScore++;
+  if (isCorrect) subjQuiz.score++;
   trackError('subj-trigger:' + q.trigger, isCorrect, 'subjunctive');
 }
 
 function nextSubjQuiz() {
-  subjQuizIdx++;
+  subjQuiz.idx++;
   renderSubjQuizQuestion();
 }
 
@@ -386,37 +392,35 @@ function renderNumberLearn() {
   el.innerHTML = html;
 }
 
-let nqQueue = [], nqIdx = 0, nqScore = 0;
-
 function startNumberQuiz() {
   if (typeof NUMBER_PRACTICE_DATA === 'undefined') return;
   const data = NUMBER_PRACTICE_DATA;
   const cardinals = data.CARDINAL_NUMBERS || [];
   // Generate 10 random number quiz questions
-  nqQueue = partialShuffle(cardinals, 10).map(n => ({
+  nqQuiz.queue = partialShuffle(cardinals, 10).map(n => ({
     number: n.number,
     spanish: n.spanish,
     type: Math.random() < 0.5 ? 'toSpanish' : 'toNumber',
   }));
-  nqIdx = 0;
-  nqScore = 0;
+  nqQuiz.idx = 0;
+  nqQuiz.score = 0;
   startSessionTimer();
   showScreen('number-quiz');
   renderNumberQuizQuestion();
 }
 
 function renderNumberQuizQuestion() {
-  if (nqIdx >= nqQueue.length) {
-    addXP(nqScore * 10);
-    showSessionSummary({ type: 'Number Quiz', correct: nqScore, total: nqQueue.length, xpEarned: nqScore * 10 });
+  if (nqQuiz.idx >= nqQuiz.queue.length) {
+    addXP(nqQuiz.score * 10);
+    showSessionSummary({ type: 'Number Quiz', correct: nqQuiz.score, total: nqQuiz.queue.length, xpEarned: nqQuiz.score * 10 });
     goBack();
     return;
   }
-  const q = nqQueue[nqIdx];
+  const q = nqQuiz.queue[nqQuiz.idx];
   const data = NUMBER_PRACTICE_DATA;
   const cardinals = data.CARDINAL_NUMBERS || [];
 
-  document.getElementById('nq-progress').textContent = `${nqIdx + 1} / ${nqQueue.length}`;
+  document.getElementById('nq-progress').textContent = `${nqQuiz.idx + 1} / ${nqQuiz.queue.length}`;
   document.getElementById('nq-next').style.display = 'none';
 
   if (q.type === 'toSpanish') {
@@ -447,7 +451,7 @@ function answerNumberQuizMC(idx) {
 }
 
 function submitNumberQuizMC() {
-  const q = nqQueue[nqIdx];
+  const q = nqQuiz.queue[nqQuiz.idx];
   const isCorrect = processMCSubmit({
     optionsSel: '#nq-quiz-content .quiz-option',
     isCorrectBtn: btn => parseInt(btn.dataset.val, 10) === q.number,
@@ -455,17 +459,17 @@ function submitNumberQuizMC() {
     nextBtnId: 'nq-next',
     feedbackFn: null,
   });
-  if (isCorrect) nqScore++;
+  if (isCorrect) nqQuiz.score++;
 }
 
 function checkNumberQuiz() {
-  const q = nqQueue[nqIdx];
+  const q = nqQuiz.queue[nqQuiz.idx];
   const input = document.getElementById('nq-input');
   if (!input) return;
   const result = checkAnswer(input.value, q.spanish);
   const fb = document.getElementById('nq-feedback');
   if (result.correct) {
-    nqScore++;
+    nqQuiz.score++;
     if (fb) {
       fb.innerHTML = `<div class="text-sm" style="color:var(--green)">${result.accentWarn ? t('correctAccent') + ' ' + q.spanish : t('correct')}</div>`;
       fb.style.display = 'block';
@@ -481,36 +485,35 @@ function checkNumberQuiz() {
 }
 
 function nextNumberQuiz() {
-  nqIdx++;
+  nqQuiz.idx++;
   renderNumberQuizQuestion();
 }
 
 // Time Quiz
-let tqQueue = [], tqIdx = 0, tqScore = 0;
 
 function startTimeQuiz() {
   if (typeof NUMBER_PRACTICE_DATA === 'undefined' || !NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS) return;
-  tqQueue = partialShuffle(NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS, 10);
-  tqIdx = 0;
-  tqScore = 0;
+  tqQuiz.queue = partialShuffle(NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS, 10);
+  tqQuiz.idx = 0;
+  tqQuiz.score = 0;
   startSessionTimer();
   showScreen('time-quiz');
   renderTimeQuizQuestion();
 }
 
 function renderTimeQuizQuestion() {
-  if (tqIdx >= tqQueue.length) {
-    addXP(tqScore * 10);
-    showSessionSummary({ type: 'Time Quiz', correct: tqScore, total: tqQueue.length, xpEarned: tqScore * 10 });
+  if (tqQuiz.idx >= tqQuiz.queue.length) {
+    addXP(tqQuiz.score * 10);
+    showSessionSummary({ type: 'Time Quiz', correct: tqQuiz.score, total: tqQuiz.queue.length, xpEarned: tqQuiz.score * 10 });
     goBack();
     return;
   }
-  const q = tqQueue[tqIdx];
+  const q = tqQuiz.queue[tqQuiz.idx];
   const allTimes = NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS;
   const wrongs = shuffle(allTimes.filter(t => t.time !== q.time)).slice(0, 3);
   const options = shuffle([q.spanish, ...wrongs.map(w => w.spanish)]);
 
-  document.getElementById('tq-progress').textContent = `${tqIdx + 1} / ${tqQueue.length}`;
+  document.getElementById('tq-progress').textContent = `${tqQuiz.idx + 1} / ${tqQuiz.queue.length}`;
   document.getElementById('tq-next').style.display = 'none';
   document.getElementById('tq-quiz-content').innerHTML = `
     <p class="mb-1">How do you say <strong>${esc(q.time)}</strong> in Spanish?</p>
@@ -525,7 +528,7 @@ function answerTimeQuizMC(idx) {
 }
 
 function submitTimeQuizMC() {
-  const q = tqQueue[tqIdx];
+  const q = tqQuiz.queue[tqQuiz.idx];
   const isCorrect = processMCSubmit({
     optionsSel: '#tq-quiz-content .quiz-option',
     isCorrectBtn: btn => btn.dataset.val === q.spanish,
@@ -533,10 +536,10 @@ function submitTimeQuizMC() {
     nextBtnId: 'tq-next',
     feedbackFn: null,
   });
-  if (isCorrect) tqScore++;
+  if (isCorrect) tqQuiz.score++;
 }
 
 function nextTimeQuiz() {
-  tqIdx++;
+  tqQuiz.idx++;
   renderTimeQuizQuestion();
 }

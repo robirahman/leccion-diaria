@@ -2,18 +2,18 @@
 
 Remaining improvements not yet implemented, organized by priority.
 
-## P3 — Medium Impact, Medium-High Effort
+## P3 — Medium Impact, Medium-High Effort (completed)
 
-- [ ] **Refactor 430-line switch statement** in app-init.js (lines 11–440) into action handler modules (e.g., quiz-actions.js, settings-actions.js, navigation-actions.js)
-- [ ] **Undo last flashcard rating** — let users undo accidental SRS ratings within a short window
-- [ ] **Onboarding flow** — after placement test, show personalized learning plan recommending modules based on level
-- [ ] **Offline indicator UX** — gray out TTS buttons when offline, show connectivity state on network-dependent features
-- [ ] **CSV export** — add option to export progress data as CSV alongside JSON
-- [ ] **Parallel vocab fetching** — change `_fetchVocabProgressive()` from sequential `.reduce()` chain to `Promise.all()` for B1-C2 chunks
-- [ ] **Batch `applyDisplayMode()`** — replace 100+ DOM queries with CSS class toggles or custom properties
-- [ ] **Card grid responsive fix** — test on 320px screens; may need `minmax(80px, 1fr)` for very small devices
-- [ ] **Improve card clickability** — add cursor:pointer, hover lift animation, subtle shadow transition on all interactive cards
-- [ ] **Encapsulate quiz state** — replace global mutable variables (vpQuizQueue, subjQuizIdx, etc.) in feature-modules.js with closures or objects
+- [x] **Refactor 430-line switch statement** in app-init.js — replaced with ACTION_HANDLERS map (O(1) lookup)
+- [x] **Undo last flashcard rating** — snapshot/restore pattern with undo toast
+- [x] **Onboarding flow** — personalized learning plan after placement test (A1-C2)
+- [x] **Offline indicator UX** — TTS buttons grayed out when offline
+- [x] **CSV export** — export progress data as CSV from settings
+- [x] **Parallel vocab fetching** — B1-C2 chunks loaded via `Promise.all()`
+- [x] **Batch `applyDisplayMode()`** — uses `data-i18n` attributes instead of individual DOM queries
+- [x] **Card grid responsive fix** — `minmax(100px, 1fr)` for 320px screens
+- [x] **Improve card clickability** — cursor:pointer, hover lift, shadow transitions
+- [x] **Encapsulate quiz state** — factory pattern replacing global mutable variables
 
 ## P4 — Lower Priority / Larger Scope
 

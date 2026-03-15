@@ -209,10 +209,12 @@ function flipVocabCard() {
 
 function rateVocab(rating) {
   const w = vocabLearnQueue[vocabLearnIdx];
+  _saveRatingSnapshot('vocab', w.word, progress.vocabFsrs, progress.vocabMastery);
   reviewItem(progress.vocabFsrs, progress.vocabMastery, w.word, rating);
   addXP(rating >= 3 ? 5 : 2);
   vocabLearnIdx++;
   renderVocabLearnCard();
+  showToast('\u2705', 'Rating saved', 'undo');
 }
 
 // ── Vocab Quiz ──

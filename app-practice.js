@@ -20,6 +20,57 @@ function exportProgress() {
   URL.revokeObjectURL(url);
 }
 
+function exportProgressCSV() {
+  if (!progress) return;
+  const rows = [];
+  // Summary header + row
+  rows.push(['Date', 'XP', 'Streak', 'VerbsMastered', 'VocabLearned', 'GrammarDone', 'PhrasesLearned', 'PlacementLevel'].join(','));
+  rows.push([
+    todayStr(),
+    progress.xp || 0,
+    progress.streak || 0,
+    Object.keys(progress.verbMastery || {}).length,
+    Object.keys(progress.vocabMastery || {}).length,
+    Object.keys(progress.grammarDone || {}).length,
+    Object.keys(progress.phraseMastery || {}).length,
+    progress.placementLevel || 'none'
+  ].join(','));
+  rows.push('');
+  // Detailed SRS data section
+  const srsStores = [
+    { name: 'verbFsrs', label: 'Verbs' },
+    { name: 'vocabFsrs', label: 'Vocab' },
+    { name: 'grammarFsrs', label: 'Grammar' },
+    { name: 'phraseFsrs', label: 'Phrases' }
+  ];
+  for (const store of srsStores) {
+    const data = progress[store.name];
+    if (!data || Object.keys(data).length === 0) continue;
+    rows.push(`Detailed ${store.label} SRS`);
+    rows.push('Item,Stability,Difficulty,Reps,Lapses,LastReview,NextReview');
+    for (const [key, card] of Object.entries(data)) {
+      rows.push([
+        '"' + key.replace(/"/g, '""') + '"',
+        card.s != null ? card.s.toFixed(2) : '',
+        card.d != null ? card.d.toFixed(2) : '',
+        card.reps || 0,
+        card.lapses || 0,
+        card.last || '',
+        card.next || ''
+      ].join(','));
+    }
+    rows.push('');
+  }
+  const csv = rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `leccion-diaria-${currentProfile}-${todayStr()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function importProgress() {
   const input = document.createElement('input');
   input.type = 'file';

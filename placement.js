@@ -780,3 +780,116 @@ function buildPlacementGrammarQs(level, count) {
     };
   });
 }
+
+// ════════════════════════════════════════
+//  LEARNING PLAN (post-placement onboarding)
+// ════════════════════════════════════════
+
+const LEARNING_PLANS = {
+  A1: {
+    subtitle: 'You are just getting started — here is your foundation plan.',
+    modules: [
+      { icon: '\u{1F44B}', label: 'Greetings & Introductions' },
+      { icon: '\u{1F522}', label: 'Numbers & Counting' },
+      { icon: '\u{1F4D6}', label: 'Basic Vocabulary (family, food, colors)' },
+      { icon: '\u{1F3E0}', label: 'Ser vs. Estar (to be)' },
+      { icon: '\u{1F4AC}', label: 'Common Phrases & Expressions' },
+      { icon: '\u{1F50A}', label: 'Pronunciation Basics' },
+    ],
+  },
+  A2: {
+    subtitle: 'You know the basics — time to build fluency.',
+    modules: [
+      { icon: '\u{1F4DA}', label: 'Expand Core Vocabulary' },
+      { icon: '\u{1F504}', label: 'Present Tense Verb Conjugation' },
+      { icon: '\u{1F4AC}', label: 'Everyday Phrases & Conversations' },
+      { icon: '\u{2194}\u{FE0F}', label: 'Por vs. Para' },
+      { icon: '\u{1F4DD}', label: 'Basic Sentence Structure' },
+      { icon: '\u{23F0}', label: 'Telling Time & Dates' },
+    ],
+  },
+  B1: {
+    subtitle: 'Intermediate level — deepen your grammar and expression.',
+    modules: [
+      { icon: '\u{1F552}', label: 'Past Tenses (preterite & imperfect)' },
+      { icon: '\u{1F52E}', label: 'Future & Conditional Tenses' },
+      { icon: '\u{1F4A1}', label: 'Subjunctive Introduction' },
+      { icon: '\u{1F4D6}', label: 'Reading Comprehension' },
+      { icon: '\u{270D}\u{FE0F}', label: 'Writing Prompts & Practice' },
+      { icon: '\u{1F5E3}\u{FE0F}', label: 'Conversational Connectors' },
+    ],
+  },
+  B2: {
+    subtitle: 'Upper intermediate — master complex structures.',
+    modules: [
+      { icon: '\u{1F9E0}', label: 'Advanced Grammar Patterns' },
+      { icon: '\u{1F504}', label: 'Subjunctive in Depth' },
+      { icon: '\u{2696}\u{FE0F}', label: 'Comparative Grammar (EN vs. ES)' },
+      { icon: '\u{1F30E}', label: 'Culture Modules & Context' },
+      { icon: '\u{1F4AC}', label: 'Idioms & Colloquial Expressions' },
+      { icon: '\u{1F4DD}', label: 'Structured Writing Practice' },
+    ],
+  },
+  C1: {
+    subtitle: 'Advanced — refine nuance and achieve near-native accuracy.',
+    modules: [
+      { icon: '\u{1F3AF}', label: 'All Grammar Modules (review & gaps)' },
+      { icon: '\u{1F9D0}', label: 'Nuance & Register (formal vs. informal)' },
+      { icon: '\u{270D}\u{FE0F}', label: 'Advanced Writing & Essays' },
+      { icon: '\u{1F4D6}', label: 'Advanced Reading (literature, news)' },
+      { icon: '\u{1F30D}', label: 'Regional Variations & Dialects' },
+      { icon: '\u{1F4AC}', label: 'Complex Idioms & Proverbs' },
+    ],
+  },
+  C2: {
+    subtitle: 'Near-native — polish every detail.',
+    modules: [
+      { icon: '\u{1F3AF}', label: 'All Modules Unlocked' },
+      { icon: '\u{1F9D0}', label: 'Stylistic Nuance & Tone' },
+      { icon: '\u{270D}\u{FE0F}', label: 'Advanced Writing & Essays' },
+      { icon: '\u{1F4D6}', label: 'Literary & Academic Reading' },
+      { icon: '\u{1F30D}', label: 'Regional Dialects & Slang' },
+      { icon: '\u{1F4AC}', label: 'Proverbs, Wordplay & Humor' },
+    ],
+  },
+};
+
+function showLearningPlan() {
+  // Only show once per profile
+  if (progress.onboardingDone) {
+    switchTab('today');
+    return;
+  }
+
+  const level = progress.placementLevel || 'A1';
+  const plan = LEARNING_PLANS[level] || LEARNING_PLANS['A1'];
+
+  document.getElementById('lp-subtitle').textContent =
+    'Level ' + level + ' — ' + plan.subtitle;
+
+  const checklist = document.getElementById('learning-plan-checklist');
+  checklist.innerHTML = plan.modules.map(m =>
+    `<div class="lp-item">
+      <span class="lp-icon">${m.icon}</span>
+      <span class="lp-label">${m.label}</span>
+      <span class="lp-check">\u2713</span>
+    </div>`
+  ).join('');
+
+  const overlay = document.getElementById('learning-plan-overlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+}
+
+function closeLearningPlan() {
+  const overlay = document.getElementById('learning-plan-overlay');
+  if (overlay) {
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+  progress.onboardingDone = true;
+  saveProgress();
+  switchTab('today');
+}

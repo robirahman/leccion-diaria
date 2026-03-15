@@ -455,15 +455,20 @@ function showToast(icon, text, type) {
   const container = document.getElementById('toast-container');
   if (!container) return;
   const toast = document.createElement('div');
-  const cls = type === 'success' ? ' toast-success' : type === 'error' ? ' toast-error' : type === 'info' ? ' toast-info' : '';
+  const cls = type === 'success' ? ' toast-success' : type === 'error' ? ' toast-error' : type === 'info' ? ' toast-info' : type === 'undo' ? ' toast-info' : '';
   toast.className = 'toast' + cls;
-  toast.textContent = icon + ' ' + text;
+  if (type === 'undo') {
+    toast.innerHTML = icon + ' ' + esc(text) + ' <button class="toast-undo-btn" data-action="undo-last-rating">Undo</button>';
+  } else {
+    toast.textContent = icon + ' ' + text;
+  }
   container.appendChild(toast);
+  const duration = type === 'undo' ? 5000 : 3500;
   requestAnimationFrame(() => toast.classList.add('visible'));
   setTimeout(() => {
     toast.classList.remove('visible');
     setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
-  }, 3500);
+  }, duration);
 }
 
 function showLoading(text) {
@@ -1273,15 +1278,32 @@ if (window.matchMedia) {
 
 // Translate all static HTML elements based on display mode
 function applyDisplayMode() {
-  // Tab bar labels
-  const tabs = { today: 'today', verbs: 'verbs', numbers: 'numbers', vocab: 'vocab',
-    grammar: 'grammar', phrases: 'phrases', culture: 'culture', explore: 'explore' };
-  for (const [tab, key] of Object.entries(tabs)) {
-    const el = document.querySelector(`.tab[data-tab="${tab}"] span:last-child`);
-    if (el) el.textContent = tBtn(key);
-  }
+  // ── Batch pass 1: all [data-i18n] elements → t(key) for textContent ──
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (key) el.textContent = t(key);
+  });
 
-  // Dropdown items
+  // ── Batch pass 2: all [data-i18n-btn] elements → tBtn(key) for textContent ──
+  document.querySelectorAll('[data-i18n-btn]').forEach(el => {
+    const key = el.dataset.i18nBtn;
+    if (key) el.textContent = tBtn(key);
+  });
+
+  // ── Batch pass 3: all [data-i18n-placeholder] elements → t(key) for placeholder ──
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (key) el.placeholder = t(key);
+  });
+
+  // ── Rating buttons (use existing data-rating attribute) ──
+  const ratings = { 1: 'again', 2: 'hard', 3: 'good', 4: 'easy' };
+  document.querySelectorAll('.rating-btn').forEach(btn => {
+    const r = btn.dataset.rating;
+    if (ratings[r]) btn.textContent = tBtn(ratings[r]);
+  });
+
+  // ── Dropdown items (dynamically generated, no data-i18n) ──
   const dropdowns = { music: 'music', movies: 'movies', poetry: 'poetry', proverbs: 'proverbs',
     folktales: 'folkTales', conversations: 'conversations', recipes: 'recipes', sports: 'sports',
     festivals: 'festivals', history: 'history', travel: 'travel', trivia: 'trivia', idioms: 'idioms' };
@@ -1290,181 +1312,9 @@ function applyDisplayMode() {
     if (el) el.textContent = tBtn(key);
   }
 
-  // Rating buttons (all 3 sets: verb, vocab, phrase)
-  const ratings = { 1: 'again', 2: 'hard', 3: 'good', 4: 'easy' };
-  document.querySelectorAll('.rating-btn').forEach(btn => {
-    const r = btn.dataset.rating;
-    if (ratings[r]) btn.textContent = tBtn(ratings[r]);
-  });
-
-  // Screen headings (h2 in static HTML)
-  const headings = [
-    ['#screen-verbs > h2', 'verbConjugation'],
-    ['#screen-numbers > h2', 'numbers'],
-    ['#screen-vocab > h2', 'vocabulary'],
-    ['#screen-grammar > h2', 'grammar'],
-    ['#screen-phrases > h2', 'phrases'],
-    ['#screen-settings > h2', 'settings'],
-    ['#screen-stats > h2', 'statistics'],
-  ];
-  for (const [sel, key] of headings) {
-    const el = document.querySelector(sel);
-    if (el) el.textContent = t(key);
-  }
-
-  // Verb screen cards
-  const cards = [
-    ['[data-action="start-verb-learn"] .card-title', 'learnNewVerbs'],
-    ['[data-action="start-verb-learn"] .card-subtitle', 'flashcardsDesc'],
-    ['[data-action="start-verb-drill"] .card-title', 'conjugationDrill'],
-    ['[data-action="start-verb-drill"] .card-subtitle', 'typeCorrectConj'],
-    ['[data-action="start-verb-quiz"] .card-title', 'verbQuiz'],
-    ['[data-action="start-verb-quiz"] .card-subtitle', 'mcAndFib'],
-    ['[data-action="open-verb-patterns"] .card-title', 'irregularPatterns'],
-    ['[data-action="open-verb-patterns"] .card-subtitle', 'practiceByPattern'],
-    ['[data-action="open-verb-browser"] .card-title', 'verbBrowser'],
-    ['[data-action="open-verb-browser"] .card-subtitle', 'browseVerbs'],
-    ['[data-action="start-number-learn"] .card-title', 'learnNumbers'],
-    ['[data-action="start-number-learn"] .card-subtitle', 'learnNumbersDesc'],
-    ['[data-action="start-number-quiz"] .card-title', 'numberQuiz'],
-    ['[data-action="start-number-quiz"] .card-subtitle', 'numberQuizDesc'],
-    ['[data-action="start-time-quiz"] .card-title', 'tellingTime'],
-    ['[data-action="start-time-quiz"] .card-subtitle', 'tellingTimeDesc'],
-  ];
-  for (const [sel, key] of cards) {
-    const el = document.querySelector(sel);
-    if (el) el.textContent = t(key);
-  }
-
-  // Vocab category buttons
-  const vocBtns = [
-    ['[data-action="start-vocab-learn"]', 'learn'],
-    ['[data-action="start-vocab-quiz"]', 'quiz'],
-    ['[data-action="start-gender-quiz"]', 'genderDrill'],
-    ['[data-action="start-phrase-learn"]', 'learn'],
-  ];
-  for (const [sel, key] of vocBtns) {
-    document.querySelectorAll(sel).forEach(el => { el.textContent = tBtn(key); });
-  }
-
-  // Take Quiz buttons
-  document.querySelectorAll('[data-action="start-grammar-quiz"], [data-action="start-culture-quiz"]').forEach(el => {
-    el.textContent = tBtn('takeQuiz');
-  });
-
-  // Flashcard "Tap to reveal"
-  document.querySelectorAll('.flashcard .front .text-muted.text-sm').forEach(el => {
-    if (el.textContent.trim() === 'Press to reveal' || el.textContent.trim() === 'Presiona para ver')
-      el.textContent = t('tapToReveal');
-  });
-
-  // Profile screen
-  const subtitle = document.querySelector('.profile-screen .subtitle');
-  if (subtitle) subtitle.textContent = t('dailySubtitle');
-  const newProfBtn = document.querySelector('[data-action="create-profile"]');
-  if (newProfBtn) newProfBtn.textContent = tBtn('newProfile');
-
-  // Results screen buttons
-  const retryBtn = document.querySelector('[data-action="results-retry"]');
-  if (retryBtn) retryBtn.textContent = tBtn('tryAgain');
-  const homeBtn = document.querySelector('[data-action="results-home"]');
-  if (homeBtn) homeBtn.textContent = tBtn('done');
-
-  // Placement results buttons
-  const placeDoneBtn = document.querySelector('[data-action="placement-done"]');
-  if (placeDoneBtn) placeDoneBtn.textContent = tBtn('startLearning');
-  const retakeBtn = document.querySelector('[data-action="retake-placement"]');
-  if (retakeBtn) retakeBtn.textContent = tBtn('retakeTest');
-  const placeTitleEl = document.querySelector('#screen-placement-results h2');
-  if (placeTitleEl) placeTitleEl.textContent = t('yourSpanishLevel');
-
-  // Next buttons
-  document.querySelectorAll('#vq-next, #vocq-next, #gq-next, #cq-next').forEach(el => {
-    el.textContent = tBtn('next');
-  });
-
-  // Settings labels
-  const settingsMap = [
-    ['#screen-settings .settings-group:nth-child(2) > h3', 'display'],
-    ['#screen-settings .settings-group:nth-child(3) > h3', 'learning'],
-    ['#screen-settings .settings-group:nth-child(4) > h3', 'data'],
-  ];
-  for (const [sel, key] of settingsMap) {
-    const el = document.querySelector(sel);
-    if (el) el.textContent = t(key);
-  }
-
-  // Settings row labels
-  const settingLabels = document.querySelectorAll('#screen-settings .setting-label');
-  const labelMap = { 'Display Mode': 'displayMode', 'Theme': 'theme', 'Color Palette': 'colorPalette',
-    'Region': 'region', 'Accent Strictness': 'accentStrict', 'TTS Voice Speed': 'ttsSpeed',
-    'Placement Test': 'placementTest' };
-  const descMap = { 'How text is shown': 'howTextShown', 'Affects verb forms and vocabulary': 'regionDesc',
-    'How strictly to check accents': 'accentDesc', 'Assess your level and unlock content': 'placementDesc' };
-  settingLabels.forEach(el => {
-    const origText = el.getAttribute('data-orig') || el.textContent.trim();
-    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', origText);
-    if (labelMap[origText]) el.textContent = t(labelMap[origText]);
-  });
-  document.querySelectorAll('#screen-settings .setting-desc').forEach(el => {
-    const origText = el.getAttribute('data-orig') || el.textContent.trim();
-    if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', origText);
-    if (descMap[origText]) el.textContent = t(descMap[origText]);
-  });
-
-  // Settings pill buttons
-  const pillMap = {
-    'Standard': 'standard', 'Immersion': 'immersion', 'Hints': 'hints',
-    'Dark': 'dark', 'Light': 'light',
-    'Latin America': 'latinAmerica', 'Spain': 'spain',
-    'Strict': 'strict', 'Warn': 'warn', 'Lenient': 'lenient',
-    'Slow': 'slow', 'Normal': 'normal', 'Fast': 'fast',
-  };
-  document.querySelectorAll('#screen-settings .pill').forEach(pill => {
-    const origText = pill.getAttribute('data-orig') || pill.textContent.trim();
-    if (!pill.getAttribute('data-orig')) pill.setAttribute('data-orig', origText);
-    if (pillMap[origText]) pill.textContent = tBtn(pillMap[origText]);
-  });
-
-  // Settings action buttons
-  const actionBtnMap = {
-    'start-placement': 'takeTest', 'export-progress': 'exportProgress',
-    'import-progress': 'importProgress', 'reset-progress': 'resetProgress',
-  };
-  for (const [action, key] of Object.entries(actionBtnMap)) {
-    const el = document.querySelector(`#screen-settings [data-action="${action}"]`);
-    if (el) el.textContent = tBtn(key);
-  }
-
-  // Search placeholders
-  const verbSearch = document.getElementById('verb-search');
-  if (verbSearch) verbSearch.placeholder = t('searchVerbs');
-  const vocabSearch = document.getElementById('vocab-search');
-  if (vocabSearch) vocabSearch.placeholder = t('searchVocab');
-
-  // Verb drill static elements
-  const vdInput = document.getElementById('vd-input');
-  if (vdInput) vdInput.placeholder = t('typeConjugation');
-  const vdCheckBtn = document.querySelector('[data-action="check-verb-drill"]');
-  if (vdCheckBtn) vdCheckBtn.textContent = tBtn('check');
-
-  // Placement next button
-  const ptNextBtn = document.querySelector('[data-action="next-placement"]');
-  if (ptNextBtn) ptNextBtn.textContent = tBtn('next');
-
-  // Verb browser filter buttons
-  const filterMap = { all: 'all', regular: 'regular', irregular: 'irregular', 'stem-changing': 'stem', reflexive: 'reflexive' };
-  document.querySelectorAll('[data-action="filter-verbs"]').forEach(btn => {
-    const filter = btn.dataset.filter;
-    if (filterMap[filter]) btn.textContent = tBtn(filterMap[filter]);
-  });
-
-  // Stats screen
-  // Stats screen card titles — find by their associated content containers
-  const masteryCard = document.getElementById('stats-mastery')?.closest('.card');
-  if (masteryCard) { const title = masteryCard.querySelector('.card-title'); if (title) title.textContent = t('masteryBreakdown'); }
-  const calCard = document.getElementById('stats-calendar')?.closest('.card');
-  if (calCard) { const title = calCard.querySelector('.card-title'); if (title) title.textContent = t('practiceCalendar'); }
+  // ── Placement "See Learning Plan" button (dynamically added) ──
+  const placePlanBtn = document.querySelector('[data-action="show-learning-plan"]');
+  if (placePlanBtn) placePlanBtn.textContent = tBtn('seeLearningPlan') || 'See Your Learning Plan';
 
   // Nav title
   const navTitle = document.querySelector('.nav-title');
@@ -1551,6 +1401,71 @@ function updateNavStats() {
 // ════════════════════════════════════════
 //  FSRS HELPERS
 // ════════════════════════════════════════
+
+// ── Undo last rating snapshot ──
+let _lastRatingSnapshot = null;
+let _undoTimer = null;
+
+function _saveRatingSnapshot(type, key, fsrsStore, masteryStore) {
+  clearTimeout(_undoTimer);
+  _lastRatingSnapshot = {
+    type,
+    key,
+    fsrsStoreName: type === 'verb' ? 'verbFsrs' : type === 'vocab' ? 'vocabFsrs' : 'phraseFsrs',
+    masteryStoreName: type === 'verb' ? 'verbMastery' : type === 'vocab' ? 'vocabMastery' : 'phraseMastery',
+    prevFsrs: fsrsStore[key] ? { ...fsrsStore[key] } : null,
+    prevMastery: masteryStore[key] !== undefined ? masteryStore[key] : null,
+    prevXP: progress.xp,
+    timestamp: Date.now()
+  };
+  // Auto-clear after 8 seconds
+  _undoTimer = setTimeout(() => { _lastRatingSnapshot = null; }, 8000);
+}
+
+function undoLastRating() {
+  const snap = _lastRatingSnapshot;
+  if (!snap) return false;
+  clearTimeout(_undoTimer);
+  _lastRatingSnapshot = null;
+
+  const fsrsStore = progress[snap.fsrsStoreName];
+  const masteryStore = progress[snap.masteryStoreName];
+
+  // Restore previous FSRS data
+  if (snap.prevFsrs === null) {
+    delete fsrsStore[snap.key];
+  } else {
+    fsrsStore[snap.key] = snap.prevFsrs;
+  }
+
+  // Restore previous mastery
+  if (snap.prevMastery === null) {
+    delete masteryStore[snap.key];
+  } else {
+    masteryStore[snap.key] = snap.prevMastery;
+  }
+
+  // Restore XP
+  progress.xp = snap.prevXP;
+
+  saveProgress();
+  updateNavStats();
+
+  // Re-show the flashcard by decrementing the index
+  if (snap.type === 'verb') {
+    verbLearnIdx--;
+    renderVerbLearnCard();
+  } else if (snap.type === 'vocab') {
+    vocabLearnIdx--;
+    renderVocabLearnCard();
+  } else if (snap.type === 'phrase') {
+    phraseLearnIdx--;
+    renderPhraseLearnCard();
+  }
+
+  showToast('\u21a9\ufe0f', 'Rating undone', 'info');
+  return true;
+}
 
 function reviewItem(fsrsStore, masteryStore, key, rating) {
   const now = Date.now();
@@ -1773,6 +1688,10 @@ function renderCefrMasteryDetailed(el) {
 
 let _ttsWarningShown = false;
 function speak(text) {
+  if (!navigator.onLine) {
+    showToast('📡', "You're offline — TTS unavailable");
+    return;
+  }
   if (!window.speechSynthesis) {
     if (!_ttsWarningShown) { _ttsWarningShown = true; showToast('🔇', 'Text-to-speech is not available in this browser.'); }
     return;

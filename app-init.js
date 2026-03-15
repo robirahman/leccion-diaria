@@ -8,6 +8,539 @@
 //  EVENT DELEGATION
 // ════════════════════════════════════════
 
+// ── Helper functions for complex action handlers ──
+
+function _handleToggleTheme() {
+  const cur = progress?.settings?.theme || 'dark';
+  setSetting('theme', cur === 'dark' ? 'light' : 'dark');
+}
+
+function _handleConfirmLeaveQuiz() {
+  closeModal();
+  if (_pendingNavTab) {
+    const fn = _pendingNavTab;
+    _pendingNavTab = null;
+    _leaveConfirmed = true;
+    fn();
+  }
+}
+
+function _handleResetProgress() {
+  showModal(t('resetTitle'), `<p>${t('resetConfirm')}</p>`, [
+    { label: tBtn('cancel'), action: 'close-modal', cls: 'btn-secondary' },
+    { label: tBtn('reset'), action: 'confirm-reset', cls: 'btn-primary' },
+  ]);
+}
+
+function _handleConfirmReset() {
+  progress = newProgress();
+  saveProgress();
+  updateNavStats();
+  closeModal();
+  switchTab('today');
+}
+
+function _handleAdminTapSettings() {
+  adminTaps++;
+  clearTimeout(adminTapTimer);
+  adminTapTimer = setTimeout(() => adminTaps = 0, 3000);
+  if (adminTaps >= 5) {
+    adminTaps = 0;
+    const btn = document.getElementById('admin-mode-btn');
+    if (btn) btn.style.display = '';
+  }
+}
+
+function _handleAdminCollapse(target) {
+  const section = target.nextElementSibling;
+  if (section) {
+    const open = section.style.display !== 'none';
+    section.style.display = open ? 'none' : '';
+    target.textContent = target.textContent.replace(/[▸▾]/, open ? '▸' : '▾');
+  }
+}
+
+function _handleAdminToggle(target) {
+  const store = target.dataset.store;
+  const key = target.dataset.key;
+  if (store && key && progress[store]) {
+    if (progress[store][key]) { delete progress[store][key]; }
+    else { progress[store][key] = true; }
+    saveProgress();
+    renderAdmin();
+  }
+}
+
+function _handleAdminClearStore(target) {
+  const stores = (target.dataset.stores || '').split(',');
+  for (const s of stores) { if (progress[s]) progress[s] = {}; }
+  saveProgress();
+  renderAdmin();
+}
+
+function _handleStartGrammarQuizRandom() {
+  if (typeof GRAMMAR_DATA !== 'undefined' && GRAMMAR_DATA.length > 0) {
+    const lesson = GRAMMAR_DATA[Math.floor(Math.random() * GRAMMAR_DATA.length)];
+    openGrammarLesson(lesson.id);
+    startGrammarQuiz();
+  }
+}
+
+function _handleSubmitVocabQuizMC() {
+  if (vocabQuizQueue[vocabQuizIdx]?.type === 'gender') {
+    submitGenderQuizMC();
+  } else {
+    submitVocabQuizMC();
+  }
+}
+
+function _handleNextVocabQuiz() {
+  vocabQuizIdx++;
+  const nextItem = vocabQuizQueue[vocabQuizIdx];
+  if (nextItem?.type === 'gender') renderVocabQuizQuestion_Gender();
+  else if (nextItem?.type === 'produce') renderVocabQuizQuestion_Produce();
+  else renderVocabQuizQuestion();
+}
+
+function _handleVrefTab(target) {
+  const tab = target.dataset.tab;
+  document.querySelectorAll('#vref-tabs .btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('vref-tab-lookup').style.display = tab === 'lookup' ? '' : 'none';
+  document.getElementById('vref-tab-rules').style.display = tab === 'rules' ? '' : 'none';
+  if (tab === 'rules') renderConjugationRules();
+}
+
+function _handleFilterReadingType(target) {
+  readingTypeFilter = target.dataset.filter || 'standard';
+  renderReadingList();
+}
+
+function _handleToggleListenMode() {
+  listenMode = !listenMode;
+  const textEl = document.getElementById('read-text');
+  const toggleBtn = document.getElementById('read-listen-toggle');
+  if (listenMode) {
+    textEl.style.display = 'none';
+    toggleBtn.classList.add('active');
+    // Auto-play the passage
+    speak(currentReading.text);
+  } else {
+    textEl.style.display = '';
+    toggleBtn.classList.remove('active');
+  }
+}
+
+function _handleLaunchTrackModule(target) {
+  const el = target.closest('[data-track-id]');
+  if (el) launchTrackModule(el.dataset.trackId, el.dataset.moduleId);
+}
+
+function _handlePtSetLength(target) {
+  const len = parseInt(target.dataset.len, 10);
+  if ([10, 20, 40].includes(len)) {
+    placementTargetLength = len;
+    savePlacementState();
+    if (placementIdx >= len) finishPlacementTest();
+    else {
+      // Re-render just the controls and progress, not the question
+      document.getElementById('pt-progress').textContent = `${placementIdx + 1} / ${placementTargetLength}`;
+      document.getElementById('pt-progress-bar-fill').style.width = Math.round((placementIdx / placementTargetLength) * 100) + '%';
+      const ctrl = document.getElementById('pt-controls');
+      if (ctrl) {
+        const minReached = placementIdx >= 5;
+        ctrl.innerHTML = `<div class="pt-controls-row">
+          <button class="btn btn-outline btn-xs${placementTargetLength===10?' active':''}" data-action="pt-set-length" data-len="10">10 Qs</button>
+          <button class="btn btn-outline btn-xs${placementTargetLength===20?' active':''}" data-action="pt-set-length" data-len="20">20 Qs</button>
+          <button class="btn btn-outline btn-xs${placementTargetLength===40?' active':''}" data-action="pt-set-length" data-len="40">40 Qs</button>
+          <button class="btn btn-outline btn-xs pt-end-btn" data-action="end-placement-early" ${minReached?'':'disabled'}>End Test</button>
+        </div>`;
+      }
+    }
+  }
+}
+
+// Unified accent insertion — maps action suffix to input ID
+const _ACCENT_INPUT_MAP = {
+  'insert-accent': 'vd-input',
+  'insert-accent-vq': 'vq-fib-input',
+  'insert-accent-gq': 'gq-fib-input',
+  'insert-accent-nq': 'nq-input',
+  'insert-accent-pt': 'pt-fib-input',
+  'insert-accent-tr': 'tr-input',
+  'insert-accent-dict': 'dict-input',
+  'insert-accent-vocq': 'vocq-produce-input',
+  'insert-accent-rev': 'rev-drill-input',
+};
+
+function _handleInsertAccent(target, action) {
+  if (action === 'insert-accent-cloze') {
+    const focused = document.activeElement;
+    if (focused?.classList.contains('cloze-blank')) insertCharAtCursor(focused, target.dataset.char);
+  } else {
+    const inputId = target.dataset.inputId || _ACCENT_INPUT_MAP[action];
+    const input = inputId ? document.getElementById(inputId) : null;
+    if (input) insertCharAtCursor(input, target.dataset.char);
+  }
+}
+
+// ── Action handler maps organized by category ──
+
+// Navigation
+const NAV_HANDLERS = {
+  'go-back':               ()  => goBack(),
+  'switch-tab':            (t) => switchTab(t.dataset.tab),
+  'toggle-theme':          ()  => _handleToggleTheme(),
+  'open-settings':         ()  => showScreen('settings'),
+  'open-guide':            ()  => showScreen('guide'),
+  'open-keyboard-help':    ()  => { showScreen('keyboard-help'); renderKeyboardHelp(); },
+  'open-review-dashboard': ()  => { showScreen('review-dashboard'); renderReviewDashboard(); },
+  'close-session-summary': ()  => { document.getElementById('session-summary-container').innerHTML = ''; },
+  'start-review-filtered': (t) => startReviewFiltered(t.dataset.filter),
+};
+
+// Profile
+const PROFILE_HANDLERS = {
+  'select-profile':         (t) => selectProfile(t.dataset.name),
+  'create-profile':         ()  => createProfile(),
+  'confirm-create-profile': ()  => confirmCreateProfile(),
+  'onboarding-next':        ()  => onboardingNext(),
+  'onboarding-skip':        ()  => onboardingSkip(),
+};
+
+// Modal
+const MODAL_HANDLERS = {
+  'close-modal':        () => { closeModal(); _pendingNavTab = null; },
+  'confirm-leave-quiz': () => _handleConfirmLeaveQuiz(),
+};
+
+// Bookmarks
+const BOOKMARK_HANDLERS = {
+  'toggle-bookmark': (t) => toggleBookmark(t.dataset.bkType, t.dataset.bkId),
+};
+
+// Settings
+const SETTINGS_HANDLERS = {
+  'set-display':              (t) => setSetting('display', t.dataset.val),
+  'set-theme':                (t) => setSetting('theme', t.dataset.val),
+  'set-palette':              (t) => setSetting('palette', t.dataset.val),
+  'set-region':               (t) => setSetting('region', t.dataset.val),
+  'set-accents':              (t) => setSetting('accents', t.dataset.val),
+  'set-tts-rate':             (t) => setSetting('ttsRate', t.dataset.val),
+  'set-hideFutureSubjunctive':(t) => setSetting('hideFutureSubjunctive', t.dataset.val === 'true'),
+  'set-subjunctiveForm':      (t) => setSetting('subjunctiveForm', t.dataset.val),
+  'set-dailyGoal':            (t) => setSetting('dailyGoal', parseInt(t.dataset.val, 10)),
+  'export-progress':          ()  => exportProgress(),
+  'export-csv':               ()  => exportProgressCSV(),
+  'import-progress':          ()  => importProgress(),
+  'reset-progress':           ()  => _handleResetProgress(),
+  'confirm-reset':            ()  => _handleConfirmReset(),
+};
+
+// Admin mode
+const ADMIN_HANDLERS = {
+  'admin-tap-settings': ()  => _handleAdminTapSettings(),
+  'open-admin':         ()  => { showScreen('admin'); renderAdmin(); },
+  'admin-collapse':     (t) => _handleAdminCollapse(t),
+  'admin-toggle':       (t) => _handleAdminToggle(t),
+  'admin-clear-store':  (t) => _handleAdminClearStore(t),
+  'admin-set-level':    (t) => { progress.placementLevel = t.dataset.val || null; saveProgress(); renderAdmin(); },
+};
+
+// Word of the Day / Daily Challenge
+const DAILY_HANDLERS = {
+  'speak-wotd':                (t) => speak(t.dataset.word),
+  'start-phrase-quiz-daily':   ()  => { currentSituation = null; startPhraseQuiz(); },
+  'start-grammar-quiz-random': ()  => _handleStartGrammarQuizRandom(),
+};
+
+// Verbs
+const VERB_HANDLERS = {
+  'start-verb-learn':    ()  => startVerbLearn(),
+  'start-verb-drill':    ()  => startVerbDrill(),
+  'start-verb-quiz':     ()  => startVerbQuiz(),
+  'open-verb-patterns':  ()  => { showScreen('verb-patterns'); renderVerbPatterns(); },
+  'start-pattern-drill': (t) => startPatternDrill(t.dataset.pattern || t.closest('[data-pattern]')?.dataset.pattern),
+  'open-verb-browser':   ()  => renderVerbBrowser(),
+  'flip-verb-card':      ()  => flipVerbCard(),
+  'rate-verb':           (t) => rateVerb(parseInt(t.dataset.rating, 10)),
+  'check-verb-drill':    ()  => checkVerbDrill(),
+  'next-verb-drill':     ()  => nextVerbDrill(),
+  'answer-verb-quiz':    (t) => answerVerbQuizMC(parseInt(t.dataset.idx, 10)),
+  'submit-verb-quiz-mc': ()  => submitVerbQuizMC(),
+  'submit-verb-quiz-fib':()  => submitVerbQuizFIB(),
+  'next-verb-quiz':      ()  => nextVerbQuiz(),
+  'show-verb-detail':    (t) => showVerbDetail(t.dataset.verb),
+  'filter-verbs':        (t) => renderVerbBrowser(t.dataset.filter),
+  'search-verbs':        ()  => renderVerbBrowser('all', document.getElementById('verb-search')?.value),
+};
+
+// Vocab
+const VOCAB_HANDLERS = {
+  'open-vocab-cat':            (t) => openVocabCategory(t.dataset.cat),
+  'vocab-cat-more':            (t) => openVocabCategory(t.dataset.cat, parseInt(t.dataset.page, 10)),
+  'start-vocab-learn':         ()  => startVocabLearn(),
+  'start-vocab-quiz':          ()  => startVocabQuiz(),
+  'start-quick-vocab':         ()  => startQuickVocab(),
+  'start-learn-new':           ()  => startLearnNewWords(),
+  'start-gender-quiz':         ()  => startGenderQuiz(),
+  'flip-vocab-card':           ()  => flipVocabCard(),
+  'rate-vocab':                (t) => rateVocab(parseInt(t.dataset.rating, 10)),
+  'answer-vocab-quiz':         (t) => answerVocabQuizMC(parseInt(t.dataset.idx, 10)),
+  'submit-vocab-quiz-mc':      ()  => _handleSubmitVocabQuizMC(),
+  'submit-vocab-quiz-produce': ()  => submitVocabQuizProduce(),
+  // insert-accent-vocq handled by unified accent handler
+  'next-vocab-quiz':           ()  => _handleNextVocabQuiz(),
+};
+
+// Grammar
+const GRAMMAR_HANDLERS = {
+  'open-grammar-lesson':    (t) => openGrammarLesson(t.dataset.lesson),
+  'start-grammar-quiz':     ()  => startGrammarQuiz(),
+  'answer-grammar-quiz':    (t) => answerGrammarQuizMC(parseInt(t.dataset.idx, 10)),
+  'submit-grammar-quiz-mc': ()  => submitGrammarQuizMC(),
+  'submit-grammar-fib':     ()  => submitGrammarFIB(),
+  'next-grammar-quiz':      ()  => nextGrammarQuiz(),
+};
+
+// Phrases
+const PHRASE_HANDLERS = {
+  'open-phrase-sit':       (t) => openPhraseSituation(t.dataset.sit),
+  'start-phrase-learn':    ()  => startPhraseLearn(),
+  'start-phrase-quiz':     ()  => startPhraseQuiz(),
+  'answer-phrase-quiz':    (t) => answerPhraseQuizMC(parseInt(t.dataset.idx, 10)),
+  'submit-phrase-quiz-mc': ()  => submitPhraseQuizMC(),
+  'next-phrase-quiz':      ()  => nextPhraseQuiz(),
+  'flip-phrase-card':      ()  => flipPhraseCard(),
+  'rate-phrase':           (t) => ratePhrase(parseInt(t.dataset.rating, 10)),
+};
+
+// Culture
+const CULTURE_HANDLERS = {
+  'open-culture':            (t) => openCultureModule(t.dataset.module),
+  'open-culture-item':       (t) => openCultureItem(t.dataset.id),
+  'start-culture-quiz':      ()  => startCultureQuiz(),
+  'start-dialogue-practice': ()  => startDialoguePractice(),
+  'answer-dialogue':         (t) => answerDialogueMC(parseInt(t.dataset.idx, 10)),
+  'submit-dialogue-mc':      ()  => submitDialogueMC(),
+  'next-dialogue':           ()  => nextDialogue(),
+  'answer-culture-quiz':     (t) => answerCultureQuizMC(parseInt(t.dataset.idx, 10)),
+  'submit-culture-quiz-mc':  ()  => submitCultureQuizMC(),
+  'next-culture-quiz':       ()  => nextCultureQuiz(),
+};
+
+// Undo last flashcard rating
+const UNDO_HANDLERS = {
+  'undo-last-rating': () => undoLastRating(),
+};
+
+// Results
+const RESULTS_HANDLERS = {
+  'results-retry': () => goBack(),
+  'results-home':  () => switchTab('today'),
+};
+
+// Review
+const REVIEW_HANDLERS = {
+  'start-review':       ()  => startReview(),
+  'answer-review':      (t) => answerReviewMC(parseInt(t.dataset.idx, 10)),
+  'submit-review-mc':   ()  => submitReviewMC(),
+  'rate-review':        (t) => rateReviewItem(parseInt(t.dataset.rating, 10)),
+  'next-review':        ()  => nextReviewItem(),
+  'check-review-drill': ()  => checkReviewDrill(),
+  'flip-review-card':   ()  => flipReviewCard(),
+  // insert-accent-rev handled by unified accent handler
+};
+
+// Stats / Progress Dashboard
+const STATS_HANDLERS = {
+  'open-stats':        ()  => { showScreen('stats'); renderStats(); },
+  'share-progress':    ()  => generateShareCard(),
+  'close-share':       ()  => { document.getElementById('share-overlay').classList.remove('open'); },
+  'download-share':    ()  => downloadShareCard(),
+  'native-share':      ()  => nativeShareCard(),
+  'start-weak-review': ()  => startWeakReview(),
+};
+
+// Placement Test
+const PLACEMENT_HANDLERS = {
+  'start-placement':      ()  => startPlacementTest(),
+  'answer-placement':     (t) => answerPlacementMC(parseInt(t.dataset.idx, 10)),
+  'submit-placement-mc':  ()  => submitPlacementMC(),
+  'submit-placement-fib': ()  => submitPlacementFIB(),
+  'next-placement':       ()  => nextPlacementQuestion(),
+  'placement-done':       ()  => switchTab('today'),
+  'show-learning-plan':   ()  => showLearningPlan(),
+  'learning-plan-start':  ()  => closeLearningPlan(),
+  'retake-placement':     ()  => startPlacementTest(),
+  'start-placement-at':   (t) => showPlacementModeSelection(t.dataset.level),
+  'start-placement-mode': (t) => startPlacementAt(t.dataset.level, t.dataset.mode),
+  'end-placement-early':  ()  => { if (placementIdx >= 5) finishPlacementTest(); },
+  'pt-set-length':        (t) => _handlePtSetLength(t),
+};
+
+// Practice exercises
+const PRACTICE_HANDLERS = {
+  'open-minimal-pairs':        ()  => { showScreen('minimal-pairs'); renderMinimalPairCategories(); },
+  'start-mp':                  (t) => startMinimalPairs(t.dataset.cat || t.closest('[data-cat]')?.dataset.cat),
+  'answer-mp':                 (t) => answerMP(parseInt(t.dataset.idx, 10)),
+  'next-mp':                   ()  => nextMP(),
+  'open-phonetic-pairs':       ()  => { showScreen('phonetic-pairs'); renderPhoneticPairCategories(); },
+  'start-pp':                  (t) => startPhoneticPairs(t.dataset.cat || t.closest('[data-cat]')?.dataset.cat),
+  'answer-pp':                 (t) => answerPP(parseInt(t.dataset.idx, 10)),
+  'next-pp':                   ()  => nextPP(),
+  'open-homophones':           ()  => { showScreen('homophones'); renderHomophoneCategories(); },
+  'start-hom':                 (t) => startHomophones(t.dataset.cat || t.closest('[data-cat]')?.dataset.cat),
+  'answer-hom':                (t) => answerHom(parseInt(t.dataset.idx, 10)),
+  'next-hom':                  ()  => nextHom(),
+  'open-connectors':           ()  => { showScreen('connectors'); renderConnectorCategories(); },
+  'start-conn':                (t) => startConnectors(t.dataset.cat || t.closest('[data-cat]')?.dataset.cat),
+  'answer-conn':               (t) => answerConn(parseInt(t.dataset.idx, 10)),
+  'next-conn':                 ()  => nextConn(),
+  'open-sentence-build-topics':()  => startSentenceBuild(),
+  'tap-sb-word':               (t) => tapSBWord(t),
+  'check-sentence-build':      ()  => checkSentenceBuild(),
+  'next-sentence-build':       ()  => nextSentenceBuild(),
+  'open-cloze-topics':         ()  => { showScreen('cloze-topics'); renderClozeTopics(); },
+  'start-cloze':               (t) => startCloze(t.dataset.topic || t.closest('[data-topic]')?.dataset.topic),
+  'check-cloze':               ()  => checkCloze(),
+  'next-cloze':                ()  => nextCloze(),
+  'open-translation-topics':   ()  => startTranslation(),
+  'check-translation':         ()  => checkTranslation(),
+  'next-translation':          ()  => nextTranslation(),
+  'open-dictation':            ()  => startDictation(),
+  'dict-play':                 ()  => dictPlayNormal(),
+  'dict-play-slow':            ()  => dictPlaySlow(),
+  'check-dictation':           ()  => checkDictation(),
+  'next-dictation':            ()  => nextDictation(),
+};
+
+// Verb Reference
+const VREF_HANDLERS = {
+  'open-verb-reference': ()  => showScreen('verb-reference'),
+  'select-vref':         (t) => renderVerbReference(t.dataset.verb),
+  'vref-tab':            (t) => _handleVrefTab(t),
+};
+
+// Pronunciation Guide
+const PRONUNCIATION_HANDLERS = {
+  'open-pronunciation': () => { showScreen('pronunciation'); renderPronunciation(); },
+};
+
+// Reading Comprehension
+const READING_HANDLERS = {
+  'open-reading':        ()  => { showScreen('reading-list'); renderReadingList(); },
+  'filter-reading':      (t) => renderReadingList(t.dataset.filter),
+  'filter-reading-type': (t) => _handleFilterReadingType(t),
+  'start-reading':       (t) => startReading(t.dataset.id || t.closest('[data-id]')?.dataset.id),
+  'answer-reading':      (t) => answerReadingMC(parseInt(t.dataset.idx, 10)),
+  'submit-reading-mc':   ()  => submitReadingMC(),
+  'next-reading':        ()  => nextReading(),
+  'toggle-listen-mode':  ()  => _handleToggleListenMode(),
+};
+
+// Themed Vocabulary
+const THEMED_VOCAB_HANDLERS = {
+  'open-themed-vocab':     ()  => { showScreen('themed-vocab'); renderThemedVocabList(); },
+  'open-themed-detail':    (t) => openThemedDetail(t.dataset.id || t.closest('[data-id]')?.dataset.id),
+  'start-themed-quiz':     ()  => startThemedQuiz(),
+  'answer-themed-quiz':    (t) => answerThemedQuizMC(parseInt(t.dataset.idx, 10)),
+  'submit-themed-quiz-mc': ()  => submitThemedQuizMC(),
+  'next-themed-quiz':      ()  => nextThemedQuiz(),
+};
+
+// CEFR Curriculum
+const CURRICULUM_HANDLERS = {
+  'open-curriculum':       ()  => { renderCurriculumOverview(); showScreen('curriculum'); },
+  'open-curriculum-level': (t) => { renderCurriculumLevel(t.dataset.level || t.closest('[data-level]')?.dataset.level); showScreen('curriculum-level'); },
+};
+
+// Curriculum Tracks
+const TRACK_HANDLERS = {
+  'open-tracks':         ()  => { renderTrackList(); showScreen('tracks'); },
+  'open-track-detail':   (t) => openTrackDetail(t.dataset.id || t.closest('[data-id]')?.dataset.id),
+  'launch-track-module': (t) => _handleLaunchTrackModule(t),
+};
+
+// Verb + Prepositions
+const VERB_PREPS_HANDLERS = {
+  'open-verb-preps': ()  => { showScreen('verb-preps'); if (typeof renderVerbPreps === 'function') renderVerbPreps(); },
+  'start-vp-quiz':   ()  => { if (typeof startVerbPrepsQuiz === 'function') startVerbPrepsQuiz(); },
+  'answer-vp-quiz':  (t) => { if (typeof answerVPQuizMC === 'function') answerVPQuizMC(parseInt(t.dataset.idx, 10)); },
+  'next-vp-quiz':    ()  => { if (typeof nextVPQuiz === 'function') nextVPQuiz(); },
+};
+
+// Subjunctive Triggers
+const SUBJ_HANDLERS = {
+  'open-subjunctive-triggers': ()  => { showScreen('subjunctive-triggers'); if (typeof renderSubjunctiveTriggers === 'function') renderSubjunctiveTriggers(); },
+  'start-subj-quiz':           ()  => { if (typeof startSubjunctiveQuiz === 'function') startSubjunctiveQuiz(); },
+  'answer-subj-quiz':          (t) => { if (typeof answerSubjQuizMC === 'function') answerSubjQuizMC(parseInt(t.dataset.idx, 10)); },
+  'next-subj-quiz':            ()  => { if (typeof nextSubjQuiz === 'function') nextSubjQuiz(); },
+};
+
+// Writing Prompts
+const WRITING_HANDLERS = {
+  'open-writing-prompts': ()  => { showScreen('writing-prompts'); if (typeof renderWritingPromptsList === 'function') renderWritingPromptsList(); },
+  'start-writing':        (t) => { if (typeof startWritingExercise === 'function') startWritingExercise(t.dataset.id || t.closest('[data-id]')?.dataset.id); },
+  'show-writing-sample':  ()  => { if (typeof showWritingSample === 'function') showWritingSample(); },
+};
+
+// Comparative Grammar
+const COMP_GRAMMAR_HANDLERS = {
+  'open-comparative-grammar': ()  => { showScreen('comparative-grammar'); if (typeof renderComparativeGrammarList === 'function') renderComparativeGrammarList(); },
+  'open-comparative-detail':  (t) => { if (typeof openComparativeDetail === 'function') openComparativeDetail(t.dataset.id || t.closest('[data-id]')?.dataset.id); },
+};
+
+// Number Practice
+const NUMBER_HANDLERS = {
+  'start-number-learn': ()  => { showScreen('number-learn'); if (typeof renderNumberLearn === 'function') renderNumberLearn(); },
+  'start-number-quiz':  ()  => { showScreen('number-quiz'); if (typeof startNumberQuiz === 'function') startNumberQuiz(); },
+  'answer-number-quiz': (t) => { if (typeof answerNumberQuizMC === 'function') answerNumberQuizMC(parseInt(t.dataset.idx, 10)); },
+  'check-number-quiz':  ()  => { if (typeof checkNumberQuiz === 'function') checkNumberQuiz(); },
+  'next-number-quiz':   ()  => { if (typeof nextNumberQuiz === 'function') nextNumberQuiz(); },
+  'start-time-quiz':    ()  => { showScreen('time-quiz'); if (typeof startTimeQuiz === 'function') startTimeQuiz(); },
+  'answer-time-quiz':   (t) => { if (typeof answerTimeQuizMC === 'function') answerTimeQuizMC(parseInt(t.dataset.idx, 10)); },
+  'next-time-quiz':     ()  => { if (typeof nextTimeQuiz === 'function') nextTimeQuiz(); },
+};
+
+// TTS
+const TTS_HANDLERS = {
+  'speak': (t) => speak(t.dataset.text),
+};
+
+// ── Merged action handler map ──
+const ACTION_HANDLERS = Object.assign({},
+  NAV_HANDLERS,
+  PROFILE_HANDLERS,
+  MODAL_HANDLERS,
+  BOOKMARK_HANDLERS,
+  SETTINGS_HANDLERS,
+  ADMIN_HANDLERS,
+  DAILY_HANDLERS,
+  VERB_HANDLERS,
+  VOCAB_HANDLERS,
+  GRAMMAR_HANDLERS,
+  PHRASE_HANDLERS,
+  CULTURE_HANDLERS,
+  UNDO_HANDLERS,
+  RESULTS_HANDLERS,
+  REVIEW_HANDLERS,
+  STATS_HANDLERS,
+  PLACEMENT_HANDLERS,
+  PRACTICE_HANDLERS,
+  VREF_HANDLERS,
+  PRONUNCIATION_HANDLERS,
+  READING_HANDLERS,
+  THEMED_VOCAB_HANDLERS,
+  CURRICULUM_HANDLERS,
+  TRACK_HANDLERS,
+  VERB_PREPS_HANDLERS,
+  SUBJ_HANDLERS,
+  WRITING_HANDLERS,
+  COMP_GRAMMAR_HANDLERS,
+  NUMBER_HANDLERS,
+  TTS_HANDLERS
+);
+
 document.addEventListener('click', e => {
   const target = e.target.closest('[data-action]');
   if (!target) {
@@ -16,428 +549,14 @@ document.addEventListener('click', e => {
   }
   const action = target.dataset.action;
 
-  switch (action) {
-    // Navigation
-    case 'go-back': goBack(); break;
-    case 'switch-tab': switchTab(target.dataset.tab); break;
-    case 'toggle-theme': {
-      const cur = progress?.settings?.theme || 'dark';
-      setSetting('theme', cur === 'dark' ? 'light' : 'dark');
-      break;
-    }
-    case 'open-settings': showScreen('settings'); break;
-    case 'open-guide': showScreen('guide'); break;
-    case 'open-keyboard-help': showScreen('keyboard-help'); renderKeyboardHelp(); break;
-    case 'open-review-dashboard': showScreen('review-dashboard'); renderReviewDashboard(); break;
-    case 'close-session-summary': document.getElementById('session-summary-container').innerHTML = ''; break;
-    case 'start-review-filtered': startReviewFiltered(target.dataset.filter); break;
-
-    // Profile
-    case 'select-profile': selectProfile(target.dataset.name); break;
-    case 'create-profile': createProfile(); break;
-    case 'confirm-create-profile': confirmCreateProfile(); break;
-    case 'onboarding-next': onboardingNext(); break;
-    case 'onboarding-skip': onboardingSkip(); break;
-
-    // Modal
-    case 'close-modal': closeModal(); _pendingNavTab = null; break;
-    case 'confirm-leave-quiz': closeModal(); if (_pendingNavTab) { const fn = _pendingNavTab; _pendingNavTab = null; _leaveConfirmed = true; fn(); } break;
-
-    // Bookmarks
-    case 'toggle-bookmark': toggleBookmark(target.dataset.bkType, target.dataset.bkId); break;
-
-    // Settings
-    case 'set-display': setSetting('display', target.dataset.val); break;
-    case 'set-theme': setSetting('theme', target.dataset.val); break;
-    case 'set-palette': setSetting('palette', target.dataset.val); break;
-    case 'set-region': setSetting('region', target.dataset.val); break;
-    case 'set-accents': setSetting('accents', target.dataset.val); break;
-    case 'set-tts-rate': setSetting('ttsRate', target.dataset.val); break;
-    case 'set-hideFutureSubjunctive': setSetting('hideFutureSubjunctive', target.dataset.val === 'true'); break;
-    case 'set-subjunctiveForm': setSetting('subjunctiveForm', target.dataset.val); break;
-    case 'set-dailyGoal': setSetting('dailyGoal', parseInt(target.dataset.val, 10)); break;
-    case 'export-progress': exportProgress(); break;
-    case 'import-progress': importProgress(); break;
-    case 'reset-progress': {
-      showModal(t('resetTitle'), `<p>${t('resetConfirm')}</p>`, [
-        { label: tBtn('cancel'), action: 'close-modal', cls: 'btn-secondary' },
-        { label: tBtn('reset'), action: 'confirm-reset', cls: 'btn-primary' },
-      ]);
-      break;
-    }
-    case 'confirm-reset': {
-      progress = newProgress();
-      saveProgress();
-      updateNavStats();
-      closeModal();
-      switchTab('today');
-      break;
-    }
-
-    // Admin mode
-    case 'admin-tap-settings': {
-      adminTaps++;
-      clearTimeout(adminTapTimer);
-      adminTapTimer = setTimeout(() => adminTaps = 0, 3000);
-      if (adminTaps >= 5) {
-        adminTaps = 0;
-        const btn = document.getElementById('admin-mode-btn');
-        if (btn) btn.style.display = '';
-      }
-      break;
-    }
-    case 'open-admin': showScreen('admin'); renderAdmin(); break;
-    case 'admin-collapse': {
-      const section = target.nextElementSibling;
-      if (section) {
-        const open = section.style.display !== 'none';
-        section.style.display = open ? 'none' : '';
-        target.textContent = target.textContent.replace(/[▸▾]/, open ? '▸' : '▾');
-      }
-      break;
-    }
-    case 'admin-toggle': {
-      const store = target.dataset.store;
-      const key = target.dataset.key;
-      if (store && key && progress[store]) {
-        if (progress[store][key]) { delete progress[store][key]; }
-        else { progress[store][key] = true; }
-        saveProgress();
-        renderAdmin();
-      }
-      break;
-    }
-    case 'admin-clear-store': {
-      const stores = (target.dataset.stores || '').split(',');
-      for (const s of stores) { if (progress[s]) progress[s] = {}; }
-      saveProgress();
-      renderAdmin();
-      break;
-    }
-    case 'admin-set-level': {
-      progress.placementLevel = target.dataset.val || null;
-      saveProgress();
-      renderAdmin();
-      break;
-    }
-
-    // Word of the Day / Daily Challenge
-    case 'speak-wotd': speak(target.dataset.word); break;
-    case 'start-phrase-quiz-daily': { currentSituation = null; startPhraseQuiz(); break; }
-    case 'start-grammar-quiz-random': {
-      if (typeof GRAMMAR_DATA !== 'undefined' && GRAMMAR_DATA.length > 0) {
-        const lesson = GRAMMAR_DATA[Math.floor(Math.random() * GRAMMAR_DATA.length)];
-        openGrammarLesson(lesson.id);
-        startGrammarQuiz();
-      }
-      break;
-    }
-
-    // Verbs
-    case 'start-verb-learn': startVerbLearn(); break;
-    case 'start-verb-drill': startVerbDrill(); break;
-    case 'start-verb-quiz': startVerbQuiz(); break;
-    case 'open-verb-patterns': showScreen('verb-patterns'); renderVerbPatterns(); break;
-    case 'start-pattern-drill': startPatternDrill(target.dataset.pattern || target.closest('[data-pattern]')?.dataset.pattern); break;
-    case 'open-verb-browser': renderVerbBrowser(); break;
-    case 'flip-verb-card': flipVerbCard(); break;
-    case 'rate-verb': rateVerb(parseInt(target.dataset.rating, 10)); break;
-    case 'check-verb-drill': checkVerbDrill(); break;
-    case 'next-verb-drill': nextVerbDrill(); break;
-    case 'answer-verb-quiz': answerVerbQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-verb-quiz-mc': submitVerbQuizMC(); break;
-    case 'submit-verb-quiz-fib': submitVerbQuizFIB(); break;
-    case 'next-verb-quiz': nextVerbQuiz(); break;
-    case 'show-verb-detail': showVerbDetail(target.dataset.verb); break;
-    case 'filter-verbs': renderVerbBrowser(target.dataset.filter); break;
-    case 'search-verbs': renderVerbBrowser('all', document.getElementById('verb-search')?.value); break;
-
-    // Vocab
-    case 'open-vocab-cat': openVocabCategory(target.dataset.cat); break;
-    case 'vocab-cat-more': openVocabCategory(target.dataset.cat, parseInt(target.dataset.page, 10)); break;
-    case 'start-vocab-learn': startVocabLearn(); break;
-    case 'start-vocab-quiz': startVocabQuiz(); break;
-    case 'start-quick-vocab': startQuickVocab(); break;
-    case 'start-learn-new': startLearnNewWords(); break;
-    case 'start-gender-quiz': startGenderQuiz(); break;
-    case 'flip-vocab-card': flipVocabCard(); break;
-    case 'rate-vocab': rateVocab(parseInt(target.dataset.rating, 10)); break;
-    case 'answer-vocab-quiz': {
-      answerVocabQuizMC(parseInt(target.dataset.idx, 10));
-      break;
-    }
-    case 'submit-vocab-quiz-mc': {
-      if (vocabQuizQueue[vocabQuizIdx]?.type === 'gender') {
-        submitGenderQuizMC();
-      } else {
-        submitVocabQuizMC();
-      }
-      break;
-    }
-    case 'submit-vocab-quiz-produce': submitVocabQuizProduce(); break;
-    // insert-accent-vocq handled by unified accent handler below
-    case 'next-vocab-quiz': {
-      vocabQuizIdx++;
-      const nextItem = vocabQuizQueue[vocabQuizIdx];
-      if (nextItem?.type === 'gender') renderVocabQuizQuestion_Gender();
-      else if (nextItem?.type === 'produce') renderVocabQuizQuestion_Produce();
-      else renderVocabQuizQuestion();
-      break;
-    }
-
-    // Grammar
-    case 'open-grammar-lesson': openGrammarLesson(target.dataset.lesson); break;
-    case 'start-grammar-quiz': startGrammarQuiz(); break;
-    case 'answer-grammar-quiz': answerGrammarQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-grammar-quiz-mc': submitGrammarQuizMC(); break;
-    case 'submit-grammar-fib': submitGrammarFIB(); break;
-    case 'next-grammar-quiz': nextGrammarQuiz(); break;
-
-    // Phrases
-    case 'open-phrase-sit': openPhraseSituation(target.dataset.sit); break;
-    case 'start-phrase-learn': startPhraseLearn(); break;
-    case 'start-phrase-quiz': startPhraseQuiz(); break;
-    case 'answer-phrase-quiz': answerPhraseQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-phrase-quiz-mc': submitPhraseQuizMC(); break;
-    case 'next-phrase-quiz': nextPhraseQuiz(); break;
-    case 'flip-phrase-card': flipPhraseCard(); break;
-    case 'rate-phrase': ratePhrase(parseInt(target.dataset.rating, 10)); break;
-
-    // Culture
-    case 'open-culture': openCultureModule(target.dataset.module); break;
-    case 'open-culture-item': openCultureItem(target.dataset.id); break;
-    case 'start-culture-quiz': startCultureQuiz(); break;
-    case 'start-dialogue-practice': startDialoguePractice(); break;
-    case 'answer-dialogue': answerDialogueMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-dialogue-mc': submitDialogueMC(); break;
-    case 'next-dialogue': nextDialogue(); break;
-    case 'answer-culture-quiz': answerCultureQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-culture-quiz-mc': submitCultureQuizMC(); break;
-    case 'next-culture-quiz': nextCultureQuiz(); break;
-
-    // Results
-    case 'results-retry': goBack(); break;
-    case 'results-home': switchTab('today'); break;
-
-    // Review
-    case 'start-review': startReview(); break;
-    case 'answer-review': answerReviewMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-review-mc': submitReviewMC(); break;
-    case 'rate-review': rateReviewItem(parseInt(target.dataset.rating, 10)); break;
-    case 'next-review': nextReviewItem(); break;
-    case 'check-review-drill': checkReviewDrill(); break;
-    case 'flip-review-card': flipReviewCard(); break;
-    // insert-accent-rev handled by unified accent handler below
-
-    // Stats / Progress Dashboard
-    case 'open-stats': showScreen('stats'); renderStats(); break;
-    case 'share-progress': generateShareCard(); break;
-    case 'close-share': document.getElementById('share-overlay').classList.remove('open'); break;
-    case 'download-share': downloadShareCard(); break;
-    case 'native-share': nativeShareCard(); break;
-    case 'start-weak-review': startWeakReview(); break;
-
-    // Placement Test
-    case 'start-placement': startPlacementTest(); break;
-    case 'answer-placement': answerPlacementMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-placement-mc': submitPlacementMC(); break;
-    case 'submit-placement-fib': submitPlacementFIB(); break;
-    case 'next-placement': nextPlacementQuestion(); break;
-    case 'placement-done': switchTab('today'); break;
-    case 'retake-placement': startPlacementTest(); break;
-    case 'start-placement-at': showPlacementModeSelection(target.dataset.level); break;
-    case 'start-placement-mode': startPlacementAt(target.dataset.level, target.dataset.mode); break;
-    case 'end-placement-early': if (placementIdx >= 5) finishPlacementTest(); break;
-    case 'pt-set-length': {
-      const len = parseInt(target.dataset.len, 10);
-      if ([10, 20, 40].includes(len)) {
-        placementTargetLength = len;
-        savePlacementState();
-        if (placementIdx >= len) finishPlacementTest();
-        else {
-          // Re-render just the controls and progress, not the question
-          document.getElementById('pt-progress').textContent = `${placementIdx + 1} / ${placementTargetLength}`;
-          document.getElementById('pt-progress-bar-fill').style.width = Math.round((placementIdx / placementTargetLength) * 100) + '%';
-          const ctrl = document.getElementById('pt-controls');
-          if (ctrl) {
-            const minReached = placementIdx >= 5;
-            ctrl.innerHTML = `<div class="pt-controls-row">
-              <button class="btn btn-outline btn-xs${placementTargetLength===10?' active':''}" data-action="pt-set-length" data-len="10">10 Qs</button>
-              <button class="btn btn-outline btn-xs${placementTargetLength===20?' active':''}" data-action="pt-set-length" data-len="20">20 Qs</button>
-              <button class="btn btn-outline btn-xs${placementTargetLength===40?' active':''}" data-action="pt-set-length" data-len="40">40 Qs</button>
-              <button class="btn btn-outline btn-xs pt-end-btn" data-action="end-placement-early" ${minReached?'':'disabled'}>End Test</button>
-            </div>`;
-          }
-        }
-      }
-      break;
-    }
-
-    // Practice exercises
-    case 'open-minimal-pairs': showScreen('minimal-pairs'); renderMinimalPairCategories(); break;
-    case 'start-mp': startMinimalPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-mp': answerMP(parseInt(target.dataset.idx, 10)); break;
-    case 'next-mp': nextMP(); break;
-    case 'open-phonetic-pairs': showScreen('phonetic-pairs'); renderPhoneticPairCategories(); break;
-    case 'start-pp': startPhoneticPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-pp': answerPP(parseInt(target.dataset.idx, 10)); break;
-    case 'next-pp': nextPP(); break;
-    case 'open-homophones': showScreen('homophones'); renderHomophoneCategories(); break;
-    case 'start-hom': startHomophones(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-hom': answerHom(parseInt(target.dataset.idx, 10)); break;
-    case 'next-hom': nextHom(); break;
-    case 'open-connectors': showScreen('connectors'); renderConnectorCategories(); break;
-    case 'start-conn': startConnectors(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-conn': answerConn(parseInt(target.dataset.idx, 10)); break;
-    case 'next-conn': nextConn(); break;
-    case 'open-sentence-build-topics': startSentenceBuild(); break;
-    case 'tap-sb-word': tapSBWord(target); break;
-    case 'check-sentence-build': checkSentenceBuild(); break;
-    case 'next-sentence-build': nextSentenceBuild(); break;
-    case 'open-cloze-topics': showScreen('cloze-topics'); renderClozeTopics(); break;
-    case 'start-cloze': startCloze(target.dataset.topic || target.closest('[data-topic]')?.dataset.topic); break;
-    case 'check-cloze': checkCloze(); break;
-    case 'next-cloze': nextCloze(); break;
-    case 'open-translation-topics': startTranslation(); break;
-    case 'check-translation': checkTranslation(); break;
-    case 'next-translation': nextTranslation(); break;
-    case 'open-dictation': startDictation(); break;
-    case 'dict-play': dictPlayNormal(); break;
-    case 'dict-play-slow': dictPlaySlow(); break;
-    case 'check-dictation': checkDictation(); break;
-    case 'next-dictation': nextDictation(); break;
-
-    // Verb Reference
-    case 'open-verb-reference': showScreen('verb-reference'); break;
-    case 'select-vref': renderVerbReference(target.dataset.verb); break;
-    case 'vref-tab': {
-      const tab = target.dataset.tab;
-      document.querySelectorAll('#vref-tabs .btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      document.getElementById('vref-tab-lookup').style.display = tab === 'lookup' ? '' : 'none';
-      document.getElementById('vref-tab-rules').style.display = tab === 'rules' ? '' : 'none';
-      if (tab === 'rules') renderConjugationRules();
-      break;
-    }
-
-    // Pronunciation Guide
-    case 'open-pronunciation': showScreen('pronunciation'); renderPronunciation(); break;
-
-    // Reading Comprehension
-    case 'open-reading': showScreen('reading-list'); renderReadingList(); break;
-    case 'filter-reading': renderReadingList(target.dataset.filter); break;
-    case 'filter-reading-type': {
-      readingTypeFilter = target.dataset.filter || 'standard';
-      renderReadingList();
-      break;
-    }
-    case 'start-reading': startReading(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
-    case 'answer-reading': answerReadingMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-reading-mc': submitReadingMC(); break;
-    case 'next-reading': nextReading(); break;
-    case 'toggle-listen-mode': {
-      listenMode = !listenMode;
-      const textEl = document.getElementById('read-text');
-      const toggleBtn = document.getElementById('read-listen-toggle');
-      if (listenMode) {
-        textEl.style.display = 'none';
-        toggleBtn.classList.add('active');
-        // Auto-play the passage
-        speak(currentReading.text);
-      } else {
-        textEl.style.display = '';
-        toggleBtn.classList.remove('active');
-      }
-      break;
-    }
-
-    // Themed Vocabulary
-    case 'open-themed-vocab': showScreen('themed-vocab'); renderThemedVocabList(); break;
-    case 'open-themed-detail': openThemedDetail(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
-    case 'start-themed-quiz': startThemedQuiz(); break;
-    case 'answer-themed-quiz': answerThemedQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'submit-themed-quiz-mc': submitThemedQuizMC(); break;
-    case 'next-themed-quiz': nextThemedQuiz(); break;
-
-    // CEFR Curriculum
-    case 'open-curriculum': renderCurriculumOverview(); showScreen('curriculum'); break;
-    case 'open-curriculum-level': renderCurriculumLevel(target.dataset.level || target.closest('[data-level]')?.dataset.level); showScreen('curriculum-level'); break;
-
-    // Curriculum Tracks
-    case 'open-tracks': renderTrackList(); showScreen('tracks'); break;
-    case 'open-track-detail': openTrackDetail(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
-    case 'launch-track-module': {
-      const el = target.closest('[data-track-id]');
-      if (el) launchTrackModule(el.dataset.trackId, el.dataset.moduleId);
-      break;
-    }
-
-    // Verb + Prepositions
-    case 'open-verb-preps': showScreen('verb-preps'); if (typeof renderVerbPreps === 'function') renderVerbPreps(); break;
-    case 'start-vp-quiz': if (typeof startVerbPrepsQuiz === 'function') startVerbPrepsQuiz(); break;
-    case 'answer-vp-quiz': if (typeof answerVPQuizMC === 'function') answerVPQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'next-vp-quiz': if (typeof nextVPQuiz === 'function') nextVPQuiz(); break;
-
-    // Subjunctive Triggers
-    case 'open-subjunctive-triggers': showScreen('subjunctive-triggers'); if (typeof renderSubjunctiveTriggers === 'function') renderSubjunctiveTriggers(); break;
-    case 'start-subj-quiz': if (typeof startSubjunctiveQuiz === 'function') startSubjunctiveQuiz(); break;
-    case 'answer-subj-quiz': if (typeof answerSubjQuizMC === 'function') answerSubjQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'next-subj-quiz': if (typeof nextSubjQuiz === 'function') nextSubjQuiz(); break;
-
-    // Writing Prompts
-    case 'open-writing-prompts': showScreen('writing-prompts'); if (typeof renderWritingPromptsList === 'function') renderWritingPromptsList(); break;
-    case 'start-writing': if (typeof startWritingExercise === 'function') startWritingExercise(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
-    case 'show-writing-sample': if (typeof showWritingSample === 'function') showWritingSample(); break;
-
-    // Comparative Grammar
-    case 'open-comparative-grammar': showScreen('comparative-grammar'); if (typeof renderComparativeGrammarList === 'function') renderComparativeGrammarList(); break;
-    case 'open-comparative-detail': if (typeof openComparativeDetail === 'function') openComparativeDetail(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
-
-    // Number Practice
-    case 'start-number-learn': showScreen('number-learn'); if (typeof renderNumberLearn === 'function') renderNumberLearn(); break;
-    case 'start-number-quiz': showScreen('number-quiz'); if (typeof startNumberQuiz === 'function') startNumberQuiz(); break;
-    case 'answer-number-quiz': if (typeof answerNumberQuizMC === 'function') answerNumberQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'check-number-quiz': if (typeof checkNumberQuiz === 'function') checkNumberQuiz(); break;
-    case 'next-number-quiz': if (typeof nextNumberQuiz === 'function') nextNumberQuiz(); break;
-    case 'start-time-quiz': showScreen('time-quiz'); if (typeof startTimeQuiz === 'function') startTimeQuiz(); break;
-    case 'answer-time-quiz': if (typeof answerTimeQuizMC === 'function') answerTimeQuizMC(parseInt(target.dataset.idx, 10)); break;
-    case 'next-time-quiz': if (typeof nextTimeQuiz === 'function') nextTimeQuiz(); break;
-
-    // TTS
-    case 'speak': speak(target.dataset.text); break;
-
-    // Unified accent insertion — maps action suffix to input ID
-    case 'insert-accent':
-    case 'insert-accent-vq':
-    case 'insert-accent-gq':
-    case 'insert-accent-pt':
-    case 'insert-accent-cloze':
-    case 'insert-accent-tr':
-    case 'insert-accent-dict':
-    case 'insert-accent-vocq':
-    case 'insert-accent-rev':
-    case 'insert-accent-nq': {
-      const accentInputMap = {
-        'insert-accent': 'vd-input',
-        'insert-accent-vq': 'vq-fib-input',
-        'insert-accent-gq': 'gq-fib-input',
-        'insert-accent-nq': 'nq-input',
-        'insert-accent-pt': 'pt-fib-input',
-        'insert-accent-tr': 'tr-input',
-        'insert-accent-dict': 'dict-input',
-        'insert-accent-vocq': 'vocq-produce-input',
-        'insert-accent-rev': 'rev-drill-input',
-      };
-      if (action === 'insert-accent-cloze') {
-        const focused = document.activeElement;
-        if (focused?.classList.contains('cloze-blank')) insertCharAtCursor(focused, target.dataset.char);
-      } else {
-        const inputId = target.dataset.inputId || accentInputMap[action];
-        const input = inputId ? document.getElementById(inputId) : null;
-        if (input) insertCharAtCursor(input, target.dataset.char);
-      }
-      break;
-    }
+  // Unified accent insertion — check prefix match for all insert-accent-* actions
+  if (action.startsWith('insert-accent')) {
+    _handleInsertAccent(target, action);
+    return;
   }
+
+  const handler = ACTION_HANDLERS[action];
+  if (handler) handler(target, e);
 });
 
 // Keyboard shortcuts
@@ -731,16 +850,16 @@ function _fetchVocabProgressive() {
       }
     }).catch(() => {});
 
-    // Then load remaining levels in background
+    // Then load remaining levels in parallel for faster loading
     const remaining = ['vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'];
-    return remaining.reduce((chain, file) =>
-      chain.then(() => fetch(file).then(r => r.json()).then(chunk => {
-        window.VOCAB_DATA = window.VOCAB_DATA.concat(chunk);
+    return Promise.all(remaining.map(file => fetch(file).then(r => r.json())))
+      .then(chunks => {
+        for (const chunk of chunks) {
+          window.VOCAB_DATA = window.VOCAB_DATA.concat(chunk);
+        }
         if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
         _updateVocabWorker();
-      })),
-      Promise.resolve()
-    );
+      });
   }).then(() => {
     // Cache the full dataset in IndexedDB
     _idbPut(_IDB_VOCAB_KEY, window.VOCAB_DATA).catch(() => {
@@ -843,6 +962,9 @@ function updateOnlineStatus() {
   if (badge) badge.classList.toggle('hidden', isOnline);
   const banner = document.getElementById('offline-banner');
   if (banner) banner.classList.toggle('visible', !isOnline);
+  // Gray out / restore TTS buttons when offline/online
+  const ttsButtons = document.querySelectorAll('[data-action="speak"], .tts-btn, .tts-inline');
+  ttsButtons.forEach(btn => btn.classList.toggle('offline-disabled', !isOnline));
   // Show toast only when coming back online (offline state shown via banner)
   if (isOnline && !_previousOnlineState) {
     showToast('\u2705', 'Back online');

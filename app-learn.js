@@ -446,10 +446,12 @@ function flipVerbCard() {
 function rateVerb(rating) {
   const item = verbLearnQueue[verbLearnIdx];
   const key = `${item.verb.infinitive}:${item.tense}:${item.person}`;
+  _saveRatingSnapshot('verb', key, progress.verbFsrs, progress.verbMastery);
   reviewItem(progress.verbFsrs, progress.verbMastery, key, rating);
   addXP(rating >= 3 ? 5 : 2);
   verbLearnIdx++;
   renderVerbLearnCard();
+  showToast('\u2705', 'Rating saved', 'undo');
 }
 
 // ── Verb Drill (Typing) ──
@@ -1175,10 +1177,12 @@ function flipPhraseCard() {
 
 function ratePhrase(rating) {
   const p = phraseLearnQueue[phraseLearnIdx];
+  _saveRatingSnapshot('phrase', p.id, progress.phraseFsrs, progress.phraseMastery);
   reviewItem(progress.phraseFsrs, progress.phraseMastery, p.id, rating);
   addXP(rating >= 3 ? 5 : 2);
   phraseLearnIdx++;
   renderPhraseLearnCard();
+  showToast('\u2705', 'Rating saved', 'undo');
 }
 
 // ── Phrase Quiz ──

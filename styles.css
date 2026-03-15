@@ -1213,6 +1213,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .pron-row:last-child { border-bottom: none; }
 .tts-inline { background: none; border: 1px solid var(--border); color: var(--text2); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 0.75rem; flex-shrink: 0; }
 
+/* ── Offline-disabled TTS buttons ── */
+.offline-disabled { opacity: 0.4; pointer-events: none; }
+
 /* ── Stats Heatmap ── */
 .streak-calendar { display: grid; grid-template-columns: repeat(14, 1fr); gap: 3px; }
 .streak-day { aspect-ratio: 1; border-radius: 3px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: var(--text3); }
@@ -1804,3 +1807,66 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .toast.toast-success { border-left: 3px solid var(--green); }
 .toast.toast-error { border-left: 3px solid var(--red); }
 .toast.toast-info { border-left: 3px solid var(--accent); }
+.toast-undo-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.15rem 0.6rem;
+  margin-left: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.toast-undo-btn:hover { opacity: 0.85; }
+
+/* ── Learning Plan (post-placement onboarding) ── */
+.learning-plan-modal {
+  max-width: 420px;
+  text-align: center;
+  padding: 1.5rem;
+}
+.learning-plan-title {
+  margin-bottom: 0.25rem;
+  font-size: 1.2rem;
+}
+.learning-plan-subtitle {
+  margin-bottom: 1rem;
+}
+.learning-plan-checklist {
+  text-align: left;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.lp-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.35rem;
+  border-radius: 0.5rem;
+  background: var(--bg2);
+  transition: background 0.15s ease;
+}
+.lp-item:hover {
+  background: var(--bg3);
+}
+.lp-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 1.75rem;
+  text-align: center;
+}
+.lp-label {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text1);
+}
+.lp-check {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
