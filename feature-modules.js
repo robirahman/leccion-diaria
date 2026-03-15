@@ -46,7 +46,7 @@ let vpQuizQueue = [], vpQuizIdx = 0, vpQuizScore = 0;
 
 function startVerbPrepsQuiz() {
   if (typeof VERB_PREPOSITIONS_DATA === 'undefined') return;
-  vpQuizQueue = shuffle(VERB_PREPOSITIONS_DATA).slice(0, 10);
+  vpQuizQueue = partialShuffle(VERB_PREPOSITIONS_DATA, 10);
   vpQuizIdx = 0;
   vpQuizScore = 0;
   startSessionTimer();
@@ -138,7 +138,7 @@ let subjQuizQueue = [], subjQuizIdx = 0, subjQuizScore = 0;
 function startSubjunctiveQuiz() {
   if (typeof SUBJUNCTIVE_TRIGGERS_DATA === 'undefined') return;
   // Build quiz: given a sentence, does it require subjunctive or indicative?
-  const items = shuffle(SUBJUNCTIVE_TRIGGERS_DATA).slice(0, 10);
+  const items = partialShuffle(SUBJUNCTIVE_TRIGGERS_DATA, 10);
   subjQuizQueue = items.map(t => ({
     trigger: t.trigger,
     example: t.example,
@@ -189,6 +189,7 @@ function submitSubjQuiz() {
     feedbackFn: null,
   });
   if (isCorrect) subjQuizScore++;
+  trackError('subj-trigger:' + q.trigger, isCorrect, 'subjunctive');
 }
 
 function nextSubjQuiz() {
@@ -305,7 +306,10 @@ function openComparativeDetail(id) {
 
   const el = document.getElementById('comparative-detail-content');
   let html = `<h3 class="mb-1">${esc(item.titleEn)}</h3>`;
-  html += `<div class="grammar-content mb-1">${item.content}</div>`;
+  // item.content is trusted author HTML (from comparative_grammar.js data file)
+  // Strip <script> tags as defense-in-depth
+  const safeContent = (item.content || '').replace(/<script[\s\S]*?<\/script>/gi, '');
+  html += `<div class="grammar-content mb-1">${safeContent}</div>`;
 
   if (item.examples && item.examples.length) {
     html += '<h4 class="mt-2 mb-1">Examples</h4>';
@@ -336,12 +340,7 @@ function openComparativeDetail(id) {
 //  NUMBER PRACTICE
 // ════════════════════════════════════════
 
-function renderNumbersHome() {
-  // Render the numbers home screen content
-  const el = document.getElementById('screen-numbers');
-  if (!el) return;
-  // Content is static in HTML, just update stats if available
-}
+// renderNumbersHome removed — numbers screen content is static HTML
 
 function renderNumberLearn() {
   const el = document.getElementById('number-learn-content');
@@ -394,7 +393,7 @@ function startNumberQuiz() {
   const data = NUMBER_PRACTICE_DATA;
   const cardinals = data.CARDINAL_NUMBERS || [];
   // Generate 10 random number quiz questions
-  nqQueue = shuffle(cardinals).slice(0, 10).map(n => ({
+  nqQueue = partialShuffle(cardinals, 10).map(n => ({
     number: n.number,
     spanish: n.spanish,
     type: Math.random() < 0.5 ? 'toSpanish' : 'toNumber',
@@ -491,7 +490,7 @@ let tqQueue = [], tqIdx = 0, tqScore = 0;
 
 function startTimeQuiz() {
   if (typeof NUMBER_PRACTICE_DATA === 'undefined' || !NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS) return;
-  tqQueue = shuffle(NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS).slice(0, 10);
+  tqQueue = partialShuffle(NUMBER_PRACTICE_DATA.TIME_EXPRESSIONS, 10);
   tqIdx = 0;
   tqScore = 0;
   startSessionTimer();

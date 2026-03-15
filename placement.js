@@ -253,7 +253,9 @@ function startPlacementTest() {
   `;
   document.getElementById('pt-progress').textContent = '';
   document.getElementById('pt-level-badge').textContent = '';
-  document.getElementById('pt-progress-bar-fill').style.width = '0%';
+  const ptFill = document.getElementById('pt-progress-bar-fill');
+  ptFill.style.width = '0%';
+  ptFill.setAttribute('aria-valuenow', '0');
   document.getElementById('pt-next').style.display = 'none';
   const ctrl = document.getElementById('pt-controls');
   if (ctrl) ctrl.innerHTML = '';
@@ -366,7 +368,9 @@ function renderPlacementQuestion() {
   const estimatedLevel = thetaToLevel(estTheta);
   document.getElementById('pt-progress').textContent = `${placementIdx + 1} / ${placementTargetLength}`;
   const pct = Math.round(((placementIdx) / placementTargetLength) * 100);
-  document.getElementById('pt-progress-bar-fill').style.width = pct + '%';
+  const ptFillEl = document.getElementById('pt-progress-bar-fill');
+  ptFillEl.style.width = pct + '%';
+  ptFillEl.setAttribute('aria-valuenow', String(pct));
   document.getElementById('pt-level-badge').textContent = `${t('testingLevel')} ${estimatedLevel}`;
   document.getElementById('pt-level-badge').style.background = (GRAMMAR_LEVELS || {})[estimatedLevel]?.color || 'var(--accent)';
   document.getElementById('pt-next').style.display = 'none';

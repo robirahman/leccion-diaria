@@ -574,7 +574,6 @@ function _getVocabWorker() {
 }
 
 // Keep worker in sync when vocab data loads progressively
-const _origBuildVocabIndexes = typeof buildVocabIndexes === 'function' ? buildVocabIndexes : null;
 function _updateVocabWorker() {
   if (_vocabWorker && typeof VOCAB_DATA !== 'undefined') {
     _vocabWorker.postMessage({ type: 'update', data: VOCAB_DATA });
@@ -634,7 +633,7 @@ document.getElementById('grammar-search')?.addEventListener('input', e => {
   const levelsEl = document.getElementById('grammar-levels');
   if (levelsEl) {
     levelsEl.innerHTML = results.map(g => `
-      <div class="card" data-action="open-grammar-lesson" data-id="${g.id}" style="padding:0.5rem 0.75rem;text-align:left">
+      <div class="card" data-action="open-grammar-lesson" data-lesson="${g.id}" style="padding:0.5rem 0.75rem;text-align:left">
         <span class="badge badge-${g.level}">${g.level}</span>
         <strong>${esc(g.titleEn)}</strong>
         <span class="text-muted text-sm"> — ${esc(g.title)}</span>

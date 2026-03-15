@@ -140,7 +140,7 @@ const NUMBER_PRACTICE_DATA = {
     { type: 'toSpanish', prompt: '156', answer: 'ciento cincuenta y seis', level: 'A1' },
     { type: 'toSpanish', prompt: '573', answer: 'quinientos setenta y tres', level: 'A2' },
     { type: 'toSpanish', prompt: '1984', answer: 'mil novecientos ochenta y cuatro', level: 'A2' },
-    { type: 'toSpanish', prompt: '21', answer: 'veintiuno', level: 'A1' },
+    { type: 'toSpanish', prompt: '21', answer: 'veintiuno', alt: 'veintiún', level: 'A1' },
     { type: 'toSpanish', prompt: '16', answer: 'dieciséis', level: 'A1' },
     { type: 'toSpanish', prompt: '100', answer: 'cien', level: 'A1' },
     { type: 'toSpanish', prompt: '101', answer: 'ciento uno', level: 'A1' },

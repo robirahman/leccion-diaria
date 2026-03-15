@@ -101,7 +101,7 @@ function renderToday() {
     <div class="stat-card">
       <div class="stat-num">${todayXP}<span class="text-muted text-sm">/${dailyGoal}</span></div>
       <div class="stat-desc">${t('todayXP') || 'Today\'s XP'}</div>
-      <div class="quiz-progress-bar" style="height:4px;margin-top:4px"><div class="quiz-progress-fill" style="width:${goalPct}%;${goalPct >= 100 ? 'background:var(--green)' : ''}"></div></div>
+      <div class="quiz-progress-bar" style="height:4px;margin-top:4px"><div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(goalPct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Daily XP goal progress" style="width:${goalPct}%;${goalPct >= 100 ? 'background:var(--green)' : ''}"></div></div>
     </div>
     <div class="stat-card"><div class="stat-num">${progress.streak}</div><div class="stat-desc">${t('dayStreak')}</div></div>
     <div class="stat-card"><div class="stat-num">${verbsLearned}</div><div class="stat-desc">${tBtn('verbs')}</div></div>
@@ -360,7 +360,7 @@ function renderTenseMasteryBars(el, tenseData) {
     let html = `<div class="text-sm text-muted" style="margin:0.5rem 0 0.25rem;font-weight:600">${title}</div>`;
     for (const t of items) {
       const rc = t.avgRecall !== null
-        ? (t.avgRecall >= 90 ? 'var(--green)' : t.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+        ? getRecallColor(t.avgRecall)
         : 'var(--text3)';
       const recallText = t.avgRecall !== null ? `${t.avgRecall}%` : '—';
       html += `<div class="stat-row" style="margin-bottom:0.2rem">
@@ -831,7 +831,7 @@ function renderGrammarHome() {
       for (const lv of gp) {
         const pct = Math.round(lv.done / lv.total * 100);
         const rc = lv.avgRecall !== null
-          ? (lv.avgRecall >= 90 ? 'var(--green)' : lv.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+          ? getRecallColor(lv.avgRecall)
           : '';
         const recallText = lv.avgRecall !== null ? `<span style="color:${rc};font-size:0.75rem;margin-left:0.5rem">${lv.avgRecall}% recall</span>` : '';
         sHtml += `<div class="stat-row" style="margin-bottom:0.4rem">
@@ -854,16 +854,14 @@ function renderGrammarHome() {
     const lessons = GRAMMAR_DATA.filter(l => l.level === level);
     if (!lessons.length) return;
     html += `<h3 class="text-sm text-muted mt-2 mb-1">${level}</h3>`;
-    const masteryLabels = ['', 'Learning', 'Familiar', 'Intermediate', 'Mastered'];
+    const masteryLabels = ['New', 'Learning', 'Familiar', 'Strong', 'Mastered'];
     lessons.forEach((l, i) => {
       const raw = progress.grammarDone[l.id];
       const level = raw === true ? 4 : (raw || 0);
-      const badge = level > 0
-        ? `<span class="mastery-badge mastery-${level}">${masteryLabels[level]}</span>`
-        : '';
+      const badge = `<span class="mastery-badge mastery-${level}" aria-label="Mastery: ${masteryLabels[level]}">${masteryLabels[level]}</span>`;
       const r = getRecallPct(progress.grammarFsrs, l.id);
       const recallBadge = r !== null
-        ? (() => { const c = r >= 90 ? 'var(--green)' : r >= 70 ? 'var(--yellow)' : 'var(--red)'; return `<span style="font-size:0.65rem;padding:0.05rem 0.35rem;background:${c}20;color:${c};border-radius:3px;margin-left:0.3rem">${r}%</span>`; })()
+        ? (() => { const c = getRecallColor(r); return `<span style="font-size:0.65rem;padding:0.05rem 0.35rem;background:${c}20;color:${c};border-radius:3px;margin-left:0.3rem">${r}%</span>`; })()
         : '';
       html += `<div class="card" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
         <div class="flex justify-between items-center">
@@ -1116,7 +1114,7 @@ function renderPhrasesHome() {
       <div class="card-icon">${s.icon || ''}</div>
       <div class="card-title text-sm">${esc(s.title)}</div>
       <div class="card-subtitle text-xs">${total > 0 ? `${masteredCount}/${total} learned` : esc(s.desc || '')}</div>
-      ${masteredCount > 0 ? `<div class="quiz-progress-bar" style="height:3px;margin-top:4px"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>` : ''}
+      ${masteredCount > 0 ? `<div class="quiz-progress-bar" style="height:3px;margin-top:4px"><div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Phrase mastery progress" style="width:${pct}%"></div></div>` : ''}
     </div>`;
   }).join('');
 }

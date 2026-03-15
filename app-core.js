@@ -451,14 +451,19 @@ function renderAchievements() {
   }).join('');
 }
 
-function showToast(icon, text) {
+function showToast(icon, text, type) {
   const container = document.getElementById('toast-container');
   if (!container) return;
   const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${esc(text)}</span>`;
+  const cls = type === 'success' ? ' toast-success' : type === 'error' ? ' toast-error' : type === 'info' ? ' toast-info' : '';
+  toast.className = 'toast' + cls;
+  toast.textContent = icon + ' ' + text;
   container.appendChild(toast);
-  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 4800);
+  requestAnimationFrame(() => toast.classList.add('visible'));
+  setTimeout(() => {
+    toast.classList.remove('visible');
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
+  }, 3500);
 }
 
 function showLoading(text) {
@@ -844,7 +849,6 @@ function saveProgress() {
 //  IndexedDB backup (redundant data safety)
 // ════════════════════════════════════════
 
-let _idbReady = false;
 let _idb = null;
 
 function openIDB() {
@@ -857,7 +861,7 @@ function openIDB() {
         db.createObjectStore('progress', { keyPath: 'profile' });
       }
     };
-    req.onsuccess = () => { _idb = req.result; _idbReady = true; resolve(_idb); };
+    req.onsuccess = () => { _idb = req.result; resolve(_idb); };
     req.onerror = () => reject(req.error);
   });
 }
@@ -1890,6 +1894,11 @@ function checkAnswer(input, correct) {
 // Wrap Spanish text with lang="es" for screen readers
 function esSpan(text) { return `<span lang="es">${text}</span>`; }
 
+/** Return a CSS color variable based on a recall percentage (0–100). */
+function getRecallColor(pct) {
+  return pct >= 90 ? 'var(--green)' : pct >= 70 ? 'var(--yellow)' : 'var(--red)';
+}
+
 function esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 // Generic MC option selection helper
@@ -1946,10 +1955,15 @@ function checkDataVersion() {
   try {
     const cached = localStorage.getItem('ld_data_version');
     if (cached && parseInt(cached, 10) < DATA_VERSION) {
-      _idbOpen().then(db => {
-        const tx = db.transaction(_IDB_STORE, 'readwrite');
-        tx.objectStore(_IDB_STORE).delete(_IDB_VOCAB_KEY);
-      }).catch(() => {});
+      // _idbOpen, _IDB_STORE, _IDB_VOCAB_KEY are defined in app-init.js
+      if (typeof _idbOpen === 'function') {
+        _idbOpen().then(db => {
+          const store = typeof _IDB_STORE === 'string' ? _IDB_STORE : 'cache';
+          const key = typeof _IDB_VOCAB_KEY === 'string' ? _IDB_VOCAB_KEY : 'vocab-data-v2';
+          const tx = db.transaction(store, 'readwrite');
+          tx.objectStore(store).delete(key);
+        }).catch(() => {});
+      }
     }
     localStorage.setItem('ld_data_version', String(DATA_VERSION));
   } catch (e) { /* ignore */ }

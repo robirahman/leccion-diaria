@@ -1056,7 +1056,7 @@ function renderStatsTenseMastery() {
   let html = '';
   for (const t of data) {
     const rc = t.avgRecall !== null
-      ? (t.avgRecall >= 90 ? 'var(--green)' : t.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+      ? getRecallColor(t.avgRecall)
       : 'var(--text3)';
     const recallText = t.avgRecall !== null ? `${t.avgRecall}%` : '—';
     const total = t.levels.reduce((a, b) => a + b, 0) || 1;
@@ -1087,7 +1087,7 @@ function renderStatsGrammarProgress() {
   for (const lv of data) {
     const pct = Math.round(lv.done / lv.total * 100);
     const rc = lv.avgRecall !== null
-      ? (lv.avgRecall >= 90 ? 'var(--green)' : lv.avgRecall >= 70 ? 'var(--yellow)' : 'var(--red)')
+      ? getRecallColor(lv.avgRecall)
       : '';
     const recallText = lv.avgRecall !== null ? ` &middot; ${lv.avgRecall}% recall` : '';
     html += `<div class="stat-row" style="margin-bottom:0.4rem">
@@ -1194,7 +1194,7 @@ function renderRecallHealth() {
 
   const avgPct = Math.round(totalR / count * 100);
   const total = count || 1;
-  const avgColor = avgPct >= 90 ? 'var(--green)' : avgPct >= 70 ? 'var(--yellow)' : 'var(--red)';
+  const avgColor = getRecallColor(avgPct);
 
   let html = `<div class="stat-row" style="margin-bottom:0.5rem">
     <span class="stat-label">Average Recall</span>
@@ -1216,7 +1216,7 @@ function renderRecallHealth() {
   </div>`;
 
   for (const s of perStore) {
-    const c = s.avg >= 90 ? 'var(--green)' : s.avg >= 70 ? 'var(--yellow)' : 'var(--red)';
+    const c = getRecallColor(s.avg);
     html += `<div class="stat-row">
       <span class="stat-label">${s.name}</span>
       <span class="text-muted text-sm">${s.count} items</span>
@@ -1280,7 +1280,7 @@ function renderReviewItem() {
   }
   const item = reviewQueue[reviewIdx];
   const total = reviewQueue.length;
-  document.getElementById('rev-progress').innerHTML = `<div class="quiz-progress-fill" style="width:${reviewIdx/total*100}%"></div>`;
+  document.getElementById('rev-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(reviewIdx/total*100)}" aria-valuemin="0" aria-valuemax="100" aria-label="Review progress" style="width:${reviewIdx/total*100}%"></div>`;
   const c = document.getElementById('rev-container');
   document.getElementById('rev-next').style.display = 'none';
   document.getElementById('rev-accents').style.display = 'none';

@@ -127,6 +127,10 @@ async function build() {
   // Process CSS files
   for (const file of CSS_FILES) {
     const src = path.join(ROOT, file);
+    if (!fs.existsSync(src)) {
+      console.warn(`  SKIP (not found): ${file}`);
+      continue;
+    }
     const raw = fs.readFileSync(src, 'utf8');
     const minified = await minifyCSS(raw);
     const hash = contentHash(Buffer.from(minified));
@@ -167,7 +171,7 @@ async function build() {
   for (const [orig, hashed] of Object.entries(hashMap)) {
     if (orig.endsWith('.css')) {
       html = html.replace(
-        new RegExp(`href="${orig.replace('.', '\\.')}"`, 'g'),
+        new RegExp(`href="${orig.replace(/\./g, '\\.')}"`, 'g'),
         `href="${hashed}"`
       );
     }
@@ -177,7 +181,7 @@ async function build() {
   for (const [orig, hashed] of Object.entries(hashMap)) {
     if (orig.endsWith('.js')) {
       html = html.replace(
-        new RegExp(`src="${orig.replace('.', '\\.')}"`, 'g'),
+        new RegExp(`src="${orig.replace(/\./g, '\\.')}"`, 'g'),
         `src="${hashed}"`
       );
     }

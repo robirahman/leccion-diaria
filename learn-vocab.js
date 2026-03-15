@@ -67,7 +67,7 @@ function renderVocabHome() {
       <div class="card-icon">${cat.icon || ''}</div>
       <div class="card-title text-sm">${esc(cat.title)}</div>
       <div class="card-subtitle text-xs">${masteredCount}/${count} ${t('words')}</div>
-      ${masteredCount > 0 ? `<div class="quiz-progress-bar" style="height:3px;margin-top:4px"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>` : ''}
+      ${masteredCount > 0 ? `<div class="quiz-progress-bar" style="height:3px;margin-top:4px"><div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Vocabulary mastery progress" style="width:${pct}%"></div></div>` : ''}
     </div>`;
   }).join('');
 }
@@ -125,7 +125,7 @@ function openVocabCategory(cat, page) {
   const recallBadge = w => {
     const r = getRecallPct(progress.vocabFsrs, w.word);
     if (r === null) return '';
-    const color = r >= 90 ? 'var(--green)' : r >= 70 ? 'var(--yellow)' : 'var(--red)';
+    const color = getRecallColor(r);
     return `<span style="font-size:0.65rem;padding:0.05rem 0.35rem;background:${color}20;color:${color};border-radius:3px;margin-left:0.3rem">${r}%</span>`;
   };
 

@@ -30,7 +30,7 @@ function renderVerbReference(infinitive) {
       return s + (rec?.s ? fsrsR(rec.s, (now - rec.lastRev) / 86400000) : 0);
     }, 0);
     const avgR = Math.round(sum / verbFsrsKeys.length * 100);
-    const rc = avgR >= 90 ? 'var(--green)' : avgR >= 70 ? 'var(--yellow)' : 'var(--red)';
+    const rc = getRecallColor(avgR);
     verbRecallBadge = `<span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:${rc}20;color:${rc};border-radius:4px">Recall ${avgR}%</span>`;
   }
 
@@ -106,7 +106,7 @@ function renderRefTenseTable(infinitive, tense, useSeForm = false) {
   if (tenseRecs.length) {
     const now = Date.now();
     const avg = Math.round(tenseRecs.reduce((s, r) => s + fsrsR(r.s, (now - r.lastRev) / 86400000), 0) / tenseRecs.length * 100);
-    const tc = avg >= 90 ? 'var(--green)' : avg >= 70 ? 'var(--yellow)' : 'var(--red)';
+    const tc = getRecallColor(avg);
     tenseRecallBadge = `<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:${tc}20;color:${tc};border-radius:3px">${avg}%</span>`;
   }
 
@@ -515,7 +515,7 @@ function renderReadingQuestion() {
 
   const total = currentReading.questions.length;
   const pct = total > 0 ? (readingQIdx / total * 100) : 0;
-  document.getElementById('read-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" style="width:${pct}%"></div>`;
+  document.getElementById('read-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress" style="width:${pct}%"></div>`;
   const q = currentReading.questions[readingQIdx];
   readingSelected = -1;
   document.getElementById('read-question').textContent = q.prompt;
@@ -833,7 +833,7 @@ function renderCurriculumLevel(lv) {
         const done = !!progress.grammarDone?.[l.id];
         const r = getRecallPct(progress.grammarFsrs, l.id);
         const icon = done ? '<span style="color:var(--green)">&#10003;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
-        const recall = r !== null ? (() => { const rc = r >= 90 ? 'var(--green)' : r >= 70 ? 'var(--yellow)' : 'var(--red)'; return `<span style="font-size:0.65rem;color:${rc}">${r}%</span>`; })() : '';
+        const recall = r !== null ? (() => { const rc = getRecallColor(r); return `<span style="font-size:0.65rem;color:${rc}">${r}%</span>`; })() : '';
         contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem;cursor:pointer" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
           <span style="min-width:1.2rem">${icon}</span>
           <span style="flex:1;font-size:0.8rem">${esc(l.titleEn || l.title)}</span>
@@ -1014,7 +1014,7 @@ function renderTrackList() {
       </div>
       <div class="text-sm text-muted mb-1">${esc(track.description)}</div>
       <div class="track-progress-wrap">
-        <div class="track-progress-bar" style="width:${comp.percent}%;background:${track.color}"></div>
+        <div class="track-progress-bar" role="progressbar" aria-valuenow="${Math.round(comp.percent)}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(track.title)} progress" style="width:${comp.percent}%;background:${track.color}"></div>
       </div>
       <div class="text-xs text-muted" style="margin-top:0.25rem">${comp.completed}/${comp.total} modules completed</div>
     </div>`;

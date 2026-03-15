@@ -16,6 +16,25 @@ function _haptic(correct) {
 }
 
 /**
+ * Partially shuffle an array using Fisher-Yates, returning only the first n elements.
+ * O(n) instead of O(N) for shuffle(arr).slice(0, n).
+ *
+ * @param {Array} arr - Source array (not mutated)
+ * @param {number} n  - Number of random elements to return
+ * @returns {Array} A new array of up to n randomly-selected elements
+ */
+function partialShuffle(arr, n) {
+  var a = arr.slice();
+  var len = a.length;
+  var count = Math.min(n, len);
+  for (var i = 0; i < count; i++) {
+    var j = i + Math.floor(Math.random() * (len - i));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a.slice(0, count);
+}
+
+/**
  * Creates a managed MC quiz flow.
  *
  * @param {Object} config
@@ -230,5 +249,5 @@ function progressBarHTML(current, total, fillId) {
   var idAttr = fillId ? ' id="' + fillId + '"' : '';
   return '<div class="quiz-progress-fill"' + idAttr +
     ' role="progressbar" aria-valuenow="' + Math.round(pct) +
-    '" aria-valuemin="0" aria-valuemax="100" style="width:' + pct + '%"></div>';
+    '" aria-valuemin="0" aria-valuemax="100" aria-label="Quiz progress" style="width:' + pct + '%"></div>';
 }

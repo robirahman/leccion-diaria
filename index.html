@@ -236,7 +236,7 @@
   <!-- ════════ VERB LEARN (FLASHCARDS) ════════ -->
   <div class="screen" id="screen-verb-learn">
     <div class="quiz-progress" id="verb-learn-progress"></div>
-    <div class="flashcard" id="verb-flashcard" data-action="flip-verb-card" role="button" tabindex="0">
+    <button class="flashcard" id="verb-flashcard" data-action="flip-verb-card">
       <div class="flashcard-inner">
         <div class="front">
           <div class="word-main" id="vl-verb"></div>
@@ -248,7 +248,7 @@
           <div class="word-detail" id="vl-table"></div>
         </div>
       </div>
-    </div>
+    </button>
     <div class="rating-bar" id="verb-learn-rating" style="display:none">
       <button class="rating-btn" data-action="rate-verb" data-rating="1">Again</button>
       <button class="rating-btn" data-action="rate-verb" data-rating="2">Hard</button>
@@ -275,7 +275,7 @@
         <button class="accent-btn" data-action="insert-accent" data-char="ñ" aria-label="Insert ñ">ñ</button>
         <button class="accent-btn" data-action="insert-accent" data-char="ü" aria-label="Insert ü">ü</button>
       </div>
-      <div class="quiz-feedback" id="vd-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="vd-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-verb-drill" style="display:none" id="vd-next">Next</button>
   </div>
@@ -360,7 +360,7 @@
   <!-- ════════ VOCAB LEARN (FLASHCARDS) ════════ -->
   <div class="screen" id="screen-vocab-learn">
     <div class="quiz-progress" id="vocl-progress"></div>
-    <div class="flashcard" id="vocab-flashcard" data-action="flip-vocab-card" role="button" tabindex="0">
+    <button class="flashcard" id="vocab-flashcard" data-action="flip-vocab-card">
       <div class="flashcard-inner">
         <div class="front">
           <div class="word-gender" id="vocl-gender"></div>
@@ -372,7 +372,7 @@
           <div class="word-detail" id="vocl-example"></div>
         </div>
       </div>
-    </div>
+    </button>
     <div class="rating-bar" id="vocab-learn-rating" style="display:none">
       <button class="rating-btn" data-action="rate-vocab" data-rating="1">Again</button>
       <button class="rating-btn" data-action="rate-vocab" data-rating="2">Hard</button>
@@ -431,7 +431,7 @@
   <!-- ════════ PHRASE LEARN ════════ -->
   <div class="screen" id="screen-phrase-learn">
     <div class="quiz-progress" id="pl-progress"></div>
-    <div class="flashcard" id="phrase-flashcard" data-action="flip-phrase-card" role="button" tabindex="0">
+    <button class="flashcard" id="phrase-flashcard" data-action="flip-phrase-card">
       <div class="flashcard-inner">
         <div class="front">
           <div class="word-main" id="pl-spanish"></div>
@@ -442,7 +442,7 @@
           <div class="word-detail" id="pl-notes"></div>
         </div>
       </div>
-    </div>
+    </button>
     <div class="rating-bar" id="phrase-learn-rating" style="display:none">
       <button class="rating-btn" data-action="rate-phrase" data-rating="1">Again</button>
       <button class="rating-btn" data-action="rate-phrase" data-rating="2">Hard</button>
@@ -638,7 +638,7 @@
     <div class="card">
       <div class="quiz-question" id="mp-sentence"></div>
       <div class="quiz-options" id="mp-options"></div>
-      <div class="quiz-feedback" id="mp-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="mp-feedback" style="display:none"></div>
       <div class="mp-contrast" id="mp-contrast" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-mp" style="display:none" id="mp-next">Next</button>
@@ -659,7 +659,7 @@
       <div id="pp-tts" class="text-center mb-1"></div>
       <div class="quiz-question" id="pp-sentence"></div>
       <div class="quiz-options" id="pp-options"></div>
-      <div class="quiz-feedback" id="pp-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="pp-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-pp" style="display:none" id="pp-next">Next</button>
   </div>
@@ -678,7 +678,7 @@
       <div id="hom-pronunciation" class="text-center text-muted text-sm mb-1"></div>
       <div class="quiz-question" id="hom-sentence"></div>
       <div class="quiz-options" id="hom-options"></div>
-      <div class="quiz-feedback" id="hom-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="hom-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-hom" style="display:none" id="hom-next">Next</button>
   </div>
@@ -696,7 +696,7 @@
     <div class="card">
       <div class="quiz-question" id="conn-sentence"></div>
       <div class="quiz-options" id="conn-options"></div>
-      <div class="quiz-feedback" id="conn-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="conn-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-conn" style="display:none" id="conn-next">Next</button>
   </div>
@@ -709,7 +709,7 @@
       <div class="sb-answer-row" id="sb-answer-row"></div>
       <div class="sb-divider"></div>
       <div class="sb-word-bank" id="sb-word-bank"></div>
-      <div class="quiz-feedback" id="sb-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="sb-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-primary btn-block mt-1" data-action="check-sentence-build" id="sb-check">Check</button>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-sentence-build" style="display:none" id="sb-next">Next</button>
@@ -735,7 +735,7 @@
         <button class="accent-btn" data-action="insert-accent-cloze" data-char="ú" aria-label="Insert ú">ú</button>
         <button class="accent-btn" data-action="insert-accent-cloze" data-char="ñ" aria-label="Insert ñ">ñ</button>
       </div>
-      <div id="cloze-feedback" style="display:none"></div>
+      <div id="cloze-feedback" aria-live="polite" style="display:none"></div>
     </div>
     <button class="btn btn-primary btn-block mt-1" data-action="check-cloze" id="cloze-check">Check</button>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-cloze" style="display:none" id="cloze-next">Next</button>
@@ -760,7 +760,7 @@
         <button class="accent-btn" data-action="insert-accent-tr" data-char="¿" aria-label="Insert inverted question mark">¿</button>
         <button class="accent-btn" data-action="insert-accent-tr" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
       </div>
-      <div class="quiz-feedback" id="tr-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="tr-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-translation" style="display:none" id="tr-next">Next</button>
   </div>
@@ -788,7 +788,7 @@
         <button class="accent-btn" data-action="insert-accent-dict" data-char="¿" aria-label="Insert inverted question mark">¿</button>
         <button class="accent-btn" data-action="insert-accent-dict" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
       </div>
-      <div class="quiz-feedback" id="dict-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="dict-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-dictation" style="display:none" id="dict-next">Next</button>
   </div>
@@ -809,7 +809,7 @@
   <!-- ════════ PLACEMENT TEST ════════ -->
   <div class="screen" id="screen-placement">
     <div class="placement-header">
-      <div class="pt-progress-bar"><div class="pt-progress-bar-fill" id="pt-progress-bar-fill"></div></div>
+      <div class="pt-progress-bar"><div class="pt-progress-bar-fill" id="pt-progress-bar-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Placement test progress"></div></div>
       <div class="placement-meta">
         <span class="quiz-progress" id="pt-progress">1 / 20</span>
         <span class="placement-level-tag" id="pt-level-badge">Testing: A1</span>
@@ -1257,7 +1257,7 @@
       <div class="quiz-question" id="read-question"></div>
       <div class="quiz-options" id="read-options"></div>
       <button class="btn btn-primary btn-block mt-1" data-action="submit-reading-mc" id="read-submit" style="display:none">Check</button>
-      <div class="quiz-feedback" id="read-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="polite" id="read-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-reading" style="display:none" id="read-next">Next</button>
   </div>
@@ -1442,27 +1442,30 @@
 
 <!-- ════════ TAB BAR ════════ -->
 <div class="tab-bar" id="tab-bar" role="tablist" style="display:none">
-  <button class="tab active" data-action="switch-tab" data-tab="today" role="tab" aria-selected="true">
+  <button class="tab active" data-action="switch-tab" data-tab="today" role="tab" aria-selected="true" aria-controls="screen-today">
     <span class="tab-icon" aria-hidden="true">&#127968;</span>
     <span>Today</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="learn" role="tab">
+  <button class="tab" data-action="switch-tab" data-tab="learn" role="tab" aria-controls="screen-learn">
     <span class="tab-icon" aria-hidden="true">&#128218;</span>
     <span>Learn</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="practice" role="tab">
+  <button class="tab" data-action="switch-tab" data-tab="practice" role="tab" aria-controls="screen-practice">
     <span class="tab-icon" aria-hidden="true">&#9997;</span>
     <span>Practice</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="culture" role="tab">
+  <button class="tab" data-action="switch-tab" data-tab="culture" role="tab" aria-controls="screen-culture">
     <span class="tab-icon" aria-hidden="true">&#127928;</span>
     <span>Culture</span>
   </button>
-  <button class="tab" data-action="switch-tab" data-tab="stats" role="tab">
+  <button class="tab" data-action="switch-tab" data-tab="stats" role="tab" aria-controls="screen-stats">
     <span class="tab-icon" aria-hidden="true">&#128202;</span>
     <span>Stats</span>
   </button>
 </div>
+
+<!-- ════════ TOAST ════════ -->
+<div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <!-- ════════ MODAL ════════ -->
 <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
@@ -1474,7 +1477,7 @@
 </div>
 
 <!-- ════════ SHARE PREVIEW MODAL ════════ -->
-<div class="modal-overlay" id="share-overlay">
+<div class="modal-overlay" id="share-overlay" aria-hidden="true">
   <div class="modal" style="text-align:center">
     <h2>Share Progress</h2>
     <canvas id="share-canvas" width="400" height="500" style="max-width:100%;border-radius:var(--radius);margin-bottom:1rem"></canvas>
@@ -1492,13 +1495,13 @@
     <div class="spinner" style="width:40px;height:40px;border-width:4px"></div>
     <div class="loading-text" id="loading-text">Loading...</div>
     <div class="loading-progress" id="loading-progress" style="display:none">
-      <div class="loading-progress-fill" id="loading-progress-fill"></div>
+      <div class="loading-progress-fill" id="loading-progress-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Loading progress"></div>
     </div>
   </div>
 </div>
 
 <!-- ════════ ONBOARDING OVERLAY ════════ -->
-<div class="modal-overlay" id="onboarding-overlay" style="display:none">
+<div class="modal-overlay" id="onboarding-overlay" aria-hidden="true" style="display:none">
   <div class="modal" style="max-width:340px;text-align:center">
     <div id="onboarding-content"></div>
     <div style="display:flex;justify-content:center;gap:0.5rem;margin-top:0.5rem">
