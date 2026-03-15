@@ -6,28 +6,38 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 
 ## File Overview
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `index.html` | 559 | 30+ screens, nav bar, tab bar, modal system |
-| `app.js` | ~5,800 | Main controller: navigation, quiz logic, placement test, settings, events |
-| `conjugation.js` | 424 | Verb conjugation engine: 18 tenses, 200+ verbs, irregular/stem-change handling |
-| `fsrs.js` | 57 | FSRS-4.5 spaced repetition algorithm (17 parameters) |
-| `styles.css` | 970 | Dark/light themes, 4 color palettes, responsive mobile-first layout |
-| `sw.js` | 37 | Service worker: cache-first offline strategy |
-| `manifest.json` | 15 | PWA metadata |
-| **Data files** | | |
-| `verbs.js` | 313 | ~200 verbs with type, group, stem change, level, frequency |
-| `vocab.js` | 931 | ~500 words across 32 categories with gender, examples, level |
-| `grammar.js` | 1,224 | 62+ grammar lessons (A1–C2) with HTML content and 5 quiz questions each |
-| `phrases.js` | 2,478 | 260+ phrases across 17 situations with formality and reply |
-| `conversations.js` | 959 | 21 role-play dialogue scenarios with vocab and quiz |
-| `freq_vocab.js` | 30,006 | Top 30k Spanish words by frequency (auto-generated) |
-| `placement_questions.js` | 1,471 | 120 hand-crafted IRT-calibrated placement questions (A1–C2) |
-| `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | ~2,800 total | Cultural content modules with descriptions, vocab, and quizzes |
-| `curriculum_tracks.js` | | Guided curriculum tracks with leveled lesson sequences |
-| `reading_sat.js` | | SAT-style reading comprehension passages and questions |
-| **Utilities** | | |
-| `generate_vocab.py` | 115 | Generates `freq_vocab.js` from the `wordfreq` Python library |
+| File | Purpose |
+|------|---------|
+| **App modules** | |
+| `index.html` | 30+ screens, nav bar, tab bar, modal system |
+| `app-init.js` | Startup, profile loading, event delegation, routing |
+| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR) |
+| `app-learn.js` | Vocab, verb, and grammar learning interfaces |
+| `app-practice.js` | Stats dashboard, quizzes, verb reference, curriculum display |
+| `quiz-engine.js` | Shared quiz rendering and answer-checking pipeline |
+| `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling |
+| `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters) |
+| `styles.css` | Dark/light themes, 4 color palettes, responsive mobile-first layout |
+| `sw.js` | Service worker: cache-first offline strategy |
+| `manifest.json` | PWA metadata |
+| **Data files** | |
+| `verbs.js` | 252 verbs with type, group, stem change, level, frequency |
+| `vocab.js` | ~28K words across 45+ categories with gender, examples, level |
+| `grammar.js` | 67 grammar lessons (A1–C2) with HTML content and quiz questions |
+| `phrases.js` | 260+ phrases across 21 situations with formality and reply |
+| `conversations.js` | 21 role-play dialogue scenarios with vocab and quiz |
+| `freq_vocab.js` | Top 30k Spanish words by frequency (auto-generated) |
+| `placement_questions.js` | 120 hand-crafted IRT-calibrated placement questions (A1–C2) |
+| `curriculum_tracks.js` | Guided curriculum tracks with leveled lesson sequences |
+| `reading.js` `reading_sat.js` | Reading comprehension passages |
+| `cloze_passages.js` `dictation.js` | Cloze and dictation exercises |
+| `sentence_construction.js` `translation_drills.js` | Writing practice exercises |
+| `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises |
+| `connectors.js` `themed_vocab.js` `jokes.js` | Additional content modules |
+| `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | Cultural content modules with descriptions, vocab, and quizzes |
+| **Utilities** | |
+| `generate_vocab.py` | Generates `freq_vocab.js` from the `wordfreq` Python library |
+| `serve.sh` | Local development server (Python 3) |
 
 ---
 
@@ -37,23 +47,22 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 User (browser)
   │
   ▼
-app.js ─── Event delegation (single click listener on document)
+app-init.js ─── Event delegation (single click listener on document)
   │
-  ├── Navigation ──── showScreen(id) / goBack() / switchTab(tab)
-  │                   Screen stack for back-button support
+  ├── app-core.js ──── Navigation: showScreen(id) / goBack() / switchTab(tab)
+  │                     Progress state, FSRS helpers, recall/mastery computation
+  │                     Settings, persistence (localStorage per profile)
+  │                     Placement test: IRT adaptive (Rasch model), Newton-Raphson MLE
   │
-  ├── Quiz pipeline ─ Load questions → Render → Answer → Check → Rate → FSRS update → Next
-  │                   Shared across verb/vocab/grammar/phrase/culture/placement modules
+  ├── app-learn.js ─── Vocab browser, flashcard learning, verb/grammar interfaces
+  │                     Learn New Words (lowest-probability flashcards)
+  │                     Tense mastery display, grammar level summaries
   │
-  ├── Placement test ─ IRT adaptive algorithm (Rasch model)
-  │                    Per-domain scoring (grammar vs vocab)
-  │                    Newton-Raphson MLE for ability estimation
+  ├── app-practice.js ─ Stats dashboard, recall health, CEFR curriculum
+  │                      Quiz modules, verb reference with conjugation tables
+  │                      Cultural content rendering
   │
-  ├── Settings ────── Display mode (standard/immersion/hints)
-  │                   Theme (dark/light), palette, region, accent strictness, TTS rate
-  │
-  └── Persistence ─── localStorage: profiles + per-profile progress
-                      sessionStorage: placement test checkpoint
+  └── quiz-engine.js ── Shared quiz pipeline: render → answer → check → rate → FSRS update
 ```
 
 ### State Management
@@ -62,6 +71,8 @@ app.js ─── Event delegation (single click listener on document)
 - **`screenStack`** — array tracking navigation history for back button
 - **`currentProfile`** — active profile name
 - **Placement state** — `placementThetas`, `placementHistory`, etc. (session-scoped, saved to `sessionStorage` for tab-switch recovery)
+
+All state is defined in `app-core.js` and accessible globally. The app modules (`app-learn.js`, `app-practice.js`) read and write this shared state.
 
 ### Navigation
 
@@ -141,7 +152,7 @@ Difficulty scale: A1 (1.0–1.8), A2 (1.9–2.7), B1 (2.8–3.5), B2 (3.6–4.3)
 
 ## Progress Structure
 
-Returned by `newProgress()` in `app.js`, saved per-profile to localStorage:
+Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
 
 ```javascript
 {
@@ -197,7 +208,7 @@ Implementation of FSRS-4.5 with 17 trained weights.
 - `fsrsSAfterForgetting(d, s, r)` — new stability after failed review
 - `masteryFromFsrs(s)` — stability → mastery level (1–4)
 
-**Review flow** (in `app.js`):
+**Review flow** (in `app-core.js`):
 1. User rates item 1–4 (Again/Hard/Good/Easy)
 2. `reviewItem(fsrsStore, masteryStore, key, rating)` computes new s, d
 3. Item is "due" when `fsrsR(s, elapsed) < 0.9`
@@ -207,7 +218,7 @@ Implementation of FSRS-4.5 with 17 trained weights.
 
 ## Conjugation Engine (`conjugation.js`)
 
-Supports 18 tenses across 6 persons (yo, tú, él, nosotros, vosotros, ellos).
+Supports 19 tenses across 6 persons (yo, tú, él, nosotros, vosotros, ellos).
 
 **Tense categories**:
 - **Simple** (9): present, preterite, imperfect, future, conditional, subjunctive present/imperfect, imperative affirmative/negative
@@ -330,4 +341,4 @@ Add to `VERB_DATA` in `verbs.js`. The conjugation engine handles regular verbs a
 Add to `PLACEMENT_QUESTIONS` in `placement_questions.js`. Set `difficulty` on the IRT scale (1.0–6.5) matching the question's CEFR level range.
 
 ### New culture module
-Create a new `modulename.js` file following the culture item schema. Add the `<script>` tag to `index.html` (before `app.js`), add it to the `ASSETS` array in `sw.js`, and register it in the culture module list in `app.js`.
+Create a new `modulename.js` file following the culture item schema. Add the `<script>` tag to `index.html` (before the app modules), add it to the `ASSETS` array in `sw.js`, and register it in the culture module list in `app-practice.js`.
