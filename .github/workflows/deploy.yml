@@ -22,9 +22,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Copy web assets to dist
+        run: |
+          mkdir -p dist/icons
+          cp *.html *.css *.js manifest.json dist/
+          cp icons/* dist/icons/ 2>/dev/null || true
+          rm -f dist/bump-version.js dist/generate_vocab.py dist/vocab_backup.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4

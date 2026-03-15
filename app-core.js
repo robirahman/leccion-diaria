@@ -24,21 +24,7 @@ let placementLastDomains = []; // track recent domains for variety
 let placementTargetLength = 20; // adjustable test length (10, 20, or 40)
 let placementMode = 'both';    // 'both', 'grammar', or 'vocab'
 
-// Practice exercise state — centralized quiz state helper
-function createQuizState() {
-  return { queue: [], idx: 0, score: 0, answered: false };
-}
-const quizStates = {
-  mp: createQuizState(),
-  pp: createQuizState(),
-  hom: createQuizState(),
-  conn: createQuizState(),
-  sb: createQuizState(),
-  cloze: createQuizState(),
-  tr: createQuizState(),
-  dict: createQuizState(),
-};
-// Quiz state accessors — using quizStates directly
+// Practice exercise state
 let mpQueue = [], mpIdx = 0, mpScore = 0, mpAnswered = false;
 let ppQueue = [], ppIdx = 0, ppScore = 0, ppAnswered = false;
 let homQueue = [], homIdx = 0, homScore = 0, homAnswered = false;
@@ -445,7 +431,7 @@ function showToast(icon, text) {
   toast.className = 'toast';
   toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${esc(text)}</span>`;
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 4800);
+  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 4800);
 }
 
 function showLoading(text) {
@@ -1662,10 +1648,12 @@ function speak(text) {
   try {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'es-ES';
+    const region = progress?.settings?.region;
+    u.lang = region === 'spain' ? 'es-ES' : 'es-MX';
     u.rate = progress?.settings?.ttsRate || 1;
     const voices = window.speechSynthesis.getVoices();
-    const esVoice = voices.find(v => v.lang.startsWith('es'));
+    const preferredLang = region === 'spain' ? 'es-ES' : 'es-MX';
+    const esVoice = voices.find(v => v.lang === preferredLang) || voices.find(v => v.lang.startsWith('es'));
     if (esVoice) u.voice = esVoice;
     else if (!_ttsWarningShown && voices.length > 0) {
       _ttsWarningShown = true;
@@ -1716,7 +1704,9 @@ function selectMCOption(containerSelector, idx) {
   if (submitBtn) submitBtn.style.display = 'block';
 }
 function todayStr() { return dateStr(new Date()); }
-function dateStr(d) { return d.toISOString().slice(0, 10); }
+function dateStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
 function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function pickN(arr, n) { return shuffle(arr).slice(0, n); }
