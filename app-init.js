@@ -27,6 +27,10 @@ document.addEventListener('click', e => {
     }
     case 'open-settings': showScreen('settings'); break;
     case 'open-guide': showScreen('guide'); break;
+    case 'open-keyboard-help': showScreen('keyboard-help'); renderKeyboardHelp(); break;
+    case 'open-review-dashboard': showScreen('review-dashboard'); renderReviewDashboard(); break;
+    case 'close-session-summary': document.getElementById('session-summary-container').innerHTML = ''; break;
+    case 'start-review-filtered': startReviewFiltered(target.dataset.filter); break;
 
     // Profile
     case 'select-profile': selectProfile(target.dataset.name); break;
@@ -51,7 +55,7 @@ document.addEventListener('click', e => {
     case 'set-tts-rate': setSetting('ttsRate', target.dataset.val); break;
     case 'set-hideFutureSubjunctive': setSetting('hideFutureSubjunctive', target.dataset.val === 'true'); break;
     case 'set-subjunctiveForm': setSetting('subjunctiveForm', target.dataset.val); break;
-    case 'set-dailyGoal': setSetting('dailyGoal', parseInt(target.dataset.val)); break;
+    case 'set-dailyGoal': setSetting('dailyGoal', parseInt(target.dataset.val, 10)); break;
     case 'export-progress': exportProgress(); break;
     case 'import-progress': importProgress(); break;
     case 'reset-progress': {
@@ -137,10 +141,10 @@ document.addEventListener('click', e => {
     case 'start-pattern-drill': startPatternDrill(target.dataset.pattern || target.closest('[data-pattern]')?.dataset.pattern); break;
     case 'open-verb-browser': renderVerbBrowser(); break;
     case 'flip-verb-card': flipVerbCard(); break;
-    case 'rate-verb': rateVerb(parseInt(target.dataset.rating)); break;
+    case 'rate-verb': rateVerb(parseInt(target.dataset.rating, 10)); break;
     case 'check-verb-drill': checkVerbDrill(); break;
     case 'next-verb-drill': nextVerbDrill(); break;
-    case 'answer-verb-quiz': answerVerbQuizMC(parseInt(target.dataset.idx)); break;
+    case 'answer-verb-quiz': answerVerbQuizMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-verb-quiz-mc': submitVerbQuizMC(); break;
     case 'submit-verb-quiz-fib': submitVerbQuizFIB(); break;
     case 'next-verb-quiz': nextVerbQuiz(); break;
@@ -150,16 +154,16 @@ document.addEventListener('click', e => {
 
     // Vocab
     case 'open-vocab-cat': openVocabCategory(target.dataset.cat); break;
-    case 'vocab-cat-more': openVocabCategory(target.dataset.cat, parseInt(target.dataset.page)); break;
+    case 'vocab-cat-more': openVocabCategory(target.dataset.cat, parseInt(target.dataset.page, 10)); break;
     case 'start-vocab-learn': startVocabLearn(); break;
     case 'start-vocab-quiz': startVocabQuiz(); break;
     case 'start-quick-vocab': startQuickVocab(); break;
     case 'start-learn-new': startLearnNewWords(); break;
     case 'start-gender-quiz': startGenderQuiz(); break;
     case 'flip-vocab-card': flipVocabCard(); break;
-    case 'rate-vocab': rateVocab(parseInt(target.dataset.rating)); break;
+    case 'rate-vocab': rateVocab(parseInt(target.dataset.rating, 10)); break;
     case 'answer-vocab-quiz': {
-      answerVocabQuizMC(parseInt(target.dataset.idx));
+      answerVocabQuizMC(parseInt(target.dataset.idx, 10));
       break;
     }
     case 'submit-vocab-quiz-mc': {
@@ -184,7 +188,7 @@ document.addEventListener('click', e => {
     // Grammar
     case 'open-grammar-lesson': openGrammarLesson(target.dataset.lesson); break;
     case 'start-grammar-quiz': startGrammarQuiz(); break;
-    case 'answer-grammar-quiz': answerGrammarQuizMC(parseInt(target.dataset.idx)); break;
+    case 'answer-grammar-quiz': answerGrammarQuizMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-grammar-quiz-mc': submitGrammarQuizMC(); break;
     case 'submit-grammar-fib': submitGrammarFIB(); break;
     case 'next-grammar-quiz': nextGrammarQuiz(); break;
@@ -193,21 +197,21 @@ document.addEventListener('click', e => {
     case 'open-phrase-sit': openPhraseSituation(target.dataset.sit); break;
     case 'start-phrase-learn': startPhraseLearn(); break;
     case 'start-phrase-quiz': startPhraseQuiz(); break;
-    case 'answer-phrase-quiz': answerPhraseQuizMC(parseInt(target.dataset.idx)); break;
+    case 'answer-phrase-quiz': answerPhraseQuizMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-phrase-quiz-mc': submitPhraseQuizMC(); break;
     case 'next-phrase-quiz': nextPhraseQuiz(); break;
     case 'flip-phrase-card': flipPhraseCard(); break;
-    case 'rate-phrase': ratePhrase(parseInt(target.dataset.rating)); break;
+    case 'rate-phrase': ratePhrase(parseInt(target.dataset.rating, 10)); break;
 
     // Culture
     case 'open-culture': openCultureModule(target.dataset.module); break;
     case 'open-culture-item': openCultureItem(target.dataset.id); break;
     case 'start-culture-quiz': startCultureQuiz(); break;
     case 'start-dialogue-practice': startDialoguePractice(); break;
-    case 'answer-dialogue': answerDialogueMC(parseInt(target.dataset.idx)); break;
+    case 'answer-dialogue': answerDialogueMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-dialogue-mc': submitDialogueMC(); break;
     case 'next-dialogue': nextDialogue(); break;
-    case 'answer-culture-quiz': answerCultureQuizMC(parseInt(target.dataset.idx)); break;
+    case 'answer-culture-quiz': answerCultureQuizMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-culture-quiz-mc': submitCultureQuizMC(); break;
     case 'next-culture-quiz': nextCultureQuiz(); break;
 
@@ -217,9 +221,9 @@ document.addEventListener('click', e => {
 
     // Review
     case 'start-review': startReview(); break;
-    case 'answer-review': answerReviewMC(parseInt(target.dataset.idx)); break;
+    case 'answer-review': answerReviewMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-review-mc': submitReviewMC(); break;
-    case 'rate-review': rateReviewItem(parseInt(target.dataset.rating)); break;
+    case 'rate-review': rateReviewItem(parseInt(target.dataset.rating, 10)); break;
     case 'next-review': nextReviewItem(); break;
     case 'check-review-drill': checkReviewDrill(); break;
     case 'flip-review-card': flipReviewCard(); break;
@@ -235,7 +239,7 @@ document.addEventListener('click', e => {
 
     // Placement Test
     case 'start-placement': startPlacementTest(); break;
-    case 'answer-placement': answerPlacementMC(parseInt(target.dataset.idx)); break;
+    case 'answer-placement': answerPlacementMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-placement-mc': submitPlacementMC(); break;
     case 'submit-placement-fib': submitPlacementFIB(); break;
     case 'next-placement': nextPlacementQuestion(); break;
@@ -245,7 +249,7 @@ document.addEventListener('click', e => {
     case 'start-placement-mode': startPlacementAt(target.dataset.level, target.dataset.mode); break;
     case 'end-placement-early': if (placementIdx >= 5) finishPlacementTest(); break;
     case 'pt-set-length': {
-      const len = parseInt(target.dataset.len);
+      const len = parseInt(target.dataset.len, 10);
       if ([10, 20, 40].includes(len)) {
         placementTargetLength = len;
         savePlacementState();
@@ -272,19 +276,19 @@ document.addEventListener('click', e => {
     // Practice exercises
     case 'open-minimal-pairs': showScreen('minimal-pairs'); renderMinimalPairCategories(); break;
     case 'start-mp': startMinimalPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-mp': answerMP(parseInt(target.dataset.idx)); break;
+    case 'answer-mp': answerMP(parseInt(target.dataset.idx, 10)); break;
     case 'next-mp': nextMP(); break;
     case 'open-phonetic-pairs': showScreen('phonetic-pairs'); renderPhoneticPairCategories(); break;
     case 'start-pp': startPhoneticPairs(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-pp': answerPP(parseInt(target.dataset.idx)); break;
+    case 'answer-pp': answerPP(parseInt(target.dataset.idx, 10)); break;
     case 'next-pp': nextPP(); break;
     case 'open-homophones': showScreen('homophones'); renderHomophoneCategories(); break;
     case 'start-hom': startHomophones(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-hom': answerHom(parseInt(target.dataset.idx)); break;
+    case 'answer-hom': answerHom(parseInt(target.dataset.idx, 10)); break;
     case 'next-hom': nextHom(); break;
     case 'open-connectors': showScreen('connectors'); renderConnectorCategories(); break;
     case 'start-conn': startConnectors(target.dataset.cat || target.closest('[data-cat]')?.dataset.cat); break;
-    case 'answer-conn': answerConn(parseInt(target.dataset.idx)); break;
+    case 'answer-conn': answerConn(parseInt(target.dataset.idx, 10)); break;
     case 'next-conn': nextConn(); break;
     case 'open-sentence-build-topics': startSentenceBuild(); break;
     case 'tap-sb-word': tapSBWord(target); break;
@@ -327,7 +331,7 @@ document.addEventListener('click', e => {
       break;
     }
     case 'start-reading': startReading(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
-    case 'answer-reading': answerReadingMC(parseInt(target.dataset.idx)); break;
+    case 'answer-reading': answerReadingMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-reading-mc': submitReadingMC(); break;
     case 'next-reading': nextReading(); break;
     case 'toggle-listen-mode': {
@@ -350,7 +354,7 @@ document.addEventListener('click', e => {
     case 'open-themed-vocab': showScreen('themed-vocab'); renderThemedVocabList(); break;
     case 'open-themed-detail': openThemedDetail(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
     case 'start-themed-quiz': startThemedQuiz(); break;
-    case 'answer-themed-quiz': answerThemedQuizMC(parseInt(target.dataset.idx)); break;
+    case 'answer-themed-quiz': answerThemedQuizMC(parseInt(target.dataset.idx, 10)); break;
     case 'submit-themed-quiz-mc': submitThemedQuizMC(); break;
     case 'next-themed-quiz': nextThemedQuiz(); break;
 
@@ -367,6 +371,37 @@ document.addEventListener('click', e => {
       break;
     }
 
+    // Verb + Prepositions
+    case 'open-verb-preps': showScreen('verb-preps'); if (typeof renderVerbPreps === 'function') renderVerbPreps(); break;
+    case 'start-vp-quiz': if (typeof startVerbPrepsQuiz === 'function') startVerbPrepsQuiz(); break;
+    case 'answer-vp-quiz': if (typeof answerVPQuizMC === 'function') answerVPQuizMC(parseInt(target.dataset.idx, 10)); break;
+    case 'next-vp-quiz': if (typeof nextVPQuiz === 'function') nextVPQuiz(); break;
+
+    // Subjunctive Triggers
+    case 'open-subjunctive-triggers': showScreen('subjunctive-triggers'); if (typeof renderSubjunctiveTriggers === 'function') renderSubjunctiveTriggers(); break;
+    case 'start-subj-quiz': if (typeof startSubjunctiveQuiz === 'function') startSubjunctiveQuiz(); break;
+    case 'answer-subj-quiz': if (typeof answerSubjQuizMC === 'function') answerSubjQuizMC(parseInt(target.dataset.idx, 10)); break;
+    case 'next-subj-quiz': if (typeof nextSubjQuiz === 'function') nextSubjQuiz(); break;
+
+    // Writing Prompts
+    case 'open-writing-prompts': showScreen('writing-prompts'); if (typeof renderWritingPromptsList === 'function') renderWritingPromptsList(); break;
+    case 'start-writing': if (typeof startWritingExercise === 'function') startWritingExercise(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
+    case 'show-writing-sample': if (typeof showWritingSample === 'function') showWritingSample(); break;
+
+    // Comparative Grammar
+    case 'open-comparative-grammar': showScreen('comparative-grammar'); if (typeof renderComparativeGrammarList === 'function') renderComparativeGrammarList(); break;
+    case 'open-comparative-detail': if (typeof openComparativeDetail === 'function') openComparativeDetail(target.dataset.id || target.closest('[data-id]')?.dataset.id); break;
+
+    // Number Practice
+    case 'start-number-learn': showScreen('number-learn'); if (typeof renderNumberLearn === 'function') renderNumberLearn(); break;
+    case 'start-number-quiz': showScreen('number-quiz'); if (typeof startNumberQuiz === 'function') startNumberQuiz(); break;
+    case 'answer-number-quiz': if (typeof answerNumberQuizMC === 'function') answerNumberQuizMC(parseInt(target.dataset.idx, 10)); break;
+    case 'check-number-quiz': if (typeof checkNumberQuiz === 'function') checkNumberQuiz(); break;
+    case 'next-number-quiz': if (typeof nextNumberQuiz === 'function') nextNumberQuiz(); break;
+    case 'start-time-quiz': showScreen('time-quiz'); if (typeof startTimeQuiz === 'function') startTimeQuiz(); break;
+    case 'answer-time-quiz': if (typeof answerTimeQuizMC === 'function') answerTimeQuizMC(parseInt(target.dataset.idx, 10)); break;
+    case 'next-time-quiz': if (typeof nextTimeQuiz === 'function') nextTimeQuiz(); break;
+
     // TTS
     case 'speak': speak(target.dataset.text); break;
 
@@ -379,11 +414,13 @@ document.addEventListener('click', e => {
     case 'insert-accent-tr':
     case 'insert-accent-dict':
     case 'insert-accent-vocq':
-    case 'insert-accent-rev': {
+    case 'insert-accent-rev':
+    case 'insert-accent-nq': {
       const accentInputMap = {
         'insert-accent': 'vd-input',
         'insert-accent-vq': 'vq-fib-input',
         'insert-accent-gq': 'gq-fib-input',
+        'insert-accent-nq': 'nq-input',
         'insert-accent-pt': 'pt-fib-input',
         'insert-accent-tr': 'tr-input',
         'insert-accent-dict': 'dict-input',
@@ -497,7 +534,7 @@ document.addEventListener('keydown', e => {
   for (const { screen, bar, fn } of ratingBars) {
     const el = document.getElementById(`screen-${screen}`);
     if (el?.classList.contains('active') && document.getElementById(bar)?.style.display !== 'none') {
-      const num = parseInt(e.key);
+      const num = parseInt(e.key, 10);
       if (num >= 1 && num <= 4) { fn(num); e.preventDefault(); break; }
     }
   }
@@ -634,7 +671,9 @@ const LAZY_SCRIPTS = [
   'sentence_construction.js', 'cloze_passages.js', 'translation_drills.js',
   'dictation.js', 'jokes.js', 'reading.js', 'reading_sat.js',
   'themed_vocab.js', 'curriculum_tracks.js', 'phonetic_pairs.js',
-  'homophones.js', 'connectors.js'
+  'homophones.js', 'connectors.js',
+  'verb_prepositions.js', 'subjunctive_triggers.js', 'writing_prompts.js',
+  'comparative_grammar.js', 'number_practice.js', 'feature-modules.js'
 ];
 let _lazyLoaded = false;
 function _resolveFile(name) {
@@ -681,6 +720,18 @@ function _fetchVocabProgressive() {
     if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
     _updateVocabWorker();
 
+    // Load supplementary A1-A2 vocab (non-critical — silently skip if missing)
+    fetch('vocab-a1a2-extra.json').then(r => {
+      if (!r.ok) return [];
+      return r.json();
+    }).then(extra => {
+      if (extra && extra.length) {
+        window.VOCAB_DATA = window.VOCAB_DATA.concat(extra);
+        if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+        _updateVocabWorker();
+      }
+    }).catch(() => {});
+
     // Then load remaining levels in background
     const remaining = ['vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'];
     return remaining.reduce((chain, file) =>
@@ -693,14 +744,21 @@ function _fetchVocabProgressive() {
     );
   }).then(() => {
     // Cache the full dataset in IndexedDB
-    _idbPut(_IDB_VOCAB_KEY, window.VOCAB_DATA);
+    _idbPut(_IDB_VOCAB_KEY, window.VOCAB_DATA).catch(() => {
+      // IndexedDB cache write failed — non-critical, vocab still works from memory
+    });
   }).catch(() => {
     // Fallback: try loading the monolithic file
     fetch('vocab-data.json').then(r => r.json()).then(data => {
       window.VOCAB_DATA = data;
       if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
       _updateVocabWorker();
-    }).catch(err => console.warn('Failed to load vocab data:', err));
+    }).catch(err => {
+      console.warn('Failed to load vocab data:', err);
+      if (typeof showErrorState === 'function') {
+        showErrorState('vocab-categories', 'Could not load vocabulary data. Check your connection and try again.', 'switch-tab');
+      }
+    });
   });
 }
 
@@ -734,6 +792,8 @@ function _idbPut(key, value) {
 }
 
 function init() {
+  // Check for data version changes to invalidate stale caches
+  if (typeof checkDataVersion === 'function') checkDataVersion();
   renderProfiles();
   // Pre-populate voices
   if (window.speechSynthesis) {

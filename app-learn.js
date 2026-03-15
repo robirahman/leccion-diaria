@@ -155,15 +155,18 @@ function renderToday() {
   const reviewDiv = document.getElementById('today-review');
   if (totalDue > 0) {
     const breakdown = dueLines.map(d =>
-      `<li><span class="due-icon">${d.icon}</span><span class="due-count">${d.count}</span> ${d.label}</li>`
+      `<li><span class="due-icon">${d.icon}</span><span class="due-count" style="${d.count > 20 ? 'color:var(--red)' : ''}">${d.count}</span> ${d.label}</li>`
     ).join('');
     reviewDiv.innerHTML = `
-      <div class="card" data-action="start-review">
-        <div class="card-title">${t('dueForReview')}</div>
+      <div class="card" data-action="start-review" style="border-left:3px solid var(--accent)">
+        <div class="card-title" style="font-size:1.1rem">${t('dueForReview')}</div>
         <ul class="due-breakdown mt-1">
           ${breakdown}
-          <li class="due-total"><span class="due-icon"></span><span class="due-count">${totalDue}</span> total — Start Review</li>
+          <li class="due-total"><span class="due-icon">&#9654;</span><span class="due-count" style="font-weight:700">${totalDue}</span> total — Start Review</li>
         </ul>
+      </div>
+      <div class="card mt-1" data-action="open-review-dashboard" style="padding:0.5rem 0.75rem">
+        <div class="card-subtitle" style="text-align:center">View Review Dashboard &rarr;</div>
       </div>
     `;
   } else {
@@ -1504,5 +1507,175 @@ function showResults(score, total, module, label) {
     <div class="stat-card"><div class="stat-num" style="color:var(--red)">${total - score}</div><div class="stat-desc">${t('incorrectLabel')}</div></div>
     <div class="stat-card"><div class="stat-num">${score * 5 + (total - score)}</div><div class="stat-desc">${t('xpEarned')}</div></div>
   `;
+
+  // Show session summary modal
+  const xpEarned = score * 5 + (total - score);
+  const duration = typeof getSessionDuration === 'function' ? getSessionDuration() : 0;
+  showSessionSummary({
+    type: label,
+    correct: score,
+    total: total,
+    xpEarned: xpEarned,
+    timeSpent: duration,
+    newWords: 0,
+    reviewedWords: total,
+  });
+}
+
+// ════════════════════════════════════════
+//  KEYBOARD SHORTCUTS HELP
+// ════════════════════════════════════════
+
+function renderKeyboardHelp() {
+  const el = document.getElementById('kbd-shortcuts-list');
+  if (!el) return;
+
+  const shortcuts = [
+    { key: '?', desc: 'Open this keyboard shortcuts help' },
+    { key: 'Alt + 1', desc: 'Switch to Today tab' },
+    { key: 'Alt + 2', desc: 'Switch to Learn tab' },
+    { key: 'Alt + 3', desc: 'Switch to Practice tab' },
+    { key: 'Alt + 4', desc: 'Switch to Culture tab' },
+    { key: 'Alt + 5', desc: 'Switch to Stats tab' },
+    { key: 'Alt + B', desc: 'Go back' },
+    { key: 'Enter', desc: 'Submit answer / advance in quizzes' },
+    { key: '1 - 4', desc: 'Rate flashcards (Again, Hard, Good, Easy)' },
+    { key: '↑ / ↓', desc: 'Navigate quiz options' },
+    { key: '← / →', desc: 'Navigate tab bar' },
+    { key: 'Space', desc: 'Flip flashcard' },
+    { key: 'Escape', desc: 'Close modal / dialog' },
+  ];
+
+  el.innerHTML = shortcuts.map(s =>
+    `<li><span class="kbd-key">${esc(s.key)}</span>${esc(s.desc)}</li>`
+  ).join('');
+}
+
+// ════════════════════════════════════════
+//  SESSION SUMMARY MODAL
+// ════════════════════════════════════════
+
+function showSessionSummary(stats) {
+  const container = document.getElementById('session-summary-container');
+  if (!container) return;
+
+  const pct = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
+  let emoji, grade, accClass;
+  if (pct >= 90) { emoji = '🎉'; grade = 'Excellent!'; accClass = 'accuracy-great'; }
+  else if (pct >= 70) { emoji = '👏'; grade = 'Good job!'; accClass = 'accuracy-ok'; }
+  else { emoji = '💪'; grade = 'Keep going!'; accClass = 'accuracy-poor'; }
+
+  const mins = Math.floor(stats.timeSpent / 60);
+  const secs = stats.timeSpent % 60;
+  const timeStr = stats.timeSpent > 0 ? (mins > 0 ? `${mins}m ${secs}s` : `${secs}s`) : '';
+
+  container.innerHTML = `
+    <div class="session-summary-overlay" data-action="close-session-summary">
+      <div class="modal session-summary" onclick="event.stopPropagation()">
+        <div style="font-size:2.5rem;margin-bottom:0.25rem">${emoji}</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem">${grade}</div>
+        <div class="summary-accuracy ${accClass}">${pct}%</div>
+        <div class="text-muted text-sm mb-1">${esc(stats.type)}</div>
+        <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:0.75rem 0">
+          <div class="summary-stat">
+            <div class="summary-num">${stats.correct}/${stats.total}</div>
+            <div class="summary-label">Correct</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-num">+${stats.xpEarned}</div>
+            <div class="summary-label">XP</div>
+          </div>
+          ${timeStr ? `<div class="summary-stat">
+            <div class="summary-num">${timeStr}</div>
+            <div class="summary-label">Time</div>
+          </div>` : ''}
+          ${stats.reviewedWords > 0 ? `<div class="summary-stat">
+            <div class="summary-num">${stats.reviewedWords}</div>
+            <div class="summary-label">Items</div>
+          </div>` : ''}
+        </div>
+        <button class="btn btn-primary btn-block mt-1" data-action="close-session-summary">Continue</button>
+      </div>
+    </div>
+  `;
+}
+
+// ════════════════════════════════════════
+//  REVIEW DASHBOARD
+// ════════════════════════════════════════
+
+function renderReviewDashboard() {
+  const el = document.getElementById('review-dashboard-content');
+  if (!el || !progress) return;
+
+  const now = Date.now();
+  const oneDayMs = 86400000;
+
+  const categories = [
+    { key: 'verbs', label: 'Verb Forms', icon: '🏃', stores: ['verbFsrs'] },
+    { key: 'vocab', label: 'Vocabulary', icon: '📚', stores: ['vocabFsrs'] },
+    { key: 'grammar', label: 'Grammar', icon: '📝', stores: ['grammarFsrs'] },
+    { key: 'phrases', label: 'Phrases', icon: '💬', stores: ['phraseFsrs'] },
+  ];
+
+  let totalDue = 0;
+  let totalOverdue = 0;
+  let cardsHtml = '';
+
+  for (const cat of categories) {
+    let catDue = 0;
+    let catOverdue = 0;
+    for (const store of cat.stores) {
+      if (!progress[store]) continue;
+      const keys = Object.keys(progress[store]);
+      for (const k of keys) {
+        const card = progress[store][k];
+        if (!card || !card.due) continue;
+        const dueTime = new Date(card.due).getTime();
+        if (dueTime <= now) {
+          catDue++;
+          if (now - dueTime > oneDayMs) catOverdue++;
+        }
+      }
+    }
+    totalDue += catDue;
+    totalOverdue += catOverdue;
+
+    const overdueStr = catOverdue > 0 ? `<div class="review-dash-overdue">${catOverdue} overdue</div>` : '';
+    cardsHtml += `
+      <div class="card mb-1 review-type-card${catOverdue > 0 ? ' review-overdue-card' : ''}"
+           ${catDue > 0 ? `data-action="start-review-filtered" data-filter="${cat.key}"` : ''}>
+        <div class="review-type-icon">${cat.icon}</div>
+        <div style="flex:1">
+          <div class="review-type-count">${catDue}</div>
+          <div class="review-type-label">${cat.label}</div>
+          ${overdueStr}
+        </div>
+        ${catDue > 0 ? '<div class="text-muted text-sm">Review &rarr;</div>' : '<div class="text-muted text-sm">All clear</div>'}
+      </div>
+    `;
+  }
+
+  const urgencyHtml = totalOverdue > 0
+    ? `<div class="card mb-1" style="border-left:3px solid var(--red);padding:0.75rem"><span style="color:var(--red);font-weight:700">${totalOverdue} items overdue</span> by more than a day</div>`
+    : '';
+
+  el.innerHTML = `
+    <div class="stat-cards mb-2">
+      <div class="stat-card"><div class="stat-num">${totalDue}</div><div class="stat-desc">Total Due</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:${totalOverdue > 0 ? 'var(--red)' : 'var(--green)'}">${totalOverdue}</div><div class="stat-desc">Overdue</div></div>
+    </div>
+    ${urgencyHtml}
+    ${cardsHtml}
+    ${totalDue > 0 ? '<button class="btn btn-primary btn-block mt-1" data-action="start-review">Review All</button>' : '<p class="text-muted text-sm" style="text-align:center">No reviews due. Great work!</p>'}
+  `;
+}
+
+function startReviewFiltered(filter) {
+  // Start a review with only items from a specific content type
+  if (typeof startReview !== 'function') return;
+  // Store the filter for the review system to pick up
+  window._reviewFilter = filter;
+  startReview();
 }
 

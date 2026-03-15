@@ -1465,6 +1465,143 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   a { color: inherit; text-decoration: underline; }
 }
 
+/* ── Skip Link (Accessibility) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Session Summary Modal ── */
+.session-summary-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+.session-summary {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.session-summary .summary-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.session-summary .summary-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+.session-summary .summary-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.session-summary .summary-stat {
+  background: var(--bg2);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+}
+.session-summary .summary-stat-num {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.session-summary .summary-stat-label {
+  font-size: 0.75rem;
+  color: var(--text3);
+}
+
+/* ── Keyboard Help Screen ── */
+.kbd-shortcuts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.kbd-shortcuts-list li {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.kbd-shortcuts-list li:last-child {
+  border-bottom: none;
+}
+.kbd-key {
+  display: inline-block;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  min-width: 2rem;
+  text-align: center;
+  margin-right: 0.75rem;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* ── Review Dashboard ── */
+.review-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.review-dash-card {
+  background: var(--bg2);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  text-align: center;
+}
+.review-dash-card.overdue {
+  border: 1px solid var(--red);
+}
+.review-dash-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.review-dash-label {
+  font-size: 0.75rem;
+  color: var(--text3);
+}
+.review-dash-overdue {
+  font-size: 0.7rem;
+  color: var(--red);
+  margin-top: 0.25rem;
+}
+
+/* ── Skill Radar Chart ── */
+.skill-radar-container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1473,3 +1610,143 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Skip to Content (Accessibility) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 10000;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Keyboard Shortcuts ── */
+.shortcuts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.shortcuts-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--bg3);
+}
+.shortcuts-table td:first-child {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  white-space: nowrap;
+  width: 8rem;
+}
+.shortcuts-table td:last-child {
+  color: var(--text2);
+  font-size: 0.85rem;
+}
+
+/* ── Writing Prompts ── */
+.writing-area {
+  width: 100%;
+  min-height: 150px;
+  padding: 0.75rem;
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius-sm);
+  background: var(--bg2);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  resize: vertical;
+}
+.writing-area:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+.self-check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
+  color: var(--text2);
+}
+.self-check-item input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+/* ── Verb + Preposition cards ── */
+.prep-card {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+}
+.prep-card .prep-verb {
+  font-weight: 700;
+  color: var(--accent);
+}
+.prep-card .prep-prep {
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+/* ── Skill Radar ── */
+.radar-label {
+  font-size: 0.7rem;
+  fill: var(--text2);
+}
+
+/* ── Review Dashboard ── */
+.review-type-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+.review-type-icon {
+  font-size: 1.5rem;
+}
+.review-type-count {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.review-type-label {
+  font-size: 0.85rem;
+  color: var(--text2);
+}
+.review-overdue {
+  color: var(--red);
+  font-weight: 700;
+}
+
+/* ── Session Summary Modal ── */
+.session-summary {
+  text-align: center;
+}
+.session-summary .summary-stat {
+  display: inline-block;
+  margin: 0.5rem;
+  text-align: center;
+}
+.session-summary .summary-num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.session-summary .summary-label {
+  font-size: 0.75rem;
+  color: var(--text3);
+}
+.session-summary .summary-accuracy {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+.session-summary .accuracy-great { color: var(--green); }
+.session-summary .accuracy-ok { color: var(--yellow); }
+.session-summary .accuracy-poor { color: var(--red); }

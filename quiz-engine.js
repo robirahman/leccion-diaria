@@ -5,9 +5,13 @@
 // ════════════════════════════════════════════════════════════════
 
 // ── Haptic feedback helper ────────────────────────────────────
+// Vibration durations in milliseconds
+var HAPTIC_CORRECT = [30];          // single short pulse
+var HAPTIC_INCORRECT = [40, 30, 40]; // double pulse with gap
+
 function _haptic(correct) {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
-    navigator.vibrate(correct ? [30] : [40, 30, 40]);
+    navigator.vibrate(correct ? HAPTIC_CORRECT : HAPTIC_INCORRECT);
   }
 }
 

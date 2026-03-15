@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="app-container">
+<a href="#main-content" class="skip-link">Skip to content</a>
+<div class="app-container" id="main-content">
 
   <!-- ════════ OFFLINE BANNER ════════ -->
   <div class="offline-banner" id="offline-banner" role="status" aria-live="polite">You are offline — progress is saved locally</div>
@@ -169,6 +170,26 @@
         <div class="card-icon">&#128483;</div>
         <div class="card-title">Dialogue Practice</div>
         <div class="card-subtitle">Choose the right response in a conversation</div>
+      </div>
+      <div class="card" data-action="open-verb-preps">
+        <div class="card-icon">&#128279;</div>
+        <div class="card-title">Verb + Preposition</div>
+        <div class="card-subtitle">pensar en, soñar con, depender de...</div>
+      </div>
+      <div class="card" data-action="open-subjunctive-triggers">
+        <div class="card-icon">&#128161;</div>
+        <div class="card-title">Subjunctive Triggers</div>
+        <div class="card-subtitle">Expressions that require the subjunctive</div>
+      </div>
+      <div class="card" data-action="open-writing-prompts">
+        <div class="card-icon">&#9997;</div>
+        <div class="card-title">Writing Practice</div>
+        <div class="card-subtitle">Free-form writing with self-assessment</div>
+      </div>
+      <div class="card" data-action="open-comparative-grammar">
+        <div class="card-icon">&#127468;&#127463;</div>
+        <div class="card-title">Grammar for English Speakers</div>
+        <div class="card-subtitle">Key differences and false friends</div>
       </div>
     </div>
   </div>
@@ -1003,6 +1024,21 @@
     </div>
   </div>
 
+  <!-- ════════ KEYBOARD SHORTCUTS HELP ════════ -->
+  <div class="screen" id="screen-keyboard-help">
+    <h2 class="mb-2">Keyboard Shortcuts</h2>
+    <p class="text-muted text-sm mb-2">Use these shortcuts to navigate faster.</p>
+    <div class="card">
+      <ul class="kbd-shortcuts-list" id="kbd-shortcuts-list"></ul>
+    </div>
+  </div>
+
+  <!-- ════════ REVIEW DASHBOARD ════════ -->
+  <div class="screen" id="screen-review-dashboard">
+    <h2 class="mb-2">Review Dashboard</h2>
+    <div id="review-dashboard-content"></div>
+  </div>
+
   <!-- ════════ SETTINGS SCREEN ════════ -->
   <div class="screen" id="screen-settings">
     <h2 class="mb-2" data-action="admin-tap-settings">Settings</h2>
@@ -1269,6 +1305,10 @@
       <div class="card-title mb-1">CEFR Level Mastery</div>
       <div id="stats-cefr-mastery"></div>
     </div>
+    <div class="card mb-1">
+      <div class="card-title">Skill Radar</div>
+      <canvas id="skill-radar-canvas" width="300" height="300" style="max-width:100%;display:block;margin:0 auto"></canvas>
+    </div>
     <div class="card mt-1">
       <div class="card-title mb-1">Achievements</div>
       <div class="badge-grid" id="stats-achievements"></div>
@@ -1339,6 +1379,64 @@
     <div id="curriculum-level-header"></div>
     <div id="curriculum-level-content"></div>
   </div>
+
+  <!-- ════════ VERB + PREPOSITIONS ════════ -->
+  <div class="screen" id="screen-verb-preps">
+    <h2>Verb + Preposition Combos</h2>
+    <div id="verb-preps-content"></div>
+  </div>
+  <div class="screen" id="screen-verb-preps-quiz">
+    <p id="vp-progress" class="text-muted text-sm mb-1"></p>
+    <div id="vp-quiz-content"></div>
+    <button class="btn btn-primary mt-1" id="vp-next" style="display:none" data-action="next-vp-quiz">Next</button>
+  </div>
+
+  <!-- ════════ SUBJUNCTIVE TRIGGERS ════════ -->
+  <div class="screen" id="screen-subjunctive-triggers">
+    <h2>Subjunctive Triggers</h2>
+    <div id="subjunctive-triggers-content"></div>
+  </div>
+  <div class="screen" id="screen-subjunctive-quiz">
+    <p id="subj-progress" class="text-muted text-sm mb-1"></p>
+    <div id="subj-quiz-content"></div>
+    <button class="btn btn-primary mt-1" id="subj-next" style="display:none" data-action="next-subj-quiz">Next</button>
+  </div>
+
+  <!-- ════════ WRITING PROMPTS ════════ -->
+  <div class="screen" id="screen-writing-prompts">
+    <h2>Writing Practice</h2>
+    <div id="writing-prompts-list"></div>
+  </div>
+  <div class="screen" id="screen-writing-exercise">
+    <div id="writing-exercise-content"></div>
+  </div>
+
+  <!-- ════════ COMPARATIVE GRAMMAR ════════ -->
+  <div class="screen" id="screen-comparative-grammar">
+    <h2>Grammar for English Speakers</h2>
+    <div id="comparative-grammar-list"></div>
+  </div>
+  <div class="screen" id="screen-comparative-detail">
+    <div id="comparative-detail-content"></div>
+  </div>
+
+  <!-- ════════ NUMBER PRACTICE ════════ -->
+  <div class="screen" id="screen-number-learn">
+    <h2 id="number-learn-title">Learn Numbers</h2>
+    <div id="number-learn-content"></div>
+  </div>
+  <div class="screen" id="screen-number-quiz">
+    <p id="nq-progress" class="text-muted text-sm mb-1"></p>
+    <div id="nq-quiz-content"></div>
+    <div class="accent-bar" id="nq-accent-bar"></div>
+    <button class="btn btn-primary mt-1" id="nq-next" style="display:none" data-action="next-number-quiz">Next</button>
+  </div>
+  <div class="screen" id="screen-time-quiz">
+    <p id="tq-progress" class="text-muted text-sm mb-1"></p>
+    <div id="tq-quiz-content"></div>
+    <button class="btn btn-primary mt-1" id="tq-next" style="display:none" data-action="next-time-quiz">Next</button>
+  </div>
+
 
 </div><!-- /app-container -->
 
@@ -1412,6 +1510,9 @@
     </div>
   </div>
 </div>
+
+<!-- ════════ SESSION SUMMARY OVERLAY ════════ -->
+<div id="session-summary-container"></div>
 
 <!-- ════════ TOAST ════════ -->
 <div id="toast-container"></div>

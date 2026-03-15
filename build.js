@@ -23,6 +23,8 @@ const JS_FILES = [
   'dictation.js', 'jokes.js', 'reading.js', 'reading_sat.js',
   'themed_vocab.js', 'curriculum_tracks.js', 'phonetic_pairs.js',
   'homophones.js', 'connectors.js',
+  'verb_prepositions.js', 'subjunctive_triggers.js', 'writing_prompts.js',
+  'comparative_grammar.js', 'number_practice.js', 'feature-modules.js',
   // Worker
   'vocab-search-worker.js',
 ];

@@ -391,6 +391,31 @@ const ACHIEVEMENTS = [
     return stores.every(s => Object.keys(p[s] || {}).length > 0);
   }},
   { id: 'night-owl', icon: '🦉', name: 'Night Owl',        desc: 'Practice after 9 PM',    check: p => p.nightOwlUnlocked },
+  // Extended achievements
+  { id: 'polyglot', icon: '🗣️', name: 'Polyglot', desc: 'Learn words from 10+ categories', check: p => {
+    if (typeof VOCAB_BY_CATEGORY === 'undefined') return false;
+    let catCount = 0;
+    for (const key of Object.keys(VOCAB_BY_CATEGORY || {})) {
+      const words = VOCAB_BY_CATEGORY[key] || [];
+      if (words.some(w => p.vocabMastery[w.word])) catCount++;
+    }
+    return catCount >= 10;
+  }},
+  { id: 'bookworm', icon: '📖', name: 'Bookworm', desc: 'Complete 5 reading passages', check: p => Object.keys(p.readingMastery || {}).length >= 5 },
+  { id: 'phrase-master', icon: '💬', name: 'Phrase Master', desc: 'Learn 50 phrases', check: p => Object.keys(p.phraseMastery || {}).length >= 50 },
+  { id: 'week-warrior', icon: '⚔️', name: 'Week Warrior', desc: 'Earn XP every day for a week', check: p => {
+    const log = p.practiceLog || {};
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      if (!log[ds] || log[ds] <= 0) return false;
+    }
+    return true;
+  }},
+  { id: 'xp-10000', icon: '🏅', name: 'Champion', desc: 'Earn 10,000 XP', check: p => p.xp >= 10000 },
+  { id: 'vocab-1000', icon: '🎓', name: 'Word Master', desc: 'Learn 1,000 words', check: p => Object.keys(p.vocabMastery || {}).length >= 1000 },
 ];
 
 function checkAchievements() {
@@ -874,6 +899,7 @@ const SCREEN_NAMES = {
   reading: 'Reading', 'reading-sat': 'Reading SAT', pronunciation: 'Pronunciation',
   'phonetic-pairs': 'Phonetic Pairs', homophones: 'Homophones',
   connectors: 'Connectors', 'themed-vocab': 'Themed Vocab',
+  'keyboard-help': 'Keyboard Shortcuts', 'review-dashboard': 'Review Dashboard',
 };
 
 function emptyState(icon, message) {
@@ -1182,6 +1208,13 @@ document.addEventListener('keydown', e => {
   if (e.altKey && e.key === 'b') {
     const backBtn = document.querySelector('.nav-back.visible');
     if (backBtn) { backBtn.click(); e.preventDefault(); }
+  }
+
+  // ? for keyboard shortcuts help
+  if (e.key === '?' && !e.altKey && !e.ctrlKey && !e.metaKey) {
+    showScreen('keyboard-help');
+    renderKeyboardHelp();
+    e.preventDefault();
   }
 });
 
@@ -1854,6 +1887,9 @@ function checkAnswer(input, correct) {
 //  UTILITY
 // ════════════════════════════════════════
 
+// Wrap Spanish text with lang="es" for screen readers
+function esSpan(text) { return `<span lang="es">${text}</span>`; }
+
 function esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 // Generic MC option selection helper
@@ -1870,6 +1906,29 @@ function selectMCOption(containerSelector, idx, autoSubmitFn) {
     if (submitBtn) submitBtn.style.display = 'block';
   }
 }
+// ════════════════════════════════════════
+//  SESSION TIMING
+// ════════════════════════════════════════
+
+let _sessionStartTime = null;
+function startSessionTimer() { _sessionStartTime = Date.now(); }
+function getSessionDuration() {
+  if (!_sessionStartTime) return 0;
+  return Math.round((Date.now() - _sessionStartTime) / 1000);
+}
+
+// ════════════════════════════════════════
+//  SESSION DIFFICULTY ADAPTATION
+// ════════════════════════════════════════
+
+let _sessionStreak = 0;
+function trackSessionAnswer(correct) {
+  if (correct) { _sessionStreak = Math.max(1, _sessionStreak + 1); }
+  else { _sessionStreak = Math.min(-1, _sessionStreak - 1); }
+  return { shouldBumpUp: _sessionStreak >= 5, shouldBumpDown: _sessionStreak <= -3 };
+}
+function resetSessionStreak() { _sessionStreak = 0; }
+
 function todayStr() { return dateStr(new Date()); }
 function dateStr(d) {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -1877,4 +1936,22 @@ function dateStr(d) {
 function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function pickN(arr, n) { return shuffle(arr).slice(0, n); }
+
+// ════════════════════════════════════════
+//  DATA VERSIONING
+// ════════════════════════════════════════
+const DATA_VERSION = 2;
+
+function checkDataVersion() {
+  try {
+    const cached = localStorage.getItem('ld_data_version');
+    if (cached && parseInt(cached, 10) < DATA_VERSION) {
+      _idbOpen().then(db => {
+        const tx = db.transaction(_IDB_STORE, 'readwrite');
+        tx.objectStore(_IDB_STORE).delete(_IDB_VOCAB_KEY);
+      }).catch(() => {});
+    }
+    localStorage.setItem('ld_data_version', String(DATA_VERSION));
+  } catch (e) { /* ignore */ }
+}
 

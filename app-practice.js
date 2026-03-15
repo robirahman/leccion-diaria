@@ -31,7 +31,20 @@ function importProgress() {
     reader.onload = () => {
       try {
         const data = JSON.parse(reader.result);
-        progress = { ...newProgress(), ...data };
+        // Validate imported data structure
+        if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+          throw new Error('Invalid format');
+        }
+        // Sanitize numeric fields to prevent injection of negative/extreme values
+        const base = newProgress();
+        const merged = { ...base, ...data };
+        if (typeof merged.xp !== 'number' || merged.xp < 0) merged.xp = base.xp;
+        if (typeof merged.streak !== 'number' || merged.streak < 0) merged.streak = base.streak;
+        if (typeof merged.longestStreak !== 'number' || merged.longestStreak < 0) merged.longestStreak = base.longestStreak;
+        if (typeof merged.freezeTokens !== 'number' || merged.freezeTokens < 0) merged.freezeTokens = base.freezeTokens;
+        // Ensure settings is an object and merge with defaults
+        merged.settings = { ...base.settings, ...(typeof merged.settings === 'object' && merged.settings ? merged.settings : {}) };
+        progress = merged;
         saveProgress();
         applySettings();
         updateNavStats();
@@ -918,6 +931,120 @@ function renderStats() {
   renderStatsTenseMastery();
   renderStatsGrammarProgress();
   renderSrsDashboard();
+  renderSkillRadar();
+}
+
+// ════════════════════════════════════════
+//  SKILL RADAR CHART
+// ════════════════════════════════════════
+
+function renderSkillRadar() {
+  const canvas = document.getElementById('skill-radar-canvas');
+  if (!canvas || !progress) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+  const maxR = Math.min(cx, cy) - 40;
+
+  // Compute mastery percentages for each domain
+  const verbTotal = typeof VERB_DATA !== 'undefined' ? Object.keys(VERB_DATA).length : 100;
+  const vocabTotal = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.length : 1000;
+  const grammarTotal = typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.length : 50;
+  const phraseTotal = typeof PHRASES_DATA !== 'undefined' ? Object.keys(PHRASES_DATA).reduce((s, k) => s + (PHRASES_DATA[k]?.phrases?.length || 0), 0) : 100;
+  const readingTotal = Math.max(Object.keys(progress.readingMastery || {}).length, 10);
+  const listeningTotal = Math.max(Object.keys(progress.dictMastery || {}).length, 10);
+
+  const domains = [
+    { label: 'Verbs', value: Math.min(100, Math.round((Object.keys(progress.verbMastery).length / Math.max(verbTotal, 1)) * 100)) },
+    { label: 'Vocab', value: Math.min(100, Math.round((Object.keys(progress.vocabMastery).length / Math.max(vocabTotal, 1)) * 100)) },
+    { label: 'Grammar', value: Math.min(100, Math.round((Object.values(progress.grammarDone).filter(Boolean).length / Math.max(grammarTotal, 1)) * 100)) },
+    { label: 'Phrases', value: Math.min(100, Math.round((Object.keys(progress.phraseMastery).length / Math.max(phraseTotal, 1)) * 100)) },
+    { label: 'Listening', value: Math.min(100, Math.round((Object.keys(progress.dictMastery || {}).length / Math.max(listeningTotal, 1)) * 100)) },
+    { label: 'Reading', value: Math.min(100, Math.round((Object.keys(progress.readingMastery || {}).length / Math.max(readingTotal, 1)) * 100)) },
+  ];
+
+  const n = domains.length;
+  const angleStep = (2 * Math.PI) / n;
+  const startAngle = -Math.PI / 2; // start from top
+
+  // Read theme colors
+  const cs = getComputedStyle(document.documentElement);
+  const borderColor = cs.getPropertyValue('--border').trim() || '#2a3a5c';
+  const textColor = cs.getPropertyValue('--text2').trim() || '#b8c0d4';
+  const accentColor = cs.getPropertyValue('--accent').trim() || '#c7553b';
+  const accentBg = cs.getPropertyValue('--accent-bg').trim() || 'rgba(199,85,59,0.15)';
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Draw grid rings (25%, 50%, 75%, 100%)
+  for (const pct of [0.25, 0.5, 0.75, 1.0]) {
+    const r = maxR * pct;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const angle = startAngle + i * angleStep;
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw axis lines
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + maxR * Math.cos(angle), cy + maxR * Math.sin(angle));
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw data polygon (filled)
+  ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    const r = maxR * (domains[i].value / 100);
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = accentBg;
+  ctx.fill();
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Draw data points
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    const r = maxR * (domains[i].value / 100);
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = accentColor;
+    ctx.fill();
+  }
+
+  // Draw labels
+  ctx.fillStyle = textColor;
+  ctx.font = '12px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    const labelR = maxR + 22;
+    const x = cx + labelR * Math.cos(angle);
+    const y = cy + labelR * Math.sin(angle);
+    ctx.fillText(`${domains[i].label} ${domains[i].value}%`, x, y);
+  }
 }
 
 function renderStatsTenseMastery() {
