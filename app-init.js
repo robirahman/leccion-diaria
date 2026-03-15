@@ -46,6 +46,7 @@ document.addEventListener('click', e => {
     case 'set-tts-rate': setSetting('ttsRate', target.dataset.val); break;
     case 'set-hideFutureSubjunctive': setSetting('hideFutureSubjunctive', target.dataset.val === 'true'); break;
     case 'set-subjunctiveForm': setSetting('subjunctiveForm', target.dataset.val); break;
+    case 'set-dailyGoal': setSetting('dailyGoal', parseInt(target.dataset.val)); break;
     case 'export-progress': exportProgress(); break;
     case 'import-progress': importProgress(); break;
     case 'reset-progress': {
@@ -533,6 +534,28 @@ document.getElementById('vocab-search')?.addEventListener('input', e => {
       hideLoading();
     });
   }, 200);
+});
+
+// Grammar search input
+document.getElementById('grammar-search')?.addEventListener('input', e => {
+  if (typeof GRAMMAR_DATA === 'undefined') return;
+  const q = e.target.value.toLowerCase();
+  if (!q) { renderGrammarHome(); return; }
+  const results = GRAMMAR_DATA.filter(g =>
+    g.title.toLowerCase().includes(q) || g.titleEn.toLowerCase().includes(q)
+  );
+  const levelsEl = document.getElementById('grammar-levels');
+  if (levelsEl) {
+    levelsEl.innerHTML = results.map(g => `
+      <div class="card" data-action="open-grammar-lesson" data-id="${g.id}" style="padding:0.5rem 0.75rem;text-align:left">
+        <span class="badge badge-${g.level}">${g.level}</span>
+        <strong>${esc(g.titleEn)}</strong>
+        <span class="text-muted text-sm"> — ${esc(g.title)}</span>
+      </div>
+    `).join('') || emptyState('🔍', t('noResults'));
+  }
+  const summaryEl = document.getElementById('grammar-level-summary');
+  if (summaryEl) summaryEl.innerHTML = '';
 });
 
 // Verb reference search input

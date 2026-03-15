@@ -365,6 +365,7 @@
   <!-- ════════ GRAMMAR HOME ════════ -->
   <div class="screen" id="screen-grammar">
     <h2 class="mb-2">Grammar</h2>
+    <input type="text" id="grammar-search" class="search-input mb-1" placeholder="Search grammar lessons...">
     <div id="grammar-level-summary"></div>
     <div id="grammar-levels"></div>
   </div>
@@ -1021,6 +1022,7 @@
         <div class="pill-group">
           <button class="pill active" data-action="set-theme" data-val="dark">Dark</button>
           <button class="pill" data-action="set-theme" data-val="light">Light</button>
+          <button class="pill" data-action="set-theme" data-val="auto">Auto</button>
         </div>
       </div>
       <div class="setting-row">
@@ -1089,6 +1091,25 @@
           <button class="pill" data-action="set-subjunctiveForm" data-val="se">-se only</button>
           <button class="pill" data-action="set-subjunctiveForm" data-val="both">Both</button>
         </div>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Daily XP Goal</div>
+          <div class="setting-desc">Target XP to earn each day</div>
+        </div>
+        <div class="pill-group">
+          <button class="pill" data-action="set-dailyGoal" data-val="50">50</button>
+          <button class="pill" data-action="set-dailyGoal" data-val="100">100</button>
+          <button class="pill active" data-action="set-dailyGoal" data-val="200">200</button>
+          <button class="pill" data-action="set-dailyGoal" data-val="500">500</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Streak Freeze</div>
+          <div class="setting-desc">Protects your streak when you miss a day</div>
+        </div>
+        <span id="freeze-token-count" class="text-muted">0 available</span>
       </div>
       <div class="setting-row">
         <div>

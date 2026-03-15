@@ -60,10 +60,14 @@ function renderVocabHome() {
   const grid = document.getElementById('vocab-categories');
   grid.innerHTML = Object.entries(VOCAB_CATEGORIES).map(([key, cat]) => {
     const count = VOCAB_CATEGORY_COUNTS[key] || 0;
+    const catWords = VOCAB_BY_CATEGORY[key] || [];
+    const masteredCount = catWords.filter(w => progress.vocabMastery[w.word]).length;
+    const pct = count > 0 ? Math.round(masteredCount / count * 100) : 0;
     return `<div class="card" data-action="open-vocab-cat" data-cat="${key}">
       <div class="card-icon">${cat.icon || ''}</div>
       <div class="card-title text-sm">${esc(cat.title)}</div>
-      <div class="card-subtitle text-xs">${count} ${t('words')}</div>
+      <div class="card-subtitle text-xs">${masteredCount}/${count} ${t('words')}</div>
+      ${masteredCount > 0 ? `<div class="quiz-progress-bar" style="height:3px;margin-top:4px"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>` : ''}
     </div>`;
   }).join('');
 }

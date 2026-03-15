@@ -94,8 +94,15 @@ function renderToday() {
   const verbsLearned = Object.keys(progress.verbMastery).length;
   const vocabLearned = Object.keys(progress.vocabMastery).length;
   const grammarDone = Object.values(progress.grammarDone).filter(Boolean).length;
+  const todayXP = progress.practiceLog[todayStr()] || 0;
+  const dailyGoal = progress.settings?.dailyGoal || 200;
+  const goalPct = Math.min(100, Math.round(todayXP / dailyGoal * 100));
   document.getElementById('today-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${progress.xp}</div><div class="stat-desc">${t('totalXP')}</div></div>
+    <div class="stat-card">
+      <div class="stat-num">${todayXP}<span class="text-muted text-sm">/${dailyGoal}</span></div>
+      <div class="stat-desc">${t('todayXP') || 'Today\'s XP'}</div>
+      <div class="quiz-progress-bar" style="height:4px;margin-top:4px"><div class="quiz-progress-fill" style="width:${goalPct}%;${goalPct >= 100 ? 'background:var(--green)' : ''}"></div></div>
+    </div>
     <div class="stat-card"><div class="stat-num">${progress.streak}</div><div class="stat-desc">${t('dayStreak')}</div></div>
     <div class="stat-card"><div class="stat-num">${verbsLearned}</div><div class="stat-desc">${tBtn('verbs')}</div></div>
     <div class="stat-card"><div class="stat-num">${vocabLearned}</div><div class="stat-desc">${t('words')}</div></div>
@@ -1093,13 +1100,19 @@ function renderPhrasesHome() {
     return;
   }
   const grid = document.getElementById('phrases-situations');
-  grid.innerHTML = PHRASES_SITUATIONS.map(s => `
-    <div class="card" data-action="open-phrase-sit" data-sit="${esc(s.slug)}">
+  const phrases = typeof PHRASES_DATA !== 'undefined' ? PHRASES_DATA : [];
+  grid.innerHTML = PHRASES_SITUATIONS.map(s => {
+    const sitPhrases = phrases.filter(p => p.situation === s.slug);
+    const masteredCount = sitPhrases.filter(p => progress.phraseMastery[p.id]).length;
+    const total = sitPhrases.length;
+    const pct = total > 0 ? Math.round(masteredCount / total * 100) : 0;
+    return `<div class="card" data-action="open-phrase-sit" data-sit="${esc(s.slug)}">
       <div class="card-icon">${s.icon || ''}</div>
       <div class="card-title text-sm">${esc(s.title)}</div>
-      <div class="card-subtitle text-xs">${esc(s.desc || '')}</div>
-    </div>
-  `).join('');
+      <div class="card-subtitle text-xs">${total > 0 ? `${masteredCount}/${total} learned` : esc(s.desc || '')}</div>
+      ${masteredCount > 0 ? `<div class="quiz-progress-bar" style="height:3px;margin-top:4px"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 function openPhraseSituation(slug) {

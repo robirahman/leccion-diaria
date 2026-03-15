@@ -348,6 +348,7 @@ function newProgress() {
       palette: 'alhambra',
       accents: 'warn', ttsRate: 1,
       hideFutureSubjunctive: true, subjunctiveForm: 'ra',
+      dailyGoal: 200,
     },
   };
 }
@@ -1118,9 +1119,17 @@ document.addEventListener('keydown', e => {
 function applySettings() {
   if (!progress) return;
   const s = progress.settings;
-  document.documentElement.setAttribute('data-theme', s.theme || 'dark');
+  // Resolve 'auto' theme to actual light/dark based on system preference
+  let resolvedTheme = s.theme || 'dark';
+  if (resolvedTheme === 'auto') {
+    resolvedTheme = window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', resolvedTheme);
   document.documentElement.setAttribute('data-palette', s.palette || 'alhambra');
   document.documentElement.setAttribute('data-region', s.region || 'latam');
+  // Update streak freeze display
+  const freezeEl = document.getElementById('freeze-token-count');
+  if (freezeEl) freezeEl.textContent = (progress.freezeTokens || 0) + ' available';
   // Highlight active pills
   document.querySelectorAll('[data-action^="set-"]').forEach(pill => {
     const act = pill.dataset.action;
@@ -1134,6 +1143,7 @@ function applySettings() {
     else if (act === 'set-tts-rate') key = 'ttsRate';
     else if (act === 'set-hideFutureSubjunctive') key = 'hideFutureSubjunctive';
     else if (act === 'set-subjunctiveForm') key = 'subjunctiveForm';
+    else if (act === 'set-dailyGoal') key = 'dailyGoal';
     if (key) {
       const current = String(s[key] ?? '');
       const isActive = val === current;
@@ -1142,6 +1152,13 @@ function applySettings() {
     }
   });
   applyDisplayMode();
+}
+
+// Watch for system color scheme changes (applies when theme = 'auto')
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (progress?.settings?.theme === 'auto') applySettings();
+  });
 }
 
 // Translate all static HTML elements based on display mode
@@ -1400,6 +1417,11 @@ function checkStreak() {
   }
   progress.lastDate = today;
   if (progress.streak > progress.longestStreak) progress.longestStreak = progress.streak;
+  // Award a freeze token every 7-day streak milestone
+  if (progress.streak > 0 && progress.streak % 7 === 0) {
+    progress.freezeTokens = (progress.freezeTokens || 0) + 1;
+    showToast('🧊', `Streak freeze earned! You now have ${progress.freezeTokens} token${progress.freezeTokens > 1 ? 's' : ''}.`);
+  }
 }
 
 function updateNavStats() {
