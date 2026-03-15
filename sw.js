@@ -1,23 +1,30 @@
-const CACHE_NAME = 'leccion-diaria-cb3edca2';
-const ASSETS = [
-  './', './index.html', './styles.css', './app-core.js', './app-learn.js',
-  './app-practice.js', './app-init.js', './fsrs.js',
-  './conjugation.js', './verbs.js', './vocab.js', './grammar.js',
-  './phrases.js', './conversations.js', './recipes.js', './music.js',
-  './movies.js', './poetry.js', './sports.js', './proverbs.js',
-  './folktales.js', './festivals.js', './history.js', './travel.js',
-  './trivia.js', './idioms.js', './placement_questions.js', './quiz-engine.js',
+const CACHE_NAME = 'leccion-diaria-v16';
+
+// App shell — precached on install (~500KB)
+const APP_SHELL = [
+  './', './index.html', './styles.css', './manifest.json',
+  './fsrs.js', './conjugation.js', './quiz-engine.js',
+  './app-core.js', './app-learn.js', './app-practice.js', './app-init.js',
+  './vocab-categories.js',
+];
+
+// Data files — cached on first use (stale-while-revalidate)
+const DATA_FILES = new Set([
+  './verbs.js', './vocab-data.json', './grammar.js',
+  './phrases.js', './conversations.js', './placement_questions.js',
+  './recipes.js', './music.js', './movies.js', './poetry.js',
+  './sports.js', './proverbs.js', './folktales.js', './festivals.js',
+  './history.js', './travel.js', './trivia.js', './idioms.js',
   './minimal_pairs.js', './sentence_construction.js', './cloze_passages.js',
   './translation_drills.js', './dictation.js', './jokes.js',
   './reading.js', './reading_sat.js', './themed_vocab.js',
-  './phonetic_pairs.js', './homophones.js', './connectors.js',
-  './freq_vocab.js', './curriculum_tracks.js',
-  './manifest.json',
-];
+  './curriculum_tracks.js', './phonetic_pairs.js', './homophones.js',
+  './connectors.js',
+]);
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c =>
-    Promise.allSettled(ASSETS.map(url =>
+    Promise.allSettled(APP_SHELL.map(url =>
       c.add(url).catch(err => console.warn('SW: failed to cache', url, err))
     ))
   ));

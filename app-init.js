@@ -556,7 +556,6 @@ function insertCharAtCursor(input, char) {
 
 // ── Lazy-load secondary content modules after init ──
 const LAZY_SCRIPTS = [
-  'vocab.js',  // loaded early among lazy scripts — 28K entries deferred from initial load
   'conversations.js', 'recipes.js', 'music.js', 'movies.js', 'poetry.js',
   'sports.js', 'proverbs.js', 'folktales.js', 'festivals.js', 'history.js',
   'travel.js', 'trivia.js', 'idioms.js', 'minimal_pairs.js',
@@ -569,12 +568,68 @@ let _lazyLoaded = false;
 function lazyLoadSecondaryScripts() {
   if (_lazyLoaded) return;
   _lazyLoaded = true;
+  // Load vocab data via fetch + JSON.parse (2-3x faster than JS eval for large data)
+  loadVocabData();
   LAZY_SCRIPTS.forEach(src => {
     const s = document.createElement('script');
     s.src = src;
     s.async = true;
     document.body.appendChild(s);
   });
+}
+
+// Load vocab from JSON, caching in IndexedDB for instant subsequent loads
+function loadVocabData() {
+  if (typeof VOCAB_DATA !== 'undefined') return; // already loaded
+  // Try IndexedDB cache first
+  _idbGet('vocab-data').then(cached => {
+    if (cached) {
+      window.VOCAB_DATA = cached;
+      if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+      return;
+    }
+    // Fetch JSON, parse, and cache
+    return fetch('vocab-data.json').then(r => r.json()).then(data => {
+      window.VOCAB_DATA = data;
+      if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+      _idbPut('vocab-data', data);
+    });
+  }).catch(() => {
+    // Fallback: fetch without IndexedDB
+    fetch('vocab-data.json').then(r => r.json()).then(data => {
+      window.VOCAB_DATA = data;
+      if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
+    }).catch(err => console.warn('Failed to load vocab data:', err));
+  });
+}
+
+// ── Minimal IndexedDB helpers for vocab caching ──
+const _IDB_NAME = 'leccion-diaria';
+const _IDB_STORE = 'cache';
+const _IDB_VERSION = 1;
+function _idbOpen() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(_IDB_NAME, _IDB_VERSION);
+    req.onupgradeneeded = () => { req.result.createObjectStore(_IDB_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+function _idbGet(key) {
+  return _idbOpen().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction(_IDB_STORE, 'readonly');
+    const req = tx.objectStore(_IDB_STORE).get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  }));
+}
+function _idbPut(key, value) {
+  return _idbOpen().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction(_IDB_STORE, 'readwrite');
+    const req = tx.objectStore(_IDB_STORE).put(value, key);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  }));
 }
 
 function init() {
