@@ -1,6 +1,6 @@
 # Leccion Diaria — Architecture & Developer Guide
 
-A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, adaptive testing, and gamification. Built with vanilla HTML/CSS/JS — no frameworks, no build tools, no backend.
+A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, adaptive testing, and gamification. Built with vanilla HTML/CSS/JS — no frameworks, no backend. Uses esbuild for production minification and cache-busting.
 
 ---
 
@@ -17,15 +17,23 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `placement.js` | IRT-adaptive placement test (Rasch model, per-domain scoring, Newton-Raphson MLE) |
 | `app-practice.js` | Export/import, admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
 | `practice-reference.js` | Verb conjugation reference, conjugation rules/endings, pronunciation guide, reading comprehension, themed vocabulary, curriculum tracks |
-| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), HTML helpers |
+| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), haptic feedback, HTML helpers |
 | `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters) |
+| `vocab-search-worker.js` | Web Worker for non-blocking vocab search with prefix index |
 | `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout |
 | `sw.js` | Service worker: app shell precache + stale-while-revalidate for data |
 | `manifest.json` | PWA metadata (maskable icons) |
+| **Build & Test** | |
+| `build.js` | esbuild-based build: minification, content-hash filenames, dist/ output |
+| `package.json` | Node.js project config (esbuild dev dependency) |
+| `tests/run.js` | Minimal zero-dependency test runner |
+| `tests/test_*.js` | Unit tests for conjugation, FSRS, core utils, and vocab data validation |
 | **Data files** | |
 | `verbs.js` | 252 verbs with type, group, stem change, level, frequency |
-| `vocab-data.json` | ~28K words as JSON (loaded async via fetch, cached in IndexedDB) |
+| `vocab-data.json` | ~28K words as JSON (monolithic fallback) |
+| `vocab-a1a2.json` | A1+A2 vocab (~2K words, 494KB — loaded first for fast startup) |
+| `vocab-b1.json` `vocab-b2.json` `vocab-c1.json` `vocab-c2.json` | Remaining vocab levels (loaded progressively in background) |
 | `vocab-categories.js` | 55+ vocabulary category definitions with titles and icons |
 | `grammar.js` | 67 grammar lessons (A1–C2) with HTML content and quiz questions |
 | `phrases.js` | 260+ phrases across 21 situations with formality and reply |
@@ -39,6 +47,7 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `connectors.js` `themed_vocab.js` `jokes.js` | Additional content modules |
 | `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | Cultural content modules with descriptions, vocab, and quizzes |
 | **Utilities** | |
+| **Utilities** | |
 | `generate_vocab.py` | Generates frequency vocabulary from the `wordfreq` Python library |
 | `serve.sh` | Local development server (Python 3) |
 
@@ -51,12 +60,15 @@ User (browser)
   │
   ▼
 app-init.js ─── Event delegation (single click listener on document)
-  │              Vocab/grammar/verb search handlers
-  │              Lazy-loading: secondary scripts + vocab JSON via IndexedDB
+  │              Vocab/grammar/verb search handlers (Worker-backed)
+  │              Progressive vocab loading (A1-A2 first, then B1→C2)
+  │              Lazy-loading: secondary scripts via requestIdleCallback
   │
   ├── app-core.js ──── Navigation: showScreen(id) / goBack() / switchTab(tab)
   │                     Progress state, FSRS helpers, recall/mastery computation
   │                     Settings (theme auto-detect, daily goals, streak freeze)
+  │                     Bookmarks system (vocab, grammar, phrases)
+  │                     Onboarding carousel for new users
   │                     Persistence (localStorage per profile)
   │                     TTS with regional voice selection (es-MX / es-ES)
   │
@@ -76,7 +88,7 @@ app-init.js ─── Event delegation (single click listener on document)
   │                      Per-domain scoring (grammar + vocab)
   │                      Newton-Raphson MLE, question selection
   │
-  ├── app-practice.js ── Stats dashboard, recall health
+  ├── app-practice.js ── Stats dashboard, recall health, SRS card distribution
   │                       Practice exercises: minimal pairs, phonetic pairs,
   │                         homophones, connectors, sentence build, cloze,
   │                         translation, dictation
@@ -90,9 +102,14 @@ app-init.js ─── Event delegation (single click listener on document)
   │                             Themed vocabulary sets
   │                             CEFR curriculum overview & tracks
   │
-  └── quiz-engine.js ── createQuizFlow: managed MC quiz lifecycle
-                         processMCSubmit: shared submit/disable/mark helper
-                         HTML helpers (accent bar, progress bar)
+  ├── quiz-engine.js ── createQuizFlow: managed MC quiz lifecycle (auto-submit option)
+  │                      processMCSubmit: shared submit/disable/mark helper
+  │                      Haptic feedback (navigator.vibrate) on answers
+  │                      HTML helpers (accent bar, progress bar)
+  │
+  └── vocab-search-worker.js ── Web Worker for vocab search
+                                 Builds prefix index (up to 4 chars) at init
+                                 Updated progressively as vocab chunks load
 ```
 
 ### State Management
@@ -117,18 +134,29 @@ A single delegated click handler on `document` routes all `data-action` attribut
 
 ## Data Loading
 
-### Vocabulary (async JSON)
+### Vocabulary (progressive JSON loading)
 
-Vocabulary data (~28K entries, ~7MB) is loaded asynchronously to avoid blocking initial paint:
+Vocabulary data (~28K entries) is split by CEFR level and loaded progressively:
 
 1. `vocab-categories.js` (5KB) loads eagerly via `<script defer>` — provides `VOCAB_CATEGORIES` for rendering category cards
-2. `vocab-data.json` (7MB) loads via `fetch()` + `JSON.parse()` after init (2–3x faster than JS eval)
-3. Parsed data is cached in **IndexedDB** (`leccion-diaria` database, `cache` store) for instant loads on subsequent visits
-4. All code guards access with `typeof VOCAB_DATA === 'undefined'` checks
+2. `vocab-a1a2.json` (494KB, ~2K entries) loads first via `fetch()` — enough for immediate A1-A2 use
+3. `vocab-b1.json`, `vocab-b2.json`, `vocab-c1.json`, `vocab-c2.json` load sequentially in the background
+4. After each chunk, `buildVocabIndexes()` runs and the vocab search Worker is updated
+5. The full dataset is cached in **IndexedDB** (`leccion-diaria` database, `cache` store, key `vocab-data-v2`) for instant loads on subsequent visits
+6. Fallback: if split files aren't found, loads the monolithic `vocab-data.json` (7MB)
+7. All code guards access with `typeof VOCAB_DATA === 'undefined'` checks
+
+### Vocab Search Worker
+
+`vocab-search-worker.js` runs in a Web Worker to avoid blocking the main thread when searching 28K entries:
+- Builds a prefix index (prefixes up to 4 characters) on init
+- Receives `search` messages with a query and returns ranked results
+- Updated via `update` messages as vocab chunks load progressively
+- Falls back to main-thread search if Workers aren't supported
 
 ### Other Data Files
 
-Secondary content modules (conversations, culture, exercises) are lazy-loaded via `requestIdleCallback` after app initialization. Each is appended as an async `<script>` tag.
+Secondary content modules (conversations, culture, exercises) are lazy-loaded via `requestIdleCallback` after app initialization. Each is appended as an async `<script>` tag. In production builds, script filenames are resolved via `window.__fileHash` (a hash map injected by `build.js`).
 
 ### Vocab Indexes
 
@@ -224,6 +252,7 @@ Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
   numberMastery: {},
   cultureDone: {},
   practiceLog: {},         // 'YYYY-MM-DD' → number (XP earned that day)
+  bookmarks: [],           // ['vocab:gato', 'grammar:gram-1', 'phrase:greet-1']
 
   placementLevel: 'B1',         // overall (backward compat)
   placementLevels: {             // per-domain
@@ -253,13 +282,21 @@ Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
 
 Managed MC quiz lifecycle used by culture and dialogue quizzes. Handles: start → render → selectOption → submit → next → onComplete.
 
-Config: `containerId`, `nextBtnId`, `progressId`, `getCorrectIdx`/`getCorrectValue`, `onCorrect`/`onIncorrect`, `onComplete`, `renderQuestion`, `getExplanation`.
+Config: `containerId`, `nextBtnId`, `progressId`, `autoSubmit` (boolean), `getCorrectIdx`/`getCorrectValue`, `onCorrect`/`onIncorrect`, `onComplete`, `renderQuestion`, `getExplanation`.
+
+When `autoSubmit: true`, tapping an option triggers submit immediately (skipping the Submit button step).
 
 ### `processMCSubmit(opts)`
 
 Shared helper used by 6+ quiz types (minimal pairs, phonetic pairs, homophones, connectors, reading, phrases). Handles the common submit pattern: disable buttons, mark correct/incorrect CSS classes, render feedback, show next button, run FSRS review.
 
 Config: `optionsSel`, `isCorrectBtn(btn)`, `feedbackId`, `nextBtnId`, `feedbackFn(isCorrect)`, `fsrs: { store, masteryStore, key }`.
+
+### Auto-Submit & Haptic Feedback
+
+Most MC quiz types now auto-submit when the user taps an option (via `selectMCOption(selector, idx, autoSubmitFn)`). This reduces the interaction from 3 taps (select + submit + next) to 2 (select + next). The placement test is excluded from auto-submit since it's high-stakes.
+
+Both `createQuizFlow.submit()` and `processMCSubmit()` call `_haptic(correct)` which triggers `navigator.vibrate()` on supported devices: a short 30ms pulse for correct answers, a double pulse (40-30-40ms) for incorrect.
 
 ---
 
@@ -379,12 +416,14 @@ Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must 
 
 ## Service Worker (`sw.js`)
 
-Cache name: `leccion-diaria-v17`. Two-tier caching strategy:
+Two-tier caching strategy:
 
-- **App shell** (~500KB) — precached on install: HTML, CSS, core JS modules, manifest
-- **Data files** (~10MB+) — cached on first use via stale-while-revalidate: vocab JSON, grammar, phrases, all content modules
+- **App shell** (~500KB) — precached on install: HTML, CSS, core JS modules, manifest, vocab search worker
+- **Data files** (~10MB+) — cached on first use via stale-while-revalidate: split vocab JSON files, grammar, phrases, all content modules
 
-On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache. Bump the cache version when deploying changes.
+On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache.
+
+In development, the cache name is manually versioned (e.g., `leccion-diaria-v18`). In production builds, `build.js` generates a content-based hash (e.g., `leccion-diaria-ef2b709a`) and rewrites the SW with hashed filenames.
 
 ---
 
@@ -400,12 +439,57 @@ Configurable in Settings (50/100/200/500 XP). The Today screen shows a progress 
 
 ---
 
+## Onboarding
+
+New users see a 4-step onboarding carousel after creating their first profile (before the placement test offer). Steps cover: welcome, spaced repetition explanation, daily goals/streaks, and tab navigation. The carousel is implemented in `app-core.js` (`showOnboarding()`, `onboardingNext()`, `onboardingSkip()`).
+
+---
+
+## Bookmarks
+
+Users can bookmark vocab words, grammar lessons, and phrases for quick review. Bookmarks are stored as `type:id` strings in `progress.bookmarks[]`.
+
+- `toggleBookmark(type, id)` — adds/removes a bookmark
+- `isBookmarked(type, id)` — check if bookmarked
+- `bookmarkBtnHTML(type, id)` — renders a star toggle button
+- `renderBookmarks()` — renders the Bookmarks section on the Today screen (up to 20 items)
+
+Bookmark types: `vocab` (keyed by word), `grammar` (keyed by lesson ID), `phrase` (keyed by phrase text).
+
+---
+
+## Build System
+
+### Development
+
+No build step needed — serve source files directly via `./serve.sh` or any HTTP server. Scripts load as global `<script defer>` tags.
+
+### Production Build
+
+`npm run build` (or `node build.js`) produces an optimized `dist/` directory:
+
+1. **Minification** — All JS (via esbuild) and CSS are minified (~264KB savings, ~20% CSS reduction)
+2. **Cache-busting** — Each file gets a content hash in its filename (e.g., `app-core.d50c0d2d.js`)
+3. **HTML rewriting** — `index.html` is updated with hashed filenames and whitespace-collapsed
+4. **SW generation** — A new `sw.js` is generated with hashed filenames and a content-based cache version
+5. **Lazy-script resolution** — A `window.__fileHash` map is injected so `app-init.js` can resolve lazy-loaded scripts to their hashed names
+6. **Static copies** — Split vocab JSON files, manifest, and icons are copied as-is
+
+### Testing
+
+`npm test` (or `node tests/run.js`) runs 49 unit tests with zero dependencies:
+- **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes, reflexives, compounds
+- **FSRS**: stability, difficulty, recall probability, mastery level mapping
+- **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping
+- **Vocab data**: field validation, CEFR levels, category presence, split file integrity
+
 ## Deployment
 
 GitHub Pages deployment via `.github/workflows/deploy.yml`. On push to `main`, the workflow:
-1. Copies only web assets (HTML, CSS, JS, JSON, icons) to a `dist/` directory
-2. Excludes Python scripts, build artifacts, and non-web files
-3. Deploys `dist/` to GitHub Pages
+1. Installs Node.js dependencies (`npm install`)
+2. Runs the test suite (`npm test`)
+3. Builds to `dist/` (`npm run build`) — minified, cache-busted output
+4. Deploys `dist/` to GitHub Pages
 
 ---
 
@@ -415,7 +499,7 @@ GitHub Pages deployment via `.github/workflows/deploy.yml`. On push to `main`, t
 Add to `GRAMMAR_DATA` in `grammar.js`. Include `id`, `title`, `titleEn`, `level`, `order`, `content` (HTML), and `quiz` (array of 5 questions with `type`, `question`, `answer`, `options`, `explanation`).
 
 ### New vocabulary
-Add entries to `vocab-data.json`. If creating a new category, also add it to `VOCAB_CATEGORIES` in `vocab-categories.js`. Re-generate `vocab-data.json` by running: `node -e "..."` or updating the source and re-exporting.
+Add entries to `vocab-data.json`. If creating a new category, also add it to `VOCAB_CATEGORIES` in `vocab-categories.js`. After editing, re-split the vocab data by running `node -e` to regenerate `vocab-a1a2.json`, `vocab-b1.json`, `vocab-b2.json`, `vocab-c1.json`, and `vocab-c2.json` (see `build.js` or the split script used during development).
 
 ### New verbs
 Add to `VERB_DATA` in `verbs.js`. The conjugation engine handles regular verbs automatically. For irregular verbs, add overrides to `FULL_IRREGULARS` or `IRREGULAR_FUTURE_STEMS` in `conjugation.js`.
