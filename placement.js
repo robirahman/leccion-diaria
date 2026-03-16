@@ -485,11 +485,11 @@ function irtProb(theta, difficulty) {
 
 // Convert theta to CEFR level
 function thetaToLevel(theta) {
-  if (theta < 1.8) return 'A1';
-  if (theta < 2.7) return 'A2';
-  if (theta < 3.5) return 'B1';
-  if (theta < 4.3) return 'B2';
-  if (theta < 5.2) return 'C1';
+  if (theta < 1.85) return 'A1';
+  if (theta < 2.725) return 'A2';
+  if (theta < 3.55) return 'B1';
+  if (theta < 4.375) return 'B2';
+  if (theta < 5.35) return 'C1';
   return 'C2';
 }
 

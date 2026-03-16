@@ -314,15 +314,11 @@ function renderVocabQuizQuestion() {
   const container = document.getElementById('vocq-container');
   document.getElementById('vocq-next').style.display = 'none';
 
-  container.innerHTML = `
-    <div class="quiz-question">${t('whatDoesMean')} <strong>${esc(item.word.word)}</strong> ${t('mean')}</div>
-    <div class="quiz-options">
-      ${item.options.map((opt, i) =>
-        `<button class="quiz-option" data-action="answer-vocab-quiz" data-idx="${i}">${esc(opt)}</button>`
-      ).join('')}
-    </div>
-    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">${tBtn('submit')}</button>
-  `;
+  container.innerHTML = renderMCQuestionHTML({
+    question: `${t('whatDoesMean')} <strong>${esc(item.word.word)}</strong> ${t('mean')}`,
+    options: item.options,
+    answerAction: 'answer-vocab-quiz', submitAction: 'submit-vocab-quiz-mc'
+  });
   speak(item.word.word);
 }
 
@@ -332,22 +328,12 @@ function renderVocabQuizQuestion_Produce() {
   const container = document.getElementById('vocq-container');
   document.getElementById('vocq-next').style.display = 'none';
 
-  container.innerHTML = `
-    <div class="quiz-question">${t('translateToSpanish')} <strong>"${esc(item.word.english)}"</strong> ${t('inSpanish')}</div>
-    <div class="fib-container mt-1">
-      <input type="text" class="quiz-input" id="vocq-produce-input" placeholder="${t('typeSpanishWord')}" autocomplete="off" autocapitalize="none">
-      <button class="btn btn-primary" data-action="submit-vocab-quiz-produce">${tBtn('check')}</button>
-    </div>
-    <div class="accent-bar">
-      <button class="accent-btn" data-action="insert-accent-vocq" data-char="á">á</button>
-      <button class="accent-btn" data-action="insert-accent-vocq" data-char="é">é</button>
-      <button class="accent-btn" data-action="insert-accent-vocq" data-char="í">í</button>
-      <button class="accent-btn" data-action="insert-accent-vocq" data-char="ó">ó</button>
-      <button class="accent-btn" data-action="insert-accent-vocq" data-char="ú">ú</button>
-      <button class="accent-btn" data-action="insert-accent-vocq" data-char="ñ">ñ</button>
-    </div>
-    <div class="quiz-feedback" id="vocq-produce-feedback" style="display:none"></div>
-  `;
+  container.innerHTML = renderFIBQuestionHTML({
+    question: `${t('translateToSpanish')} <strong>"${esc(item.word.english)}"</strong> ${t('inSpanish')}`,
+    inputId: 'vocq-produce-input', inputPlaceholder: t('typeSpanishWord'),
+    submitAction: 'submit-vocab-quiz-produce', accentAction: 'insert-accent-vocq',
+    feedbackId: 'vocq-produce-feedback'
+  });
   document.getElementById('vocq-produce-input').focus();
 }
 
@@ -466,13 +452,10 @@ function renderVocabQuizQuestion_Gender() {
   const container = document.getElementById('vocq-container');
   document.getElementById('vocq-next').style.display = 'none';
 
-  container.innerHTML = `
-    <div class="quiz-question">${t('elOrLa')} <strong>_____ ${esc(item.word.word)}</strong></div>
-    <div class="quiz-options">
-      <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="0">${t('elMasc')}</button>
-      <button class="quiz-option" data-action="answer-vocab-quiz" data-idx="1">${t('laFem')}</button>
-    </div>
-    <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-vocab-quiz-mc" style="display:none">${tBtn('submit')}</button>
-  `;
+  container.innerHTML = renderMCQuestionHTML({
+    question: `${t('elOrLa')} <strong>_____ ${esc(item.word.word)}</strong>`,
+    options: [t('elMasc'), t('laFem')],
+    answerAction: 'answer-vocab-quiz', submitAction: 'submit-vocab-quiz-mc'
+  });
 }
 

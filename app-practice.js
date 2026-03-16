@@ -632,17 +632,17 @@ function renderClozeTopics() {
   const container = document.getElementById('cloze-topic-cards');
   if (!container) return;
   const topicLabels = {
-    ser_estar: 'Ser vs Estar', preterite_imperfect: 'Preterite vs Imperfect',
-    subjunctive: 'Subjunctive', pronouns: 'Pronouns',
-    prepositions: 'Prepositions', mixed: 'Mixed Grammar',
+    ser_estar: t('topicSerEstar'), preterite_imperfect: t('topicPretImperfect'),
+    subjunctive: t('topicSubjunctive'), pronouns: t('topicPronouns'),
+    prepositions: t('topicPrepositions'), mixed: t('topicMixedGrammar'),
   };
-  container.innerHTML = topics.map(t => `
-    <div class="card" data-action="start-cloze" data-topic="${t}">
-      <div class="card-title">${esc(topicLabels[t] || t)}</div>
+  container.innerHTML = topics.map(tp => `
+    <div class="card" data-action="start-cloze" data-topic="${tp}">
+      <div class="card-title">${esc(topicLabels[tp] || tp)}</div>
     </div>
   `).join('') + `
     <div class="card" data-action="start-cloze" data-topic="all">
-      <div class="card-title">All Topics</div>
+      <div class="card-title">${t('topicAllTopics')}</div>
     </div>
   `;
 }
@@ -871,8 +871,11 @@ function dictPlaySlow() {
   const rate = (progress?.settings?.ttsRate || 1) * 0.55;
   const orig = progress?.settings?.ttsRate;
   if (progress?.settings) progress.settings.ttsRate = rate;
-  speak(item.sentence);
-  if (progress?.settings) progress.settings.ttsRate = orig;
+  try {
+    speak(item.sentence);
+  } finally {
+    if (progress?.settings) progress.settings.ttsRate = orig;
+  }
 }
 
 function checkDictation() {
@@ -1344,6 +1347,19 @@ function renderRecallHealth() {
 // ════════════════════════════════════════
 
 let reviewQueue = [], reviewIdx = 0, reviewScore = 0, reviewSelected = -1, _currentRevQuiz = null;
+
+function resetPracticeState() {
+  mpQueue = []; mpIdx = 0; mpScore = 0; mpAnswered = false;
+  ppQueue = []; ppIdx = 0; ppScore = 0; ppAnswered = false;
+  homQueue = []; homIdx = 0; homScore = 0; homAnswered = false;
+  connQueue = []; connIdx = 0; connScore = 0; connAnswered = false;
+  sbQueue = []; sbIdx = 0; sbScore = 0;
+  clozeQueue = []; clozeIdx = 0; clozeScore = 0;
+  trQueue = []; trIdx = 0; trScore = 0;
+  dictQueue = []; dictIdx = 0; dictScore = 0;
+  reviewQueue = []; reviewIdx = 0; reviewScore = 0; reviewSelected = -1; _currentRevQuiz = null;
+  _activeQuizScreen = null;
+}
 
 function buildReviewQueue() {
   const queue = [];

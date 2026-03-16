@@ -173,6 +173,15 @@ const UI_STRINGS = {
   categoryProgress: ['Category Progress', 'Progreso por categoría'],
   practiceCalendar: ['Practice Calendar', 'Calendario de práctica'],
 
+  // Cloze topic labels
+  topicSerEstar: ['Ser vs Estar', 'Ser vs Estar'],
+  topicPretImperfect: ['Preterite vs Imperfect', 'Pretérito vs Imperfecto'],
+  topicSubjunctive: ['Subjunctive', 'Subjuntivo'],
+  topicPronouns: ['Pronouns', 'Pronombres'],
+  topicPrepositions: ['Prepositions', 'Preposiciones'],
+  topicMixedGrammar: ['Mixed Grammar', 'Gramática mixta'],
+  topicAllTopics: ['All Topics', 'Todos los temas'],
+
   // Search
   searchVerbs: ['Search verbs...', 'Buscar verbos...'],
   searchVocab: ['Search vocabulary...', 'Buscar vocabulario...'],
@@ -1040,6 +1049,7 @@ function renderProfiles() {
 function selectProfile(name) {
   currentProfile = name;
   progress = loadProgress(name);
+  if (typeof resetPracticeState === 'function') resetPracticeState();
   applySettings();
   updateNavStats();
   document.getElementById('tab-bar').style.display = 'flex';
@@ -1721,6 +1731,9 @@ function speak(text) {
 //  BOOKMARKS
 // ════════════════════════════════════════
 
+function bookmarkType(bk) { return bk.split(':')[0]; }
+function bookmarkId(bk) { return bk.slice(bk.indexOf(':') + 1); }
+
 function toggleBookmark(type, id) {
   if (!progress) return;
   if (!progress.bookmarks) progress.bookmarks = [];
@@ -1757,7 +1770,7 @@ function renderBookmarks() {
 
   let html = '';
   for (const bk of progress.bookmarks.slice(0, 20)) {
-    const [type, id] = [bk.split(':')[0], bk.slice(bk.indexOf(':') + 1)];
+    const [type, id] = [bookmarkType(bk), bookmarkId(bk)];
     if (type === 'vocab') {
       const word = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.find(w => w.word === id) : null;
       if (word) {

@@ -741,26 +741,30 @@ document.getElementById('vocab-search')?.addEventListener('input', e => {
   }, 150);
 });
 
-// Grammar search input
+// Grammar search input (debounced)
+let grammarSearchTimer = null;
 document.getElementById('grammar-search')?.addEventListener('input', e => {
   if (typeof GRAMMAR_DATA === 'undefined') return;
   const q = e.target.value.toLowerCase();
-  if (!q) { renderGrammarHome(); return; }
-  const results = GRAMMAR_DATA.filter(g =>
-    g.title.toLowerCase().includes(q) || g.titleEn.toLowerCase().includes(q)
-  );
-  const levelsEl = document.getElementById('grammar-levels');
-  if (levelsEl) {
-    levelsEl.innerHTML = results.map(g => `
-      <div class="card" data-action="open-grammar-lesson" data-lesson="${g.id}" style="padding:0.5rem 0.75rem;text-align:left">
-        <span class="badge badge-${g.level}">${g.level}</span>
-        <strong>${esc(g.titleEn)}</strong>
-        <span class="text-muted text-sm"> — ${esc(g.title)}</span>
-      </div>
-    `).join('') || emptyState('🔍', t('noResults'));
-  }
-  const summaryEl = document.getElementById('grammar-level-summary');
-  if (summaryEl) summaryEl.innerHTML = '';
+  if (!q) { clearTimeout(grammarSearchTimer); renderGrammarHome(); return; }
+  clearTimeout(grammarSearchTimer);
+  grammarSearchTimer = setTimeout(() => {
+    const results = GRAMMAR_DATA.filter(g =>
+      g.title.toLowerCase().includes(q) || g.titleEn.toLowerCase().includes(q)
+    );
+    const levelsEl = document.getElementById('grammar-levels');
+    if (levelsEl) {
+      levelsEl.innerHTML = results.map(g => `
+        <div class="card" data-action="open-grammar-lesson" data-lesson="${g.id}" style="padding:0.5rem 0.75rem;text-align:left">
+          <span class="badge badge-${g.level}">${g.level}</span>
+          <strong>${esc(g.titleEn)}</strong>
+          <span class="text-muted text-sm"> — ${esc(g.title)}</span>
+        </div>
+      `).join('') || emptyState('🔍', t('noResults'));
+    }
+    const summaryEl = document.getElementById('grammar-level-summary');
+    if (summaryEl) summaryEl.innerHTML = '';
+  }, 150);
 });
 
 // Verb reference search input
@@ -867,7 +871,7 @@ function _fetchVocabProgressive() {
     });
   }).catch(() => {
     // Fallback: try loading the monolithic file
-    fetch('vocab-data.json').then(r => r.json()).then(data => {
+    fetch(_resolveFile('vocab-data.json')).then(r => r.json()).then(data => {
       window.VOCAB_DATA = data;
       if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
       _updateVocabWorker();

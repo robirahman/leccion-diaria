@@ -634,32 +634,16 @@ function renderVerbQuizQuestion() {
     <span class="text-muted">${tenseLabel(TENSE_META[item.tense]) || item.tense} — ${PERSON_LABELS[PERSONS[item.person]]}</span>`;
 
   if (item.type === 'mc') {
-    container.innerHTML = `
-      <div class="quiz-question">${prompt}</div>
-      <div class="quiz-options">
-        ${item.options.map((opt, i) =>
-          `<button class="quiz-option" data-action="answer-verb-quiz" data-idx="${i}">${esc(opt)}</button>`
-        ).join('')}
-      </div>
-      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-verb-quiz-mc" style="display:none">${tBtn('submit')}</button>
-    `;
+    container.innerHTML = renderMCQuestionHTML({
+      question: prompt, options: item.options,
+      answerAction: 'answer-verb-quiz', submitAction: 'submit-verb-quiz-mc'
+    });
   } else {
-    container.innerHTML = `
-      <div class="quiz-question">${prompt}</div>
-      <div class="quiz-input-row">
-        <input type="text" id="vq-fib-input" placeholder="${t('typeConjugation')}" autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-verb-quiz-fib">${tBtn('check')}</button>
-      </div>
-      <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-vq" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-vq" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-vq" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-vq" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-vq" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-vq" data-char="ñ">ñ</button>
-      </div>
-      <div class="quiz-feedback" id="vq-fib-feedback" style="display:none"></div>
-    `;
+    container.innerHTML = renderFIBQuestionHTML({
+      question: prompt, inputId: 'vq-fib-input', inputPlaceholder: t('typeConjugation'),
+      submitAction: 'submit-verb-quiz-fib', accentAction: 'insert-accent-vq',
+      feedbackId: 'vq-fib-feedback'
+    });
     setTimeout(() => document.getElementById('vq-fib-input')?.focus(), 50);
   }
 }
@@ -934,88 +918,42 @@ function renderGrammarQuizQuestion() {
   document.getElementById('gq-next').style.display = 'none';
 
   if (q.type === 'mc') {
-    container.innerHTML = `
-      <div class="quiz-question">${esc(q.question)}</div>
-      <div class="quiz-options">
-        ${q.options.map((opt, i) =>
-          `<button class="quiz-option" data-action="answer-grammar-quiz" data-idx="${i}">${esc(opt)}</button>`
-        ).join('')}
-      </div>
-      <button class="btn btn-primary btn-block mt-1 mc-submit" data-action="submit-grammar-quiz-mc" style="display:none">${tBtn('submit')}</button>
-    `;
+    container.innerHTML = renderMCQuestionHTML({
+      question: esc(q.question), options: q.options,
+      answerAction: 'answer-grammar-quiz', submitAction: 'submit-grammar-quiz-mc'
+    });
   } else if (q.type === 'fib') {
-    container.innerHTML = `
-      <div class="quiz-question">${esc(q.question)}</div>
-      <div class="quiz-input-row">
-        <input type="text" id="gq-fib-input" placeholder="${t('typeAnswer')}" autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
-      </div>
-      <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ñ">ñ</button>
-      </div>
-      <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
-    `;
+    container.innerHTML = renderFIBQuestionHTML({
+      question: esc(q.question), inputId: 'gq-fib-input', inputPlaceholder: t('typeAnswer'),
+      submitAction: 'submit-grammar-fib', accentAction: 'insert-accent-gq',
+      feedbackId: 'gq-fib-feedback'
+    });
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   } else if (q.type === 'translate') {
-    container.innerHTML = `
-      <div class="quiz-question">${t('translate')} <strong>${esc(q.question)}</strong></div>
-      <div class="quiz-input-row">
-        <input type="text" id="gq-fib-input" placeholder="${t('typeTranslation')}" autocomplete="off" autocapitalize="off">
-        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
-      </div>
-      <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ñ">ñ</button>
-      </div>
-      <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
-    `;
+    container.innerHTML = renderFIBQuestionHTML({
+      question: `${t('translate')} <strong>${esc(q.question)}</strong>`,
+      inputId: 'gq-fib-input', inputPlaceholder: t('typeTranslation'),
+      submitAction: 'submit-grammar-fib', accentAction: 'insert-accent-gq',
+      feedbackId: 'gq-fib-feedback'
+    });
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   } else if (q.type === 'error-correct') {
-    container.innerHTML = `
-      <div class="quiz-question">Find and fix the error:</div>
-      <div class="error-sentence">"${esc(q.sentence)}"</div>
-      <div class="quiz-input-row mt-1">
-        <input type="text" id="gq-fib-input" placeholder="Type the corrected sentence..." autocomplete="off" autocapitalize="none" value="${esc(q.sentence)}">
-        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
-      </div>
-      <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ñ">ñ</button>
-      </div>
-      <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
-    `;
+    container.innerHTML = renderFIBQuestionHTML({
+      question: 'Find and fix the error:',
+      preInputHTML: `<div class="error-sentence">"${esc(q.sentence)}"</div>`,
+      inputId: 'gq-fib-input', inputPlaceholder: 'Type the corrected sentence...',
+      submitAction: 'submit-grammar-fib', accentAction: 'insert-accent-gq',
+      feedbackId: 'gq-fib-feedback', inputValue: q.sentence
+    });
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   } else if (q.type === 'transform') {
-    container.innerHTML = `
-      <div class="quiz-question">${esc(q.question)}</div>
-      <div class="error-sentence">"${esc(q.sentence)}"</div>
-      <div class="quiz-input-row mt-1">
-        <input type="text" id="gq-fib-input" placeholder="Type the transformed sentence..." autocomplete="off" autocapitalize="none">
-        <button class="btn btn-primary" data-action="submit-grammar-fib">${tBtn('check')}</button>
-      </div>
-      <div class="accent-bar">
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="á">á</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="é">é</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="í">í</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ó">ó</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ú">ú</button>
-        <button class="accent-btn" data-action="insert-accent-gq" data-char="ñ">ñ</button>
-      </div>
-      <div class="quiz-feedback" id="gq-fib-feedback" style="display:none"></div>
-    `;
+    container.innerHTML = renderFIBQuestionHTML({
+      question: esc(q.question),
+      preInputHTML: `<div class="error-sentence">"${esc(q.sentence)}"</div>`,
+      inputId: 'gq-fib-input', inputPlaceholder: 'Type the transformed sentence...',
+      submitAction: 'submit-grammar-fib', accentAction: 'insert-accent-gq',
+      feedbackId: 'gq-fib-feedback'
+    });
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 50);
   }
 }

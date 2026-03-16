@@ -158,6 +158,14 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   min-height: 100dvh;
 }
 
+/* ── Z-Index Scale ──
+   Sticky nav / tab bar:  100
+   Dropdowns:             200
+   Modal overlays:        1000
+   Modal content:         1001
+   Toast notifications:   1100
+   ───────────────────── */
+
 /* ── Top Nav Bar ── */
 .navbar {
   position: sticky;
@@ -263,7 +271,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   min-width: 160px;
   padding: 0.25rem 0;
   display: none;
-  z-index: 150;
+  z-index: 200;
 }
 .tab-dropdown.open { display: block; }
 .tab-dropdown .dropdown-item {
@@ -357,7 +365,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 /* ── Flashcard ── */
 .flashcard {
   appearance: none;
-  border: none;
   text-align: left;
   font: inherit;
   width: 100%;
@@ -368,6 +375,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   cursor: pointer;
   user-select: none;
   position: relative;
+  -webkit-perspective: 800px;
   perspective: 800px;
 }
 .flashcard:hover { box-shadow: var(--shadow-lg); }
@@ -382,10 +390,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   text-align: center;
   padding: 2rem;
   position: relative;
-  transition: transform 0.5s ease;
+  transition: -webkit-transform 0.5s ease, transform 0.5s ease;
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
 }
-.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard.flipped .flashcard-inner { -webkit-transform: rotateY(180deg); transform: rotateY(180deg); }
 .flashcard .front, .flashcard .back {
   width: 100%;
   backface-visibility: hidden;
@@ -394,6 +403,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .flashcard .back {
   position: absolute;
   inset: 0;
+  -webkit-transform: rotateY(180deg);
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
@@ -829,7 +839,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 1000;
   background: rgba(0,0,0,0);
   display: flex;
   align-items: center;
@@ -1044,10 +1054,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .empty-state-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.6; }
 .empty-state-text { font-size: 0.95rem; line-height: 1.5; }
 
-/* ── Breadcrumb ── */
-.nav-crumb { font-size: 0.7rem; font-weight: 400; color: var(--text3); display: none; }
-.nav-crumb.visible { display: inline; }
-.nav-crumb::after { content: ' \203A '; color: var(--text3); }
 .nav-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55vw; }
 
 /* ── Conjugation table scroll ── */
@@ -1288,7 +1294,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   top: 60px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 300;
+  z-index: 1100;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -1367,7 +1373,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .loading-overlay {
   position: fixed;
   inset: 0;
-  z-index: 250;
+  z-index: 1000;
   background: rgba(0,0,0,0.4);
   display: flex;
   align-items: center;
@@ -1491,7 +1497,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   position: absolute;
   top: -100%;
   left: 0;
-  z-index: 1000;
+  z-index: 1100;
   padding: 0.5rem 1rem;
   background: var(--accent);
   color: #fff;
@@ -1507,7 +1513,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .session-summary-overlay {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 1000;
   background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
@@ -1637,7 +1643,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   position: absolute;
   top: -100%;
   left: 0;
-  z-index: 10000;
+  z-index: 1100;
   padding: 0.5rem 1rem;
   background: var(--accent);
   color: #fff;
@@ -1778,7 +1784,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 250;
+  z-index: 1100;
   display: flex;
   flex-direction: column;
   align-items: center;

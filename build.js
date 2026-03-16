@@ -40,10 +40,13 @@ const COPY_FILES = [
 
 const COPY_DIRS = ['icons'];
 
+// JSON data files that get content-hashed (no minification)
+const HASH_JSON_FILES = ['vocab-data.json'];
+
 // Files excluded from dist
 const EXCLUDE = new Set([
   'build.js', 'bump-version.js', 'package.json', 'package-lock.json',
-  'vocab_backup.js', 'vocab.js', 'freq_vocab.js', 'vocab-data.json',
+  'vocab_backup.js', 'vocab.js', 'freq_vocab.js',
   'serve.sh',
 ]);
 
@@ -144,6 +147,23 @@ async function build() {
     console.log(`  ${file} → ${hashed} (${(minified.length / 1024).toFixed(1)}KB, -${((saved / raw.length) * 100).toFixed(0)}%)`);
   }
 
+  // Process JSON data files (content-hashed, no minification)
+  for (const file of HASH_JSON_FILES) {
+    const src = path.join(ROOT, file);
+    if (!fs.existsSync(src)) {
+      console.warn(`  SKIP (not found): ${file}`);
+      continue;
+    }
+    const raw = fs.readFileSync(src);
+    const hash = contentHash(raw);
+    const ext = path.extname(file);
+    const base = path.basename(file, ext);
+    const hashed = `${base}.${hash}${ext}`;
+    fs.writeFileSync(path.join(DIST, hashed), raw);
+    hashMap[file] = hashed;
+    console.log(`  ${file} → ${hashed} (${(raw.length / 1024).toFixed(1)}KB, hashed)`);
+  }
+
   // Copy static files
   for (const file of COPY_FILES) {
     const src = path.join(ROOT, file);
@@ -212,7 +232,7 @@ async function build() {
 
   // Build new DATA_FILES list with hashed names
   const dataFileNames = [
-    'verbs.js', 'grammar.js', 'phrases.js', 'conversations.js',
+    'verbs.js', 'vocab-data.json', 'grammar.js', 'phrases.js', 'conversations.js',
     'placement_questions.js', 'recipes.js', 'music.js', 'movies.js',
     'poetry.js', 'sports.js', 'proverbs.js', 'folktales.js',
     'festivals.js', 'history.js', 'travel.js', 'trivia.js',
@@ -236,7 +256,7 @@ async function build() {
   // lazy-loaded script names in the already-minified app-init.js
   // We handle this by patching the HTML to inject a script-name map
   const lazyMap = {};
-  JS_FILES.forEach(f => {
+  [...JS_FILES, ...HASH_JSON_FILES].forEach(f => {
     if (hashMap[f] && hashMap[f] !== f) {
       lazyMap[f] = hashMap[f];
     }
@@ -281,10 +301,26 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+function fetchWithTimeout(request, timeout) {
+  return Promise.race([
+    fetch(request),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+  ]);
+}
+
+function isDataFile(url) {
+  const path = new URL(url).pathname;
+  for (const f of DATA_FILES) {
+    if (path.endsWith(f.replace('./', '/'))) return true;
+  }
+  return false;
+}
+
 self.addEventListener('fetch', e => {
+  const timeout = isDataFile(e.request.url) ? 5000 : 10000;
   e.respondWith(
     caches.match(e.request).then(cached => {
-      const fetchPromise = fetch(e.request).then(response => {
+      const fetchPromise = fetchWithTimeout(e.request, timeout).then(response => {
         if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(c => c.put(e.request, clone));

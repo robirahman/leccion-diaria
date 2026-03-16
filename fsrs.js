@@ -21,17 +21,27 @@ if (FSRS_W.length !== 17) throw new Error('FSRS_W must have 17 weights');
 
 const FSRS_AGAIN = 1, FSRS_HARD = 2, FSRS_GOOD = 3, FSRS_EASY = 4;
 
-function fsrsInitS(rating) { return FSRS_W[rating - 1]; }
+function fsrsInitS(rating) {
+  rating = Math.max(1, Math.min(4, rating));
+  return FSRS_W[rating - 1];
+}
 
 function fsrsInitD(rating) {
+  rating = Math.max(1, Math.min(4, rating));
   return Math.max(1, Math.min(10, FSRS_W[4] - Math.exp(FSRS_W[5] * (rating - 1)) + 1));
 }
 
 function fsrsR(s, elapsedDays) {
+  if (s <= 0) return 0;
+  if (elapsedDays < 0) elapsedDays = 0;
   return Math.pow(1 + elapsedDays / (9 * s), -1);
 }
 
 function fsrsSAfterRecall(d, s, r, rating) {
+  d = Math.max(1, Math.min(10, d));
+  s = Math.max(0.001, s);
+  r = Math.max(0.001, Math.min(1, r));
+  rating = Math.max(1, Math.min(4, rating));
   const hardPenalty = rating === FSRS_HARD ? FSRS_W[15] : 1;
   const easyBonus = rating === FSRS_EASY ? FSRS_W[16] : 1;
   return s * (Math.exp(FSRS_W[8]) * (11 - d) * Math.pow(s, -FSRS_W[9]) *
@@ -39,11 +49,16 @@ function fsrsSAfterRecall(d, s, r, rating) {
 }
 
 function fsrsSAfterForgetting(d, s, r) {
+  d = Math.max(1, Math.min(10, d));
+  s = Math.max(0.001, s);
+  r = Math.max(0.001, Math.min(1, r));
   return FSRS_W[11] * Math.pow(d, -FSRS_W[12]) * (Math.pow(s + 1, FSRS_W[13]) - 1) *
     Math.exp(FSRS_W[14] * (1 - r));
 }
 
 function fsrsNextD(d, rating) {
+  d = Math.max(1, Math.min(10, d));
+  rating = Math.max(1, Math.min(4, rating));
   const d3 = fsrsInitD(FSRS_GOOD);
   const dp = d - FSRS_W[6] * (rating - 3);
   return Math.max(1, Math.min(10, FSRS_W[7] * d3 + (1 - FSRS_W[7]) * dp));

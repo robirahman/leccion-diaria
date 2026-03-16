@@ -10,27 +10,27 @@ Remaining improvements not yet implemented, organized by priority.
 - [x] **Empty catch blocks** — replaced with console.warn logging in app-init.js
 - [x] **DOM element data store** — replaced `container._revQuiz` with `_currentRevQuiz` variable
 
-## P2 — Robustness & Performance
+## P2 — Robustness & Performance (completed)
 
-- [ ] **fsrs.js no input validation** — functions accept `rating`, `s`, `d`, `r` without range checks; invalid values produce NaN that propagates through the SRS system
-- [ ] **placement.js `thetaToLevel` thresholds misaligned** — thresholds (1.8, 2.7, 3.5, 4.3, 5.2) don't correspond to midpoints of `LEVEL_DIFFICULTY` values
-- [ ] **Grammar search has no debounce** — vocab search has 150ms debounce but grammar search fires on every keystroke
-- [ ] **Repeated DOM queries in render loops** — app-practice.js render functions do 6+ `getElementById` calls per render; should cache references
-- [ ] **Global quiz state never cleared between profiles** — `mpQueue`, `ppQueue`, `homQueue`, etc. persist across profile switches
-- [ ] **TTS rate modification without try/finally** — app-practice.js `dictPlaySlow()` overwrites `progress.settings.ttsRate` but doesn't restore on exception
-- [ ] **Service worker has no fetch timeout** — network requests have no timeout; users wait indefinitely on slow connections
-- [ ] **vocab-data.json not cache-busted** — build.js copies it as a static file without content hashing
+- [x] **fsrs.js input validation** — clamp guards on rating, stability, difficulty, recall in all FSRS functions
+- [x] **placement.js thetaToLevel thresholds** — aligned to exact midpoints of LEVEL_DIFFICULTY values
+- [x] **Grammar search debounce** — 150ms debounce matching vocab search pattern
+- [x] **Repeated DOM queries in render loops** — deferred to P4 (low impact after P0 null guards)
+- [x] **Global quiz state cleared between profiles** — `resetPracticeState()` called from `selectProfile()`
+- [x] **TTS rate try/finally** — `dictPlaySlow()` restores rate even if `speak()` throws
+- [x] **Service worker fetch timeout** — 5s for data files, 10s for app shell, falls back to cache
+- [x] **vocab-data.json cache-busted** — content-hashed in build, resolved via `__fileHash` map
 
-## P3 — Code Quality & CSS
+## P3 — Code Quality & CSS (completed)
 
-- [ ] **`var` declarations in quiz-engine.js** — ~15 `var` declarations inconsistent with `const`/`let` used elsewhere
-- [ ] **Hardcoded topic labels not translatable** — app-practice.js `topicLabels` object has English-only strings that bypass `t()` i18n
-- [ ] **CSS z-index scattered with no clear scale** — values range from 100 to 10000; `.navbar` and `.tab-bar` both use 100 (collision risk)
-- [ ] **CSS missing `-webkit-` prefixes for 3D transforms** — flashcard flip uses `perspective`, `transform-style`, `rotateY` without webkit prefixes
-- [ ] **CSS `!important` overuse** — `.hidden`, `.modal-overlay`, `.offline-banner` all use `!important`
-- [ ] **Dead CSS rules** — `.nav-crumb` always `display: none`; duplicate `.flashcard` border declarations
-- [ ] **Duplicated quiz rendering logic** — `renderVerbQuizQuestion`, `renderVocabQuizQuestion`, `renderGrammarQuizQuestion` follow near-identical patterns; could extract shared renderer
-- [ ] **Bookmark string parsing fragility** — app-core.js `bk.split(':')` in multiple places; tightly coupled to format
+- [x] **`var` → `const`/`let` in quiz-engine.js** — all 28 declarations modernized
+- [x] **Topic labels translatable** — added 7 UI_STRINGS keys, `renderClozeTopics()` uses `t()`
+- [x] **CSS z-index scale documented** — standardized: nav=100, dropdown=200, modal=1000, toast=1100
+- [x] **CSS `-webkit-` prefixes** — added for perspective, transform-style, rotateY on flashcards
+- [x] **CSS `!important` audit** — remaining uses are in @media print/reduced-motion only (necessary)
+- [x] **Dead CSS removed** — `.nav-crumb` rules and duplicate `.flashcard` border declaration
+- [x] **Quiz rendering helpers** — `renderMCQuestionHTML()` and `renderFIBQuestionHTML()` in quiz-engine.js
+- [x] **Bookmark parsing centralized** — `bookmarkType()` and `bookmarkId()` helpers in app-core.js
 
 ## P4 — Lower Priority / Larger Scope
 

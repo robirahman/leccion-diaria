@@ -41,10 +41,26 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+function fetchWithTimeout(request, timeout) {
+  return Promise.race([
+    fetch(request),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+  ]);
+}
+
+function isDataFile(url) {
+  const path = new URL(url).pathname;
+  for (const f of DATA_FILES) {
+    if (path.endsWith(f.replace('./', '/'))) return true;
+  }
+  return false;
+}
+
 self.addEventListener('fetch', e => {
+  const timeout = isDataFile(e.request.url) ? 5000 : 10000;
   e.respondWith(
     caches.match(e.request).then(cached => {
-      const fetchPromise = fetch(e.request).then(response => {
+      const fetchPromise = fetchWithTimeout(e.request, timeout).then(response => {
         if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(c => c.put(e.request, clone));

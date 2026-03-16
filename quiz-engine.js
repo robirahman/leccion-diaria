@@ -6,8 +6,8 @@
 
 // ── Haptic feedback helper ────────────────────────────────────
 // Vibration durations in milliseconds
-var HAPTIC_CORRECT = [30];          // single short pulse
-var HAPTIC_INCORRECT = [40, 30, 40]; // double pulse with gap
+const HAPTIC_CORRECT = [30];          // single short pulse
+const HAPTIC_INCORRECT = [40, 30, 40]; // double pulse with gap
 
 function _haptic(correct) {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -24,12 +24,12 @@ function _haptic(correct) {
  * @returns {Array} A new array of up to n randomly-selected elements
  */
 function partialShuffle(arr, n) {
-  var a = arr.slice();
-  var len = a.length;
-  var count = Math.min(n, len);
-  for (var i = 0; i < count; i++) {
-    var j = i + Math.floor(Math.random() * (len - i));
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  const a = arr.slice();
+  const len = a.length;
+  const count = Math.min(n, len);
+  for (let i = 0; i < count; i++) {
+    const j = i + Math.floor(Math.random() * (len - i));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
   }
   return a.slice(0, count);
 }
@@ -53,11 +53,11 @@ function partialShuffle(arr, n) {
  * @returns {{ start, render, selectOption, submit, next, getState }}
  */
 function createQuizFlow(config) {
-  var queue = [];
-  var idx = 0;
-  var score = 0;
+  let queue = [];
+  let idx = 0;
+  let score = 0;
 
-  var submitBtnClass = config.submitBtnClass || 'mc-submit';
+  const submitBtnClass = config.submitBtnClass || 'mc-submit';
 
   // ── public API ────────────────────────────────────────────────
 
@@ -73,25 +73,25 @@ function createQuizFlow(config) {
       if (config.onComplete) config.onComplete(score, queue.length);
       return;
     }
-    var q = queue[idx];
+    const q = queue[idx];
 
     if (config.progressId) {
-      var progEl = document.getElementById(config.progressId);
+      const progEl = document.getElementById(config.progressId);
       if (progEl) progEl.textContent = (idx + 1) + ' / ' + queue.length;
     }
 
-    var nextBtn = document.getElementById(config.nextBtnId);
+    const nextBtn = document.getElementById(config.nextBtnId);
     if (nextBtn) nextBtn.style.display = 'none';
 
-    var container = document.getElementById(config.containerId);
+    const container = document.getElementById(config.containerId);
     if (container && config.renderQuestion) {
       container.innerHTML = config.renderQuestion(q, idx, queue.length);
     }
   }
 
   function selectOption(optIdx) {
-    var selector = '#' + config.containerId;
-    var btns = document.querySelectorAll(selector + ' .quiz-option');
+    const selector = '#' + config.containerId;
+    const btns = document.querySelectorAll(selector + ' .quiz-option');
     if (btns[0] && btns[0].classList.contains('disabled')) return;
     btns.forEach(function (btn) { btn.classList.remove('selected'); });
     if (btns[optIdx]) btns[optIdx].classList.add('selected');
@@ -100,27 +100,27 @@ function createQuizFlow(config) {
       // Auto-submit immediately on tap — skip the Submit button
       submit();
     } else {
-      var submitBtn = document.querySelector(selector + ' .' + submitBtnClass);
+      const submitBtn = document.querySelector(selector + ' .' + submitBtnClass);
       if (submitBtn) submitBtn.style.display = 'block';
     }
   }
 
   function submit() {
-    var containerSel = '#' + config.containerId;
-    var selectedBtn = document.querySelector(containerSel + ' .quiz-option.selected');
+    const containerSel = '#' + config.containerId;
+    const selectedBtn = document.querySelector(containerSel + ' .quiz-option.selected');
     if (!selectedBtn) return;
 
-    var selectedIdx = parseInt(selectedBtn.dataset.idx, 10);
-    var q = queue[idx];
+    const selectedIdx = parseInt(selectedBtn.dataset.idx, 10);
+    const q = queue[idx];
 
-    var correctIdx = -1;
+    let correctIdx = -1;
     if (config.getCorrectIdx) {
-      var rawIdx = config.getCorrectIdx(q);
+      const rawIdx = config.getCorrectIdx(q);
       correctIdx = typeof rawIdx === 'number' ? rawIdx : parseInt(rawIdx, 10);
       if (isNaN(correctIdx)) correctIdx = -1;
     } else if (config.getCorrectValue) {
-      var correctVal = config.getCorrectValue(q);
-      var allBtns = document.querySelectorAll(containerSel + ' .quiz-option');
+      const correctVal = config.getCorrectValue(q);
+      const allBtns = document.querySelectorAll(containerSel + ' .quiz-option');
       allBtns.forEach(function (btn, i) {
         if (btn.textContent.trim() === correctVal || btn.dataset.val === correctVal) {
           correctIdx = i;
@@ -130,22 +130,22 @@ function createQuizFlow(config) {
 
     // If no correct answer could be determined, skip grading this question
     if (correctIdx === -1) {
-      var nextBtn = document.getElementById(config.nextBtnId);
+      const nextBtn = document.getElementById(config.nextBtnId);
       if (nextBtn) nextBtn.style.display = 'flex';
       return;
     }
 
-    var isCorrect = selectedIdx === correctIdx;
+    const isCorrect = selectedIdx === correctIdx;
     _haptic(isCorrect);
 
-    var btns = document.querySelectorAll(containerSel + ' .quiz-option');
+    const btns = document.querySelectorAll(containerSel + ' .quiz-option');
     btns.forEach(function (btn, i) {
       btn.classList.add('disabled');
       if (i === correctIdx) btn.classList.add('correct');
       if (i === selectedIdx && !isCorrect) btn.classList.add('incorrect');
     });
 
-    var sBtnEl = document.querySelector(containerSel + ' .' + submitBtnClass);
+    const sBtnEl = document.querySelector(containerSel + ' .' + submitBtnClass);
     if (sBtnEl) sBtnEl.style.display = 'none';
 
     if (isCorrect) {
@@ -155,17 +155,17 @@ function createQuizFlow(config) {
       if (config.onIncorrect) config.onIncorrect(q, selectedIdx);
     }
 
-    var explanation = config.getExplanation ? config.getExplanation(q) : null;
+    const explanation = config.getExplanation ? config.getExplanation(q) : null;
     if (explanation) {
-      var expDiv = document.createElement('div');
+      const expDiv = document.createElement('div');
       expDiv.className = 'quiz-feedback text-muted';
       expDiv.style.fontSize = '0.85rem';
       expDiv.textContent = explanation;
-      var cont = document.getElementById(config.containerId);
+      const cont = document.getElementById(config.containerId);
       if (cont) cont.appendChild(expDiv);
     }
 
-    var nextBtn = document.getElementById(config.nextBtnId);
+    const nextBtn = document.getElementById(config.nextBtnId);
     if (nextBtn) nextBtn.style.display = 'flex';
   }
 
@@ -200,13 +200,13 @@ function createQuizFlow(config) {
  * @returns {boolean} whether the selected answer was correct
  */
 function processMCSubmit(opts) {
-  var selectedBtn = document.querySelector(opts.optionsSel.replace(' .quiz-option', ' .quiz-option.selected'));
+  const selectedBtn = document.querySelector(opts.optionsSel.replace(' .quiz-option', ' .quiz-option.selected'));
   if (!selectedBtn) return false;
 
-  var isCorrect = opts.isCorrectBtn(selectedBtn);
+  const isCorrect = opts.isCorrectBtn(selectedBtn);
   _haptic(isCorrect);
 
-  var btns = document.querySelectorAll(opts.optionsSel);
+  const btns = document.querySelectorAll(opts.optionsSel);
   btns.forEach(function (btn) {
     btn.classList.add('disabled');
     if (opts.isCorrectBtn(btn)) btn.classList.add('correct');
@@ -214,13 +214,13 @@ function processMCSubmit(opts) {
   });
 
   if (opts.feedbackFn) {
-    var fb = document.getElementById(opts.feedbackId);
+    const fb = document.getElementById(opts.feedbackId);
     if (fb) {
       fb.innerHTML = opts.feedbackFn(isCorrect);
       fb.style.display = 'block';
     }
   }
-  var nextBtn = document.getElementById(opts.nextBtnId);
+  const nextBtn = document.getElementById(opts.nextBtnId);
   if (nextBtn) nextBtn.style.display = 'flex';
 
   if (opts.fsrs) {
@@ -239,8 +239,8 @@ function processMCSubmit(opts) {
  * Generate accent button bar HTML.
  */
 function accentBarHTML(action, inputId) {
-  var chars = ['\u00e1', '\u00e9', '\u00ed', '\u00f3', '\u00fa', '\u00f1'];   // á é í ó ú ñ
-  var inputAttr = inputId ? ' data-input-id="' + inputId + '"' : '';
+  const chars = ['\u00e1', '\u00e9', '\u00ed', '\u00f3', '\u00fa', '\u00f1'];   // á é í ó ú ñ
+  const inputAttr = inputId ? ' data-input-id="' + inputId + '"' : '';
   return '<div class="accent-bar">\n' +
     chars.map(function (c) {
       return '    <button class="accent-btn" data-action="' + action +
@@ -254,9 +254,63 @@ function accentBarHTML(action, inputId) {
  * Generate a progress-bar fill element.
  */
 function progressBarHTML(current, total, fillId) {
-  var pct = total > 0 ? (current / total * 100) : 0;
-  var idAttr = fillId ? ' id="' + fillId + '"' : '';
+  const pct = total > 0 ? (current / total * 100) : 0;
+  const idAttr = fillId ? ' id="' + fillId + '"' : '';
   return '<div class="quiz-progress-fill"' + idAttr +
     ' role="progressbar" aria-valuenow="' + Math.round(pct) +
     '" aria-valuemin="0" aria-valuemax="100" aria-label="Quiz progress" style="width:' + pct + '%"></div>';
+}
+
+/**
+ * Generate the common MC quiz question HTML: question + option buttons + submit button.
+ *
+ * @param {Object} cfg
+ * @param {string}   cfg.question      - Inner HTML for the question div
+ * @param {string[]} cfg.options       - Array of option label strings (will be escaped)
+ * @param {string}   cfg.answerAction  - data-action for option buttons (e.g. 'answer-verb-quiz')
+ * @param {string}   cfg.submitAction  - data-action for submit button (e.g. 'submit-verb-quiz-mc')
+ * @param {string}   [cfg.submitLabel] - Label for the submit button (default: tBtn('submit'))
+ * @returns {string} HTML string
+ */
+function renderMCQuestionHTML(cfg) {
+  const submitLabel = cfg.submitLabel || tBtn('submit');
+  return '<div class="quiz-question">' + cfg.question + '</div>\n' +
+    '<div class="quiz-options">\n' +
+    cfg.options.map(function (opt, i) {
+      return '  <button class="quiz-option" data-action="' + cfg.answerAction +
+        '" data-idx="' + i + '">' + esc(opt) + '</button>';
+    }).join('\n') +
+    '\n</div>\n' +
+    '<button class="btn btn-primary btn-block mt-1 mc-submit" data-action="' +
+    cfg.submitAction + '" style="display:none">' + submitLabel + '</button>';
+}
+
+/**
+ * Generate the common FIB (fill-in-blank / production) quiz question HTML:
+ * question + input row + accent bar + feedback div.
+ *
+ * @param {Object} cfg
+ * @param {string}   cfg.question         - Inner HTML for the question div
+ * @param {string}   cfg.inputId          - ID for the text input
+ * @param {string}   cfg.inputPlaceholder - Placeholder text
+ * @param {string}   cfg.submitAction     - data-action for the check button
+ * @param {string}   cfg.accentAction     - data-action for accent bar buttons
+ * @param {string}   cfg.feedbackId       - ID for the feedback div
+ * @param {string}   [cfg.submitLabel]    - Label for the check button (default: tBtn('check'))
+ * @param {string}   [cfg.inputValue]     - Pre-filled value for the input
+ * @param {string}   [cfg.preInputHTML]   - Extra HTML before the input row (e.g. error sentence div)
+ * @returns {string} HTML string
+ */
+function renderFIBQuestionHTML(cfg) {
+  const submitLabel = cfg.submitLabel || tBtn('check');
+  const valueAttr = cfg.inputValue ? ' value="' + esc(cfg.inputValue) + '"' : '';
+  return '<div class="quiz-question">' + cfg.question + '</div>\n' +
+    (cfg.preInputHTML || '') +
+    '<div class="quiz-input-row">\n' +
+    '  <input type="text" id="' + cfg.inputId + '" placeholder="' + cfg.inputPlaceholder +
+    '" autocomplete="off" autocapitalize="off"' + valueAttr + '>\n' +
+    '  <button class="btn btn-primary" data-action="' + cfg.submitAction + '">' + submitLabel + '</button>\n' +
+    '</div>\n' +
+    accentBarHTML(cfg.accentAction, cfg.inputId) + '\n' +
+    '<div class="quiz-feedback" id="' + cfg.feedbackId + '" style="display:none"></div>';
 }
