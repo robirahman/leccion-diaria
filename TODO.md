@@ -44,3 +44,24 @@ Remaining improvements not yet implemented, organized by priority.
 - [ ] **Social/competitive features** — leaderboards, friend challenges
 - [ ] **Cloud sync** — sync progress across devices
 - [ ] **Spaced repetition notifications** — push notifications for due reviews
+
+## Recently Completed
+
+### Code Quality Fixes (Rounds 1-3)
+- [x] **Gender quiz FSRS tracking** — `submitGenderQuizMC()` now calls `reviewItem()` for SRS scheduling
+- [x] **Conjugation stem variable** — fixed o>ue preterite/imperfect subjunctive using `conjStem` instead of `stem`
+- [x] **Grammar search aria-label** — added missing `aria-label` to grammar search input
+- [x] **Share modal dialog ARIA** — added `role="dialog"`, `aria-modal`, `aria-labelledby`
+- [x] **`pick()` empty array guard** — returns `undefined` safely for empty/falsy arrays
+- [x] **`bookmarkId()` malformed input** — returns empty string if no colon found
+- [x] **TTS error feedback** — shows one-time toast on speech synthesis failure
+- [x] **IDB backup error logging** — catch block now logs via `console.warn`
+- [x] **`parseInt` radix** — added explicit radix 10 in learn-vocab.js, app-practice.js
+- [x] **Vocab indexing null guard** — skips entries with missing `word` property
+- [x] **`?.focus()` null checks** — added optional chaining on `getElementById().focus()`
+- [x] **Arrow key modulo-by-zero** — guard for empty quiz options array
+- [x] **`VERB_DATA.length`** — replaced `Object.keys(VERB_DATA).length` with direct `.length`
+- [x] **Build error reporting** — per-file try/catch in minification loop
+- [x] **Daily Challenge fallback** — `topics[dayOfWeek] || topics[0]`
+- [x] **sw.js variable rename** — `path` → `pathname` in `isDataFile()`
+- [x] **Verb frequency gap** — closed 153→155 gap, shifted B2 frequencies

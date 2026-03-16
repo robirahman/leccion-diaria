@@ -205,17 +205,17 @@ const VERB_DATA = [
   // ---------------------------------------------------------------------------
   // COMPOUND IRREGULAR VERBS — B2
   // ---------------------------------------------------------------------------
-  { infinitive: 'producir', english: 'to produce', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 155 },
-  { infinitive: 'reducir', english: 'to reduce', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 156 },
-  { infinitive: 'traducir', english: 'to translate', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 157 },
-  { infinitive: 'describir', english: 'to describe', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 158 },
-  { infinitive: 'descubrir', english: 'to discover', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 159 },
-  { infinitive: 'devolver', english: 'to return, give back', type: 'irregular', group: 'er', stemChange: 'o>ue', level: 'B2', frequency: 160 },
-  { infinitive: 'atraer', english: 'to attract', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 161 },
-  { infinitive: 'componer', english: 'to compose, make up', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 162 },
-  { infinitive: 'mantener', english: 'to maintain, keep', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 163 },
-  { infinitive: 'obtener', english: 'to obtain, get', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 164 },
-  { infinitive: 'contener', english: 'to contain, hold', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 165 },
+  { infinitive: 'producir', english: 'to produce', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 154 },
+  { infinitive: 'reducir', english: 'to reduce', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 155 },
+  { infinitive: 'traducir', english: 'to translate', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 156 },
+  { infinitive: 'describir', english: 'to describe', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 157 },
+  { infinitive: 'descubrir', english: 'to discover', type: 'irregular', group: 'ir', stemChange: null, level: 'B2', frequency: 158 },
+  { infinitive: 'devolver', english: 'to return, give back', type: 'irregular', group: 'er', stemChange: 'o>ue', level: 'B2', frequency: 159 },
+  { infinitive: 'atraer', english: 'to attract', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 160 },
+  { infinitive: 'componer', english: 'to compose, make up', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 161 },
+  { infinitive: 'mantener', english: 'to maintain, keep', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 162 },
+  { infinitive: 'obtener', english: 'to obtain, get', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 163 },
+  { infinitive: 'contener', english: 'to contain, hold', type: 'irregular', group: 'er', stemChange: null, level: 'B2', frequency: 164 },
 
   // ---------------------------------------------------------------------------
   // C1 VERBS — Advanced (25)

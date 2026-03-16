@@ -114,17 +114,22 @@ async function build() {
       continue;
     }
     const raw = fs.readFileSync(src, 'utf8');
-    const minified = await minifyJS(raw);
-    const hash = contentHash(Buffer.from(minified));
-    const ext = path.extname(file);
-    const base = path.basename(file, ext);
-    const hashed = `${base}.${hash}${ext}`;
-    fs.writeFileSync(path.join(DIST, hashed), minified);
-    hashMap[file] = hashed;
-    const saved = raw.length - minified.length;
-    totalSaved += saved;
-    const pct = raw.length > 0 ? ((saved / raw.length) * 100).toFixed(0) : 0;
-    console.log(`  ${file} → ${hashed} (${(minified.length / 1024).toFixed(1)}KB, -${pct}%)`);
+    try {
+      const minified = await minifyJS(raw);
+      const hash = contentHash(Buffer.from(minified));
+      const ext = path.extname(file);
+      const base = path.basename(file, ext);
+      const hashed = `${base}.${hash}${ext}`;
+      fs.writeFileSync(path.join(DIST, hashed), minified);
+      hashMap[file] = hashed;
+      const saved = raw.length - minified.length;
+      totalSaved += saved;
+      const pct = raw.length > 0 ? ((saved / raw.length) * 100).toFixed(0) : 0;
+      console.log(`  ${file} → ${hashed} (${(minified.length / 1024).toFixed(1)}KB, -${pct}%)`);
+    } catch (err) {
+      console.error(`  ERROR minifying ${file}: ${err.message}`);
+      process.exit(1);
+    }
   }
 
   // Process CSS files

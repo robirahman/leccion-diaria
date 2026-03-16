@@ -521,7 +521,7 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
         if (pattern === 'e>ie' || pattern === 'e>i') {
           conjStem = applyStemChange(conjStem, 'e>i');
         } else if (pattern === 'o>ue') {
-          conjStem = applyStemChange(stem, 'o>ue').replace('ue', 'u');
+          conjStem = applyStemChange(conjStem, 'o>ue').replace('ue', 'u');
         }
       }
       // Imperfect subjunctive stem change for -ir stem-changers (all persons)
@@ -529,7 +529,7 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
         if (pattern === 'e>ie' || pattern === 'e>i') {
           conjStem = applyStemChange(conjStem, 'e>i');
         } else if (pattern === 'o>ue') {
-          conjStem = applyStemChange(stem, 'o>ue').replace('ue', 'u');
+          conjStem = applyStemChange(conjStem, 'o>ue').replace('ue', 'u');
         }
       }
     }

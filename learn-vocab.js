@@ -32,6 +32,7 @@ function buildVocabIndexes() {
   for (const k in VOCAB_BY_WORD) delete VOCAB_BY_WORD[k];
   for (const k in VOCAB_CATEGORY_COUNTS) delete VOCAB_CATEGORY_COUNTS[k];
   for (const v of VOCAB_DATA) {
+    if (!v || !v.word) continue;
     const cat = v.category;
     (VOCAB_BY_CATEGORY[cat] ??= []).push(v);
     (VOCAB_BY_LEVEL[v.level] ??= []).push(v);
@@ -334,7 +335,7 @@ function renderVocabQuizQuestion_Produce() {
     submitAction: 'submit-vocab-quiz-produce', accentAction: 'insert-accent-vocq',
     feedbackId: 'vocq-produce-feedback'
   });
-  document.getElementById('vocq-produce-input').focus();
+  document.getElementById('vocq-produce-input')?.focus();
 }
 
 function submitVocabQuizProduce() {
@@ -373,7 +374,7 @@ function submitVocabQuizMC() {
   if (vocabQuizIdx >= vocabQuizQueue.length) { showResults(vocabQuizScore, vocabQuizQueue.length, 'vocab-quiz', t('vocabQuizLabel')); return; }
   const selectedBtn = document.querySelector('#vocq-container .quiz-option.selected');
   if (!selectedBtn) return;
-  const idx = parseInt(selectedBtn.dataset.idx);
+  const idx = parseInt(selectedBtn.dataset.idx, 10);
   const item = vocabQuizQueue[vocabQuizIdx];
   const selected = item.options[idx];
   const btns = document.querySelectorAll('#vocq-container .quiz-option');
@@ -401,7 +402,7 @@ function submitGenderQuizMC() {
   if (vocabQuizIdx >= vocabQuizQueue.length) { showResults(vocabQuizScore, vocabQuizQueue.length, 'gender-quiz', t('genderQuizLabel')); return; }
   const selectedBtn = document.querySelector('#vocq-container .quiz-option.selected');
   if (!selectedBtn) return;
-  const idx = parseInt(selectedBtn.dataset.idx);
+  const idx = parseInt(selectedBtn.dataset.idx, 10);
   const item = vocabQuizQueue[vocabQuizIdx];
   const correctIdx = item.correct === item.options[0] ? 0 : 1;
   const btns = document.querySelectorAll('#vocq-container .quiz-option');
@@ -410,7 +411,16 @@ function submitGenderQuizMC() {
     if (i === correctIdx) btn.classList.add('correct');
     if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });
-  if (idx === correctIdx) { vocabQuizScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
+  const genCorrect = idx === correctIdx;
+  trackError(`vocab:${item.word.word}`, genCorrect, 'vocab');
+  if (genCorrect) {
+    vocabQuizScore++;
+    reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_GOOD);
+    addXP(XP_CORRECT);
+  } else {
+    reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_AGAIN);
+    addXP(XP_INCORRECT);
+  }
   const submitBtn = document.querySelector('#vocq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
   document.getElementById('vocq-next').style.display = 'flex';

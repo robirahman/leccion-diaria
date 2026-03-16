@@ -697,7 +697,7 @@ function checkCloze() {
   const explanations = [];
 
   blanks.forEach(input => {
-    const n = parseInt(input.dataset.blank);
+    const n = parseInt(input.dataset.blank, 10);
     const blankDef = item.blanks.find(b => b.id === n);
     if (!blankDef) return;
     const userVal = input.value.trim();
@@ -1071,7 +1071,7 @@ function renderSkillRadar() {
   const maxR = Math.min(cx, cy) - 40;
 
   // Compute mastery percentages for each domain
-  const verbTotal = typeof VERB_DATA !== 'undefined' ? Object.keys(VERB_DATA).length : 100;
+  const verbTotal = typeof VERB_DATA !== 'undefined' ? VERB_DATA.length : 100;
   const vocabTotal = typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA.length : 1000;
   const grammarTotal = typeof GRAMMAR_DATA !== 'undefined' ? GRAMMAR_DATA.length : 50;
   const phraseTotal = typeof PHRASES_DATA !== 'undefined' ? Object.keys(PHRASES_DATA).reduce((s, k) => s + (PHRASES_DATA[k]?.phrases?.length || 0), 0) : 100;
@@ -1434,7 +1434,7 @@ function renderReviewItem() {
     const parts = key.split(':');
     let verb, tense, person;
     if (parts.length >= 3) {
-      person = parseInt(parts.pop());
+      person = parseInt(parts.pop(), 10);
       tense = parts.pop();
       verb = parts.join(':');
     } else {
@@ -1576,7 +1576,7 @@ function checkReviewDrill() {
   const item = reviewQueue[reviewIdx];
   const parts = item.key.split(':');
   let verb, tense, person;
-  if (parts.length >= 3) { person = parseInt(parts.pop()); tense = parts.pop(); verb = parts.join(':'); }
+  if (parts.length >= 3) { person = parseInt(parts.pop(), 10); tense = parts.pop(); verb = parts.join(':'); }
   else { verb = item.key; tense = 'present'; person = 0; }
   const correct = typeof conjugate === 'function' ? conjugate(verb, tense, person) : '';
   const input = document.getElementById('rev-drill-input');

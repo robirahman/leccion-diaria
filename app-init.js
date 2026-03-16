@@ -566,6 +566,7 @@ document.addEventListener('keydown', e => {
     const focused = document.activeElement;
     if (focused && focused.classList.contains('quiz-option') && !focused.classList.contains('disabled')) {
       const options = [...focused.closest('.quiz-options').querySelectorAll('.quiz-option:not(.disabled)')];
+      if (options.length === 0) return;
       const idx = options.indexOf(focused);
       const next = e.key === 'ArrowDown' ? (idx + 1) % options.length : (idx - 1 + options.length) % options.length;
       options[next]?.focus();

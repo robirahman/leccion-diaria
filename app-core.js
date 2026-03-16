@@ -895,7 +895,7 @@ function backupToIDB() {
   openIDB().then(db => {
     const tx = db.transaction('progress', 'readwrite');
     tx.objectStore('progress').put({ profile: currentProfile, data: progress, ts: Date.now() });
-  }).catch(() => { /* silent — IDB is optional redundancy */ });
+  }).catch(e => { console.warn('IDB backup:', e); });
 }
 
 function restoreFromIDB(profileName) {
@@ -1707,6 +1707,7 @@ function renderCefrMasteryDetailed(el) {
 // ════════════════════════════════════════
 
 let _ttsWarningShown = false;
+let _ttsErrorShown = false;
 function speak(text) {
   if (!navigator.onLine) {
     showToast('📡', "You're offline — TTS unavailable");
@@ -1730,7 +1731,7 @@ function speak(text) {
       _ttsWarningShown = true;
       showToast('🔇', 'No Spanish voice found. Using default voice.');
     }
-    u.onerror = () => {}; // suppress errors silently
+    u.onerror = () => { if (!_ttsErrorShown) { _ttsErrorShown = true; showToast('', 'Text-to-speech unavailable'); } };
     window.speechSynthesis.speak(u);
   } catch (e) {
     console.warn('TTS error:', e);
@@ -1742,7 +1743,7 @@ function speak(text) {
 // ════════════════════════════════════════
 
 function bookmarkType(bk) { return bk.split(':')[0]; }
-function bookmarkId(bk) { return bk.slice(bk.indexOf(':') + 1); }
+function bookmarkId(bk) { const i = bk.indexOf(':'); return i < 0 ? '' : bk.slice(i + 1); }
 
 function toggleBookmark(type, id) {
   if (!progress) return;
@@ -1885,7 +1886,7 @@ function dateStr(d) {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function pick(arr) { return arr && arr.length ? arr[Math.floor(Math.random() * arr.length)] : undefined; }
 function pickN(arr, n) { return shuffle(arr).slice(0, n); }
 
 // ════════════════════════════════════════

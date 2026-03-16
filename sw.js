@@ -49,9 +49,9 @@ function fetchWithTimeout(request, timeout) {
 }
 
 function isDataFile(url) {
-  const path = new URL(url).pathname;
+  const pathname = new URL(url).pathname;
   for (const f of DATA_FILES) {
-    if (path.endsWith(f.replace('./', '/'))) return true;
+    if (pathname.endsWith(f.replace('./', '/'))) return true;
   }
   return false;
 }

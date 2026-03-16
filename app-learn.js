@@ -66,7 +66,7 @@ function renderDailyChallenge() {
     { label: 'Phrase Challenge', action: 'start-phrase-quiz-daily', icon: '💬' },
     { label: 'Mixed Challenge', action: 'start-verb-drill', icon: '🎯' },
   ];
-  const topic = topics[dayOfWeek];
+  const topic = topics[dayOfWeek] || topics[0];
   div.innerHTML = `
     <h2>Daily Challenge</h2>
     <div class="card${completed ? ' completed' : ''}" data-action="${completed ? '' : topic.action}">
