@@ -7,7 +7,7 @@ const APP_SHELL = [
   './fsrs.js', './conjugation.js', './quiz-engine.js',
   './app-core.js', './learn-vocab.js', './app-learn.js',
   './placement.js', './app-practice.js', './practice-reference.js',
-  './app-init.js', './vocab-categories.js', './vocab-search-worker.js',
+  './api.js', './app-init.js', './vocab-categories.js', './vocab-search-worker.js',
 ];
 
 // Data files — cached on first use (stale-while-revalidate)

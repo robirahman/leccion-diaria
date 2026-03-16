@@ -14,7 +14,7 @@ const JS_FILES = [
   'fsrs.js', 'conjugation.js', 'verbs.js', 'vocab-categories.js',
   'grammar.js', 'phrases.js', 'placement_questions.js', 'quiz-engine.js',
   'app-core.js', 'learn-vocab.js', 'app-learn.js', 'placement.js',
-  'app-practice.js', 'practice-reference.js', 'app-init.js',
+  'app-practice.js', 'practice-reference.js', 'api.js', 'app-init.js',
   // Lazy-loaded
   'conversations.js', 'recipes.js', 'music.js', 'movies.js', 'poetry.js',
   'sports.js', 'proverbs.js', 'folktales.js', 'festivals.js', 'history.js',
@@ -231,7 +231,7 @@ async function build() {
     'fsrs.js', 'conjugation.js', 'quiz-engine.js',
     'app-core.js', 'learn-vocab.js', 'app-learn.js',
     'placement.js', 'app-practice.js', 'practice-reference.js',
-    'app-init.js', 'vocab-categories.js',
+    'api.js', 'app-init.js', 'vocab-categories.js',
   ];
   const appShell = [
     "'./'", "'./index.html'",
