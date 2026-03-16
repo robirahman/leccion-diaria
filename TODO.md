@@ -67,3 +67,10 @@ Remaining improvements not yet implemented, organized by priority.
 - [x] Analytics: local-only stats screen with study time, daily XP chart, quiz breakdown, feature usage, learning pace
 - [x] A11y moderate fixes: quiz feedback assertive, dark theme contrast, flashcard announcements, nav streak live region, focus-visible improvements
 - [x] Fixed 441 A1/A2 vocab examples to include dictionary form (verbs, adjectives, nouns)
+
+### P4 Wave 5: Programmatic API
+- [x] `api.js` — UMD API: pure function re-exports (conjugation, FSRS, IRT, utils), data access, `Session` class, `PlacementSession` class
+- [x] `api-node.js` — Node.js loader using `vm.createContext` with DOM stubs
+- [x] `tests/test_api.js` — 31 tests covering pure functions, session CRUD, FSRS review flow, headless placement
+- [x] Integrated into build pipeline (`build.js`), service worker (`sw.js`), and `index.html`
+- [x] Total test count: 142 → 174

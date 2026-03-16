@@ -20,6 +20,7 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **Bookmarks** — Star any vocab word, grammar lesson, or phrase for quick access from the Today screen
 - **Onboarding** — 4-step welcome carousel for new users explaining SRS, goals, and navigation, plus personalized learning plan after placement test
 - **Undo Ratings** — Undo accidental SRS ratings within a toast notification window
+- **Programmatic API** — Full API for Node.js scripts, automated tests, and browser console (`window.LeccionDiaria`) — conjugation, FSRS, IRT, data access, session management, and headless placement tests
 - **CSV Export** — Export all progress data as CSV from settings
 - **Offline Support** — Service worker with dual-cache system (app shell + data files cached separately with independent version hashes); TTS buttons gray out when offline and re-enable on reconnect
 - **Customization** — Dark/light/auto themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed, configurable daily goals
@@ -46,12 +47,50 @@ To create a minified, cache-busted build:
 
 ```bash
 npm install
-npm test          # 142 unit tests
+npm test          # 174 unit tests
 npm run test:e2e  # 14 Playwright E2E tests
 npm run build     # outputs to dist/
 ```
 
 The build produces a `dist/` directory with content-hashed filenames, minified JS/CSS, and an auto-generated service worker with separate app/data cache versions. This is what gets deployed to GitHub Pages.
+
+### Programmatic API
+
+The app exposes a programmatic API for use from Node.js scripts, automated tests, and the browser console:
+
+```js
+// Node.js
+const api = require('./api-node')();
+
+// Browser console (after page loads)
+const api = window.LeccionDiaria;
+
+// Conjugation
+api.conjugate('hablar', 'present', 0)   // 'hablo'
+api.conjugateAll('ser', 'preterite')     // ['fui','fuiste','fue',...]
+
+// FSRS spaced repetition
+api.fsrs.initS(3)                        // initial stability
+api.fsrs.recall(5, 1)                    // retrievability after 1 day
+
+// Data access
+api.data.verbs.length                    // 251
+api.data.vocab.length                    // 28092
+
+// Session management
+const session = api.createSession();
+session.createProfile('maria');
+session.selectProfile('maria');
+session.addXP(10);
+session.reviewItem('vocabFsrs', 'vocabMastery', 'gato', 3);
+
+// Headless placement test
+const pt = session.startPlacement({ level: 'B1', mode: 'both', length: 20 });
+// ... answer questions ...
+const levels = pt.finish();              // {grammar: 'B2', vocab: 'A2', overall: 'B1'}
+```
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the full API reference.
 
 ### Alternative Dev Servers
 
@@ -82,6 +121,8 @@ php -S localhost:8000
 | `quiz-engine.js` | Shared quiz rendering, HTML helpers, auto-submit, haptic feedback |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm (JSDoc typed) |
 | `conjugation.js` | Verb conjugation engine (19 tenses, irregulars) (JSDoc typed) |
+| `api.js` | Programmatic API (UMD): conjugation, FSRS, IRT, data, Session, PlacementSession |
+| `api-node.js` | Node.js loader for the API (vm.createContext with DOM stubs) |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search |
 | `styles.css` | Dark/light/auto themes, 4 palettes, responsive layout |
 | `sw.js` | Service worker: dual-cache (app shell + data) with separate versioning |
@@ -91,7 +132,7 @@ php -S localhost:8000
 | `jsconfig.json` | TypeScript/IDE type checking config (checkJs, ES2020) |
 | `playwright.config.js` | Playwright E2E test configuration (Chromium) |
 | `package.json` | Node.js project config |
-| `tests/` | 142 unit tests for conjugation, FSRS, core utils, build helpers, vocab data |
+| `tests/` | 174 unit tests for conjugation, FSRS, core utils, build helpers, API, vocab data |
 | `e2e/` | 14 Playwright E2E tests (navigation, learn flow, placement) |
 | **Data files** | |
 | `vocab-a1a2.json` | A1+A2 vocab (~2K words, loaded first for fast startup) |

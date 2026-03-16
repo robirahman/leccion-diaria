@@ -20,6 +20,8 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), quiz HTML helpers (`renderMCQuestionHTML`, `renderFIBQuestionHTML`), haptic feedback, `partialShuffle()`, `aria-disabled` on disabled options |
 | `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling (o>ue fix for preterite/imperfect subjunctive). JSDoc typed. |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters, input-validated). JSDoc typed. |
+| `api.js` | Programmatic API (UMD): re-exports pure functions (conjugation, FSRS, IRT, utils), data access, `Session` class (profiles, XP, reviews), `PlacementSession` class (headless IRT). Browser: `window.LeccionDiaria`. Node: via `api-node.js` |
+| `api-node.js` | Node.js loader for the API — uses `vm.createContext` with DOM stubs to load all source files into a sandbox, returns the API object |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search with prefix index |
 | `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout, 44px touch targets |
 | `sw.js` | Service worker: dual-cache (APP_CACHE + DATA_CACHE) with separate versioning, stale-while-revalidate, fetch timeout |
@@ -30,7 +32,7 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `playwright.config.js` | Playwright E2E test config (Chromium only, static file server) |
 | `package.json` | Node.js project config (esbuild, Playwright, serve as dev dependencies) |
 | `tests/run.js` | Minimal zero-dependency test runner |
-| `tests/test_*.js` | 142 unit tests for conjugation, FSRS, core utils, build helpers, quiz engine, placement, and vocab data validation |
+| `tests/test_*.js` | 174 unit tests for conjugation, FSRS, core utils, build helpers, quiz engine, placement, programmatic API, and vocab data validation |
 | `e2e/*.spec.js` | 14 Playwright E2E tests (navigation, learn flow, placement) |
 | **Data files** | |
 | `verbs.js` | 252 verbs with type, group, stem change, level, frequency |
@@ -127,9 +129,17 @@ app-init.js ─── Event delegation (single click listener on document)
   │                      HTML helpers (accent bar, progress bar)
   │                      aria-disabled on quiz option disable
   │
-  └── vocab-search-worker.js ── Web Worker for vocab search
-                                 Builds prefix index (up to 4 chars) at init
-                                 Updated progressively as vocab chunks load
+  ├── vocab-search-worker.js ── Web Worker for vocab search
+  │                              Builds prefix index (up to 4 chars) at init
+  │                              Updated progressively as vocab chunks load
+  │
+  └── api.js ──────────────── Programmatic API (UMD module)
+                                Pure function re-exports (conjugation, FSRS, IRT, utils)
+                                Data access (verbs, vocab, tenses, grammar, phrases)
+                                Session class (profile CRUD, XP, FSRS reviews, settings)
+                                PlacementSession class (headless IRT adaptive test)
+                                Browser: window.LeccionDiaria
+                                Node.js: require('./api-node')()
 ```
 
 ### State Management
@@ -505,6 +515,117 @@ After placement, `showLearningPlan()` displays a level-specific module recommend
 
 ---
 
+## Programmatic API (`api.js`, `api-node.js`)
+
+A clean API layer that exposes the app's core functionality for use from Node.js scripts, automated tests, and the browser console — without modifying any existing code.
+
+### Environment Support
+
+| Environment | Access | How it works |
+|---|---|---|
+| **Browser** | `window.LeccionDiaria` | UMD wrapper reads from globals after all `<script defer>` tags execute |
+| **Node.js** | `require('./api-node')()` | `vm.createContext` loads all source files into a sandbox with DOM stubs |
+
+### API Surface
+
+```js
+// ── Node.js ──
+const api = require('./api-node')();
+
+// ── Browser (after page load) ──
+const api = window.LeccionDiaria;
+
+// ── Pure functions (no state) ──
+api.conjugate('hablar', 'present', 0)         // 'hablo'
+api.conjugateAll('ser', 'preterite')           // ['fui','fuiste','fue',...]
+api.getParticiple('escribir')                  // 'escrito'
+api.getGerund('dormir')                        // 'durmiendo'
+api.checkAnswer('cafe', 'café')                // {correct: true, accentWarn: true}
+api.stripAccents('año')                        // 'ano'
+api.esc('<b>')                                 // '&lt;b&gt;'
+
+api.fsrs.initS(3)                              // initial stability for rating 3
+api.fsrs.recall(stability, elapsedDays)        // retrievability (0–1)
+api.fsrs.mastery(stability)                    // mastery level 1–4
+
+api.irt.prob(theta, difficulty)                // Rasch probability
+api.irt.thetaToLevel(theta)                    // theta → CEFR string
+
+api.util.shuffle([1,2,3])                      // shuffled copy
+api.util.pick([1,2,3])                         // random element
+api.util.pickN([1,2,3], 2)                     // 2 random elements
+
+// ── Data access ──
+api.data.verbs                                 // VERB_DATA array (251 verbs)
+api.data.vocab                                 // VOCAB_DATA array (28K words)
+api.data.tenses                                // TENSE_META object (19 tenses)
+api.data.persons                               // PERSONS array (6 persons)
+api.data.grammar                               // GRAMMAR_DATA array (67 lessons)
+api.data.phrases                               // PHRASES_DATA array (325 phrases)
+api.data.categories                            // VOCAB_CATEGORIES object (51 categories)
+
+// ── Stateful session (profiles, progress, reviews) ──
+const session = api.createSession();            // in-memory storage
+const session = api.createSession(localStorage) // browser storage
+session.createProfile('maria');
+session.selectProfile('maria');
+session.getProgress();                          // progress object
+session.addXP(10);                              // increments XP, updates streak
+session.reviewItem('vocabFsrs', 'vocabMastery', 'gato', 3);
+session.isDue('vocabFsrs', 'gato');             // false (just reviewed)
+session.getDueItems('vocabFsrs', ['gato','perro','casa']);
+session.setSetting('accents', 'strict');
+session.save();                                 // persist to storage
+
+// ── Placement test (headless IRT) ──
+const pt = session.startPlacement({ level: 'B1', mode: 'both', length: 20 });
+while (!pt.isFinished()) {
+  const q = pt.currentQuestion();
+  if (!q) break;                                // pool exhausted
+  const correct = /* evaluate answer */;
+  pt.answer(correct);                           // updates theta via Newton-Raphson
+}
+const levels = pt.finish();                     // {grammar: 'B2', vocab: 'A2', overall: 'B1'}
+```
+
+### Session Class
+
+Replicates pure logic from `app-core.js` without DOM calls. Uses injectable storage backend — `new api.MemoryStorage()` for testing, `localStorage` for browser persistence.
+
+| Session method | Wraps | Skips (DOM) |
+|---|---|---|
+| `addXP(n)` | XP increment, practiceLog, streak logic | `updateNavStats()`, achievement toasts |
+| `reviewItem(store, mastery, key, rating)` | FSRS computation, mastery update | `analyticsTrackWordsLearned()` DOM calls |
+| `_checkStreak()` | Streak/freeze logic | Streak milestone toasts |
+| `save()` | localStorage write | IDB backup |
+| `selectProfile(name)` | Load progress from storage | `applySettings()`, `switchTab()` |
+
+### PlacementSession Class
+
+Wraps the IRT state machine from `placement.js` without DOM rendering:
+
+1. Constructor sets up placement state and builds question pool via `buildPlacementIRTPool()`
+2. `currentQuestion()` calls `selectNextIRTQuestion()` to pick the optimal next question
+3. `answer(isCorrect)` records the answer and calls `updateTheta()` (Newton-Raphson MLE)
+4. `finish()` calls `determinePlacementLevel()` and `applyPlacementResults()` (seeds FSRS state for mastered items)
+
+Placement modes: `'both'` (grammar + vocab), `'grammar'`, `'vocab'`. Test length: 10, 20, or 40 questions. Starting level: any CEFR level (A1–C2) for initial theta.
+
+### Node.js Loader (`api-node.js`)
+
+Uses the same `vm.createContext` pattern as the existing test suite (`tests/test_core.js`). Loads source files in dependency order with a minimal DOM stub context:
+
+- `document.getElementById()` → `null` (safe — all DOM code has null guards or is bypassed)
+- `localStorage` → `MemoryStorage` (functional in-memory mock)
+- `indexedDB` → `null` (IDB backup silently skips via existing `.catch()`)
+- `matchMedia` → `{ matches: false }` (defaults to dark theme)
+
+Special handling for `let`-scoped placement state variables (which are not shared across `vm.runInContext` calls): setter/getter helper functions (`_setPlacementState`, `_getPlacementState`, `_setProgress`, `_setCurrentProfile`) bridge the lexical scope gap.
+
+Vocab data is loaded synchronously from `vocab-data.json` on disk, and `buildVocabIndexes()` is called to populate lookup maps.
+
+---
+
 ## Display Modes & Localization
 
 All user-facing strings are in `UI_STRINGS` with `[english, spanish]` pairs.
@@ -618,13 +739,14 @@ No build step needed — serve source files directly via `./serve.sh` or any HTT
 
 ### Testing
 
-**Unit tests**: `npm test` (or `node tests/run.js`) runs 142 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
+**Unit tests**: `npm test` (or `node tests/run.js`) runs 174 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
 - **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes (incl. dormir o>ue), reflexives, compounds, unknown verbs, bounds checking
 - **FSRS**: stability, difficulty, recall probability, mastery level mapping
 - **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping, `pick()`, `bookmarkId()`/`bookmarkType()`, `shuffle()`, `pickN()`, localStorage round-trips (save/load, empty, corrupt JSON)
 - **Placement**: IRT probability, theta updates, question selection, cognate detection, levenshtein distance
 - **Quiz engine**: `createQuizFlow` API, score tracking, `processMCSubmit`, accent bar, progress bar
 - **Build helpers**: `contentHash()` determinism/length/hex, `escapeRegex()` for all metacharacters
+- **Programmatic API**: pure function access (conjugation, FSRS, IRT, utils), data access (verbs, vocab, tenses, grammar, phrases, categories), session CRUD (profile create/select, XP, settings, save/reload), FSRS review flow (reviewItem, isDue, getDueItems), headless placement test (grammar-only, vocab-only, both modes)
 - **Vocab data**: field validation, CEFR levels, POS normalization, noun genders, category presence, frequency range, split file integrity
 
 **E2E tests**: `npm run test:e2e` runs 14 Playwright tests with Chromium:
