@@ -7,11 +7,11 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **Adaptive Placement Test** — IRT-based (Rasch model) assessment that determines your grammar and vocabulary levels independently, so practice starts at the right difficulty
 - **Spaced Repetition** — FSRS-4.5 algorithm schedules reviews at optimal intervals for long-term retention across all content types
 - **Verb Conjugation** — 252 verbs across 19 tenses (simple, compound, progressive) with a full conjugation engine handling irregulars, stem changes, and spelling rules
-- **Vocabulary** — 28,000+ words across 55+ categories with translations, example sentences, and CEFR levels; searchable browser with progress indicators
+- **Vocabulary** — 28,000+ words across 55+ categories with translations, example sentences, and CEFR levels; normalized POS tags and noun genders; searchable browser with progress indicators
 - **Grammar** — 67 lessons from A1 to C2 with interactive quizzes and searchable lesson browser
 - **Phrases & Conversations** — 260+ phrases across 21 situations with mastery tracking, plus role-play dialogues
-- **Pronunciation** — Minimal pairs, homophones, phonetic exercises, and text-to-speech with regional voice selection (Latin American / Castilian)
-- **Reading & Listening** — Cloze passages, dictation, SAT-style reading comprehension, translation drills, and sentence construction
+- **Pronunciation** — Minimal pairs, homophones, 49 phonetic pairs (b/v distinction, intervocalic d, regional accents), and text-to-speech with regional voice selection (Latin American / Castilian)
+- **Reading & Listening** — 36 reading passages, cloze passages, dictation, SAT-style reading comprehension, translation drills, and sentence construction
 - **Culture** — Modules on recipes, music, movies, poetry, sports, proverbs, folktales, festivals, history, travel, trivia, and idioms
 - **CEFR Curriculum** — Comprehensive view of what you need to learn at each level with mastery tracking across vocabulary, verbs, and grammar
 - **Progress Tracking** — Daily XP goals with progress bar, streaks with freeze token protection, mastery levels, recall probability display, SRS card state distribution, tense/grammar mastery breakdowns, and per-level CEFR mastery percentages
@@ -21,8 +21,8 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **CSV Export** — Export all progress data as CSV from settings
 - **Offline Support** — Service worker caches app shell on install, data files on first use; TTS buttons gray out when offline and re-enable on reconnect
 - **Customization** — Dark/light/auto themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed, configurable daily goals
-- **Accessibility** — WCAG AA contrast ratios, semantic buttons, `aria-live` quiz feedback, `aria-valuenow` progress bars, focus-visible styling
-- **Security** — Content Security Policy, input-validated FSRS algorithm, bounds-checked conjugation engine, null-safe DOM operations throughout
+- **Accessibility** — WCAG AA 4.5:1 contrast verified on all color combinations, semantic buttons, `aria-live` quiz feedback and flashcard flip announcer, `aria-valuenow` progress bars, focus-visible styling, focus management on screen transitions, ARIA dialog attributes on share modal
+- **Security** — Content Security Policy, input-validated FSRS algorithm, bounds-checked conjugation engine, null-safe DOM operations throughout, `pick()` empty-array guard, `bookmarkId()` malformed-input handling, `parseInt` radix enforced throughout
 - **Performance** — Progressive vocab loading (A1-A2 first at 494KB, B1-C2 in parallel), Web Worker for search, batch DOM updates via `data-i18n` attributes, service worker with fetch timeouts, esbuild minification with content-hash cache-busting
 
 ## Running Locally
@@ -43,7 +43,7 @@ To create a minified, cache-busted build:
 
 ```bash
 npm install
-npm test       # 91 unit tests
+npm test       # 108 unit tests
 npm run build  # outputs to dist/
 ```
 
@@ -96,10 +96,10 @@ php -S localhost:8000
 | `conversations.js` | 21 role-play dialogue scenarios |
 | `placement_questions.js` | 120 IRT-calibrated placement questions |
 | `curriculum_tracks.js` | Guided curriculum tracks |
-| `reading.js` `reading_sat.js` | Reading comprehension passages |
+| `reading.js` `reading_sat.js` | 36 reading comprehension passages |
 | `cloze_passages.js` `dictation.js` | Cloze and dictation exercises |
 | `sentence_construction.js` `translation_drills.js` | Writing practice |
-| `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises |
+| `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises (49 phonetic pairs) |
 | `connectors.js` `themed_vocab.js` `jokes.js` | Additional content |
 | `recipes.js` `music.js` `movies.js` ... | Cultural content modules |
 

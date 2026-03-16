@@ -11,21 +11,21 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | **App modules** | |
 | `index.html` | 30+ screens, nav bar, tab bar, modal system |
 | `app-init.js` | Startup, profile loading, event delegation (ACTION_HANDLERS map), routing, search handlers |
-| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR), settings, TTS |
+| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR), settings, TTS, toast error notifications |
 | `app-learn.js` | Today screen, verb learning/drill/quiz, grammar lessons, phrases, numbers, culture, results |
 | `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz (MC + production + gender), Learn New Words |
 | `placement.js` | IRT-adaptive placement test (Rasch model, per-domain scoring, Newton-Raphson MLE) |
 | `app-practice.js` | Export/import (JSON + CSV), admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
 | `practice-reference.js` | Verb conjugation reference, conjugation rules/endings, pronunciation guide, reading comprehension, themed vocabulary, curriculum tracks |
 | `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), quiz HTML helpers (`renderMCQuestionHTML`, `renderFIBQuestionHTML`), haptic feedback, `partialShuffle()` |
-| `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling |
+| `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling (o>ue fix for preterite/imperfect subjunctive) |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters, input-validated) |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search with prefix index |
 | `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout |
 | `sw.js` | Service worker: app shell precache + stale-while-revalidate for data + fetch timeout |
 | `manifest.json` | PWA metadata (maskable icons) |
 | **Build & Test** | |
-| `build.js` | esbuild-based build: minification, content-hash filenames, dist/ output |
+| `build.js` | esbuild-based build: minification, content-hash filenames, dist/ output, `escapeRegex()` helper, recursive `fs.cpSync`, per-file error handling |
 | `package.json` | Node.js project config (esbuild dev dependency) |
 | `tests/run.js` | Minimal zero-dependency test runner |
 | `tests/test_*.js` | Unit tests for conjugation, FSRS, core utils, and vocab data validation |
@@ -40,10 +40,10 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `conversations.js` | 21 role-play dialogue scenarios with vocab and quiz |
 | `placement_questions.js` | 120 hand-crafted IRT-calibrated placement questions (A1–C2) |
 | `curriculum_tracks.js` | Guided curriculum tracks with leveled lesson sequences |
-| `reading.js` `reading_sat.js` | Reading comprehension passages |
+| `reading.js` `reading_sat.js` | 36 reading comprehension passages (31 A1 + SAT-style) |
 | `cloze_passages.js` `dictation.js` | Cloze and dictation exercises |
 | `sentence_construction.js` `translation_drills.js` | Writing practice exercises |
-| `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises |
+| `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises (49 phonetic pairs incl. b/v, intervocalic d, regional accents) |
 | `connectors.js` `themed_vocab.js` `jokes.js` | Additional content modules |
 | `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | Cultural content modules with descriptions, vocab, and quizzes |
 | **Utilities** | |
@@ -69,14 +69,19 @@ app-init.js ─── Event delegation (single click listener on document)
   │                     Bookmarks system (vocab, grammar, phrases)
   │                     Onboarding carousel for new users
   │                     Persistence (localStorage per profile)
+  │                     `pick()` guards against empty arrays
+  │                     `bookmarkId()` handles malformed bookmarks
   │                     TTS with regional voice selection + offline detection
+  │                     TTS errors show one-time toast notification
+  │                     IDB backup errors now logged
   │                     Toast/snackbar notifications (success/error/info/undo)
   │                     Undo last SRS rating (snapshot/restore)
   │                     getRecallColor() shared utility
   │
-  ├── learn-vocab.js ── Vocab indexes (by category, level, word)
+  ├── learn-vocab.js ── Vocab indexes (by category, level, word); skips malformed entries
   │                      Vocab browser with progress indicators
   │                      Flashcard learning, MC/production/gender quizzes
+  │                      Gender quiz tracks FSRS spaced repetition data
   │                      Learn New Words (lowest-probability flashcards)
   │
   ├── app-learn.js ──── Today screen with daily XP goal progress
@@ -92,6 +97,7 @@ app-init.js ─── Event delegation (single click listener on document)
   │                      Post-test learning plan (A1-C2 module recommendations)
   │
   ├── app-practice.js ── Stats dashboard, recall health, SRS card distribution
+  │                       `VERB_DATA.length` used directly (not Object.keys)
   │                       Practice exercises: minimal pairs, phonetic pairs,
   │                         homophones, connectors, sentence build, cloze,
   │                         translation, dictation
@@ -128,7 +134,7 @@ All state is defined in `app-core.js` and accessible globally. The app modules r
 
 ### Navigation
 
-All screens are `<div>` elements in `index.html` with `display:none` by default. `showScreen(id)` hides the current screen and shows the target. The tab bar has 8 main tabs; Culture and Explore have dropdown submenus.
+All screens are `<div>` elements in `index.html` with `display:none` by default. `showScreen(id)` hides the current screen, shows the target, and focuses the first `h1`/`h2`/`h3` heading for screen reader accessibility. The tab bar has 8 main tabs; Culture and Explore have dropdown submenus.
 
 ### Event Handling
 
@@ -189,6 +195,7 @@ Types: `regular`, `irregular`, `stem-changing`, `reflexive`
   gender: 'm', example: '¿Dónde está el gato?',
   exampleEn: 'Where is the cat?', level: 'A1', freq: 50 }
 ```
+POS values are full words (`noun`, `verb`, `adjective`, `adverb`, etc.) — 2,744 abbreviations were normalized. All nouns have gender values (`m`/`f`).
 
 ### Grammar Lesson (`grammar.js`)
 ```javascript
@@ -438,7 +445,7 @@ Mobile-first responsive design with max-width 640px centered container. Safe-are
 
 **Z-index scale**: nav/tab-bar=100, dropdowns=200, modals=1000, toasts=1100.
 
-**Accessibility**: Dark theme colors meet WCAG AA contrast ratios. Interactive cards have `cursor:pointer`, hover lift (`translateY`), and shadow transitions. Flashcard rating buttons use semantic `<button>` elements. Quiz feedback divs have `aria-live="polite"`. Progress bars include `aria-valuenow` updates. Tabs use `aria-controls`. Focus-visible styling on tab elements.
+**Accessibility**: All color combinations verified WCAG AA 4.5:1 contrast ratio. Interactive cards have `cursor:pointer`, hover lift (`translateY`), and shadow transitions. Flashcard rating buttons use semantic `<button>` elements. Flashcard flip uses `aria-live="polite"` announcer for screen readers. Quiz feedback divs have `aria-live="polite"`. Progress bars include `aria-valuenow` updates. Tabs use `aria-controls`. Focus-visible styling on tab elements. Grammar search input has `aria-label`. Share modal has proper dialog ARIA attributes. Arrow key navigation guards empty option lists.
 
 Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must appear **after** `.quiz-option.selected` in the stylesheet to ensure answer highlighting overrides selection styling.
 
@@ -513,19 +520,19 @@ No build step needed — serve source files directly via `./serve.sh` or any HTT
 
 `npm run build` (or `node build.js`) produces an optimized `dist/` directory:
 
-1. **Minification** — All JS (via esbuild) and CSS are minified (~300KB savings, ~22% CSS reduction)
-2. **Cache-busting** — Each file gets a content hash in its filename (e.g., `app-core.d50c0d2d.js`), including `vocab-data.json`
+1. **Minification** — All JS (via esbuild, with prominent fallback warning) and CSS are minified (~300KB savings, ~22% CSS reduction); per-file try/catch with file name in error messages
+2. **Cache-busting** — Each file gets a content hash in its filename (e.g., `app-core.d50c0d2d.js`), using `escapeRegex()` helper for safe filename regex replacement
 3. **HTML rewriting** — `index.html` is updated with hashed filenames and whitespace-collapsed
 4. **SW generation** — A new `sw.js` is generated with hashed filenames, fetch timeouts, and a content-based cache version
 5. **Lazy-script resolution** — A `window.__fileHash` map is injected so `app-init.js` can resolve lazy-loaded scripts and data files to their hashed names
-6. **Static copies** — Split vocab JSON files, manifest, and icons are copied as-is
+6. **Static copies** — Split vocab JSON files, manifest, and icons are copied via recursive `fs.cpSync`
 
 ### Testing
 
-`npm test` (or `node tests/run.js`) runs 91 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
-- **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes, reflexives, compounds
+`npm test` (or `node tests/run.js`) runs 108 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
+- **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes (incl. dormir o>ue), reflexives, compounds
 - **FSRS**: stability, difficulty, recall probability, mastery level mapping
-- **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping
+- **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping, `pick()`, `bookmarkId()`/`bookmarkType()`, `shuffle()`, `pickN()`
 - **Placement**: IRT probability, theta updates, question selection, cognate detection, levenshtein distance
 - **Quiz engine**: `createQuizFlow` API, score tracking, `processMCSubmit`, accent bar, progress bar
 - **Vocab data**: field validation, CEFR levels, category presence, split file integrity
