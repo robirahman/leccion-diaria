@@ -943,7 +943,7 @@ function showScreen(id, pushStack = true) {
     setTimeout(() => el.classList.remove('fade-in'), 250);
     window.scrollTo(0, 0);
     // Accessibility: move focus to screen heading or container
-    const focusTarget = el.querySelector('h2, h3, [tabindex="-1"]') || el;
+    const focusTarget = el.querySelector('h1, h2, h3, [tabindex="-1"]') || el;
     if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
     focusTarget.focus({ preventScroll: true });
   }
