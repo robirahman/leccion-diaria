@@ -4,6 +4,15 @@
 // ════════════════════════════════════════════════════════════
 'use strict';
 
+// ── Practice Constants ──
+const SCORE_EXCELLENT = 0.9;
+const SCORE_GOOD = 0.7;
+const TTS_SLOW_MULTIPLIER = 0.55;
+const QUIZ_SIZE_DEFAULT = 10;
+const QUIZ_SIZE_CLOZE = 8;
+const DICTATION_PHRASE_SUPPLEMENT = 10;
+const STATS_CATEGORY_LIMIT = 12;
+
 // ════════════════════════════════════════
 //  EXPORT / IMPORT
 // ════════════════════════════════════════
@@ -206,7 +215,7 @@ function renderAdmin() {
     const count = keys.reduce((n, k) => n + Object.keys(progress[k] || {}).length, 0);
     html += `<div class="setting-row">
       <span class="text-sm">${fs.title} <span class="text-muted">(${count} items)</span></span>
-      ${count > 0 ? `<button class="btn btn-sm btn-outline" data-action="admin-clear-store" data-stores="${fs.stores}" style="color:var(--red)">Clear</button>` : ''}
+      ${count > 0 ? `<button class="btn btn-sm btn-outline" data-action="admin-clear-store" data-stores="${fs.stores}" class="text-incorrect">Clear</button>` : ''}
     </div>`;
   }
   html += '</div>';
@@ -240,7 +249,7 @@ function renderMinimalPairCategories() {
   const container = document.getElementById('mp-categories');
   if (!container) return;
   if (typeof MINIMAL_PAIR_CATEGORIES === 'undefined') {
-    container.innerHTML = '<p class="text-muted" style="text-align:center">Loading…</p>';
+    container.innerHTML = '<p class="text-muted text-center">Loading…</p>';
     return;
   }
   container.innerHTML = Object.entries(MINIMAL_PAIR_CATEGORIES).map(([key, cat]) => `
@@ -255,7 +264,7 @@ function startMinimalPairs(category) {
   if (typeof MINIMAL_PAIRS === 'undefined') return;
   const userLevel = progress?.placementLevel || 'B1';
   let items = MINIMAL_PAIRS.filter(p => p.category === category);
-  items = shuffle(items).slice(0, 10);
+  items = shuffle(items).slice(0, QUIZ_SIZE_DEFAULT);
   if (items.length === 0) return;
   mpQueue = items; mpIdx = 0; mpScore = 0; mpAnswered = false;
   showScreen('mp-drill');
@@ -301,7 +310,7 @@ function answerMP(idx) {
     feedbackFn: ok => `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`,
     fsrs: { store: progress.mpFsrs, masteryStore: progress.mpMastery, key: item.id },
   });
-  if (correct) { mpScore++; addXP(5); } else { addXP(1); }
+  if (correct) { mpScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
   const contrast = document.getElementById('mp-contrast');
   if (item.contrast) { contrast.innerHTML = esc(item.contrast); contrast.style.display = 'block'; }
 }
@@ -333,7 +342,7 @@ function startPhoneticPairs(category) {
       queue.push({ item, side, sentence: item['example' + side], answer: item['word' + side], wrong: item['word' + (side === 'A' ? 'B' : 'A')] });
     }
   }
-  ppQueue = shuffle(queue).slice(0, 10);
+  ppQueue = shuffle(queue).slice(0, QUIZ_SIZE_DEFAULT);
   if (ppQueue.length === 0) return;
   ppIdx = 0; ppScore = 0; ppAnswered = false;
   showScreen('pp-drill');
@@ -384,7 +393,7 @@ function answerPP(idx) {
     feedbackFn: ok => `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`,
     fsrs: { store: progress.ppFsrs, masteryStore: progress.ppMastery, key: q.item.id },
   });
-  if (correct) { ppScore++; addXP(5); } else { addXP(1); }
+  if (correct) { ppScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
 }
 
 function nextPP() { ppIdx++; renderPPQuestion(); }
@@ -413,7 +422,7 @@ function startHomophones(category) {
       queue.push({ item, sentence: ex.sentence, answer: ex.answer, english: ex.english, options });
     }
   }
-  homQueue = shuffle(queue).slice(0, 10);
+  homQueue = shuffle(queue).slice(0, QUIZ_SIZE_DEFAULT);
   if (homQueue.length === 0) return;
   homIdx = 0; homScore = 0; homAnswered = false;
   showScreen('hom-drill');
@@ -470,7 +479,7 @@ function answerHom(idx) {
     },
     fsrs: { store: progress.homFsrs, masteryStore: progress.homMastery, key: q.item.id },
   });
-  if (correct) { homScore++; addXP(5); } else { addXP(1); }
+  if (correct) { homScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
 }
 
 function nextHom() { homIdx++; renderHomQuestion(); }
@@ -490,7 +499,7 @@ function renderConnectorCategories() {
 
 function startConnectors(category) {
   if (typeof CONNECTORS === 'undefined') return;
-  const items = shuffle(CONNECTORS.filter(c => c.category === category)).slice(0, 10);
+  const items = shuffle(CONNECTORS.filter(c => c.category === category)).slice(0, QUIZ_SIZE_DEFAULT);
   if (items.length === 0) return;
   connQueue = items; connIdx = 0; connScore = 0; connAnswered = false;
   showScreen('conn-drill');
@@ -530,7 +539,7 @@ function answerConn(idx) {
     feedbackFn: ok => `<div class="${ok ? 'text-correct' : 'text-incorrect'}">${ok ? '\u2713' : '\u2717'} ${esc(explanation)}</div>`,
     fsrs: { store: progress.connFsrs, masteryStore: progress.connMastery, key: item.id },
   });
-  if (correct) { connScore++; addXP(5); } else { addXP(1); }
+  if (correct) { connScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
 }
 
 function nextConn() { connIdx++; renderConnQuestion(); }
@@ -542,7 +551,7 @@ function startSentenceBuild() {
     showToast('⏳', 'Still loading — please try again in a moment.');
     return;
   }
-  let items = shuffle([...SENTENCE_CONSTRUCTION]).slice(0, 10);
+  let items = shuffle([...SENTENCE_CONSTRUCTION]).slice(0, QUIZ_SIZE_DEFAULT);
   if (items.length === 0) return;
   sbQueue = items; sbIdx = 0; sbScore = 0;
   showScreen('sentence-build');
@@ -601,11 +610,11 @@ function checkSentenceBuild() {
 
   const fb = document.getElementById('sb-feedback');
   if (correct) {
-    sbScore++; addXP(5);
+    sbScore++; addXP(XP_CORRECT);
     if (fb) fb.innerHTML = `<div class="text-correct">✓ ${esc(item.sentence)}</div>`;
     if (fb && item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
   } else {
-    addXP(1);
+    addXP(XP_INCORRECT);
     // Mark distractor tiles
     const distractors = new Set(item.distractors || []);
     tiles.forEach(t => { if (distractors.has(t.textContent)) t.classList.add('distractor-wrong'); });
@@ -650,7 +659,7 @@ function renderClozeTopics() {
 function startCloze(topic) {
   if (typeof CLOZE_PASSAGES === 'undefined') return;
   let items = topic === 'all' ? [...CLOZE_PASSAGES] : CLOZE_PASSAGES.filter(p => p.topic === topic);
-  items = shuffle(items).slice(0, 8);
+  items = shuffle(items).slice(0, QUIZ_SIZE_CLOZE);
   if (items.length === 0) return;
   clozeQueue = items; clozeIdx = 0; clozeScore = 0;
   showScreen('cloze');
@@ -707,8 +716,8 @@ function checkCloze() {
     explanations.push(`<div class="cloze-explanation">{${n}} <strong>${esc(blankDef.answer)}</strong> — ${esc(blankDef.explanation)}</div>`);
   });
 
-  if (allCorrect) { clozeScore++; addXP(5); }
-  else { addXP(1); }
+  if (allCorrect) { clozeScore++; addXP(XP_CORRECT); }
+  else { addXP(XP_INCORRECT); }
 
   const fb = document.getElementById('cloze-feedback');
   if (fb) {
@@ -729,7 +738,7 @@ function nextCloze() { clozeIdx++; renderClozePassage(); }
 
 function startTranslation() {
   if (typeof TRANSLATION_DRILLS === 'undefined') return;
-  let items = shuffle([...TRANSLATION_DRILLS]).slice(0, 10);
+  let items = shuffle([...TRANSLATION_DRILLS]).slice(0, QUIZ_SIZE_DEFAULT);
   if (items.length === 0) return;
   // Assign random direction: ~50% EN→ES, ~50% ES→EN
   trQueue = items.map(item => ({ ...item, direction: Math.random() < 0.5 ? 'es-en' : 'en-es' }));
@@ -794,8 +803,8 @@ function checkTranslation() {
     keyMisses = item.keyWords.filter(kw => !inputLower.includes(stripAccents(kw.toLowerCase())));
   }
 
-  if (correct) { trScore++; addXP(accentWarn ? 3 : 5); }
-  else { addXP(1); }
+  if (correct) { trScore++; addXP(accentWarn ? XP_ACCENT_WARN : XP_CORRECT); }
+  else { addXP(XP_INCORRECT); }
 
   const fb = document.getElementById('tr-feedback');
   let html = '';
@@ -835,9 +844,9 @@ function startDictation() {
       (sit.phrases || []).filter(p => p.spanish && p.spanish.length > 5 && p.spanish.length < 80)
         .map(p => ({ id: 'dict-p-' + p.id, level: 'A2', topic: sit.situation, sentence: p.spanish, english: p.english, notes: '' }))
     );
-    items = items.concat(shuffle(extras).slice(0, 10));
+    items = items.concat(shuffle(extras).slice(0, DICTATION_PHRASE_SUPPLEMENT));
   }
-  items = shuffle(items).slice(0, 10);
+  items = shuffle(items).slice(0, QUIZ_SIZE_DEFAULT);
   if (items.length === 0) return;
   dictQueue = items; dictIdx = 0; dictScore = 0;
   showScreen('dictation');
@@ -868,7 +877,7 @@ function dictPlayNormal() {
 function dictPlaySlow() {
   const item = dictQueue[dictIdx];
   if (!item) return;
-  const rate = (progress?.settings?.ttsRate || 1) * 0.55;
+  const rate = (progress?.settings?.ttsRate || 1) * TTS_SLOW_MULTIPLIER;
   const orig = progress?.settings?.ttsRate;
   if (progress?.settings) progress.settings.ttsRate = rate;
   try {
@@ -907,9 +916,9 @@ function checkDictation() {
   const extra = Math.max(0, inputWords.length - correctWords.length);
   const score = Math.max(0, matches - extra * 0.5) / correctWords.length;
 
-  if (score >= 0.9) { dictScore++; addXP(5); }
-  else if (score >= 0.7) { addXP(3); }
-  else { addXP(1); }
+  if (score >= SCORE_EXCELLENT) { dictScore++; addXP(XP_CORRECT); }
+  else if (score >= SCORE_GOOD) { addXP(XP_ACCENT_WARN); }
+  else { addXP(XP_INCORRECT); }
 
   // Build word-by-word feedback
   const wordHtml = results.map(r => {
@@ -923,7 +932,7 @@ function checkDictation() {
   const fb = document.getElementById('dict-feedback');
   const pct = Math.round(score * 100);
   if (fb) {
-    fb.innerHTML = `<div class="${score >= 0.9 ? 'text-correct' : score >= 0.7 ? '' : 'text-incorrect'}">${pct}% correct</div>` +
+    fb.innerHTML = `<div class="${score >= SCORE_EXCELLENT ? 'text-correct' : score >= SCORE_GOOD ? '' : 'text-incorrect'}">${pct}% correct</div>` +
       `<div class="mt-1">${wordHtml}</div>` +
       `<div class="text-muted text-sm mt-1">${esc(item.english)}</div>` +
       (item.notes ? `<div class="text-muted text-sm">${esc(item.notes)}</div>` : '');
@@ -932,7 +941,7 @@ function checkDictation() {
   if (dictInputEl) dictInputEl.readOnly = true;
   const dictNextBtn = document.getElementById('dict-next');
   if (dictNextBtn) dictNextBtn.style.display = 'flex';
-  const rating = score >= 0.9 ? FSRS_GOOD : score >= 0.7 ? FSRS_HARD : FSRS_AGAIN;
+  const rating = score >= SCORE_EXCELLENT ? FSRS_GOOD : score >= SCORE_GOOD ? FSRS_HARD : FSRS_AGAIN;
   reviewItem(progress.dictFsrs, progress.dictMastery, item.id, rating);
   saveProgress();
 }
@@ -990,7 +999,7 @@ function renderStats() {
   let catHtml = '';
   if (typeof VOCAB_CATEGORIES !== 'undefined' && typeof VOCAB_DATA !== 'undefined') {
     buildVocabIndexes();
-    const cats = Object.entries(VOCAB_CATEGORIES).slice(0, 12);
+    const cats = Object.entries(VOCAB_CATEGORIES).slice(0, STATS_CATEGORY_LIMIT);
     for (const [key, cat] of cats) {
       const catWords = VOCAB_BY_CATEGORY[key] || [];
       const total = catWords.length;
@@ -1230,9 +1239,9 @@ function renderSrsDashboard() {
   const now = Date.now();
   let html = '<div style="font-size:0.7rem;display:flex;gap:0.75rem;margin-bottom:0.5rem;color:var(--text3)">'
     + '<span style="color:var(--text2)">New</span>'
-    + '<span style="color:var(--red)">Learning</span>'
-    + '<span style="color:var(--yellow)">Review</span>'
-    + '<span style="color:var(--green)">Mature</span></div>';
+    + '<span class="text-incorrect">Learning</span>'
+    + '<span class="text-warning">Review</span>'
+    + '<span class="text-correct">Mature</span></div>';
 
   for (const d of domains) {
     // Count cards in each SRS state
@@ -1325,9 +1334,9 @@ function renderRecallHealth() {
     <div style="width:${weak/total*100}%;background:var(--red)"></div>
   </div>
   <div style="display:flex;gap:1rem;font-size:0.75rem;color:var(--text3);margin-bottom:0.5rem">
-    <span style="color:var(--green)">&#9632; Strong ${strong}</span>
-    <span style="color:var(--yellow)">&#9632; Fading ${fading}</span>
-    <span style="color:var(--red)">&#9632; Weak ${weak}</span>
+    <span class="text-correct">&#9632; Strong ${strong}</span>
+    <span class="text-warning">&#9632; Fading ${fading}</span>
+    <span class="text-incorrect">&#9632; Weak ${weak}</span>
   </div>`;
 
   for (const s of perStore) {

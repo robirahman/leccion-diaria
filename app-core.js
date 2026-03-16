@@ -44,6 +44,16 @@ const TENSE_SUBJUNCTIVE_IMPERFECT = 'subjunctive_imperfect';
 const TENSE_IMPERATIVE_AFF = 'imperative_aff';
 const TENSE_IMPERATIVE_NEG = 'imperative_neg';
 
+// ── XP Reward Constants ──
+const XP_CORRECT = 5;
+const XP_ACCENT_WARN = 3;   // correct answer but accent issues
+const XP_INCORRECT = 1;
+
+// ── Toast Timing Constants ──
+const TOAST_DURATION_MS = 3500;
+const TOAST_UNDO_DURATION_MS = 5000;
+const TOAST_FADE_MS = 300;
+
 // Map question domains to scoring groups
 const DOMAIN_GROUP = { grammar: 'grammar', usage: 'grammar', reading: 'grammar', verb: 'grammar', vocab: 'vocab' };
 function scoringGroup(domain) { return DOMAIN_GROUP[domain] || 'grammar'; }
@@ -472,11 +482,11 @@ function showToast(icon, text, type) {
     toast.textContent = icon + ' ' + text;
   }
   container.appendChild(toast);
-  const duration = type === 'undo' ? 5000 : 3500;
+  const duration = type === 'undo' ? TOAST_UNDO_DURATION_MS : TOAST_DURATION_MS;
   requestAnimationFrame(() => toast.classList.add('visible'));
   setTimeout(() => {
     toast.classList.remove('visible');
-    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, TOAST_FADE_MS);
   }, duration);
 }
 
@@ -1201,7 +1211,7 @@ document.addEventListener('keydown', e => {
   const overlay = document.getElementById('modal-overlay');
 
   // Modal focus trap
-  if (overlay && overlay.classList.contains('open')) {
+  if (overlay?.classList.contains('open')) {
     if (e.key === 'Escape') { closeModal(); e.preventDefault(); return; }
     if (e.key === 'Tab') {
       const focusable = overlay.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -1424,7 +1434,7 @@ function _saveRatingSnapshot(type, key, fsrsStore, masteryStore) {
     fsrsStoreName: type === 'verb' ? 'verbFsrs' : type === 'vocab' ? 'vocabFsrs' : 'phraseFsrs',
     masteryStoreName: type === 'verb' ? 'verbMastery' : type === 'vocab' ? 'vocabMastery' : 'phraseMastery',
     prevFsrs: fsrsStore[key] ? { ...fsrsStore[key] } : null,
-    prevMastery: masteryStore[key] !== undefined ? masteryStore[key] : null,
+    prevMastery: masteryStore[key] ?? null,
     prevXP: progress.xp,
     timestamp: Date.now()
   };

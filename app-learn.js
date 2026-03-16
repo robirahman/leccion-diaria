@@ -166,7 +166,7 @@ function renderToday() {
         </ul>
       </div>
       <div class="card mt-1" data-action="open-review-dashboard" style="padding:0.5rem 0.75rem">
-        <div class="card-subtitle" style="text-align:center">View Review Dashboard &rarr;</div>
+        <div class="card-subtitle text-center">View Review Dashboard &rarr;</div>
       </div>
     `;
   } else {
@@ -508,14 +508,14 @@ function checkVerbDrill() {
     fb.textContent = result.accentWarn ? `${t('correctAccent')} ${item.answer}` : t('correct');
     verbDrillScore++;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
     fb.className = 'quiz-feedback incorrect';
     fb.textContent = result.accentWarn
       ? `${t('incorrectAccent')} ${item.answer}`
       : `${t('incorrectAnswer')} ${item.answer}`;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   const explanation = buildVerbExplanation(item.verb, item.tense, item.person, item.answer);
   if (explanation) {
@@ -670,10 +670,10 @@ function submitVerbQuizMC() {
   if (isCorrect) {
     verbQuizScore++;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_GOOD);
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   const explanation = buildVerbExplanation(item.verb, item.tense, item.person, item.correct);
   if (explanation) {
@@ -702,12 +702,12 @@ function submitVerbQuizFIB() {
     fb.textContent = result.accentWarn ? `${t('correctAccent')} ${item.correct}` : t('correct');
     verbQuizScore++;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
     fb.className = 'quiz-feedback incorrect';
     fb.textContent = result.accentWarn ? `${t('incorrectAccent')} ${item.correct}` : `${t('incorrectAnswer')} ${item.correct}`;
     reviewItem(progress.verbFsrs, progress.verbMastery, key, FSRS_AGAIN);
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   const explanation = buildVerbExplanation(item.verb, item.tense, item.person, item.correct);
   if (explanation) {
@@ -761,8 +761,8 @@ function showVerbDetail(infinitive) {
   document.getElementById('vdet-title').textContent = verb.infinitive;
   document.getElementById('vdet-subtitle').textContent = `${verb.english} — ${verb.type} (${verb.group})`;
 
-  const tenses = ['present', 'preterite', 'imperfect', 'future', 'conditional',
-    'subjunctive_present', 'subjunctive_imperfect', 'imperative_aff'];
+  const tenses = Object.keys(TENSE_META).filter(k =>
+    !TENSE_META[k].compound && !TENSE_META[k].progressive && k !== 'future_subjunctive' && k !== 'imperative_neg');
   let html = '';
   tenses.forEach(tense => {
     const meta = TENSE_META[tense];
@@ -977,9 +977,9 @@ function submitGrammarQuizMC() {
   trackError(`grammar:${q.id || grammarQuizIdx}`, idx === correctIdx, 'grammar');
   if (idx === correctIdx) {
     grammarQuizScore++;
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   const submitBtn = document.querySelector('#gq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
@@ -1013,11 +1013,11 @@ function submitGrammarFIB() {
     fb.className = 'quiz-feedback correct';
     fb.textContent = accentWarn ? `${t('correctAccent')} ${answer}` : t('correct');
     grammarQuizScore++;
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
     fb.className = 'quiz-feedback incorrect';
     fb.textContent = `${t('incorrectAnswer')} ${answer}`;
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   if (q.explanation) {
     fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
@@ -1064,7 +1064,7 @@ function openPhraseSituation(slug) {
   currentSituation = slug;
   const sit = PHRASES_SITUATIONS?.find(s => s.slug === slug);
   showScreen('phrases-sit');
-  document.getElementById('ps-title').textContent = sit ? sit.title : slug;
+  document.getElementById('ps-title').textContent = sit?.title ?? slug;
 
   const phrases = PHRASES_DATA.filter(p => p.situation === slug);
   document.getElementById('ps-phrases').innerHTML = phrases.map(p => `
@@ -1196,7 +1196,7 @@ function submitPhraseQuizMC() {
     fsrs: { store: progress.phraseFsrs, masteryStore: progress.phraseMastery, key: item.phrase.id },
   });
   trackError(`phrase:${item.phrase.id}`, isCorrect, 'phrase');
-  if (isCorrect) { phraseQuizScore++; addXP(5); } else { addXP(1); }
+  if (isCorrect) { phraseQuizScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
   const submitBtn = document.querySelector('#pq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
 }
@@ -1309,8 +1309,8 @@ const cultureQuizFlow = createQuizFlow({
   nextBtnId: 'cq-next',
   progressId: 'cq-progress',
   getCorrectIdx: q => q.correct,
-  onCorrect: () => addXP(5),
-  onIncorrect: () => addXP(1),
+  onCorrect: () => addXP(XP_CORRECT),
+  onIncorrect: () => addXP(XP_INCORRECT),
   getExplanation: q => q.explanation || null,
   onComplete: (score, total) => showResults(score, total, 'culture-quiz', t('cultureQuizLabel')),
   renderQuestion: (q) => `
@@ -1340,8 +1340,8 @@ const dialogueQuizFlow = createQuizFlow({
   nextBtnId: 'dp-next',
   progressId: 'dp-progress',
   getCorrectValue: q => q.correct.spanish,
-  onCorrect: () => addXP(5),
-  onIncorrect: () => addXP(1),
+  onCorrect: () => addXP(XP_CORRECT),
+  onIncorrect: () => addXP(XP_INCORRECT),
   getExplanation: q => `"${q.correct.english}"`,
   onComplete: (score, total) => showResults(score, total, 'dialogue', 'Dialogue Practice'),
   renderQuestion: (q, idx, total) => {
@@ -1443,13 +1443,13 @@ function showResults(score, total, module, label) {
     <div>${score} / ${total} ${t('correctLabel').toLowerCase()} — ${label}</div>
   `;
   document.getElementById('res-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${score}</div><div class="stat-desc">${t('correctLabel')}</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--red)">${total - score}</div><div class="stat-desc">${t('incorrectLabel')}</div></div>
-    <div class="stat-card"><div class="stat-num">${score * 5 + (total - score)}</div><div class="stat-desc">${t('xpEarned')}</div></div>
+    <div class="stat-card"><div class="stat-num text-correct">${score}</div><div class="stat-desc">${t('correctLabel')}</div></div>
+    <div class="stat-card"><div class="stat-num text-incorrect">${total - score}</div><div class="stat-desc">${t('incorrectLabel')}</div></div>
+    <div class="stat-card"><div class="stat-num">${score * XP_CORRECT + (total - score) * XP_INCORRECT}</div><div class="stat-desc">${t('xpEarned')}</div></div>
   `;
 
   // Show session summary modal
-  const xpEarned = score * 5 + (total - score);
+  const xpEarned = score * XP_CORRECT + (total - score) * XP_INCORRECT;
   const duration = typeof getSessionDuration === 'function' ? getSessionDuration() : 0;
   showSessionSummary({
     type: label,
@@ -1607,7 +1607,7 @@ function renderReviewDashboard() {
     </div>
     ${urgencyHtml}
     ${cardsHtml}
-    ${totalDue > 0 ? '<button class="btn btn-primary btn-block mt-1" data-action="start-review">Review All</button>' : '<p class="text-muted text-sm" style="text-align:center">No reviews due. Great work!</p>'}
+    ${totalDue > 0 ? '<button class="btn btn-primary btn-block mt-1" data-action="start-review">Review All</button>' : '<p class="text-muted text-sm text-center">No reviews due. Great work!</p>'}
   `;
 }
 

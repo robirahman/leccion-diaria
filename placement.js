@@ -226,8 +226,8 @@ function startPlacementTest() {
   showScreen('placement');
   // Show self-assessment step
   document.getElementById('pt-container').innerHTML = `
-    <h3 style="text-align:center;margin-bottom:0.5rem">How would you describe your Spanish?</h3>
-    <p class="text-muted text-sm" style="text-align:center;margin-bottom:1rem">This helps us start the test at the right level.</p>
+    <h3 class="text-center mb-05">How would you describe your Spanish?</h3>
+    <p class="text-muted text-sm" class="text-center mb-2">This helps us start the test at the right level.</p>
     <div class="pt-self-assess">
       <button class="card pt-level-choice" data-action="start-placement-at" data-level="A1">
         <div class="card-title">Complete Beginner</div>
@@ -263,8 +263,8 @@ function startPlacementTest() {
 
 function showPlacementModeSelection(level) {
   document.getElementById('pt-container').innerHTML = `
-    <h3 style="text-align:center;margin-bottom:0.5rem">What do you want to test?</h3>
-    <p class="text-muted text-sm" style="text-align:center;margin-bottom:1rem">Choose which skills to assess.</p>
+    <h3 class="text-center mb-05">What do you want to test?</h3>
+    <p class="text-muted text-sm" class="text-center mb-2">Choose which skills to assess.</p>
     <div class="pt-self-assess">
       <button class="card pt-level-choice" data-action="start-placement-mode" data-level="${level}" data-mode="both">
         <div class="card-title">Grammar &amp; Vocabulary</div>
@@ -392,7 +392,7 @@ function renderPlacementQuestion() {
 
   if (q.type === 'mc' && q.options) {
     container.innerHTML = `
-      <div class="text-muted mb-1" style="font-size:0.75rem">${domainLabel} — ${q.level}</div>
+      <div class="text-muted text-xs mb-1">${domainLabel} — ${q.level}</div>
       <div class="quiz-question">${q.prompt}</div>
       <div class="quiz-options">
         ${q.options.map((opt, i) =>
@@ -403,7 +403,7 @@ function renderPlacementQuestion() {
     `;
   } else {
     container.innerHTML = `
-      <div class="text-muted mb-1" style="font-size:0.75rem">${domainLabel} — ${q.level}</div>
+      <div class="text-muted text-xs mb-1">${domainLabel} — ${q.level}</div>
       <div class="quiz-question">${q.prompt}</div>
       <div class="quiz-input-row">
         <input type="text" id="pt-fib-input" placeholder="${t('typeAnswer')}" autocomplete="off" autocapitalize="off">
@@ -682,23 +682,23 @@ function finishPlacementTest() {
   breakdownHtml += `<div style="display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem">`;
   if (mode !== 'vocab') {
     breakdownHtml += `
-      <div style="text-align:center">
-        <div style="font-size:0.75rem;color:var(--text-muted)">${t('grammarLevel')}</div>
+      <div class="text-center">
+        <div class="text-xs text-muted">${t('grammarLevel')}</div>
         <div class="level-badge" style="background:${gInfo.color};display:inline-block;padding:0.25rem 0.75rem;border-radius:0.5rem;color:#fff;font-weight:700;font-size:1.1rem">${levels.grammar}</div>
-        <div style="font-size:0.7rem;color:var(--text-muted)">${gTheta} &plusmn; ${gSE}</div>
+        <div class="text-xxs text-muted">${gTheta} &plusmn; ${gSE}</div>
       </div>`;
   }
   if (mode !== 'grammar') {
     breakdownHtml += `
-      <div style="text-align:center">
-        <div style="font-size:0.75rem;color:var(--text-muted)">${t('vocabLevel')}</div>
+      <div class="text-center">
+        <div class="text-xs text-muted">${t('vocabLevel')}</div>
         <div class="level-badge" style="background:${vInfo.color};display:inline-block;padding:0.25rem 0.75rem;border-radius:0.5rem;color:#fff;font-weight:700;font-size:1.1rem">${levels.vocab}</div>
-        <div style="font-size:0.7rem;color:var(--text-muted)">${vTheta} &plusmn; ${vSE}</div>
+        <div class="text-xxs text-muted">${vTheta} &plusmn; ${vSE}</div>
       </div>`;
   }
   breakdownHtml += `
     </div>
-    <div style="text-align:center;margin-bottom:0.75rem;font-size:0.85rem;color:var(--text-muted)">
+    <div class="text-center text-muted text-sm" style="margin-bottom:0.75rem">
       ${totalCorrect}/${placementHistory.length} ${t('correctLabelLC')}
     </div>
   `;

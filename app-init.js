@@ -800,7 +800,7 @@ const LAZY_SCRIPTS = [
 let _lazyLoaded = false;
 function _resolveFile(name) {
   // In production builds, window.__fileHash maps original names to hashed names
-  return (window.__fileHash && window.__fileHash[name]) || name;
+  return window.__fileHash?.[name] || name;
 }
 function lazyLoadSecondaryScripts() {
   if (_lazyLoaded) return;
@@ -826,7 +826,7 @@ function loadVocabData() {
 
   // Try IndexedDB cache first (full dataset)
   _idbGet(_IDB_VOCAB_KEY).then(cached => {
-    if (cached && cached.length > 1000) {
+    if (cached?.length > 1000) {
       window.VOCAB_DATA = cached;
       if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
       return;
@@ -847,7 +847,7 @@ function _fetchVocabProgressive() {
       if (!r.ok) return [];
       return r.json();
     }).then(extra => {
-      if (extra && extra.length) {
+      if (extra?.length) {
         window.VOCAB_DATA = window.VOCAB_DATA.concat(extra);
         if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
         _updateVocabWorker();

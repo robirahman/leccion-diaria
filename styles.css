@@ -1040,6 +1040,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .mt-3 { margin-top: 1.5rem; }
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
+.m-0 { margin: 0; }
+.mb-05 { margin-bottom: 0.5rem; }
+.text-left { text-align: left; }
+.text-correct { color: var(--green); }
+.text-incorrect { color: var(--red); }
+.text-warning { color: var(--yellow); }
+.text-dim { color: var(--text3); }
+.text-xxs { font-size: 0.7rem; }
+.text-xxxs { font-size: 0.6rem; }
+.level-tag { font-size: 0.6rem; padding: 0.1rem 0.4rem; background: var(--bg3); color: var(--text3); border-radius: 3px; }
 .gap-1 { gap: 0.5rem; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }

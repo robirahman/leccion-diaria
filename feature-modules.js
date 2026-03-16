@@ -280,7 +280,7 @@ function showWritingSample() {
       <p class="text-muted text-xs mt-1">${esc(currentWritingPrompt.sampleResponseEn)}</p>
     </div>
   `;
-  addXP(5);
+  addXP(XP_CORRECT);
 }
 
 // ════════════════════════════════════════
@@ -347,7 +347,7 @@ function openComparativeDetail(id) {
   }
 
   el.innerHTML = html;
-  addXP(5);
+  addXP(XP_CORRECT);
 }
 
 // ════════════════════════════════════════
@@ -487,12 +487,12 @@ function checkNumberQuiz() {
   if (result.correct) {
     nqQuiz.score++;
     if (fb) {
-      fb.innerHTML = `<div class="text-sm" style="color:var(--green)">${result.accentWarn ? t('correctAccent') + ' ' + q.spanish : t('correct')}</div>`;
+      fb.innerHTML = `<div class="text-sm text-correct">${result.accentWarn ? t('correctAccent') + ' ' + q.spanish : t('correct')}</div>`;
       fb.style.display = 'block';
     }
   } else {
     if (fb) {
-      fb.innerHTML = `<div class="text-sm" style="color:var(--red)">${t('incorrectAnswer')} <strong lang="es">${esc(q.spanish)}</strong></div>`;
+      fb.innerHTML = `<div class="text-sm text-incorrect">${t('incorrectAnswer')} <strong lang="es">${esc(q.spanish)}</strong></div>`;
       fb.style.display = 'block';
     }
   }

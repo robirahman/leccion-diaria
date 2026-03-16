@@ -37,7 +37,7 @@ function buildVocabIndexes() {
     (VOCAB_BY_LEVEL[v.level] ??= []).push(v);
     VOCAB_BY_WORD[v.word.toLowerCase()] = v;
     // Pre-compute cognate flag to avoid levenshtein in placement loops
-    if (v._cognate === undefined) v._cognate = isCognate(v.word, v.english);
+    if (v._cognate == null) v._cognate = isCognate(v.word, v.english);
   }
   for (const [cat, arr] of Object.entries(VOCAB_BY_CATEGORY)) {
     VOCAB_CATEGORY_COUNTS[cat] = arr.length;
@@ -353,13 +353,13 @@ function submitVocabQuizProduce() {
       ? `<span class="text-correct">${t('correctAccent')} ${esc(item.correct)}</span>`
       : `<span class="text-correct">${t('correct')}</span>`;
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
     fb.innerHTML = result.accentWarn
       ? `<span class="text-incorrect">${t('incorrectAccent')} ${esc(item.correct)}</span>`
       : `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(item.correct)}</span>`;
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_AGAIN);
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   fb.style.display = 'block';
   document.getElementById('vocq-next').style.display = 'flex';
@@ -387,10 +387,10 @@ function submitVocabQuizMC() {
   if (vocCorrect) {
     vocabQuizScore++;
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_GOOD);
-    addXP(5);
+    addXP(XP_CORRECT);
   } else {
     reviewItem(progress.vocabFsrs, progress.vocabMastery, item.word.word, FSRS_AGAIN);
-    addXP(1);
+    addXP(XP_INCORRECT);
   }
   const submitBtn = document.querySelector('#vocq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
@@ -410,7 +410,7 @@ function submitGenderQuizMC() {
     if (i === correctIdx) btn.classList.add('correct');
     if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });
-  if (idx === correctIdx) { vocabQuizScore++; addXP(5); } else { addXP(1); }
+  if (idx === correctIdx) { vocabQuizScore++; addXP(XP_CORRECT); } else { addXP(XP_INCORRECT); }
   const submitBtn = document.querySelector('#vocq-container .mc-submit');
   if (submitBtn) submitBtn.style.display = 'none';
   document.getElementById('vocq-next').style.display = 'flex';

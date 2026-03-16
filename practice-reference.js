@@ -38,7 +38,7 @@ function renderVerbReference(infinitive) {
 
   // Header
   html += `<div class="card mb-1">
-    <h2 style="margin:0">${esc(verb.infinitive)}</h2>
+    <h2 class="m-0">${esc(verb.infinitive)}</h2>
     <p class="text-muted">${esc(verb.english)}</p>
     <div class="flex gap-1 mt-1" style="flex-wrap:wrap">
       <span class="verb-type-badge ${verb.type}" style="font-size:0.7rem;padding:0.15rem 0.5rem">${verb.type}</span>
@@ -60,13 +60,12 @@ function renderVerbReference(infinitive) {
     </table></div>
   </div>`;
 
-  // Tense groups by mood
-  const indicative = ['present','preterite','imperfect','future','conditional',
-    'present_perfect','pluperfect','future_perfect','conditional_perfect',
-    'progressive_present','progressive_preterite','progressive_imperfect'];
-  const subjunctive = getActiveTenses(['subjunctive_present','subjunctive_imperfect',
-    'subjunctive_perfect','subjunctive_pluperfect','future_subjunctive']);
-  const imperative = ['imperative_aff','imperative_neg'];
+  // Tense groups by mood — derived from TENSE_META
+  const indicative = Object.keys(TENSE_META).filter(k =>
+    !k.startsWith('subjunctive') && !k.startsWith('imperative') && k !== 'future_subjunctive');
+  const subjunctive = getActiveTenses(Object.keys(TENSE_META).filter(k =>
+    k.startsWith('subjunctive') || k === 'future_subjunctive'));
+  const imperative = Object.keys(TENSE_META).filter(k => k.startsWith('imperative'));
 
   // Determine -se form preference for reference tables
   const seFormPref = progress?.settings?.subjunctiveForm || 'ra';
@@ -117,7 +116,7 @@ function renderRefTenseTable(infinitive, tense, useSeForm = false) {
     <div class="flex" style="justify-content:space-between;align-items:center">
       <div class="card-title text-sm">${label}</div>
       <div style="display:flex;gap:0.25rem">
-        <span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">${meta.level}</span>
+        <span class="level-tag">${meta.level}</span>
         ${isIrregular ? '<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--accent-bg);color:var(--accent);border-radius:3px">irregular</span>' : ''}
         ${tenseRecallBadge}
       </div>
@@ -127,7 +126,7 @@ function renderRefTenseTable(infinitive, tense, useSeForm = false) {
     <div class="conj-table-scroll"><table class="conj-table mt-1">
       ${PERSONS.map((p, i) => {
         const form = forms[i];
-        if (form === '—') return `<tr><td>${PERSON_LABELS[p]}</td><td style="color:var(--text3)">—</td></tr>`;
+        if (form === '—') return `<tr><td>${PERSON_LABELS[p]}</td><td class="text-dim">—</td></tr>`;
         return `<tr><td>${PERSON_LABELS[p]}</td><td${isIrregular ? ' class="irreg"' : ''}>${esc(form)}</td></tr>`;
       }).join('')}
     </table></div>
@@ -178,13 +177,13 @@ function renderConjugationRules() {
     let rows = personLabels.map((p, i) => {
       const cells = groups.map(g => {
         const e = endings[g][i];
-        return `<td>${e === '—' ? '<span style="color:var(--text3)">—</span>' : '<strong>' + esc(e) + '</strong>'}</td>`;
+        return `<td>${e === '—' ? '<span class="text-dim">—</span>' : '<strong>' + esc(e) + '</strong>'}</td>`;
       }).join('');
       return `<tr><td>${p}</td>${cells}</tr>`;
     }).join('');
     return `<div class="card mb-1">
       <div class="card-title text-sm">${label}</div>
-      ${meta ? `<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">${meta.level}</span>` : ''}
+      ${meta ? `<span class="level-tag">${meta.level}</span>` : ''}
       <div class="conj-table-scroll"><table class="conj-table mt-1">
         <tr><th></th><th>-ar</th><th>-er</th><th>-ir</th></tr>
         ${rows}
@@ -206,13 +205,16 @@ function renderConjugationRules() {
 
   // ── Indicative mood ──
   html += '<div class="mood-header mood-indicative">Indicative</div>';
-  const indicativeSimple = ['present', 'preterite', 'imperfect'];
+  const indicativeSimple = Object.keys(TENSE_META).filter(k =>
+    !TENSE_META[k].compound && !TENSE_META[k].progressive
+    && !k.startsWith('subjunctive') && !k.startsWith('imperative')
+    && k !== 'future_subjunctive' && k !== 'future' && k !== 'conditional');
   for (const t of indicativeSimple) html += endingsTable(t);
 
   // Future & conditional use full infinitive as stem
   html += `<div class="card mb-1">
     <div class="card-title text-sm">${tenseLabel(TENSE_META.future)}</div>
-    <span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">A2</span>
+    <span class="level-tag">A2</span>
     <p class="text-muted text-sm mt-1">Add endings to the <strong>full infinitive</strong> (e.g. hablar + é = hablaré).</p>
     <div class="conj-table-scroll"><table class="conj-table mt-1">
       <tr><th></th><th>Ending</th></tr>
@@ -222,7 +224,7 @@ function renderConjugationRules() {
 
   html += `<div class="card mb-1">
     <div class="card-title text-sm">${tenseLabel(TENSE_META.conditional)}</div>
-    <span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text3);border-radius:3px">B1</span>
+    <span class="level-tag">B1</span>
     <p class="text-muted text-sm mt-1">Add endings to the <strong>full infinitive</strong> (e.g. hablar + ía = hablaría).</p>
     <div class="conj-table-scroll"><table class="conj-table mt-1">
       <tr><th></th><th>Ending</th></tr>
@@ -478,7 +480,7 @@ function renderReadingList(filter) {
       <div class="flex" style="justify-content:space-between;align-items:center">
         <div class="card-title">${satBadge}${esc(p.title)}</div>
         <div style="display:flex;gap:0.25rem;align-items:center">
-          ${done ? '<span style="color:var(--green)">&#10003;</span>' : ''}
+          ${done ? '<span class="text-correct">&#10003;</span>' : ''}
           <span style="font-size:0.65rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text2);border-radius:3px">${p.level}</span>
         </div>
       </div>
@@ -598,7 +600,7 @@ function renderThemedVocabList() {
       <div class="flex" style="justify-content:space-between;align-items:center">
         <div class="card-title">${th.icon || ''} ${esc(th.theme)}</div>
         <div style="display:flex;gap:0.25rem;align-items:center">
-          ${done ? '<span style="color:var(--green)">&#10003;</span>' : ''}
+          ${done ? '<span class="text-correct">&#10003;</span>' : ''}
           <span style="font-size:0.65rem;padding:0.1rem 0.4rem;background:var(--bg3);color:var(--text2);border-radius:3px">${th.level}</span>
         </div>
       </div>
@@ -825,7 +827,7 @@ function renderCurriculumLevel(lv) {
   // Header
   let headerHtml = `
     <div style="border-left:4px solid ${color};padding-left:0.75rem;margin-bottom:1rem">
-      <h2 style="margin:0"><span style="color:${color}">${lv}</span> — ${info.nameEn}</h2>
+      <h2 class="m-0"><span style="color:${color}">${lv}</span> — ${info.nameEn}</h2>
       <p class="text-muted" style="font-size:0.85rem;margin:0.25rem 0">${info.name}</p>
     </div>
     <div class="card mb-1">
@@ -868,7 +870,7 @@ function renderCurriculumLevel(lv) {
       for (const l of lessons) {
         const done = !!progress.grammarDone?.[l.id];
         const r = getRecallPct(progress.grammarFsrs, l.id);
-        const icon = done ? '<span style="color:var(--green)">&#10003;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
+        const icon = done ? '<span class="text-correct">&#10003;</span>' : '<span class="text-dim">&#9675;</span>';
         const recall = r !== null ? (() => { const rc = getRecallColor(r); return `<span style="font-size:0.65rem;color:${rc}">${r}%</span>`; })() : '';
         contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem;cursor:pointer" data-action="open-grammar-lesson" data-lesson="${esc(l.id)}">
           <span style="min-width:1.2rem">${icon}</span>
@@ -899,7 +901,7 @@ function renderCurriculumLevel(lv) {
         }
         const pct = total ? Math.round(practiced / total * 100) : 0;
         const pc = cefrColor(pct);
-        const icon = pct >= 80 ? '<span style="color:var(--green)">&#10003;</span>' : pct > 0 ? '<span style="color:var(--yellow)">&#9673;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
+        const icon = pct >= 80 ? '<span class="text-correct">&#10003;</span>' : pct > 0 ? '<span class="text-warning">&#9673;</span>' : '<span class="text-dim">&#9675;</span>';
         contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem">
           <span style="min-width:1.2rem">${icon}</span>
           <span style="flex:1;font-size:0.8rem">${tMeta.labelEn || tMeta.label}</span>
@@ -981,7 +983,7 @@ function renderCurriculumLevel(lv) {
       contentHtml += `<div class="card mb-1"><div class="card-title mb-1" style="font-size:0.85rem">Reading (${readings.length})</div>`;
       for (const r of readings) {
         const done = !!progress.readingMastery?.[r.id];
-        const icon = done ? '<span style="color:var(--green)">&#10003;</span>' : '<span style="color:var(--text3)">&#9675;</span>';
+        const icon = done ? '<span class="text-correct">&#10003;</span>' : '<span class="text-dim">&#9675;</span>';
         contentHtml += `<div class="stat-row" style="margin-bottom:0.2rem">
           <span style="min-width:1.2rem">${icon}</span>
           <span style="font-size:0.8rem">${esc(r.titleEn || r.title)}</span>
@@ -1003,9 +1005,9 @@ function renderCurriculumLevel(lv) {
     const items = ex.data.filter(i => i.level === lv);
     if (!items.length) continue;
     const done = items.filter(i => progress[ex.store]?.[i.id]).length;
-    const icon = done === items.length ? '<span style="color:var(--green)">&#10003;</span>'
-      : done > 0 ? '<span style="color:var(--yellow)">&#9673;</span>'
-      : '<span style="color:var(--text3)">&#9675;</span>';
+    const icon = done === items.length ? '<span class="text-correct">&#10003;</span>'
+      : done > 0 ? '<span class="text-warning">&#9673;</span>'
+      : '<span class="text-dim">&#9675;</span>';
     contentHtml += `<div class="stat-row" style="margin-bottom:0.3rem">
       <span style="min-width:1.2rem">${icon}</span>
       <span style="flex:1;font-size:0.8rem">${ex.name}</span>
@@ -1071,7 +1073,7 @@ function openTrackDetail(trackId) {
     <div class="flex align-center gap-1 mb-1">
       <span style="font-size:2rem">${track.icon}</span>
       <div style="flex:1">
-        <h2 style="margin:0">${esc(track.title)}</h2>
+        <h2 class="m-0">${esc(track.title)}</h2>
         <div class="text-muted text-sm">${esc(track.titleEn)} · ${esc(track.level)}</div>
       </div>
       <div class="track-completion-ring" style="--pct:${comp.percent};--clr:${track.color}">
