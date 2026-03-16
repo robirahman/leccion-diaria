@@ -39,7 +39,7 @@ try {
   // Ignore DOM-related errors during init
 }
 
-const { stripAccents, checkAnswer, esc } = ctx;
+const { stripAccents, checkAnswer, esc, pick, bookmarkType, bookmarkId, shuffle, pickN } = ctx;
 
 describe('stripAccents', () => {
   it('removes accent marks', () => {
@@ -109,5 +109,91 @@ describe('esc (HTML escaping)', () => {
 
   it('handles numbers', () => {
     assertEqual(esc(42), '42');
+  });
+});
+
+describe('pick', () => {
+  it('returns an element from the array', () => {
+    const arr = [1, 2, 3, 4, 5];
+    const result = pick(arr);
+    assert(arr.includes(result), 'Result should be an element of the array');
+  });
+
+  it('returns undefined for empty array', () => {
+    assertEqual(pick([]), undefined);
+  });
+
+  it('returns undefined for null/undefined', () => {
+    assertEqual(pick(null), undefined);
+    assertEqual(pick(undefined), undefined);
+  });
+
+  it('returns the only element for single-item array', () => {
+    assertEqual(pick([42]), 42);
+  });
+});
+
+describe('bookmarkType', () => {
+  it('extracts type from bookmark key', () => {
+    assertEqual(bookmarkType('vocab:hello'), 'vocab');
+    assertEqual(bookmarkType('grammar:lesson-1'), 'grammar');
+    assertEqual(bookmarkType('phrase:greetings:1'), 'phrase');
+  });
+});
+
+describe('bookmarkId', () => {
+  it('extracts id from bookmark key', () => {
+    assertEqual(bookmarkId('vocab:hello'), 'hello');
+    assertEqual(bookmarkId('grammar:lesson-1'), 'lesson-1');
+  });
+
+  it('handles multiple colons (returns everything after first)', () => {
+    assertEqual(bookmarkId('phrase:greetings:1'), 'greetings:1');
+  });
+
+  it('returns empty string for malformed bookmark (no colon)', () => {
+    assertEqual(bookmarkId('malformed'), '');
+  });
+});
+
+describe('shuffle', () => {
+  it('returns array of same length', () => {
+    const arr = [1, 2, 3, 4, 5];
+    const result = shuffle(arr);
+    assertEqual(result.length, arr.length);
+  });
+
+  it('does not modify original array', () => {
+    const arr = [1, 2, 3];
+    shuffle(arr);
+    assertEqual(arr.length, 3);
+    assertEqual(arr[0], 1);
+  });
+
+  it('contains same elements', () => {
+    const arr = [1, 2, 3, 4, 5];
+    const result = shuffle(arr);
+    for (const item of arr) {
+      assert(result.includes(item), `Result should include ${item}`);
+    }
+  });
+});
+
+describe('pickN', () => {
+  it('returns n elements from array', () => {
+    const arr = [1, 2, 3, 4, 5];
+    const result = pickN(arr, 3);
+    assertEqual(result.length, 3);
+  });
+
+  it('returns all elements when n >= array length', () => {
+    const arr = [1, 2, 3];
+    const result = pickN(arr, 5);
+    assertEqual(result.length, 3);
+  });
+
+  it('returns empty array when n is 0', () => {
+    const result = pickN([1, 2, 3], 0);
+    assertEqual(result.length, 0);
   });
 });

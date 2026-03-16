@@ -56,6 +56,10 @@ function contentHash(buf) {
   return crypto.createHash('sha256').update(buf).digest('hex').slice(0, 8);
 }
 
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -69,7 +73,10 @@ try {
   try {
     esbuild = require('/tmp/leccion-build/node_modules/esbuild');
   } catch {
-    console.warn('WARNING: esbuild not found — copying JS/CSS without minification');
+    console.warn('\n' + '='.repeat(60));
+    console.warn('WARNING: esbuild not found — output will NOT be minified!');
+    console.warn('Run: npm install esbuild');
+    console.warn('='.repeat(60) + '\n');
     esbuild = null;
   }
 }
@@ -179,14 +186,11 @@ async function build() {
     fs.copyFileSync(src, path.join(DIST, file));
   }
 
-  // Copy directories
+  // Copy directories (recursive)
   for (const dir of COPY_DIRS) {
     const src = path.join(ROOT, dir);
     if (!fs.existsSync(src)) continue;
-    ensureDir(path.join(DIST, dir));
-    for (const f of fs.readdirSync(src)) {
-      fs.copyFileSync(path.join(src, f), path.join(DIST, dir, f));
-    }
+    fs.cpSync(src, path.join(DIST, dir), { recursive: true });
   }
 
   // Rewrite index.html with hashed filenames
@@ -196,7 +200,7 @@ async function build() {
   for (const [orig, hashed] of Object.entries(hashMap)) {
     if (orig.endsWith('.css')) {
       html = html.replace(
-        new RegExp(`href="${orig.replace(/\./g, '\\.')}"`, 'g'),
+        new RegExp(`href="${escapeRegex(orig)}"`, 'g'),
         `href="${hashed}"`
       );
     }
@@ -206,7 +210,7 @@ async function build() {
   for (const [orig, hashed] of Object.entries(hashMap)) {
     if (orig.endsWith('.js')) {
       html = html.replace(
-        new RegExp(`src="${orig.replace(/\./g, '\\.')}"`, 'g'),
+        new RegExp(`src="${escapeRegex(orig)}"`, 'g'),
         `src="${hashed}"`
       );
     }
@@ -314,9 +318,9 @@ function fetchWithTimeout(request, timeout) {
 }
 
 function isDataFile(url) {
-  const path = new URL(url).pathname;
+  const pathname = new URL(url).pathname;
   for (const f of DATA_FILES) {
-    if (path.endsWith(f.replace('./', '/'))) return true;
+    if (pathname.endsWith(f.replace('./', '/'))) return true;
   }
   return false;
 }

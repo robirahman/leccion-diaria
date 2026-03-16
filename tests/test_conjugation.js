@@ -108,6 +108,27 @@ describe('Conjugation Engine', () => {
     assertEqual(conjugate('levantarse', 'present', 0), 'me levanto');
   });
 
+  it('conjugates o→ue -ir stem-changers in preterite (dormir)', () => {
+    // 3rd person preterite should use u stem (durmió, durmieron)
+    assertEqual(conjugate('dormir', 'preterite', 2), 'durmió');
+    assertEqual(conjugate('dormir', 'preterite', 5), 'durmieron');
+    // 1st person should be regular
+    assertEqual(conjugate('dormir', 'preterite', 0), 'dormí');
+  });
+
+  it('conjugates o→ue -ir stem-changers in imperfect subjunctive (dormir)', () => {
+    // All persons use u stem in imperfect subjunctive
+    assertEqual(conjugate('dormir', 'subjunctive_imperfect', 0), 'durmiera');
+    assertEqual(conjugate('dormir', 'subjunctive_imperfect', 2), 'durmiera');
+    assertEqual(conjugate('dormir', 'subjunctive_imperfect', 5), 'durmieran');
+  });
+
+  it('conjugates o→ue -ir stem-changers in present (dormir)', () => {
+    // Boot pattern: yo/tú/él/ellos get stem change, nosotros/vosotros don't
+    assertEqual(conjugate('dormir', 'present', 0), 'duermo');
+    assertEqual(conjugate('dormir', 'present', 3), 'dormimos');
+  });
+
   it('returns a string for every verb × tense × person combination', () => {
     let failures = 0;
     const sampleVerbs = ['hablar', 'comer', 'vivir', 'ser', 'estar', 'ir', 'tener', 'hacer', 'poder', 'decir'];
