@@ -22,7 +22,8 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **Offline Support** — Service worker caches app shell on install, data files on first use; TTS buttons gray out when offline and re-enable on reconnect
 - **Customization** — Dark/light/auto themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed, configurable daily goals
 - **Accessibility** — WCAG AA contrast ratios, semantic buttons, `aria-live` quiz feedback, `aria-valuenow` progress bars, focus-visible styling
-- **Performance** — Progressive vocab loading (A1-A2 first at 494KB, B1-C2 in parallel), Web Worker for search, batch DOM updates via `data-i18n` attributes, esbuild minification with content-hash cache-busting
+- **Security** — Content Security Policy, input-validated FSRS algorithm, bounds-checked conjugation engine, null-safe DOM operations throughout
+- **Performance** — Progressive vocab loading (A1-A2 first at 494KB, B1-C2 in parallel), Web Worker for search, batch DOM updates via `data-i18n` attributes, service worker with fetch timeouts, esbuild minification with content-hash cache-busting
 
 ## Running Locally
 
@@ -74,7 +75,7 @@ php -S localhost:8000
 | `placement.js` | IRT-adaptive placement test, personalized learning plans |
 | `app-practice.js` | Practice exercises, stats dashboard, review queue, CSV export |
 | `practice-reference.js` | Verb reference, reading, pronunciation, curriculum |
-| `quiz-engine.js` | Shared quiz rendering, auto-submit, haptic feedback |
+| `quiz-engine.js` | Shared quiz rendering, HTML helpers, auto-submit, haptic feedback |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm |
 | `conjugation.js` | Verb conjugation engine (19 tenses, irregulars) |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search |

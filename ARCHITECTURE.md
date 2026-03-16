@@ -17,12 +17,12 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `placement.js` | IRT-adaptive placement test (Rasch model, per-domain scoring, Newton-Raphson MLE) |
 | `app-practice.js` | Export/import (JSON + CSV), admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
 | `practice-reference.js` | Verb conjugation reference, conjugation rules/endings, pronunciation guide, reading comprehension, themed vocabulary, curriculum tracks |
-| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), haptic feedback, `partialShuffle()`, HTML helpers |
+| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), quiz HTML helpers (`renderMCQuestionHTML`, `renderFIBQuestionHTML`), haptic feedback, `partialShuffle()` |
 | `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling |
-| `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters) |
+| `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters, input-validated) |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search with prefix index |
 | `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout |
-| `sw.js` | Service worker: app shell precache + stale-while-revalidate for data |
+| `sw.js` | Service worker: app shell precache + stale-while-revalidate for data + fetch timeout |
 | `manifest.json` | PWA metadata (maskable icons) |
 | **Build & Test** | |
 | `build.js` | esbuild-based build: minification, content-hash filenames, dist/ output |
@@ -59,7 +59,7 @@ User (browser)
   │
   ▼
 app-init.js ─── Event delegation (single click listener on document)
-  │              Vocab/grammar/verb search handlers (Worker-backed)
+  │              Vocab/grammar/verb search handlers (debounced, Worker-backed)
   │              Progressive vocab loading (A1-A2 first, then B1→C2)
   │              Lazy-loading: secondary scripts via requestIdleCallback
   │
@@ -107,6 +107,7 @@ app-init.js ─── Event delegation (single click listener on document)
   │
   ├── quiz-engine.js ── createQuizFlow: managed MC quiz lifecycle (auto-submit option)
   │                      processMCSubmit: shared submit/disable/mark helper
+  │                      renderMCQuestionHTML / renderFIBQuestionHTML: shared quiz HTML
   │                      Haptic feedback (navigator.vibrate) on answers
   │                      HTML helpers (accent bar, progress bar)
   │
@@ -123,7 +124,7 @@ app-init.js ─── Event delegation (single click listener on document)
 - **Placement state** — `placementThetas`, `placementHistory`, etc. (session-scoped, saved to `sessionStorage` for tab-switch recovery)
 - **Practice state** — per-exercise quiz state objects created via `createQuizState()` factory (e.g., `vpQuiz.queue`, `vpQuiz.idx`, `vpQuiz.score`)
 
-All state is defined in `app-core.js` and accessible globally. The app modules read and write this shared state.
+All state is defined in `app-core.js` and accessible globally. The app modules read and write this shared state. Practice quiz state (queues, indices, scores) is reset via `resetPracticeState()` when the user switches profiles.
 
 ### Navigation
 
@@ -295,6 +296,12 @@ Shared helper used by 6+ quiz types (minimal pairs, phonetic pairs, homophones, 
 
 Config: `optionsSel`, `isCorrectBtn(btn)`, `feedbackId`, `nextBtnId`, `feedbackFn(isCorrect)`, `fsrs: { store, masteryStore, key }`.
 
+### `renderMCQuestionHTML(cfg)` / `renderFIBQuestionHTML(cfg)`
+
+Shared HTML generators for quiz question layouts, used by verb, vocab, and grammar quiz renderers to eliminate duplicated markup:
+- `renderMCQuestionHTML({ question, options, answerAction, submitAction })` — question text + MC option buttons + submit button
+- `renderFIBQuestionHTML({ question, inputId, submitAction, accentAction, feedbackId })` — question text + text input + accent bar + feedback div
+
 ### `partialShuffle(arr, n)`
 
 Fisher-Yates partial shuffle — selects `n` random elements from `arr` in O(n) time instead of shuffling the entire array. Used by quiz builders that only need a subset of questions.
@@ -309,7 +316,7 @@ Both `createQuizFlow.submit()` and `processMCSubmit()` call `_haptic(correct)` w
 
 ## FSRS Spaced Repetition (`fsrs.js`)
 
-Implementation of FSRS-4.5 with 17 trained weights.
+Implementation of FSRS-4.5 with 17 trained weights. All functions include input validation clamps (rating to [1,4], stability to >0, difficulty to [1,10], recall to (0,1]) to prevent NaN propagation from invalid inputs.
 
 **Per-item state**: `{ s: stability, d: difficulty, lastRev: timestamp }`
 
@@ -340,6 +347,7 @@ Supports 19 tenses across 6 persons (yo, tú, él, nosotros, vosotros, ellos).
 - **Progressive** (3): present/preterite/imperfect progressive — formed with estar + gerund
 
 **Algorithm** (`conjugate(infinitive, tense, person)`):
+0. Validate `personIdx` is integer in [0, 5]; return `'?'` otherwise
 1. Check for compound tense → conjugate haber + `getParticiple()`
 2. Check for progressive → conjugate estar + `getGerund()`
 3. Check `FULL_IRREGULARS` for complete override
@@ -388,7 +396,7 @@ where x_i = 1 if correct, P_i = model probability. Converges in ~5 iterations.
 
 ### Level Mapping
 
-θ → CEFR: <1.8 = A1, <2.7 = A2, <3.5 = B1, <4.3 = B2, <5.2 = C1, ≥5.2 = C2
+θ → CEFR: <1.85 = A1, <2.725 = A2, <3.55 = B1, <4.375 = B2, <5.35 = C1, ≥5.35 = C2 (midpoints between adjacent LEVEL_DIFFICULTY values)
 
 ### Result Application
 
@@ -428,6 +436,8 @@ CSS custom properties drive the theme system. Four color palettes (Alhambra, Oax
 
 Mobile-first responsive design with max-width 640px centered container. Safe-area insets for notched phones. Card grid uses `minmax(100px, 1fr)` for 320px screen support.
 
+**Z-index scale**: nav/tab-bar=100, dropdowns=200, modals=1000, toasts=1100.
+
 **Accessibility**: Dark theme colors meet WCAG AA contrast ratios. Interactive cards have `cursor:pointer`, hover lift (`translateY`), and shadow transitions. Flashcard rating buttons use semantic `<button>` elements. Quiz feedback divs have `aria-live="polite"`. Progress bars include `aria-valuenow` updates. Tabs use `aria-controls`. Focus-visible styling on tab elements.
 
 Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must appear **after** `.quiz-option.selected` in the stylesheet to ensure answer highlighting overrides selection styling.
@@ -441,7 +451,7 @@ Two-tier caching strategy:
 - **App shell** (~500KB) — precached on install: HTML, CSS, core JS modules, manifest, vocab search worker
 - **Data files** (~10MB+) — cached on first use via stale-while-revalidate: split vocab JSON files, grammar, phrases, all content modules
 
-On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache.
+On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache. Fetch requests have timeouts (5 seconds for data files, 10 seconds for app shell) — on timeout, the cached response is returned to avoid indefinite waits on slow connections.
 
 In development, the cache name is manually versioned (e.g., `leccion-diaria-v18`). In production builds, `build.js` generates a content-based hash (e.g., `leccion-diaria-ef2b709a`) and rewrites the SW with hashed filenames.
 
@@ -486,6 +496,7 @@ Users can bookmark vocab words, grammar lessons, and phrases for quick review. B
 - `toggleBookmark(type, id)` — adds/removes a bookmark
 - `isBookmarked(type, id)` — check if bookmarked
 - `bookmarkBtnHTML(type, id)` — renders a star toggle button
+- `bookmarkType(bk)` / `bookmarkId(bk)` — parse `type:id` bookmark strings
 - `renderBookmarks()` — renders the Bookmarks section on the Today screen (up to 20 items)
 
 Bookmark types: `vocab` (keyed by word), `grammar` (keyed by lesson ID), `phrase` (keyed by phrase text).
@@ -502,11 +513,11 @@ No build step needed — serve source files directly via `./serve.sh` or any HTT
 
 `npm run build` (or `node build.js`) produces an optimized `dist/` directory:
 
-1. **Minification** — All JS (via esbuild) and CSS are minified (~264KB savings, ~20% CSS reduction)
-2. **Cache-busting** — Each file gets a content hash in its filename (e.g., `app-core.d50c0d2d.js`)
+1. **Minification** — All JS (via esbuild) and CSS are minified (~300KB savings, ~22% CSS reduction)
+2. **Cache-busting** — Each file gets a content hash in its filename (e.g., `app-core.d50c0d2d.js`), including `vocab-data.json`
 3. **HTML rewriting** — `index.html` is updated with hashed filenames and whitespace-collapsed
-4. **SW generation** — A new `sw.js` is generated with hashed filenames and a content-based cache version
-5. **Lazy-script resolution** — A `window.__fileHash` map is injected so `app-init.js` can resolve lazy-loaded scripts to their hashed names
+4. **SW generation** — A new `sw.js` is generated with hashed filenames, fetch timeouts, and a content-based cache version
+5. **Lazy-script resolution** — A `window.__fileHash` map is injected so `app-init.js` can resolve lazy-loaded scripts and data files to their hashed names
 6. **Static copies** — Split vocab JSON files, manifest, and icons are copied as-is
 
 ### Testing
