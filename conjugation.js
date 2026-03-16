@@ -429,11 +429,13 @@ function getGerund(infinitive) {
 
 // ── Get reflexive pronoun ──
 function getReflexivePronoun(personIdx) {
+  if (personIdx < 0 || personIdx > 5 || !Number.isInteger(personIdx)) return '?';
   return ['me', 'te', 'se', 'nos', 'os', 'se'][personIdx];
 }
 
 // ── Main conjugation function ──
 function conjugate(infinitive, tense, personIdx, useSeForm = false) {
+  if (personIdx < 0 || personIdx > 5 || !Number.isInteger(personIdx)) return '?';
   const isReflexive = infinitive.endsWith('se');
   const base = isReflexive ? infinitive.slice(0, -2) : infinitive;
   const group = base.slice(-2); // ar, er, ir

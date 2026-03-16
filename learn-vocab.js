@@ -229,11 +229,12 @@ function startVocabQuiz() {
   vocabQuizQueue = [];
   const words = pickN(pool, Math.min(10, pool.length));
   words.forEach((w, i) => {
-    if (i % 3 === 2) {
-      // ~30% production questions: type Spanish from English
+    const filtered = pool.filter(x => x.word !== w.word);
+    if (i % 3 === 2 || filtered.length < 3) {
+      // production question (also used as fallback when not enough wrong answers)
       vocabQuizQueue.push({ word: w, correct: w.word, type: 'produce' });
     } else {
-      const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
+      const wrongs = pickN(filtered, 3).map(x => x.english);
       const options = shuffle([w.english, ...wrongs]);
       vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
     }
@@ -260,10 +261,11 @@ function startQuickVocab() {
   vocabQuizQueue = [];
   const words = pickN(pool, Math.min(10, pool.length));
   words.forEach((w, i) => {
-    if (i % 3 === 2) {
+    const filtered = pool.filter(x => x.word !== w.word);
+    if (i % 3 === 2 || filtered.length < 3) {
       vocabQuizQueue.push({ word: w, correct: w.word, type: 'produce' });
     } else {
-      const wrongs = pickN(pool.filter(x => x.word !== w.word), 3).map(x => x.english);
+      const wrongs = pickN(filtered, 3).map(x => x.english);
       const options = shuffle([w.english, ...wrongs]);
       vocabQuizQueue.push({ word: w, options, correct: w.english, type: 'mc' });
     }
@@ -350,6 +352,7 @@ function renderVocabQuizQuestion_Produce() {
 }
 
 function submitVocabQuizProduce() {
+  if (vocabQuizIdx >= vocabQuizQueue.length) { showResults(vocabQuizScore, vocabQuizQueue.length, 'vocab-quiz', t('vocabQuizLabel')); return; }
   const item = vocabQuizQueue[vocabQuizIdx];
   const input = document.getElementById('vocq-produce-input');
   if (!input || !input.value.trim()) return;
@@ -381,6 +384,7 @@ function answerVocabQuizMC(idx) {
 }
 
 function submitVocabQuizMC() {
+  if (vocabQuizIdx >= vocabQuizQueue.length) { showResults(vocabQuizScore, vocabQuizQueue.length, 'vocab-quiz', t('vocabQuizLabel')); return; }
   const selectedBtn = document.querySelector('#vocq-container .quiz-option.selected');
   if (!selectedBtn) return;
   const idx = parseInt(selectedBtn.dataset.idx);
@@ -408,6 +412,7 @@ function submitVocabQuizMC() {
 }
 
 function submitGenderQuizMC() {
+  if (vocabQuizIdx >= vocabQuizQueue.length) { showResults(vocabQuizScore, vocabQuizQueue.length, 'gender-quiz', t('genderQuizLabel')); return; }
   const selectedBtn = document.querySelector('#vocq-container .quiz-option.selected');
   if (!selectedBtn) return;
   const idx = parseInt(selectedBtn.dataset.idx);

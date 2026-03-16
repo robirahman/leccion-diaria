@@ -150,7 +150,7 @@ function buildPlacementIRTPool() {
 
   // 2. Add generated questions from existing content (grammar, vocab, verbs)
   for (const level of PLACEMENT_LEVELS) {
-    const diff = LEVEL_DIFFICULTY[level];
+    const diff = LEVEL_DIFFICULTY[level] || 3.0;
     if (mode !== 'vocab') {
       const grammar = buildPlacementGrammarQs(level, 5);
       grammar.forEach(q => pool.push({ ...q, difficulty: diff + (Math.random() - 0.5) * 0.4, id: `gen-g-${pool.length}`, source: 'generated' }));

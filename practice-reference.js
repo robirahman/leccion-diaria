@@ -14,10 +14,12 @@ function renderVerbReference(infinitive) {
   if (!infinitive || typeof VERB_DATA === 'undefined') return;
   const verb = VERB_DATA.find(v => v.infinitive === infinitive);
   if (!verb) {
-    document.getElementById('vref-content').innerHTML = `<p class="text-muted">Verb not found.</p>`;
+    const el = document.getElementById('vref-content');
+    if (el) el.innerHTML = `<p class="text-muted">Verb not found.</p>`;
     return;
   }
-  document.getElementById('vref-suggestions').innerHTML = '';
+  const sugEl = document.getElementById('vref-suggestions');
+  if (sugEl) sugEl.innerHTML = '';
   let html = '';
 
   // Compute overall verb recall
@@ -86,7 +88,8 @@ function renderVerbReference(infinitive) {
   html += '<div class="mood-header mood-imperative">Imperative</div>';
   for (const t of imperative) html += renderRefTenseTable(base, t);
 
-  document.getElementById('vref-content').innerHTML = html;
+  const vrefEl = document.getElementById('vref-content');
+  if (vrefEl) vrefEl.innerHTML = html;
 }
 
 function renderRefTenseTable(infinitive, tense, useSeForm = false) {
@@ -133,15 +136,19 @@ function renderRefTenseTable(infinitive, tense, useSeForm = false) {
 
 function showVrefSuggestions(query) {
   if (!query || typeof VERB_DATA === 'undefined') {
-    document.getElementById('vref-suggestions').innerHTML = '';
-    document.getElementById('vref-content').innerHTML = '';
+    const s = document.getElementById('vref-suggestions');
+    const c = document.getElementById('vref-content');
+    if (s) s.innerHTML = '';
+    if (c) c.innerHTML = '';
     return;
   }
   const exact = VERB_DATA.find(v => v.infinitive === query);
   if (exact) { renderVerbReference(query); return; }
   const matches = VERB_DATA.filter(v => v.infinitive.startsWith(query) || v.english.toLowerCase().includes(query)).slice(0, 10);
-  document.getElementById('vref-content').innerHTML = '';
-  document.getElementById('vref-suggestions').innerHTML = matches.map(v =>
+  const vrefC = document.getElementById('vref-content');
+  if (vrefC) vrefC.innerHTML = '';
+  const vrefS = document.getElementById('vref-suggestions');
+  if (vrefS) vrefS.innerHTML = matches.map(v =>
     `<div class="vref-suggestion" data-action="select-vref" data-verb="${esc(v.infinitive)}">
       <strong>${esc(v.infinitive)}</strong> <span class="text-muted text-sm">— ${esc(v.english)}</span>
     </div>`
@@ -425,7 +432,8 @@ function renderPronunciation() {
     </div>
   </div>`;
 
-  document.getElementById('pron-content').innerHTML = html;
+  const pronEl = document.getElementById('pron-content');
+  if (pronEl) pronEl.innerHTML = html;
 }
 
 // ════════════════════════════════════════
@@ -439,7 +447,8 @@ let readingTypeFilter = 'standard';
 
 function renderReadingList(filter) {
   if (typeof READING_DATA === 'undefined') {
-    document.getElementById('reading-passages').innerHTML = '<p class="text-muted">Loading...</p>';
+    const rp = document.getElementById('reading-passages');
+    if (rp) rp.innerHTML = '<p class="text-muted">Loading...</p>';
     return;
   }
   filter = filter || 'all';
@@ -460,7 +469,9 @@ function renderReadingList(filter) {
     : !isSat ? READING_DATA : [];
 
   const passages = filter === 'all' ? source : source.filter(p => p.level === filter);
-  document.getElementById('reading-passages').innerHTML = passages.map(p => {
+  const rpEl = document.getElementById('reading-passages');
+  if (!rpEl) return;
+  rpEl.innerHTML = passages.map(p => {
     const done = progress.readingMastery && progress.readingMastery[p.id];
     const satBadge = p.sat ? '<span class="sat-badge">SAT</span> ' : '';
     return `<div class="card" data-action="start-reading" data-id="${esc(p.id)}" data-sat="${p.sat ? '1' : ''}">
@@ -484,21 +495,28 @@ function startReading(id) {
   readingQIdx = 0; readingScore = 0; readingSelected = -1;
   listenMode = false;
   showScreen('reading');
-  document.getElementById('read-title').textContent = currentReading.title;
-  document.getElementById('read-level').textContent = currentReading.level;
-  document.getElementById('read-text').textContent = currentReading.text;
-  document.getElementById('read-text').style.display = '';
-  document.getElementById('read-speak').dataset.text = currentReading.text;
-  document.getElementById('read-listen-toggle').classList.remove('active');
+  const readTitle = document.getElementById('read-title');
+  const readLevel = document.getElementById('read-level');
+  const readText = document.getElementById('read-text');
+  const readSpeak = document.getElementById('read-speak');
+  const readListenToggle = document.getElementById('read-listen-toggle');
+  if (readTitle) readTitle.textContent = currentReading.title;
+  if (readLevel) readLevel.textContent = currentReading.level;
+  if (readText) { readText.textContent = currentReading.text; readText.style.display = ''; }
+  if (readSpeak) readSpeak.dataset.text = currentReading.text;
+  if (readListenToggle) readListenToggle.classList.remove('active');
 
   // Vocab sidebar
-  if (currentReading.vocab && currentReading.vocab.length) {
-    document.getElementById('read-vocab').innerHTML = `<div class="card">
-      <div class="card-title text-sm" style="color:var(--text2)">Key Vocabulary</div>
-      ${currentReading.vocab.map(v => `<div class="stat-row"><span>${esc(v.word)}</span><span class="text-muted">${esc(v.english)}</span></div>`).join('')}
-    </div>`;
-  } else {
-    document.getElementById('read-vocab').innerHTML = '';
+  const readVocab = document.getElementById('read-vocab');
+  if (readVocab) {
+    if (currentReading.vocab && currentReading.vocab.length) {
+      readVocab.innerHTML = `<div class="card">
+        <div class="card-title text-sm" style="color:var(--text2)">Key Vocabulary</div>
+        ${currentReading.vocab.map(v => `<div class="stat-row"><span>${esc(v.word)}</span><span class="text-muted">${esc(v.english)}</span></div>`).join('')}
+      </div>`;
+    } else {
+      readVocab.innerHTML = '';
+    }
   }
 
   renderReadingQuestion();
@@ -515,16 +533,22 @@ function renderReadingQuestion() {
 
   const total = currentReading.questions.length;
   const pct = total > 0 ? (readingQIdx / total * 100) : 0;
-  document.getElementById('read-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress" style="width:${pct}%"></div>`;
+  const readProg = document.getElementById('read-progress');
+  if (readProg) readProg.innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress" style="width:${pct}%"></div>`;
   const q = currentReading.questions[readingQIdx];
   readingSelected = -1;
-  document.getElementById('read-question').textContent = q.prompt;
-  document.getElementById('read-options').innerHTML = q.options.map((opt, i) =>
+  const readQ = document.getElementById('read-question');
+  if (readQ) readQ.textContent = q.prompt;
+  const readOpts = document.getElementById('read-options');
+  if (readOpts) readOpts.innerHTML = q.options.map((opt, i) =>
     `<button class="quiz-option" data-action="answer-reading" data-idx="${i}">${esc(opt)}</button>`
   ).join('');
-  document.getElementById('read-submit').style.display = 'none';
-  document.getElementById('read-feedback').style.display = 'none';
-  document.getElementById('read-next').style.display = 'none';
+  const readSubmit = document.getElementById('read-submit');
+  if (readSubmit) readSubmit.style.display = 'none';
+  const readFb = document.getElementById('read-feedback');
+  if (readFb) readFb.style.display = 'none';
+  const readNext = document.getElementById('read-next');
+  if (readNext) readNext.style.display = 'none';
 }
 
 function answerReadingMC(idx) {
@@ -546,9 +570,11 @@ function submitReadingMC() {
       return html;
     },
   });
-  document.getElementById('read-feedback').setAttribute('role', 'alert');
+  const readFbEl = document.getElementById('read-feedback');
+  if (readFbEl) readFbEl.setAttribute('role', 'alert');
   if (correct) readingScore++;
-  document.getElementById('read-submit').style.display = 'none';
+  const readSubmitEl = document.getElementById('read-submit');
+  if (readSubmitEl) readSubmitEl.style.display = 'none';
 }
 
 function nextReading() { readingQIdx++; renderReadingQuestion(); }
@@ -560,11 +586,13 @@ function nextReading() { readingQIdx++; renderReadingQuestion(); }
 let currentTheme = null;
 
 function renderThemedVocabList() {
+  const tvList = document.getElementById('themed-vocab-list');
+  if (!tvList) return;
   if (typeof THEMED_VOCAB_DATA === 'undefined') {
-    document.getElementById('themed-vocab-list').innerHTML = '<p class="text-muted">Loading...</p>';
+    tvList.innerHTML = '<p class="text-muted">Loading...</p>';
     return;
   }
-  document.getElementById('themed-vocab-list').innerHTML = THEMED_VOCAB_DATA.map(th => {
+  tvList.innerHTML = THEMED_VOCAB_DATA.map(th => {
     const done = progress.themedVocabDone && progress.themedVocabDone[th.id];
     return `<div class="card" data-action="open-themed-detail" data-id="${esc(th.id)}">
       <div class="flex" style="justify-content:space-between;align-items:center">
@@ -584,24 +612,30 @@ function openThemedDetail(id) {
   currentTheme = THEMED_VOCAB_DATA.find(th => th.id === id);
   if (!currentTheme) return;
   showScreen('themed-detail');
-  document.getElementById('tv-title').textContent = `${currentTheme.icon || ''} ${currentTheme.theme}`;
-  document.getElementById('tv-scenario').textContent = currentTheme.scenario;
+  const tvTitle = document.getElementById('tv-title');
+  if (tvTitle) tvTitle.textContent = `${currentTheme.icon || ''} ${currentTheme.theme}`;
+  const tvScenario = document.getElementById('tv-scenario');
+  if (tvScenario) tvScenario.textContent = currentTheme.scenario;
 
   // Dialogue
-  if (currentTheme.dialogue && currentTheme.dialogue.length) {
-    document.getElementById('tv-dialogue').innerHTML = currentTheme.dialogue.map((d, i) =>
-      `<div class="tv-dialogue-line">
-        <span class="tv-speaker">${esc(d.speaker)}</span>
-        <span>${esc(d.text)}</span>
-        <button class="tts-inline" data-action="speak" data-text="${esc(d.text)}" aria-label="Listen to ${esc(d.text)}">&#9654;</button>
-      </div>`
-    ).join('');
-  } else {
-    document.getElementById('tv-dialogue').innerHTML = '';
+  const tvDialogue = document.getElementById('tv-dialogue');
+  if (tvDialogue) {
+    if (currentTheme.dialogue && currentTheme.dialogue.length) {
+      tvDialogue.innerHTML = currentTheme.dialogue.map((d, i) =>
+        `<div class="tv-dialogue-line">
+          <span class="tv-speaker">${esc(d.speaker)}</span>
+          <span>${esc(d.text)}</span>
+          <button class="tts-inline" data-action="speak" data-text="${esc(d.text)}" aria-label="Listen to ${esc(d.text)}">&#9654;</button>
+        </div>`
+      ).join('');
+    } else {
+      tvDialogue.innerHTML = '';
+    }
   }
 
   // Phrases
-  document.getElementById('tv-phrases').innerHTML = currentTheme.phrases.map(p =>
+  const tvPhrases = document.getElementById('tv-phrases');
+  if (tvPhrases) tvPhrases.innerHTML = currentTheme.phrases.map(p =>
     `<div class="phrase-card">
       <div class="phrase-es">${esc(p.spanish)} <button class="tts-inline" data-action="speak" data-text="${esc(p.spanish)}" aria-label="Listen to ${esc(p.spanish)}">&#9654;</button></div>
       <div class="phrase-en">${esc(p.english)}</div>
@@ -610,7 +644,8 @@ function openThemedDetail(id) {
   ).join('');
 
   // Vocab
-  document.getElementById('tv-vocab').innerHTML = currentTheme.vocab.map(v =>
+  const tvVocab = document.getElementById('tv-vocab');
+  if (tvVocab) tvVocab.innerHTML = currentTheme.vocab.map(v =>
     `<div class="stat-row">
       ${v.gender ? `<span class="word-gender ${v.gender}" style="font-size:0.6rem;padding:0.05rem 0.25rem">${v.gender === 'f' ? 'la' : 'el'}</span>` : ''}
       <span style="flex:1;margin-left:0.25rem"><strong>${esc(v.word)}</strong></span>
@@ -819,7 +854,8 @@ function renderCurriculumLevel(lv) {
       <div class="text-muted" style="font-size:0.75rem"><strong>Conversations:</strong> ${info.conversations}</div>
     </div>`;
 
-  document.getElementById('curriculum-level-header').innerHTML = headerHtml;
+  const clHeader = document.getElementById('curriculum-level-header');
+  if (clHeader) clHeader.innerHTML = headerHtml;
 
   // Content sections
   let contentHtml = '';
@@ -992,7 +1028,8 @@ function renderCurriculumLevel(lv) {
     </div>`;
   }
 
-  document.getElementById('curriculum-level-content').innerHTML = contentHtml;
+  const clContent = document.getElementById('curriculum-level-content');
+  if (clContent) clContent.innerHTML = contentHtml;
 }
 
 let currentTrack = null;
@@ -1029,7 +1066,8 @@ function openTrackDetail(trackId) {
   showScreen('track-detail');
 
   const comp = getTrackCompletion(track);
-  document.getElementById('track-header').innerHTML = `
+  const trackHeaderEl = document.getElementById('track-header');
+  if (trackHeaderEl) trackHeaderEl.innerHTML = `
     <div class="flex align-center gap-1 mb-1">
       <span style="font-size:2rem">${track.icon}</span>
       <div style="flex:1">
@@ -1055,7 +1093,8 @@ function openTrackDetail(trackId) {
     conversation: cs.getPropertyValue('--accent2').trim()
   };
 
-  document.getElementById('track-modules').innerHTML = track.modules.map((mod, i) => {
+  const trackModulesEl = document.getElementById('track-modules');
+  if (trackModulesEl) trackModulesEl.innerHTML = track.modules.map((mod, i) => {
     const done = isTrackModuleComplete(mod);
     const label = typeLabels[mod.type] || mod.type;
     const color = typeColors[mod.type] || '#666';

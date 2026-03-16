@@ -261,14 +261,20 @@ function renderMPQuestion() {
   if (mpIdx >= mpQueue.length) { showResults(mpScore, mpQueue.length, 'mp', 'Minimal Pairs'); return; }
   const item = mpQueue[mpIdx];
   mpAnswered = false;
-  document.getElementById('mp-progress').textContent = `${mpIdx + 1} / ${mpQueue.length}`;
-  document.getElementById('mp-sentence').innerHTML = esc(item.sentence).replace('___', '<strong>______</strong>');
-  document.getElementById('mp-options').innerHTML = item.options.map((opt, i) =>
+  const mpProgEl = document.getElementById('mp-progress');
+  if (mpProgEl) mpProgEl.textContent = `${mpIdx + 1} / ${mpQueue.length}`;
+  const mpSentEl = document.getElementById('mp-sentence');
+  if (mpSentEl) mpSentEl.innerHTML = esc(item.sentence).replace('___', '<strong>______</strong>');
+  const mpOptsEl = document.getElementById('mp-options');
+  if (mpOptsEl) mpOptsEl.innerHTML = item.options.map((opt, i) =>
     `<button class="quiz-option" data-action="answer-mp" data-idx="${i}">${esc(opt)}</button>`
   ).join('');
-  document.getElementById('mp-feedback').style.display = 'none';
-  document.getElementById('mp-contrast').style.display = 'none';
-  document.getElementById('mp-next').style.display = 'none';
+  const mpFbEl = document.getElementById('mp-feedback');
+  if (mpFbEl) mpFbEl.style.display = 'none';
+  const mpContrastEl = document.getElementById('mp-contrast');
+  if (mpContrastEl) mpContrastEl.style.display = 'none';
+  const mpNextEl = document.getElementById('mp-next');
+  if (mpNextEl) mpNextEl.style.display = 'none';
 }
 
 function answerMP(idx) {
@@ -334,18 +340,25 @@ function renderPPQuestion() {
   const q = ppQueue[ppIdx];
   const cat = PHONETIC_PAIR_CATEGORIES[q.item.category];
   ppAnswered = false;
-  document.getElementById('pp-progress').textContent = `${ppIdx + 1} / ${ppQueue.length}`;
-  document.getElementById('pp-ipa').innerHTML = `${esc(q.item.ipaA)} vs ${esc(q.item.ipaB)}`;
-  document.getElementById('pp-tts').innerHTML =
+  const ppProgEl = document.getElementById('pp-progress');
+  if (ppProgEl) ppProgEl.textContent = `${ppIdx + 1} / ${ppQueue.length}`;
+  const ppIpaEl = document.getElementById('pp-ipa');
+  if (ppIpaEl) ppIpaEl.innerHTML = `${esc(q.item.ipaA)} vs ${esc(q.item.ipaB)}`;
+  const ppTtsEl = document.getElementById('pp-tts');
+  if (ppTtsEl) ppTtsEl.innerHTML =
     `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordA)}" aria-label="Listen to ${esc(q.item.wordA)}">${esc(q.item.wordA)} &#9654;</button> ` +
     `<button class="btn btn-sm" data-action="speak" data-text="${esc(q.item.wordB)}" aria-label="Listen to ${esc(q.item.wordB)}">${esc(q.item.wordB)} &#9654;</button>`;
-  document.getElementById('pp-sentence').innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
+  const ppSentEl = document.getElementById('pp-sentence');
+  if (ppSentEl) ppSentEl.innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
   const options = shuffle([q.answer, q.wrong]);
-  document.getElementById('pp-options').innerHTML = options.map((opt, i) =>
+  const ppOptsEl = document.getElementById('pp-options');
+  if (ppOptsEl) ppOptsEl.innerHTML = options.map((opt, i) =>
     `<button class="quiz-option" data-action="answer-pp" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
   ).join('');
-  document.getElementById('pp-feedback').style.display = 'none';
-  document.getElementById('pp-next').style.display = 'none';
+  const ppFbEl = document.getElementById('pp-feedback');
+  if (ppFbEl) ppFbEl.style.display = 'none';
+  const ppNextEl = document.getElementById('pp-next');
+  if (ppNextEl) ppNextEl.style.display = 'none';
 }
 
 function answerPP(idx) {
@@ -406,18 +419,24 @@ function renderHomQuestion() {
   if (homIdx >= homQueue.length) { showResults(homScore, homQueue.length, 'hom', 'Homophones'); return; }
   const q = homQueue[homIdx];
   homAnswered = false;
-  document.getElementById('hom-progress').textContent = `${homIdx + 1} / ${homQueue.length}`;
-  document.getElementById('hom-pronunciation').textContent = q.item.pronunciation;
-  document.getElementById('hom-sentence').innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
+  const homProgEl = document.getElementById('hom-progress');
+  if (homProgEl) homProgEl.textContent = `${homIdx + 1} / ${homQueue.length}`;
+  const homPronEl = document.getElementById('hom-pronunciation');
+  if (homPronEl) homPronEl.textContent = q.item.pronunciation;
+  const homSentEl = document.getElementById('hom-sentence');
+  if (homSentEl) homSentEl.innerHTML = esc(q.sentence).replace('___', '<strong>______</strong>');
   const options = shuffle([...new Set(q.options.map(o => o.toLowerCase().replace(/^¡|!$/g, '')))].map(o => {
     // Find original casing from the options
     return q.options.find(orig => orig.toLowerCase().replace(/^¡|!$/g, '') === o) || o;
   }));
-  document.getElementById('hom-options').innerHTML = options.map((opt, i) =>
+  const homOptsEl = document.getElementById('hom-options');
+  if (homOptsEl) homOptsEl.innerHTML = options.map((opt, i) =>
     `<button class="quiz-option" data-action="answer-hom" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
   ).join('');
-  document.getElementById('hom-feedback').style.display = 'none';
-  document.getElementById('hom-next').style.display = 'none';
+  const homFbEl = document.getElementById('hom-feedback');
+  if (homFbEl) homFbEl.style.display = 'none';
+  const homNextEl = document.getElementById('hom-next');
+  if (homNextEl) homNextEl.style.display = 'none';
 }
 
 function answerHom(idx) {
@@ -477,14 +496,19 @@ function renderConnQuestion() {
   if (connIdx >= connQueue.length) { showResults(connScore, connQueue.length, 'conn', 'Connectors'); return; }
   const item = connQueue[connIdx];
   connAnswered = false;
-  document.getElementById('conn-progress').textContent = `${connIdx + 1} / ${connQueue.length}`;
-  document.getElementById('conn-sentence').innerHTML = esc(item.sentence).replace('___', '<strong>______</strong>');
+  const connProgEl = document.getElementById('conn-progress');
+  if (connProgEl) connProgEl.textContent = `${connIdx + 1} / ${connQueue.length}`;
+  const connSentEl = document.getElementById('conn-sentence');
+  if (connSentEl) connSentEl.innerHTML = esc(item.sentence).replace('___', '<strong>______</strong>');
   const options = shuffle([...item.options]);
-  document.getElementById('conn-options').innerHTML = options.map((opt, i) =>
+  const connOptsEl = document.getElementById('conn-options');
+  if (connOptsEl) connOptsEl.innerHTML = options.map((opt, i) =>
     `<button class="quiz-option" data-action="answer-conn" data-idx="${i}" data-val="${esc(opt)}">${esc(opt)}</button>`
   ).join('');
-  document.getElementById('conn-feedback').style.display = 'none';
-  document.getElementById('conn-next').style.display = 'none';
+  const connFbEl = document.getElementById('conn-feedback');
+  if (connFbEl) connFbEl.style.display = 'none';
+  const connNextEl = document.getElementById('conn-next');
+  if (connNextEl) connNextEl.style.display = 'none';
 }
 
 function answerConn(idx) {
@@ -523,17 +547,23 @@ function startSentenceBuild() {
 function renderSBQuestion() {
   if (sbIdx >= sbQueue.length) { showResults(sbScore, sbQueue.length, 'sb', 'Sentence Construction'); return; }
   const item = sbQueue[sbIdx];
-  document.getElementById('sb-progress').textContent = `${sbIdx + 1} / ${sbQueue.length}`;
-  document.getElementById('sb-prompt').innerHTML = `${t('arrangeWords') || 'Arrange the words:'} <strong>${esc(item.english)}</strong>`;
+  const sbProgEl = document.getElementById('sb-progress');
+  if (sbProgEl) sbProgEl.textContent = `${sbIdx + 1} / ${sbQueue.length}`;
+  const sbPromptEl = document.getElementById('sb-prompt');
+  if (sbPromptEl) sbPromptEl.innerHTML = `${t('arrangeWords') || 'Arrange the words:'} <strong>${esc(item.english)}</strong>`;
   const bank = document.getElementById('sb-word-bank');
   const allWords = [...item.words, ...(item.distractors || [])];
-  bank.innerHTML = shuffle(allWords).map(w =>
+  if (bank) bank.innerHTML = shuffle(allWords).map(w =>
     `<button class="sb-word-tile" data-action="tap-sb-word">${esc(w)}</button>`
   ).join('');
-  document.getElementById('sb-answer-row').innerHTML = '';
-  document.getElementById('sb-feedback').style.display = 'none';
-  document.getElementById('sb-check').style.display = 'flex';
-  document.getElementById('sb-next').style.display = 'none';
+  const sbAnswerEl = document.getElementById('sb-answer-row');
+  if (sbAnswerEl) sbAnswerEl.innerHTML = '';
+  const sbFbEl = document.getElementById('sb-feedback');
+  if (sbFbEl) sbFbEl.style.display = 'none';
+  const sbCheckEl = document.getElementById('sb-check');
+  if (sbCheckEl) sbCheckEl.style.display = 'flex';
+  const sbNextEl = document.getElementById('sb-next');
+  if (sbNextEl) sbNextEl.style.display = 'none';
 }
 
 function tapSBWord(target) {
@@ -567,19 +597,21 @@ function checkSentenceBuild() {
   const fb = document.getElementById('sb-feedback');
   if (correct) {
     sbScore++; addXP(5);
-    fb.innerHTML = `<div class="text-correct">✓ ${esc(item.sentence)}</div>`;
-    if (item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
+    if (fb) fb.innerHTML = `<div class="text-correct">✓ ${esc(item.sentence)}</div>`;
+    if (fb && item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
   } else {
     addXP(1);
     // Mark distractor tiles
     const distractors = new Set(item.distractors || []);
     tiles.forEach(t => { if (distractors.has(t.textContent)) t.classList.add('distractor-wrong'); });
-    fb.innerHTML = `<div class="text-incorrect">✗ ${esc(item.sentence)}</div>`;
-    if (item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
+    if (fb) fb.innerHTML = `<div class="text-incorrect">✗ ${esc(item.sentence)}</div>`;
+    if (fb && item.hint) fb.innerHTML += `<div class="text-muted text-sm">${esc(item.hint)}</div>`;
   }
-  fb.style.display = 'block';
-  document.getElementById('sb-check').style.display = 'none';
-  document.getElementById('sb-next').style.display = 'flex';
+  if (fb) fb.style.display = 'block';
+  const sbChkEl = document.getElementById('sb-check');
+  if (sbChkEl) sbChkEl.style.display = 'none';
+  const sbNxtEl = document.getElementById('sb-next');
+  if (sbNxtEl) sbNxtEl.style.display = 'flex';
   document.querySelectorAll('.sb-word-tile').forEach(t => t.style.pointerEvents = 'none');
   reviewItem(progress.sentenceFsrs, progress.sentenceMastery, item.id, correct ? FSRS_GOOD : FSRS_AGAIN);
   saveProgress();
@@ -623,18 +655,23 @@ function startCloze(topic) {
 function renderClozePassage() {
   if (clozeIdx >= clozeQueue.length) { showResults(clozeScore, clozeQueue.length, 'cloze', 'Cloze Passages'); return; }
   const item = clozeQueue[clozeIdx];
-  document.getElementById('cloze-progress').textContent = `${clozeIdx + 1} / ${clozeQueue.length}`;
+  const clozeProgEl = document.getElementById('cloze-progress');
+  if (clozeProgEl) clozeProgEl.textContent = `${clozeIdx + 1} / ${clozeQueue.length}`;
   const displayMode = progress?.settings?.display || 'standard';
-  document.getElementById('cloze-title').textContent = displayMode === 'immersion' ? item.title : (item.titleEn || item.title);
+  const clozeTitleEl = document.getElementById('cloze-title');
+  if (clozeTitleEl) clozeTitleEl.textContent = displayMode === 'immersion' ? item.title : (item.titleEn || item.title);
   // Replace {N} tokens with input fields
   let html = esc(item.passage).replace(/\{(\d+)\}/g, (_, n) =>
     `<input class="cloze-blank" data-blank="${n}" size="10" autocomplete="off" autocapitalize="off">`
   );
-  document.getElementById('cloze-container').innerHTML = html;
-  document.getElementById('cloze-feedback').style.display = 'none';
-  document.getElementById('cloze-feedback').innerHTML = '';
-  document.getElementById('cloze-check').style.display = 'flex';
-  document.getElementById('cloze-next').style.display = 'none';
+  const clozeContEl = document.getElementById('cloze-container');
+  if (clozeContEl) clozeContEl.innerHTML = html;
+  const clozeFbEl = document.getElementById('cloze-feedback');
+  if (clozeFbEl) { clozeFbEl.style.display = 'none'; clozeFbEl.innerHTML = ''; }
+  const clozeChkEl = document.getElementById('cloze-check');
+  if (clozeChkEl) clozeChkEl.style.display = 'flex';
+  const clozeNxtEl = document.getElementById('cloze-next');
+  if (clozeNxtEl) clozeNxtEl.style.display = 'none';
   // Focus first blank
   setTimeout(() => document.querySelector('.cloze-blank')?.focus(), 50);
 }
@@ -669,10 +706,14 @@ function checkCloze() {
   else { addXP(1); }
 
   const fb = document.getElementById('cloze-feedback');
-  fb.innerHTML = `<div class="${allCorrect ? 'text-correct' : 'text-incorrect'}">${allCorrect ? '✓ All correct!' : '✗ Some blanks were incorrect.'}</div>` + explanations.join('');
-  fb.style.display = 'block';
-  document.getElementById('cloze-check').style.display = 'none';
-  document.getElementById('cloze-next').style.display = 'flex';
+  if (fb) {
+    fb.innerHTML = `<div class="${allCorrect ? 'text-correct' : 'text-incorrect'}">${allCorrect ? '✓ All correct!' : '✗ Some blanks were incorrect.'}</div>` + explanations.join('');
+    fb.style.display = 'block';
+  }
+  const clozeChk = document.getElementById('cloze-check');
+  if (clozeChk) clozeChk.style.display = 'none';
+  const clozeNxt = document.getElementById('cloze-next');
+  if (clozeNxt) clozeNxt.style.display = 'flex';
   reviewItem(progress.clozeFsrs, progress.clozeMastery, item.id, allCorrect ? FSRS_GOOD : FSRS_AGAIN);
   saveProgress();
 }
@@ -695,22 +736,28 @@ function startTranslation() {
 function renderTranslationQuestion() {
   if (trIdx >= trQueue.length) { showResults(trScore, trQueue.length, 'tr', 'Translation Drills'); return; }
   const item = trQueue[trIdx];
-  document.getElementById('tr-progress').textContent = `${trIdx + 1} / ${trQueue.length}`;
+  const trProgEl = document.getElementById('tr-progress');
+  if (trProgEl) trProgEl.textContent = `${trIdx + 1} / ${trQueue.length}`;
+  const trPromptEl = document.getElementById('tr-prompt');
   if (item.direction === 'es-en') {
-    document.getElementById('tr-prompt').innerHTML = `Translate to English: <strong>${esc(item.primary)}</strong>`;
+    if (trPromptEl) trPromptEl.innerHTML = `Translate to English: <strong>${esc(item.primary)}</strong>`;
     speak(item.primary);
   } else {
-    document.getElementById('tr-prompt').innerHTML = `Translate to Spanish: <strong>${esc(item.english)}</strong>`;
+    if (trPromptEl) trPromptEl.innerHTML = `Translate to Spanish: <strong>${esc(item.english)}</strong>`;
   }
-  document.getElementById('tr-input').value = '';
-  document.getElementById('tr-feedback').style.display = 'none';
-  document.getElementById('tr-next').style.display = 'none';
+  const trInputEl = document.getElementById('tr-input');
+  if (trInputEl) trInputEl.value = '';
+  const trFbEl = document.getElementById('tr-feedback');
+  if (trFbEl) trFbEl.style.display = 'none';
+  const trNextEl = document.getElementById('tr-next');
+  if (trNextEl) trNextEl.style.display = 'none';
   setTimeout(() => document.getElementById('tr-input')?.focus(), 50);
 }
 
 function checkTranslation() {
   const item = trQueue[trIdx];
-  const input = document.getElementById('tr-input').value.trim();
+  const trInEl = document.getElementById('tr-input');
+  const input = trInEl ? trInEl.value.trim() : '';
   if (!input) return;
 
   const isReverse = item.direction === 'es-en';
@@ -761,10 +808,10 @@ function checkTranslation() {
     }
   }
   if (item.explanation) html += `<div class="text-muted text-sm mt-1">${esc(item.explanation)}</div>`;
-  fb.innerHTML = html;
-  fb.style.display = 'block';
-  document.getElementById('tr-next').style.display = 'flex';
-  document.getElementById('tr-input').readOnly = true;
+  if (fb) { fb.innerHTML = html; fb.style.display = 'block'; }
+  const trNxtEl = document.getElementById('tr-next');
+  if (trNxtEl) trNxtEl.style.display = 'flex';
+  if (trInEl) trInEl.readOnly = true;
   reviewItem(progress.translationFsrs, progress.translationMastery, item.id,
     correct ? (accentWarn ? FSRS_HARD : FSRS_GOOD) : FSRS_AGAIN);
   saveProgress();
@@ -794,11 +841,14 @@ function startDictation() {
 
 function renderDictationQuestion() {
   if (dictIdx >= dictQueue.length) { showResults(dictScore, dictQueue.length, 'dict', 'Dictation'); return; }
-  document.getElementById('dict-progress').textContent = `${dictIdx + 1} / ${dictQueue.length}`;
-  document.getElementById('dict-input').value = '';
-  document.getElementById('dict-input').readOnly = false;
-  document.getElementById('dict-feedback').style.display = 'none';
-  document.getElementById('dict-next').style.display = 'none';
+  const dictProgEl = document.getElementById('dict-progress');
+  if (dictProgEl) dictProgEl.textContent = `${dictIdx + 1} / ${dictQueue.length}`;
+  const dictInEl = document.getElementById('dict-input');
+  if (dictInEl) { dictInEl.value = ''; dictInEl.readOnly = false; }
+  const dictFbEl = document.getElementById('dict-feedback');
+  if (dictFbEl) dictFbEl.style.display = 'none';
+  const dictNxtEl = document.getElementById('dict-next');
+  if (dictNxtEl) dictNxtEl.style.display = 'none';
   setTimeout(() => {
     dictPlayNormal();
     document.getElementById('dict-input')?.focus();
@@ -822,7 +872,8 @@ function dictPlaySlow() {
 
 function checkDictation() {
   const item = dictQueue[dictIdx];
-  const input = document.getElementById('dict-input').value.trim();
+  const dictInputEl = document.getElementById('dict-input');
+  const input = dictInputEl ? dictInputEl.value.trim() : '';
   if (!input) return;
 
   const norm = s => s.toLowerCase().replace(/[¿¡.,;:!?"""''—–\-()]/g, '').trim();
@@ -863,13 +914,16 @@ function checkDictation() {
 
   const fb = document.getElementById('dict-feedback');
   const pct = Math.round(score * 100);
-  fb.innerHTML = `<div class="${score >= 0.9 ? 'text-correct' : score >= 0.7 ? '' : 'text-incorrect'}">${pct}% correct</div>` +
-    `<div class="mt-1">${wordHtml}</div>` +
-    `<div class="text-muted text-sm mt-1">${esc(item.english)}</div>` +
-    (item.notes ? `<div class="text-muted text-sm">${esc(item.notes)}</div>` : '');
-  fb.style.display = 'block';
-  document.getElementById('dict-input').readOnly = true;
-  document.getElementById('dict-next').style.display = 'flex';
+  if (fb) {
+    fb.innerHTML = `<div class="${score >= 0.9 ? 'text-correct' : score >= 0.7 ? '' : 'text-incorrect'}">${pct}% correct</div>` +
+      `<div class="mt-1">${wordHtml}</div>` +
+      `<div class="text-muted text-sm mt-1">${esc(item.english)}</div>` +
+      (item.notes ? `<div class="text-muted text-sm">${esc(item.notes)}</div>` : '');
+    fb.style.display = 'block';
+  }
+  if (dictInputEl) dictInputEl.readOnly = true;
+  const dictNextBtn = document.getElementById('dict-next');
+  if (dictNextBtn) dictNextBtn.style.display = 'flex';
   const rating = score >= 0.9 ? FSRS_GOOD : score >= 0.7 ? FSRS_HARD : FSRS_AGAIN;
   reviewItem(progress.dictFsrs, progress.dictMastery, item.id, rating);
   saveProgress();
@@ -890,7 +944,8 @@ function renderStats() {
   const level = progress.placementLevel || 'A1';
   const totalItems = verbsLearned + vocabLearned + phrasesLearned;
 
-  document.getElementById('stats-overview').innerHTML = `
+  const statsOv = document.getElementById('stats-overview');
+  if (statsOv) statsOv.innerHTML = `
     <div class="stat-card"><div class="stat-num">${progress.xp}</div><div class="stat-desc">${t('totalXP')}</div></div>
     <div class="stat-card"><div class="stat-num">${progress.streak}d</div><div class="stat-desc">${t('dayStreak')}</div></div>
     <div class="stat-card"><div class="stat-num">${progress.longestStreak}d</div><div class="stat-desc">${t('longestStreak')}</div></div>
@@ -920,7 +975,8 @@ function renderStats() {
       <span class="text-muted text-sm" style="min-width:2rem;text-align:right">${Object.keys(mod.store).length}</span>
     </div>`;
   }
-  document.getElementById('stats-mastery').innerHTML = masteryHtml;
+  const statsMast = document.getElementById('stats-mastery');
+  if (statsMast) statsMast.innerHTML = masteryHtml;
 
   // Category progress
   let catHtml = '';
@@ -1331,10 +1387,13 @@ function renderReviewItem() {
   }
   const item = reviewQueue[reviewIdx];
   const total = reviewQueue.length;
-  document.getElementById('rev-progress').innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(reviewIdx/total*100)}" aria-valuemin="0" aria-valuemax="100" aria-label="Review progress" style="width:${reviewIdx/total*100}%"></div>`;
+  const revProg = document.getElementById('rev-progress');
+  if (revProg) revProg.innerHTML = `<div class="quiz-progress-fill" role="progressbar" aria-valuenow="${Math.round(reviewIdx/total*100)}" aria-valuemin="0" aria-valuemax="100" aria-label="Review progress" style="width:${reviewIdx/total*100}%"></div>`;
   const c = document.getElementById('rev-container');
-  document.getElementById('rev-next').style.display = 'none';
-  document.getElementById('rev-accents').style.display = 'none';
+  const revNext = document.getElementById('rev-next');
+  if (revNext) revNext.style.display = 'none';
+  const revAccents = document.getElementById('rev-accents');
+  if (revAccents) revAccents.style.display = 'none';
   reviewSelected = -1;
 
   if (item.type === 'verb') {
@@ -1364,8 +1423,8 @@ function renderReviewItem() {
         <div class="quiz-feedback mt-1" id="rev-drill-fb" style="display:none"></div>
       </div>
     `;
-    document.getElementById('rev-accents').style.display = 'flex';
-    document.getElementById('rev-drill-input').focus();
+    if (revAccents) revAccents.style.display = 'flex';
+    document.getElementById('rev-drill-input')?.focus();
   } else if (item.type === 'vocab') {
     buildVocabIndexes();
     const word = VOCAB_BY_WORD[item.key?.toLowerCase()] || null;
@@ -1471,12 +1530,16 @@ function submitReviewMC() {
   trackError(item.key, correct);
   if (correct) reviewScore++;
   const fb = document.getElementById('rev-mc-fb');
-  fb.textContent = correct ? t('correct') : `${t('incorrectAnswer')} ${q.answer || q.options[q.correct]}`;
-  if (q.explanation) fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
-  fb.style.display = 'block';
-  document.querySelector('#rev-container .mc-submit').style.display = 'none';
+  if (fb) {
+    fb.textContent = correct ? t('correct') : `${t('incorrectAnswer')} ${q.answer || q.options[q.correct]}`;
+    if (q.explanation) fb.innerHTML += `<br><span class="text-muted" style="font-size:0.85rem">${esc(q.explanation)}</span>`;
+    fb.style.display = 'block';
+  }
+  const mcSubmitBtn = document.querySelector('#rev-container .mc-submit');
+  if (mcSubmitBtn) mcSubmitBtn.style.display = 'none';
   reviewItem(progress[item.fsrs], progress[item.mastery], item.key, correct ? FSRS_GOOD : FSRS_AGAIN);
-  document.getElementById('rev-next').style.display = 'flex';
+  const revNextBtn = document.getElementById('rev-next');
+  if (revNextBtn) revNextBtn.style.display = 'flex';
 }
 
 function checkReviewDrill() {
@@ -1493,27 +1556,30 @@ function checkReviewDrill() {
   const fb = document.getElementById('rev-drill-fb');
   if (result.correct) {
     reviewScore++;
-    fb.innerHTML = result.accentWarn
+    if (fb) fb.innerHTML = result.accentWarn
       ? `<span class="text-correct">${t('correctAccent')} ${esc(correct)}</span>`
       : `<span class="text-correct">${t('correct')}</span>`;
     reviewItem(progress[item.fsrs], progress[item.mastery], item.key, result.accentWarn ? FSRS_HARD : FSRS_GOOD);
   } else {
-    fb.innerHTML = result.accentWarn
+    if (fb) fb.innerHTML = result.accentWarn
       ? `<span class="text-incorrect">${t('incorrectAccent')} ${esc(correct)}</span>`
       : `<span class="text-incorrect">${t('incorrectAnswer')} ${esc(correct)}</span>`;
     reviewItem(progress[item.fsrs], progress[item.mastery], item.key, FSRS_AGAIN);
   }
-  fb.style.display = 'block';
+  if (fb) fb.style.display = 'block';
   input.readOnly = true;
-  document.querySelector('#rev-container [data-action="check-review-drill"]').style.display = 'none';
-  document.getElementById('rev-next').style.display = 'flex';
+  const drillBtn = document.querySelector('#rev-container [data-action="check-review-drill"]');
+  if (drillBtn) drillBtn.style.display = 'none';
+  const revNextEl = document.getElementById('rev-next');
+  if (revNextEl) revNextEl.style.display = 'flex';
 }
 
 function rateReviewItem(rating) {
   const item = reviewQueue[reviewIdx];
   reviewItem(progress[item.fsrs], progress[item.mastery], item.key, rating);
   if (rating >= FSRS_GOOD) reviewScore++;
-  document.getElementById('rev-rating').style.display = 'none';
+  const revRating = document.getElementById('rev-rating');
+  if (revRating) revRating.style.display = 'none';
   reviewIdx++;
   renderReviewItem();
 }

@@ -113,9 +113,11 @@ function createQuizFlow(config) {
     var selectedIdx = parseInt(selectedBtn.dataset.idx, 10);
     var q = queue[idx];
 
-    var correctIdx;
+    var correctIdx = -1;
     if (config.getCorrectIdx) {
-      correctIdx = config.getCorrectIdx(q);
+      var rawIdx = config.getCorrectIdx(q);
+      correctIdx = typeof rawIdx === 'number' ? rawIdx : parseInt(rawIdx, 10);
+      if (isNaN(correctIdx)) correctIdx = -1;
     } else if (config.getCorrectValue) {
       var correctVal = config.getCorrectValue(q);
       var allBtns = document.querySelectorAll(containerSel + ' .quiz-option');
@@ -124,6 +126,13 @@ function createQuizFlow(config) {
           correctIdx = i;
         }
       });
+    }
+
+    // If no correct answer could be determined, skip grading this question
+    if (correctIdx === -1) {
+      var nextBtn = document.getElementById(config.nextBtnId);
+      if (nextBtn) nextBtn.style.display = 'flex';
+      return;
     }
 
     var isCorrect = selectedIdx === correctIdx;

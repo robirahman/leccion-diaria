@@ -74,9 +74,12 @@ function renderVPQuizQuestion() {
   const wrongs = shuffle(allPreps.filter(p => p !== q.preposition)).slice(0, 3);
   const options = shuffle([q.preposition, ...wrongs]);
 
-  document.getElementById('vp-progress').textContent = `${vpQuiz.idx + 1} / ${vpQuiz.queue.length}`;
-  document.getElementById('vp-next').style.display = 'none';
-  document.getElementById('vp-quiz-content').innerHTML = `
+  const vpProg = document.getElementById('vp-progress');
+  if (vpProg) vpProg.textContent = `${vpQuiz.idx + 1} / ${vpQuiz.queue.length}`;
+  const vpNext = document.getElementById('vp-next');
+  if (vpNext) vpNext.style.display = 'none';
+  const vpContent = document.getElementById('vp-quiz-content');
+  if (vpContent) vpContent.innerHTML = `
     <p class="mb-1">Complete: <strong>${esc(q.verb)} ___</strong> (${esc(q.english)})</p>
     <div class="quiz-options">
       ${options.map((o, i) => `<button class="quiz-option" data-action="answer-vp-quiz" data-idx="${i}" data-val="${esc(o)}">${esc(o)}</button>`).join('')}
@@ -171,9 +174,12 @@ function renderSubjQuizQuestion() {
   const wrongs = shuffle(allTriggers.filter(t => t !== q.trigger)).slice(0, 3);
   const options = shuffle([q.trigger, ...wrongs]);
 
-  document.getElementById('subj-progress').textContent = `${subjQuiz.idx + 1} / ${subjQuiz.queue.length}`;
-  document.getElementById('subj-next').style.display = 'none';
-  document.getElementById('subj-quiz-content').innerHTML = `
+  const subjProg = document.getElementById('subj-progress');
+  if (subjProg) subjProg.textContent = `${subjQuiz.idx + 1} / ${subjQuiz.queue.length}`;
+  const subjNext = document.getElementById('subj-next');
+  if (subjNext) subjNext.style.display = 'none';
+  const subjContent = document.getElementById('subj-quiz-content');
+  if (subjContent) subjContent.innerHTML = `
     <p class="mb-1">Which expression means: <strong>"${esc(q.english)}"</strong>?</p>
     <div class="quiz-options">
       ${options.map((o, i) => `<button class="quiz-option" data-action="answer-subj-quiz" data-idx="${i}" data-val="${esc(o)}">${esc(o)}</button>`).join('')}
@@ -241,6 +247,7 @@ function startWritingExercise(id) {
 
   const p = currentWritingPrompt;
   const el = document.getElementById('writing-exercise-content');
+  if (!el) return;
   el.innerHTML = `
     <h3 class="mb-1">${esc(p.promptEn)}</h3>
     <p class="text-muted text-sm mb-1" lang="es">${esc(p.prompt)}</p>
@@ -311,6 +318,7 @@ function openComparativeDetail(id) {
   showScreen('comparative-detail');
 
   const el = document.getElementById('comparative-detail-content');
+  if (!el) return;
   let html = `<h3 class="mb-1">${esc(item.titleEn)}</h3>`;
   // item.content is trusted author HTML (from comparative_grammar.js data file)
   // Strip <script> tags as defense-in-depth
@@ -400,6 +408,7 @@ function startNumberQuiz() {
   nqQuiz.queue = partialShuffle(cardinals, 10).map(n => ({
     number: n.number,
     spanish: n.spanish,
+    alt: n.alt || null,
     type: Math.random() < 0.5 ? 'toSpanish' : 'toNumber',
   }));
   nqQuiz.idx = 0;
@@ -420,12 +429,15 @@ function renderNumberQuizQuestion() {
   const data = NUMBER_PRACTICE_DATA;
   const cardinals = data.CARDINAL_NUMBERS || [];
 
-  document.getElementById('nq-progress').textContent = `${nqQuiz.idx + 1} / ${nqQuiz.queue.length}`;
-  document.getElementById('nq-next').style.display = 'none';
+  const nqProg = document.getElementById('nq-progress');
+  if (nqProg) nqProg.textContent = `${nqQuiz.idx + 1} / ${nqQuiz.queue.length}`;
+  const nqNext = document.getElementById('nq-next');
+  if (nqNext) nqNext.style.display = 'none';
+  const nqContent = document.getElementById('nq-quiz-content');
 
   if (q.type === 'toSpanish') {
     // Show number, ask for Spanish word — FIB
-    document.getElementById('nq-quiz-content').innerHTML = `
+    if (nqContent) nqContent.innerHTML = `
       <p class="mb-1">Write <strong>${q.number}</strong> in Spanish:</p>
       <input type="text" id="nq-input" class="quiz-input" placeholder="Type the Spanish word..." autocomplete="off" lang="es">
       ${accentBarHTML('insert-accent-nq', 'nq-input')}
@@ -437,7 +449,7 @@ function renderNumberQuizQuestion() {
     // Show Spanish word, ask which number
     const wrongs = shuffle(cardinals.filter(n => n.number !== q.number)).slice(0, 3);
     const options = shuffle([q.number, ...wrongs.map(w => w.number)]);
-    document.getElementById('nq-quiz-content').innerHTML = `
+    if (nqContent) nqContent.innerHTML = `
       <p class="mb-1">What number is <strong lang="es">"${esc(q.spanish)}"</strong>?</p>
       <div class="quiz-options">
         ${options.map((o, i) => `<button class="quiz-option" data-action="answer-number-quiz" data-idx="${i}" data-val="${o}">${o}</button>`).join('')}
@@ -466,7 +478,11 @@ function checkNumberQuiz() {
   const q = nqQuiz.queue[nqQuiz.idx];
   const input = document.getElementById('nq-input');
   if (!input) return;
-  const result = checkAnswer(input.value, q.spanish);
+  let result = checkAnswer(input.value, q.spanish);
+  if (!result.correct && q.alt) {
+    const altResult = checkAnswer(input.value, q.alt);
+    if (altResult.correct) result = altResult;
+  }
   const fb = document.getElementById('nq-feedback');
   if (result.correct) {
     nqQuiz.score++;
@@ -481,7 +497,8 @@ function checkNumberQuiz() {
     }
   }
   input.disabled = true;
-  document.getElementById('nq-next').style.display = 'flex';
+  const nqNextBtn = document.getElementById('nq-next');
+  if (nqNextBtn) nqNextBtn.style.display = 'flex';
 }
 
 function nextNumberQuiz() {
@@ -513,9 +530,12 @@ function renderTimeQuizQuestion() {
   const wrongs = shuffle(allTimes.filter(t => t.time !== q.time)).slice(0, 3);
   const options = shuffle([q.spanish, ...wrongs.map(w => w.spanish)]);
 
-  document.getElementById('tq-progress').textContent = `${tqQuiz.idx + 1} / ${tqQuiz.queue.length}`;
-  document.getElementById('tq-next').style.display = 'none';
-  document.getElementById('tq-quiz-content').innerHTML = `
+  const tqProg = document.getElementById('tq-progress');
+  if (tqProg) tqProg.textContent = `${tqQuiz.idx + 1} / ${tqQuiz.queue.length}`;
+  const tqNext = document.getElementById('tq-next');
+  if (tqNext) tqNext.style.display = 'none';
+  const tqContent = document.getElementById('tq-quiz-content');
+  if (tqContent) tqContent.innerHTML = `
     <p class="mb-1">How do you say <strong>${esc(q.time)}</strong> in Spanish?</p>
     <div class="quiz-options">
       ${options.map((o, i) => `<button class="quiz-option" data-action="answer-time-quiz" data-idx="${i}" data-val="${esc(o)}">${esc(o)}</button>`).join('')}
