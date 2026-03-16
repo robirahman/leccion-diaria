@@ -441,6 +441,7 @@ function renderVerbLearnCard() {
 function flipVerbCard() {
   document.getElementById('verb-flashcard').classList.add('flipped');
   document.getElementById('verb-learn-rating').style.display = 'flex';
+  announceFlip('verb-flashcard');
 }
 
 function rateVerb(rating) {
@@ -1113,6 +1114,7 @@ function renderPhraseLearnCard() {
 function flipPhraseCard() {
   document.getElementById('phrase-flashcard').classList.add('flipped');
   document.getElementById('phrase-learn-rating').style.display = 'flex';
+  announceFlip('phrase-flashcard');
 }
 
 function ratePhrase(rating) {
@@ -1423,6 +1425,12 @@ function showResults(score, total, module, label) {
     saveProgress();
   }
   checkAchievements();
+
+  // Analytics: track quiz completion
+  if (typeof analyticsTrackQuiz === 'function') {
+    const duration = typeof getSessionDuration === 'function' ? getSessionDuration() : 0;
+    analyticsTrackQuiz(module, score, total, duration);
+  }
 
   // Celebratory feedback based on score
   let scoreClass, emoji, message;

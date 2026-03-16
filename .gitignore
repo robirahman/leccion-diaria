@@ -134,3 +134,7 @@ dmypy.json
 # Node
 node_modules/
 dist/
+
+# Playwright
+test-results/
+playwright-report/

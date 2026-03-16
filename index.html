@@ -27,7 +27,7 @@
     <span class="offline-badge hidden" id="offline-badge" aria-live="polite">Offline</span>
     <div class="nav-stats">
       <span class="xp" id="nav-xp" title="Experience Points">0 XP</span>
-      <span class="streak" id="nav-streak" title="Day Streak">0d</span>
+      <span class="streak" id="nav-streak" title="Day Streak" aria-live="polite">0d</span>
     </div>
     <button class="nav-btn" data-action="toggle-theme" title="Toggle theme" aria-label="Toggle dark and light theme">&#9681;</button>
     <button class="nav-btn" data-action="open-settings" title="Settings" aria-label="Open settings">&#9881;</button>
@@ -281,7 +281,7 @@
         <button class="accent-btn" data-action="insert-accent" data-char="ñ" aria-label="Insert ñ">ñ</button>
         <button class="accent-btn" data-action="insert-accent" data-char="ü" aria-label="Insert ü">ü</button>
       </div>
-      <div class="quiz-feedback" aria-live="polite" id="vd-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="vd-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-verb-drill" style="display:none" id="vd-next">Next</button>
   </div>
@@ -671,7 +671,7 @@
     <div class="card">
       <div class="quiz-question" id="mp-sentence"></div>
       <div class="quiz-options" id="mp-options"></div>
-      <div class="quiz-feedback" aria-live="polite" id="mp-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="mp-feedback" style="display:none"></div>
       <div class="mp-contrast" id="mp-contrast" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-mp" style="display:none" id="mp-next">Next</button>
@@ -692,7 +692,7 @@
       <div id="pp-tts" class="text-center mb-1"></div>
       <div class="quiz-question" id="pp-sentence"></div>
       <div class="quiz-options" id="pp-options"></div>
-      <div class="quiz-feedback" aria-live="polite" id="pp-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="pp-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-pp" style="display:none" id="pp-next">Next</button>
   </div>
@@ -711,7 +711,7 @@
       <div id="hom-pronunciation" class="text-center text-muted text-sm mb-1"></div>
       <div class="quiz-question" id="hom-sentence"></div>
       <div class="quiz-options" id="hom-options"></div>
-      <div class="quiz-feedback" aria-live="polite" id="hom-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="hom-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-hom" style="display:none" id="hom-next">Next</button>
   </div>
@@ -729,7 +729,7 @@
     <div class="card">
       <div class="quiz-question" id="conn-sentence"></div>
       <div class="quiz-options" id="conn-options"></div>
-      <div class="quiz-feedback" aria-live="polite" id="conn-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="conn-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-conn" style="display:none" id="conn-next">Next</button>
   </div>
@@ -742,7 +742,7 @@
       <div class="sb-answer-row" id="sb-answer-row"></div>
       <div class="sb-divider"></div>
       <div class="sb-word-bank" id="sb-word-bank"></div>
-      <div class="quiz-feedback" aria-live="polite" id="sb-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="sb-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-primary btn-block mt-1" data-action="check-sentence-build" id="sb-check">Check</button>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-sentence-build" style="display:none" id="sb-next">Next</button>
@@ -793,7 +793,7 @@
         <button class="accent-btn" data-action="insert-accent-tr" data-char="¿" aria-label="Insert inverted question mark">¿</button>
         <button class="accent-btn" data-action="insert-accent-tr" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
       </div>
-      <div class="quiz-feedback" aria-live="polite" id="tr-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="tr-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-translation" style="display:none" id="tr-next">Next</button>
   </div>
@@ -821,7 +821,7 @@
         <button class="accent-btn" data-action="insert-accent-dict" data-char="¿" aria-label="Insert inverted question mark">¿</button>
         <button class="accent-btn" data-action="insert-accent-dict" data-char="¡" aria-label="Insert inverted exclamation mark">¡</button>
       </div>
-      <div class="quiz-feedback" aria-live="polite" id="dict-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="dict-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-dictation" style="display:none" id="dict-next">Next</button>
   </div>
@@ -1291,7 +1291,7 @@
       <div class="quiz-question" id="read-question"></div>
       <div class="quiz-options" id="read-options"></div>
       <button class="btn btn-primary btn-block mt-1" data-action="submit-reading-mc" id="read-submit" style="display:none">Check</button>
-      <div class="quiz-feedback" aria-live="polite" id="read-feedback" style="display:none"></div>
+      <div class="quiz-feedback" aria-live="assertive" id="read-feedback" style="display:none"></div>
     </div>
     <button class="btn btn-secondary btn-block mt-1" data-action="next-reading" style="display:none" id="read-next">Next</button>
   </div>
@@ -1331,6 +1331,37 @@
   <div class="screen" id="screen-stats">
     <h2 class="mb-2" data-i18n="statistics">Statistics</h2>
     <div class="stat-cards" id="stats-overview"></div>
+
+    <!-- ── Analytics: Study Time ── -->
+    <div class="card mt-1">
+      <div class="card-title mb-1">Study Time</div>
+      <div id="analytics-study-time"></div>
+    </div>
+
+    <!-- ── Analytics: Daily XP Chart ── -->
+    <div class="card mt-1">
+      <div class="card-title mb-1">Daily XP (last 14 days)</div>
+      <div id="analytics-daily-xp"></div>
+    </div>
+
+    <!-- ── Analytics: Quizzes By Type ── -->
+    <div class="card mt-1">
+      <div class="card-title mb-1">Quizzes By Type</div>
+      <div id="analytics-quizzes"></div>
+    </div>
+
+    <!-- ── Analytics: Feature Usage ── -->
+    <div class="card mt-1">
+      <div class="card-title mb-1">Most Used Features</div>
+      <div id="analytics-features"></div>
+    </div>
+
+    <!-- ── Analytics: Learning Pace ── -->
+    <div class="card mt-1">
+      <div class="card-title mb-1">Learning Pace</div>
+      <div id="analytics-pace"></div>
+    </div>
+
     <div class="card mt-1">
       <div class="card-title mb-1">SRS Card Distribution</div>
       <div id="stats-srs-dashboard"></div>

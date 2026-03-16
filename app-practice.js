@@ -1056,6 +1056,8 @@ function renderStats() {
   renderStatsGrammarProgress();
   renderSrsDashboard();
   renderSkillRadar();
+  // Render local analytics section
+  if (typeof renderAnalytics === 'function') renderAnalytics();
 }
 
 // ════════════════════════════════════════
@@ -1538,21 +1540,7 @@ function flipReviewCard() {
   if (card) {
     card.classList.add('flipped');
     if (rating) rating.style.display = 'flex';
-    // Accessibility: announce flipped card content to screen readers
-    const backContent = document.getElementById('rev-card-back');
-    if (backContent) {
-      let announcer = document.getElementById('flip-announcer');
-      if (!announcer) {
-        announcer = document.createElement('div');
-        announcer.id = 'flip-announcer';
-        announcer.setAttribute('aria-live', 'polite');
-        announcer.setAttribute('role', 'status');
-        announcer.className = 'sr-only';
-        document.body.appendChild(announcer);
-      }
-      announcer.textContent = '';
-      setTimeout(() => { announcer.textContent = backContent.textContent.trim(); }, 100);
-    }
+    announceFlip('rev-flashcard');
   }
 }
 

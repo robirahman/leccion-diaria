@@ -7,13 +7,6 @@ Remaining improvements not yet implemented, organized by priority.
 ### Content
 - [ ] **Vocabulary with images** — add image URLs/assets for concrete nouns (requires image hosting)
 
-### Infrastructure
-- [ ] **E2E tests** — set up Playwright or Cypress for critical user flows
-- [ ] **Analytics infrastructure** — lightweight, privacy-respecting usage analytics
-
-### Data Quality
-- [ ] **Improve ~607 examples** where the word appears only in conjugated/inflected form (not a real bug — examples are correct, just harder to match programmatically)
-
 ### Social / Backend Features (requires server)
 - [ ] **Social/competitive features** — leaderboards, friend challenges
 - [ ] **Cloud sync** — sync progress across devices
@@ -68,3 +61,9 @@ Remaining improvements not yet implemented, organized by priority.
   - Card keyboard handler (Enter/Space)
 - [x] TypeScript migration: jsconfig.json + JSDoc types for fsrs.js and conjugation.js
 - [x] Branching dialogue practice: 6 dialogues (A1-B2), chat-style UI, XP tracking
+
+### P4 Wave 4: E2E Tests, Analytics, A11y Polish, Example Fixes
+- [x] E2E tests: Playwright + Chromium, 14 smoke tests (navigation, learn flow, placement)
+- [x] Analytics: local-only stats screen with study time, daily XP chart, quiz breakdown, feature usage, learning pace
+- [x] A11y moderate fixes: quiz feedback assertive, dark theme contrast, flashcard announcements, nav streak live region, focus-visible improvements
+- [x] Fixed 441 A1/A2 vocab examples to include dictionary form (verbs, adjectives, nouns)

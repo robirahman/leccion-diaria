@@ -371,6 +371,13 @@ function newProgress() {
       hideFutureSubjunctive: true, subjunctiveForm: 'ra',
       dailyGoal: 200,
     },
+    analytics: {
+      totalStudyTime: 0,          // cumulative seconds
+      sessions: [],               // [{start, duration, screens}] last 30
+      quizzes: {},                 // {type: {completed, correct, incorrect, totalTime}}
+      featureUsage: {},            // {feature: hitCount}
+      dailyActivity: {},          // {'YYYY-MM-DD': {wordsLearned, xp, studyTime, quizzes}}
+    },
   };
 }
 
@@ -835,6 +842,13 @@ function migrateProgress(p) {
   }
   if (p.perfectQuizCount == null) p.perfectQuizCount = 0;
   if (p.nightOwlUnlocked == null) p.nightOwlUnlocked = false;
+  // Analytics migration
+  if (!p.analytics) p.analytics = { totalStudyTime: 0, sessions: [], quizzes: {}, featureUsage: {}, dailyActivity: {} };
+  if (!p.analytics.sessions) p.analytics.sessions = [];
+  if (!p.analytics.quizzes) p.analytics.quizzes = {};
+  if (!p.analytics.featureUsage) p.analytics.featureUsage = {};
+  if (!p.analytics.dailyActivity) p.analytics.dailyActivity = {};
+  if (p.analytics.totalStudyTime == null) p.analytics.totalStudyTime = 0;
   return p;
 }
 
@@ -941,6 +955,9 @@ function emptyState(icon, message) {
 }
 
 function showScreen(id, pushStack = true) {
+  // Track screen visit for analytics
+  if (typeof analyticsTrackScreen === 'function') analyticsTrackScreen(id);
+
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + id);
   if (el) {
@@ -1084,6 +1101,13 @@ function selectProfile(name) {
   document.getElementById('tab-bar').style.display = 'flex';
   switchTab('today');
   try { sessionStorage.setItem('ld_active_profile', name); } catch (e) { /* ignore */ }
+  // Start analytics session tracking
+  if (typeof _initAnalyticsListeners === 'function' && !window._analyticsInitDone) {
+    _initAnalyticsListeners();
+    window._analyticsInitDone = true;
+  } else if (typeof analyticsStartSession === 'function') {
+    analyticsStartSession();
+  }
 }
 
 function createProfile() {
@@ -1406,6 +1430,8 @@ function addXP(amount) {
   progress.xp += amount;
   const today = todayStr();
   progress.practiceLog[today] = (progress.practiceLog[today] || 0) + amount;
+  // Analytics: track daily XP
+  if (typeof analyticsTrackDailyXP === 'function') analyticsTrackDailyXP(amount);
   checkStreak();
   saveProgress();
   updateNavStats();
@@ -1522,6 +1548,7 @@ function undoLastRating() {
 function reviewItem(fsrsStore, masteryStore, key, rating) {
   const now = Date.now();
   let rec = fsrsStore[key];
+  const isNew = !rec;
   if (!rec) {
     const s = fsrsInitS(rating);
     const d = fsrsInitD(rating);
@@ -1537,6 +1564,8 @@ function reviewItem(fsrsStore, masteryStore, key, rating) {
   }
   fsrsStore[key] = rec;
   masteryStore[key] = masteryFromFsrs(rec.s);
+  // Track new items learned for analytics
+  if (isNew && typeof analyticsTrackWordsLearned === 'function') analyticsTrackWordsLearned(1);
   saveProgress();
 }
 
@@ -1876,6 +1905,25 @@ function getRecallColor(pct) {
 
 function esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
+// Announce flashcard flip to screen readers
+function announceFlip(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  const back = card.querySelector('.back');
+  if (!back) return;
+  let announcer = document.getElementById('flip-announcer');
+  if (!announcer) {
+    announcer = document.createElement('div');
+    announcer.id = 'flip-announcer';
+    announcer.setAttribute('aria-live', 'polite');
+    announcer.setAttribute('role', 'status');
+    announcer.className = 'sr-only';
+    document.body.appendChild(announcer);
+  }
+  announcer.textContent = '';
+  setTimeout(() => { announcer.textContent = back.textContent.trim(); }, 100);
+}
+
 // Generic MC option selection helper
 // If autoSubmitFn is provided, auto-submits after selection (skips Submit button)
 function selectMCOption(containerSelector, idx, autoSubmitFn) {
@@ -1942,5 +1990,291 @@ function checkDataVersion() {
     }
     localStorage.setItem('ld_data_version', String(DATA_VERSION));
   } catch (e) { /* ignore */ }
+}
+
+// ════════════════════════════════════════
+//  LOCAL ANALYTICS (privacy-first, no network)
+// ════════════════════════════════════════
+
+// --- Session tracking ---
+let _analyticsSessionStart = null;
+let _analyticsScreensVisited = [];
+let _analyticsSaveTimer = null;
+const ANALYTICS_ROLLING_DAYS = 30;
+const ANALYTICS_MAX_SESSIONS = 30;
+
+function analyticsStartSession() {
+  _analyticsSessionStart = Date.now();
+  _analyticsScreensVisited = [];
+}
+
+function analyticsEndSession() {
+  if (!progress || !_analyticsSessionStart) return;
+  const a = progress.analytics;
+  const duration = Math.round((Date.now() - _analyticsSessionStart) / 1000);
+  if (duration < 2) return; // ignore trivial visits
+  a.totalStudyTime = (a.totalStudyTime || 0) + duration;
+  a.sessions.push({ start: _analyticsSessionStart, duration, screens: [...new Set(_analyticsScreensVisited)] });
+  // Keep only last N sessions
+  if (a.sessions.length > ANALYTICS_MAX_SESSIONS) a.sessions = a.sessions.slice(-ANALYTICS_MAX_SESSIONS);
+  // Update daily study time
+  const today = todayStr();
+  if (!a.dailyActivity[today]) a.dailyActivity[today] = { wordsLearned: 0, xp: 0, studyTime: 0, quizzes: 0 };
+  a.dailyActivity[today].studyTime += duration;
+  _pruneOldDailyActivity(a);
+  _analyticsSessionStart = Date.now(); // reset for next segment
+  _debouncedAnalyticsSave();
+}
+
+function analyticsTrackScreen(screenId) {
+  if (!progress) return;
+  _analyticsScreensVisited.push(screenId);
+  // Map screen to feature category
+  const featureMap = {
+    'verbs': 'verbs', 'verb-learn': 'verbs', 'verb-drill': 'verbs', 'verb-quiz': 'verbs', 'verb-browser': 'verbs',
+    'vocab': 'vocab', 'vocab-learn': 'vocab', 'vocab-quiz': 'vocab', 'themed-vocab': 'vocab', 'themed-quiz': 'vocab',
+    'grammar': 'grammar', 'grammar-quiz': 'grammar', 'grammar-lesson': 'grammar',
+    'phrases': 'phrases', 'phrase-learn': 'phrases', 'phrase-quiz': 'phrases',
+    'reading': 'reading', 'culture': 'culture', 'culture-quiz': 'culture',
+    'numbers': 'numbers', 'number-learn': 'numbers', 'number-quiz': 'numbers', 'time-quiz': 'numbers',
+    'mp-drill': 'practice', 'pp-drill': 'practice', 'hom-drill': 'practice',
+    'conn-drill': 'practice', 'sentence-build': 'practice', 'cloze': 'practice',
+    'translation': 'practice', 'dictation': 'practice',
+    'dialogue-practice': 'dialogues', 'writing-exercise': 'writing',
+  };
+  const feature = featureMap[screenId];
+  if (feature) {
+    const a = progress.analytics;
+    a.featureUsage[feature] = (a.featureUsage[feature] || 0) + 1;
+  }
+}
+
+function analyticsTrackQuiz(type, correct, total, durationSec) {
+  if (!progress) return;
+  const a = progress.analytics;
+  if (!a.quizzes[type]) a.quizzes[type] = { completed: 0, correct: 0, incorrect: 0, totalTime: 0 };
+  const q = a.quizzes[type];
+  q.completed++;
+  q.correct += correct;
+  q.incorrect += (total - correct);
+  q.totalTime += durationSec;
+  // Daily activity
+  const today = todayStr();
+  if (!a.dailyActivity[today]) a.dailyActivity[today] = { wordsLearned: 0, xp: 0, studyTime: 0, quizzes: 0 };
+  a.dailyActivity[today].quizzes++;
+  _debouncedAnalyticsSave();
+}
+
+function analyticsTrackDailyXP(amount) {
+  if (!progress) return;
+  const a = progress.analytics;
+  const today = todayStr();
+  if (!a.dailyActivity[today]) a.dailyActivity[today] = { wordsLearned: 0, xp: 0, studyTime: 0, quizzes: 0 };
+  a.dailyActivity[today].xp += amount;
+}
+
+function analyticsTrackWordsLearned(count) {
+  if (!progress) return;
+  const a = progress.analytics;
+  const today = todayStr();
+  if (!a.dailyActivity[today]) a.dailyActivity[today] = { wordsLearned: 0, xp: 0, studyTime: 0, quizzes: 0 };
+  a.dailyActivity[today].wordsLearned += count;
+  _debouncedAnalyticsSave();
+}
+
+function _pruneOldDailyActivity(a) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - ANALYTICS_ROLLING_DAYS - 1);
+  const cutoffStr = dateStr(cutoff);
+  for (const key of Object.keys(a.dailyActivity)) {
+    if (key < cutoffStr) delete a.dailyActivity[key];
+  }
+}
+
+function _debouncedAnalyticsSave() {
+  if (_analyticsSaveTimer) return;
+  _analyticsSaveTimer = setTimeout(() => {
+    _analyticsSaveTimer = null;
+    saveProgress();
+  }, 3000);
+}
+
+// Auto-session: start on load, end on visibility change / unload
+function _initAnalyticsListeners() {
+  analyticsStartSession();
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) analyticsEndSession();
+    else analyticsStartSession();
+  });
+  window.addEventListener('beforeunload', () => analyticsEndSession());
+}
+
+// ════════════════════════════════════════
+//  ANALYTICS RENDERING (Stats screen)
+// ════════════════════════════════════════
+
+function renderAnalytics() {
+  if (!progress || !progress.analytics) return;
+  const a = progress.analytics;
+
+  // --- Total Study Time ---
+  const tsEl = document.getElementById('analytics-study-time');
+  if (tsEl) {
+    const secs = a.totalStudyTime || 0;
+    tsEl.innerHTML = `
+      <div class="stat-cards">
+        <div class="stat-card"><div class="stat-num">${_fmtDuration(secs)}</div><div class="stat-desc">Total Study Time</div></div>
+        <div class="stat-card"><div class="stat-num">${a.sessions.length}</div><div class="stat-desc">Sessions (last 30)</div></div>
+        <div class="stat-card"><div class="stat-num">${a.sessions.length ? _fmtDuration(Math.round(a.sessions.reduce((s, x) => s + x.duration, 0) / a.sessions.length)) : '0m'}</div><div class="stat-desc">Avg Session</div></div>
+      </div>
+    `;
+  }
+
+  // --- Quizzes By Type ---
+  const qzEl = document.getElementById('analytics-quizzes');
+  if (qzEl) {
+    const entries = Object.entries(a.quizzes);
+    if (!entries.length) {
+      qzEl.innerHTML = '<p class="text-muted text-sm">No quizzes completed yet.</p>';
+    } else {
+      const maxCompleted = Math.max(...entries.map(([, v]) => v.completed), 1);
+      let html = '';
+      // Sort by most completed
+      entries.sort((a, b) => b[1].completed - a[1].completed);
+      for (const [type, data] of entries) {
+        const pct = Math.round(data.completed / maxCompleted * 100);
+        const accuracy = data.correct + data.incorrect > 0
+          ? Math.round(data.correct / (data.correct + data.incorrect) * 100) : 0;
+        html += `<div class="analytics-bar-row">
+          <span class="analytics-bar-label">${_prettyQuizType(type)}</span>
+          <div class="analytics-bar-track">
+            <div class="analytics-bar-fill" style="width:${pct}%"></div>
+          </div>
+          <span class="analytics-bar-value">${data.completed} <span class="text-muted text-sm">(${accuracy}%)</span></span>
+        </div>`;
+      }
+      qzEl.innerHTML = html;
+    }
+  }
+
+  // --- Daily XP Chart (last 14 days) ---
+  const dxEl = document.getElementById('analytics-daily-xp');
+  if (dxEl) {
+    const days = [];
+    const today = new Date();
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const ds = dateStr(d);
+      const da = a.dailyActivity[ds];
+      days.push({ date: ds, xp: da ? da.xp : (progress.practiceLog[ds] || 0), label: String(d.getDate()) });
+    }
+    const maxXP = Math.max(...days.map(d => d.xp), 1);
+    const goal = progress.settings?.dailyGoal || 200;
+    const goalPct = Math.min(100, Math.round(goal / maxXP * 100));
+    let html = '<div class="analytics-chart">';
+    // Goal line
+    if (goal <= maxXP) {
+      html += `<div class="analytics-goal-line" style="bottom:${goalPct}%" title="Daily goal: ${goal} XP"></div>`;
+    }
+    for (const day of days) {
+      const h = Math.max(2, Math.round(day.xp / maxXP * 100));
+      const isToday = day.date === todayStr();
+      html += `<div class="analytics-chart-col${isToday ? ' today' : ''}" title="${day.date}: ${day.xp} XP">
+        <div class="analytics-chart-bar" style="height:${h}%"></div>
+        <div class="analytics-chart-label">${day.label}</div>
+      </div>`;
+    }
+    html += '</div>';
+    dxEl.innerHTML = html;
+  }
+
+  // --- Feature Usage ---
+  const fuEl = document.getElementById('analytics-features');
+  if (fuEl) {
+    const entries = Object.entries(a.featureUsage);
+    if (!entries.length) {
+      fuEl.innerHTML = '<p class="text-muted text-sm">No feature usage recorded yet.</p>';
+    } else {
+      entries.sort((a, b) => b[1] - a[1]);
+      const maxUse = Math.max(...entries.map(([, v]) => v), 1);
+      let html = '';
+      for (const [feature, count] of entries) {
+        const pct = Math.round(count / maxUse * 100);
+        html += `<div class="analytics-bar-row">
+          <span class="analytics-bar-label">${_prettyFeature(feature)}</span>
+          <div class="analytics-bar-track">
+            <div class="analytics-bar-fill accent2" style="width:${pct}%"></div>
+          </div>
+          <span class="analytics-bar-value">${count}</span>
+        </div>`;
+      }
+      fuEl.innerHTML = html;
+    }
+  }
+
+  // --- Learning Pace ---
+  const lpEl = document.getElementById('analytics-pace');
+  if (lpEl) {
+    const vocabCount = Object.keys(progress.vocabMastery || {}).length;
+    const verbCount = Object.keys(progress.verbMastery || {}).length;
+    const phraseCount = Object.keys(progress.phraseMastery || {}).length;
+    const totalLearned = vocabCount + verbCount + phraseCount;
+    const log = progress.practiceLog || {};
+    const activeDays = Object.keys(log).length || 1;
+    const wordsPerDay = (totalLearned / activeDays).toFixed(1);
+    const xpPerDay = Math.round(Object.values(log).reduce((s, v) => s + v, 0) / activeDays);
+
+    // Words learned per day over last 7 days from dailyActivity
+    const last7 = [];
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const da = a.dailyActivity[dateStr(d)];
+      last7.push(da ? da.wordsLearned : 0);
+    }
+    const recentAvg = (last7.reduce((s, v) => s + v, 0) / 7).toFixed(1);
+
+    lpEl.innerHTML = `
+      <div class="stat-row"><span class="stat-label">Items learned (all time)</span><span class="stat-value">${totalLearned}</span></div>
+      <div class="stat-row"><span class="stat-label">Active study days</span><span class="stat-value">${activeDays}</span></div>
+      <div class="stat-row"><span class="stat-label">Avg items/day (all time)</span><span class="stat-value">${wordsPerDay}</span></div>
+      <div class="stat-row"><span class="stat-label">Avg items/day (last 7d)</span><span class="stat-value">${recentAvg}</span></div>
+      <div class="stat-row"><span class="stat-label">Avg XP/day</span><span class="stat-value">${xpPerDay}</span></div>
+    `;
+  }
+}
+
+// --- Utility formatters ---
+
+function _fmtDuration(totalSec) {
+  if (totalSec < 60) return totalSec + 's';
+  const hrs = Math.floor(totalSec / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
+  if (hrs > 0) return hrs + 'h ' + mins + 'm';
+  return mins + 'm';
+}
+
+function _prettyQuizType(type) {
+  const map = {
+    'verb-quiz': 'Verb Quiz', 'verb-drill': 'Conjugation Drill', 'vocab-quiz': 'Vocabulary',
+    'grammar-quiz': 'Grammar', 'phrase-quiz': 'Phrases', 'culture-quiz': 'Culture',
+    'mp-drill': 'Minimal Pairs', 'pp-drill': 'Para/Por', 'hom-drill': 'Homophones',
+    'conn-drill': 'Connectors', 'sentence-build': 'Sentence Builder', 'cloze': 'Cloze',
+    'translation': 'Translation', 'dictation': 'Dictation', 'reading': 'Reading',
+    'number-quiz': 'Numbers', 'time-quiz': 'Telling Time', 'themed-quiz': 'Themed Vocab',
+    'placement': 'Placement Test',
+  };
+  return map[type] || type.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function _prettyFeature(feature) {
+  const map = {
+    verbs: 'Verbs', vocab: 'Vocabulary', grammar: 'Grammar', phrases: 'Phrases',
+    reading: 'Reading', culture: 'Culture', numbers: 'Numbers', practice: 'Practice Drills',
+    dialogues: 'Dialogues', writing: 'Writing',
+  };
+  return map[feature] || feature;
 }
 

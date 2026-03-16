@@ -12,7 +12,7 @@
   --card-hover: #253358;
   --border: #2a3a5c;
   --text: #e8e8e8;
-  --text2: #b8c0d4;
+  --text2: #cdd4e0;
   --text3: #c0c8dc;
   --accent: #c7553b;
   --accent2: #e07b5f;
@@ -1190,7 +1190,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   background: transparent; color: var(--text1); font-size: 1rem;
   text-align: center; padding: 0.1rem 0.25rem; outline: none;
 }
-.cloze-blank:focus { border-bottom-color: var(--text1); }
+.cloze-blank:focus-visible { border-bottom-color: var(--text1); outline: 2px solid var(--accent); outline-offset: 1px; }
 .cloze-blank.correct { border-color: var(--green); color: var(--green); }
 .cloze-blank.incorrect { border-color: var(--red); color: var(--red); }
 .cloze-explanation { font-size: 0.85rem; color: var(--text2); margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid var(--accent); }
@@ -1726,7 +1726,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   font-size: 0.9rem;
   resize: vertical;
 }
-.writing-area:focus {
+.writing-area:focus-visible {
   outline: 2px solid var(--accent);
   border-color: var(--accent);
 }
@@ -1912,4 +1912,90 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   font-weight: 700;
   font-size: 1rem;
   flex-shrink: 0;
+}
+
+/* ── Analytics Charts ── */
+
+.analytics-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.analytics-bar-row:last-child { border-bottom: none; }
+.analytics-bar-label {
+  min-width: 5.5rem;
+  font-size: 0.8rem;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.analytics-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--bg3);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.analytics-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+.analytics-bar-fill.accent2 {
+  background: var(--blue, #4a90d9);
+}
+.analytics-bar-value {
+  min-width: 3rem;
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text1);
+  flex-shrink: 0;
+}
+
+/* Daily XP bar chart */
+.analytics-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 100px;
+  position: relative;
+  padding-bottom: 1.2rem;
+}
+.analytics-chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+}
+.analytics-chart-bar {
+  width: 100%;
+  min-height: 2px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s ease;
+}
+.analytics-chart-col.today .analytics-chart-bar {
+  background: var(--green);
+}
+.analytics-chart-label {
+  position: absolute;
+  bottom: -1.1rem;
+  font-size: 0.55rem;
+  color: var(--text3);
+  text-align: center;
+}
+.analytics-goal-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px dashed var(--yellow, #e6a817);
+  z-index: 1;
+  pointer-events: none;
 }

@@ -206,6 +206,7 @@ function renderVocabLearnCard() {
 function flipVocabCard() {
   document.getElementById('vocab-flashcard').classList.add('flipped');
   document.getElementById('vocab-learn-rating').style.display = 'flex';
+  announceFlip('vocab-flashcard');
 }
 
 function rateVocab(rating) {
