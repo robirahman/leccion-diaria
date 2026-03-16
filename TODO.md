@@ -2,13 +2,13 @@
 
 Remaining improvements not yet implemented, organized by priority.
 
-## P1 — Security & Error Handling
+## P1 — Security & Error Handling (completed)
 
-- [ ] **Missing Content-Security-Policy** — add CSP meta tag to index.html to prevent accidental script injection
-- [ ] **Service worker not registered in source HTML** — add `navigator.serviceWorker.register()` so PWA works when serving source files directly
-- [ ] **FileReader missing `onerror` handler** — app-practice.js `importProgress()`: `reader.readAsText(file)` silently fails on read errors
-- [ ] **Empty catch blocks hiding errors** — app-init.js lines ~874, 929, 984: IDB cache write, init(), and error toast all swallow failures silently
-- [ ] **DOM element used as data store** — app-practice.js `container._revQuiz = q` stores quiz state as a DOM property; use a variable or Map instead
+- [x] **Content-Security-Policy** — added CSP meta tag to index.html
+- [x] **Service worker registration** — already present in app-init.js
+- [x] **FileReader `onerror` handler** — added error modal on read failure in app-practice.js
+- [x] **Empty catch blocks** — replaced with console.warn logging in app-init.js
+- [x] **DOM element data store** — replaced `container._revQuiz` with `_currentRevQuiz` variable
 
 ## P2 — Robustness & Performance
 

@@ -848,7 +848,7 @@ function _fetchVocabProgressive() {
         if (typeof buildVocabIndexes === 'function') buildVocabIndexes();
         _updateVocabWorker();
       }
-    }).catch(() => {});
+    }).catch(() => { /* optional file — missing is expected */ });
 
     // Then load remaining levels in parallel for faster loading
     const remaining = ['vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'];
@@ -862,8 +862,8 @@ function _fetchVocabProgressive() {
       });
   }).then(() => {
     // Cache the full dataset in IndexedDB
-    _idbPut(_IDB_VOCAB_KEY, window.VOCAB_DATA).catch(() => {
-      // IndexedDB cache write failed — non-critical, vocab still works from memory
+    _idbPut(_IDB_VOCAB_KEY, window.VOCAB_DATA).catch(err => {
+      console.warn('IndexedDB cache write failed (non-critical):', err);
     });
   }).catch(() => {
     // Fallback: try loading the monolithic file
@@ -926,7 +926,7 @@ function init() {
       // Restore placement test if it was in progress
       restorePlacementTest();
     }
-  } catch (e) { /* ignore */ }
+  } catch (e) { console.warn('Session restore failed:', e); }
   // Lazy-load secondary content modules after a short delay
   if ('requestIdleCallback' in window) {
     requestIdleCallback(lazyLoadSecondaryScripts, { timeout: 2000 });

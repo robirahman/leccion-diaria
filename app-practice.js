@@ -108,6 +108,11 @@ function importProgress() {
         ]);
       }
     };
+    reader.onerror = () => {
+      showModal(t('errorTitle'), `<p>${t('invalidFile')}</p>`, [
+        { label: tBtn('ok'), action: 'close-modal', cls: 'btn-primary' },
+      ]);
+    };
     reader.readAsText(file);
   };
   input.click();
@@ -1338,7 +1343,7 @@ function renderRecallHealth() {
 //  UNIFIED REVIEW QUEUE
 // ════════════════════════════════════════
 
-let reviewQueue = [], reviewIdx = 0, reviewScore = 0, reviewSelected = -1;
+let reviewQueue = [], reviewIdx = 0, reviewScore = 0, reviewSelected = -1, _currentRevQuiz = null;
 
 function buildReviewQueue() {
   const queue = [];
@@ -1495,7 +1500,7 @@ function renderReviewItem() {
         <div class="quiz-feedback mt-1" id="rev-mc-fb" style="display:none"></div>
       </div>
     `;
-    c._revQuiz = q;
+    _currentRevQuiz = q;
   } else {
     // Generic: skip unknown types
     reviewIdx++; renderReviewItem(); return;
@@ -1518,7 +1523,7 @@ function answerReviewMC(idx) {
 
 function submitReviewMC() {
   const item = reviewQueue[reviewIdx];
-  const q = document.getElementById('rev-container')._revQuiz;
+  const q = _currentRevQuiz;
   if (!q || reviewSelected < 0) return;
   const opts = document.querySelectorAll('#rev-mc-options .quiz-option');
   opts.forEach((o, i) => {
