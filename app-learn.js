@@ -664,6 +664,7 @@ function submitVerbQuizMC() {
   const btns = document.querySelectorAll('#vq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
+    btn.setAttribute('aria-disabled', 'true');
     if (item.options[i] === item.correct) btn.classList.add('correct');
     if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
   });
@@ -971,6 +972,7 @@ function submitGrammarQuizMC() {
   const btns = document.querySelectorAll('#gq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
+    btn.setAttribute('aria-disabled', 'true');
     if (i === correctIdx) btn.classList.add('correct');
     if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });
@@ -1617,5 +1619,168 @@ function startReviewFiltered(filter) {
   // Store the filter for the review system to pick up
   window._reviewFilter = filter;
   startReview();
+}
+
+// ════════════════════════════════════════
+//  BRANCHING DIALOGUES
+// ════════════════════════════════════════
+let _bdCurrent = null;
+let _bdNodeId = null;
+let _bdVisited = [];
+let _bdChoicesMade = 0;
+
+function openBranchingDialogues() {
+  if (typeof BRANCHING_DIALOGUES === 'undefined') return;
+  showScreen('branching-dialogues-list');
+  const el = document.getElementById('bd-list');
+  if (!el) return;
+  const done = progress.bdDone || {};
+  el.innerHTML = BRANCHING_DIALOGUES.map(d => {
+    const completed = done[d.id];
+    return `<div class="card mb-1" data-action="start-branching-dialogue" data-id="${d.id}" style="text-align:left">
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <span style="font-size:1.8rem">${d.icon}</span>
+        <div style="flex:1">
+          <div class="card-title" style="margin:0">${esc(d.title)}</div>
+          <div class="text-muted text-sm">${esc(d.titleEn)}</div>
+          <div class="text-muted text-sm mt-025">${esc(d.desc)}</div>
+          ${completed ? '<div class="text-sm" style="color:var(--green)">&#10003; Completed</div>' : ''}
+        </div>
+        <span class="badge badge-${d.level}">${d.level}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function startBranchingDialogue(id) {
+  if (typeof BRANCHING_DIALOGUES === 'undefined') return;
+  const bd = BRANCHING_DIALOGUES.find(d => d.id === id);
+  if (!bd) return;
+  _bdCurrent = bd;
+  _bdNodeId = 'start';
+  _bdVisited = [];
+  _bdChoicesMade = 0;
+  showScreen('branching-dialogue');
+  document.getElementById('bd-title').textContent = bd.icon + ' ' + bd.title;
+  document.getElementById('bd-chat').innerHTML = '';
+  document.getElementById('bd-end').style.display = 'none';
+  document.getElementById('bd-choices').innerHTML = '';
+  document.getElementById('bd-feedback').style.display = 'none';
+  document.getElementById('bd-continue').style.display = 'none';
+  _bdRenderNode();
+}
+
+function _bdRenderNode() {
+  const node = _bdCurrent.nodes.find(n => n.id === _bdNodeId);
+  if (!node) { _bdShowEnd(); return; }
+  _bdVisited.push(_bdNodeId);
+
+  const chat = document.getElementById('bd-chat');
+  const choicesEl = document.getElementById('bd-choices');
+  const feedbackEl = document.getElementById('bd-feedback');
+  const continueBtn = document.getElementById('bd-continue');
+
+  choicesEl.innerHTML = '';
+  feedbackEl.style.display = 'none';
+  continueBtn.style.display = 'none';
+
+  if (node.choices) {
+    // Player choice node — show options
+    choicesEl.innerHTML = node.choices.map((c, i) =>
+      `<button class="btn btn-outline btn-block bd-choice-btn" data-action="bd-pick" data-idx="${i}">
+        ${esc(c.spanish)}
+        <span class="text-muted text-sm bd-choice-en">${esc(c.english)}</span>
+      </button>`
+    ).join('');
+  } else {
+    // NPC line — add to chat transcript
+    const speaker = _bdCurrent.speakers[node.speaker];
+    chat.innerHTML += `<div class="bd-msg bd-msg-npc">
+      <div class="bd-msg-name">${esc(speaker.name)}</div>
+      <div class="bd-msg-text">${esc(node.spanish)}</div>
+      <div class="bd-msg-en">${esc(node.english)}</div>
+    </div>`;
+    chat.scrollTop = chat.scrollHeight;
+
+    if (node.next) {
+      _bdNodeId = node.next;
+      setTimeout(() => _bdRenderNode(), 500);
+    } else {
+      _bdShowEnd();
+    }
+  }
+}
+
+function bdPick(idx) {
+  const node = _bdCurrent.nodes.find(n => n.id === _bdNodeId);
+  if (!node || !node.choices || !node.choices[idx]) return;
+  const choice = node.choices[idx];
+  _bdChoicesMade++;
+
+  // Add player's choice to transcript
+  const chat = document.getElementById('bd-chat');
+  chat.innerHTML += `<div class="bd-msg bd-msg-player">
+    <div class="bd-msg-name">T\u00FA</div>
+    <div class="bd-msg-text">${esc(choice.spanish)}</div>
+    <div class="bd-msg-en">${esc(choice.english)}</div>
+  </div>`;
+
+  // Show feedback
+  if (choice.feedback) {
+    const feedbackEl = document.getElementById('bd-feedback');
+    feedbackEl.innerHTML = `<div class="bd-feedback-box">${esc(choice.feedback)}</div>`;
+    feedbackEl.style.display = 'block';
+  }
+
+  // Hide choices, show continue
+  document.getElementById('bd-choices').innerHTML = '';
+  const continueBtn = document.getElementById('bd-continue');
+  continueBtn.style.display = 'block';
+  continueBtn.dataset.next = choice.next || '';
+
+  // Award XP per choice
+  addXP(XP_CORRECT);
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function bdContinue() {
+  const continueBtn = document.getElementById('bd-continue');
+  const nextId = continueBtn.dataset.next;
+  document.getElementById('bd-feedback').style.display = 'none';
+  continueBtn.style.display = 'none';
+  if (nextId) {
+    _bdNodeId = nextId;
+    _bdRenderNode();
+  } else {
+    _bdShowEnd();
+  }
+}
+
+function _bdShowEnd() {
+  document.getElementById('bd-choices').innerHTML = '';
+  document.getElementById('bd-feedback').style.display = 'none';
+  document.getElementById('bd-continue').style.display = 'none';
+  const endEl = document.getElementById('bd-end');
+  endEl.style.display = 'block';
+
+  // Track completion
+  if (!progress.bdDone) progress.bdDone = {};
+  progress.bdDone[_bdCurrent.id] = true;
+  saveProgress();
+
+  const xp = _bdChoicesMade * XP_CORRECT;
+  document.getElementById('bd-summary').innerHTML = `
+    <p class="mt-1">You made <strong>${_bdChoicesMade}</strong> choice${_bdChoicesMade !== 1 ? 's' : ''} and earned <strong>${xp} XP</strong>!</p>
+  `;
+  // Show vocab for this dialogue
+  const vocabEl = document.getElementById('bd-vocab');
+  if (vocabEl && _bdCurrent.vocab && _bdCurrent.vocab.length > 0) {
+    vocabEl.innerHTML = '<h4 class="mb-05">Key Vocabulary</h4>' + _bdCurrent.vocab.map(v =>
+      `<div class="flex justify-between" style="padding:0.2rem 0;border-bottom:1px solid var(--border)">
+        <strong>${esc(v.word)}</strong><span class="text-muted">${esc(v.english)}</span>
+      </div>`
+    ).join('');
+  }
 }
 

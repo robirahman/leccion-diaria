@@ -41,6 +41,77 @@ try {
 
 const { stripAccents, checkAnswer, esc, pick, bookmarkType, bookmarkId, shuffle, pickN } = ctx;
 
+// ── localStorage round-trip tests ──
+// Build a separate context with a functional localStorage mock
+function buildStorageCtx() {
+  const store = {};
+  const storageMock = {
+    _store: store,
+    getItem: (k) => store[k] !== undefined ? store[k] : null,
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; },
+  };
+  const storageCtx = vm.createContext({
+    document: { getElementById: () => null, querySelector: () => null, querySelectorAll: () => [] },
+    window: {},
+    localStorage: storageMock,
+    navigator: { onLine: true, serviceWorker: null },
+    matchMedia: () => ({ matches: false, addEventListener: () => {} }),
+    requestAnimationFrame: fn => fn(),
+    setTimeout, clearTimeout, setInterval, clearInterval,
+    console,
+    indexedDB: null,
+    alert: () => {},
+    FSRS_AGAIN: 1, FSRS_HARD: 2, FSRS_GOOD: 3, FSRS_EASY: 4,
+    fsrsInitS: r => [0, 0.4, 1.18, 3.13, 15.47][r],
+    fsrsInitD: () => 5,
+    fsrsR: (s, d) => Math.pow(1 + d / (9 * s), -1),
+    fsrsSAfterRecall: (d, s) => s * 2,
+    fsrsNextD: (d) => d,
+    masteryFromFsrs: s => { if (!s || s < 0.5) return 1; if (s < 7) return 2; if (s < 21) return 3; return 4; },
+    VERBS: [],
+    GRAMMAR_DATA: [],
+    PHRASES_DATA: [],
+    VOCAB_CATEGORIES: {},
+  });
+  try { vm.runInContext(coreCode, storageCtx); } catch (_) {}
+  return { ctx: storageCtx, store };
+}
+
+describe('localStorage round-trip (saveProgress / loadProgress)', () => {
+  it('saves and loads progress data correctly', () => {
+    const { ctx: sCtx } = buildStorageCtx();
+    // Set a profile and modify progress
+    vm.runInContext('currentProfile = "tester";', sCtx);
+    vm.runInContext('progress = newProgress();', sCtx);
+    vm.runInContext('progress.xp = 999;', sCtx);
+    vm.runInContext('progress.streak = 7;', sCtx);
+    vm.runInContext('saveProgress();', sCtx);
+    // Load it back
+    const loaded = vm.runInContext('loadProgress("tester")', sCtx);
+    assertEqual(loaded.xp, 999);
+    assertEqual(loaded.streak, 7);
+  });
+
+  it('returns fresh progress when localStorage is empty', () => {
+    const { ctx: sCtx } = buildStorageCtx();
+    const loaded = vm.runInContext('loadProgress("nonexistent")', sCtx);
+    assertEqual(loaded.xp, 0);
+    assertEqual(loaded.streak, 0);
+    assert(loaded.bookmarks !== undefined, 'Should have bookmarks array');
+  });
+
+  it('handles corrupt JSON in localStorage gracefully', () => {
+    const { ctx: sCtx, store } = buildStorageCtx();
+    // Write invalid JSON directly into the store
+    store['ld_progress_corrupt'] = '{bad json!!!';
+    const loaded = vm.runInContext('loadProgress("corrupt")', sCtx);
+    // Should return fresh progress instead of crashing
+    assertEqual(loaded.xp, 0);
+    assertEqual(loaded.streak, 0);
+  });
+});
+
 describe('stripAccents', () => {
   it('removes accent marks', () => {
     assertEqual(stripAccents('café'), 'cafe');

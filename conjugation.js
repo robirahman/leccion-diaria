@@ -3,11 +3,14 @@
 //  Ported from util.py and expanded to 14 tenses
 // ════════════════════════════════════════
 
+/** @type {readonly ['yo', 'tu', 'el', 'nosotros', 'vosotros', 'ellos']} */
 const PERSONS = ['yo', 'tu', 'el', 'nosotros', 'vosotros', 'ellos'];
+/** @type {Readonly<Record<string, string>>} */
 const PERSON_LABELS = {
   yo: 'yo', tu: 'tú', el: 'él/ella/usted',
   nosotros: 'nosotros', vosotros: 'vosotros', ellos: 'ellos/ellas/ustedes'
 };
+/** @type {Readonly<Record<string, string>>} */
 const PERSON_LABELS_SHORT = {
   yo: 'yo', tu: 'tú', el: 'él', nosotros: 'nos.', vosotros: 'vos.', ellos: 'ellos'
 };
@@ -16,6 +19,17 @@ const PERSON_LABELS_SHORT = {
 // is intentionally omitted from this app. It is archaic and virtually unused in modern
 // Spanish, replaced by the pretérito indefinido or pluscuamperfecto in all contexts.
 
+/**
+ * @typedef {Object} TenseMeta
+ * @property {string} label - Spanish label
+ * @property {string} labelEn - English label
+ * @property {string} level - CEFR level (A1-C2)
+ * @property {boolean} compound - Whether this is a compound tense
+ * @property {string} [auxTense] - Auxiliary tense key (for compound/progressive)
+ * @property {boolean} [progressive] - Whether this is a progressive tense
+ */
+
+/** @type {Readonly<Record<string, TenseMeta>>} */
 const TENSE_META = {
   present:             { label: 'Presente',              labelEn: 'Present',              level: 'A1', compound: false },
   preterite:           { label: 'Pretérito Indefinido',   labelEn: 'Preterite',            level: 'A2', compound: false },
@@ -37,7 +51,9 @@ const TENSE_META = {
   progressive_imperfect: { label: 'Imperfecto Progresivo', labelEn: 'Imperfect Progressive', level: 'B1', compound: false, progressive: true, auxTense: 'imperfect' },
   future_subjunctive: { label: 'Futuro del Subjuntivo', labelEn: 'Future Subjunctive', level: 'C2', compound: false },
 };
+/** @type {string[]} */
 const TENSES = Object.keys(TENSE_META);
+/** @type {string[]} */
 const SIMPLE_TENSES = TENSES.filter(t => !TENSE_META[t].compound);
 
 // ── Regular endings (ported from util.py verb_endings) ──
@@ -149,6 +165,10 @@ const COMPOUND_FUTURE_EXCEPTIONS = new Set([
   'predecir', 'contradecir', 'bendecir', 'maldecir',
 ]);
 
+/**
+ * @param {string} base - Verb base (infinitive without -se)
+ * @returns {{ prefix: string, root: string, irregularKey: string } | null}
+ */
 function resolveCompound(base) {
   for (const root of COMPOUND_BASES) {
     if (base.endsWith(root) && base.length > root.length) {
@@ -196,6 +216,12 @@ const STEM_CHANGE_MAP = {
 const BOOT_PERSONS = [0, 1, 2, 5]; // yo, tú, él, ellos
 
 // ── Spelling change rules ──
+/**
+ * @param {string} stem
+ * @param {string} group - 'ar', 'er', or 'ir'
+ * @param {string} ending
+ * @returns {string}
+ */
 function applySpellingChange(stem, group, ending) {
   const firstChar = ending.charAt(0);
   const lastChar = stem.slice(-1);
@@ -212,7 +238,12 @@ function applySpellingChange(stem, group, ending) {
   return stem;
 }
 
-// Apply stem change to last occurrence of the vowel in the stem
+/**
+ * Apply stem change to last occurrence of the vowel in the stem.
+ * @param {string} stem
+ * @param {string} pattern - e.g. 'e>ie', 'o>ue'
+ * @returns {string}
+ */
 function applyStemChange(stem, pattern) {
   const { from, to } = STEM_CHANGE_MAP[pattern];
   const idx = stem.lastIndexOf(from);
@@ -386,6 +417,10 @@ const FULL_IRREGULARS = {
 };
 
 // ── Get past participle ──
+/**
+ * @param {string} infinitive
+ * @returns {string}
+ */
 function getParticiple(infinitive) {
   // Strip reflexive -se
   const base = infinitive.replace(/se$/, '');
@@ -411,6 +446,10 @@ const IRREGULAR_GERUNDS = {
   sentir: 'sintiendo', seguir: 'siguiendo', ir: 'yendo',
   leer: 'leyendo', oír: 'oyendo', traer: 'trayendo', caer: 'cayendo',
 };
+/**
+ * @param {string} infinitive
+ * @returns {string}
+ */
 function getGerund(infinitive) {
   const base = infinitive.replace(/se$/, '');
   const group = base.slice(-2);
@@ -434,6 +473,14 @@ function getReflexivePronoun(personIdx) {
 }
 
 // ── Main conjugation function ──
+/**
+ * Conjugate a Spanish verb.
+ * @param {string} infinitive - Verb infinitive (e.g. 'hablar', 'comerse')
+ * @param {string} tense - Tense key from TENSE_META (e.g. 'present', 'preterite')
+ * @param {number} personIdx - Person index 0-5 (yo, tú, él, nosotros, vosotros, ellos)
+ * @param {boolean} [useSeForm=false] - Use -se variant for imperfect subjunctive
+ * @returns {string} Conjugated form, or '?' if unknown, '—' if non-existent
+ */
 function conjugate(infinitive, tense, personIdx, useSeForm = false) {
   if (personIdx < 0 || personIdx > 5 || !Number.isInteger(personIdx)) return '?';
   const isReflexive = infinitive.endsWith('se');
@@ -566,7 +613,13 @@ function conjugate(infinitive, tense, personIdx, useSeForm = false) {
   return form;
 }
 
-// Get full conjugation table for a verb in one tense
+/**
+ * Get full conjugation table for a verb in one tense.
+ * @param {string} infinitive - Verb infinitive
+ * @param {string} tense - Tense key from TENSE_META
+ * @param {boolean} [useSeForm=false] - Use -se variant for imperfect subjunctive
+ * @returns {string[]} Array of 6 conjugated forms (one per person)
+ */
 function conjugateAll(infinitive, tense, useSeForm = false) {
   return PERSONS.map((_, i) => conjugate(infinitive, tense, i, useSeForm));
 }

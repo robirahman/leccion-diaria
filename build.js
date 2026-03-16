@@ -25,6 +25,7 @@ const JS_FILES = [
   'homophones.js', 'connectors.js',
   'verb_prepositions.js', 'subjunctive_triggers.js', 'writing_prompts.js',
   'comparative_grammar.js', 'number_practice.js', 'feature-modules.js',
+  'branching_dialogues.js',
   // Worker
   'vocab-search-worker.js',
 ];
@@ -249,17 +250,31 @@ async function build() {
     'cloze_passages.js', 'translation_drills.js', 'dictation.js',
     'jokes.js', 'reading.js', 'reading_sat.js', 'themed_vocab.js',
     'curriculum_tracks.js', 'phonetic_pairs.js', 'homophones.js',
-    'connectors.js',
+    'connectors.js', 'branching_dialogues.js',
   ];
   const dataFiles = dataFileNames.map(f => `  './${hashMap[f] || f}'`);
 
-  // Compute cache name from content hash of all output files
-  const allHash = crypto.createHash('sha256');
+  // Compute separate cache version hashes for app shell and data files
+  const dataFileSet = new Set(dataFileNames);
   const distFiles = fs.readdirSync(DIST).filter(f => !fs.statSync(path.join(DIST, f)).isDirectory());
-  distFiles.sort().forEach(f => {
-    allHash.update(fs.readFileSync(path.join(DIST, f)));
-  });
-  const cacheVersion = 'leccion-diaria-' + allHash.digest('hex').slice(0, 8);
+  distFiles.sort();
+
+  const appHash = crypto.createHash('sha256');
+  const dataHash = crypto.createHash('sha256');
+  for (const f of distFiles) {
+    const content = fs.readFileSync(path.join(DIST, f));
+    // Determine if this dist file originated from a data file
+    const origName = Object.entries(hashMap).find(([, v]) => v === f)?.[0];
+    if (origName && dataFileSet.has(origName)) {
+      dataHash.update(content);
+    } else if (['vocab-a1a2.json', 'vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'].includes(f)) {
+      dataHash.update(content);
+    } else {
+      appHash.update(content);
+    }
+  }
+  const appCacheVersion = 'leccion-app-' + appHash.digest('hex').slice(0, 8);
+  const dataCacheVersion = 'leccion-data-' + dataHash.digest('hex').slice(0, 8);
 
   // Also update LAZY_SCRIPTS mapping in app-init — we need to rewrite the
   // lazy-loaded script names in the already-minified app-init.js
@@ -282,7 +297,8 @@ async function build() {
   fs.writeFileSync(path.join(DIST, 'index.html'), patchedHtml);
 
   // Write the new SW
-  const newSW = `const CACHE_NAME = '${cacheVersion}';
+  const newSW = `const APP_CACHE = '${appCacheVersion}';
+const DATA_CACHE = '${dataCacheVersion}';
 
 const APP_SHELL = [
   ${appShell.join(',\n  ')},
@@ -294,8 +310,10 @@ ${dataFiles.join(',\n')},
   './vocab-c1.json', './vocab-c2.json',
 ]);
 
+const KNOWN_CACHES = [APP_CACHE, DATA_CACHE];
+
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE_NAME).then(c =>
+  e.waitUntil(caches.open(APP_CACHE).then(c =>
     Promise.allSettled(APP_SHELL.map(url =>
       c.add(url).catch(err => console.warn('SW: failed to cache', url, err))
     ))
@@ -305,7 +323,7 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    Promise.all(keys.filter(k => !KNOWN_CACHES.includes(k)).map(k => caches.delete(k)))
   ));
   self.clients.claim();
 });
@@ -326,13 +344,15 @@ function isDataFile(url) {
 }
 
 self.addEventListener('fetch', e => {
-  const timeout = isDataFile(e.request.url) ? 5000 : 10000;
+  const isData = isDataFile(e.request.url);
+  const timeout = isData ? 5000 : 10000;
+  const targetCache = isData ? DATA_CACHE : APP_CACHE;
   e.respondWith(
     caches.match(e.request).then(cached => {
       const fetchPromise = fetchWithTimeout(e.request, timeout).then(response => {
         if (response.ok) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+          caches.open(targetCache).then(c => c.put(e.request, clone));
         }
         return response;
       }).catch(() => cached);
@@ -343,7 +363,7 @@ self.addEventListener('fetch', e => {
 `;
 
   fs.writeFileSync(path.join(DIST, 'sw.js'), newSW);
-  console.log(`  sw.js → sw.js (cache: ${cacheVersion})`);
+  console.log(`  sw.js → sw.js (app: ${appCacheVersion}, data: ${dataCacheVersion})`);
 
   // Summary
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);

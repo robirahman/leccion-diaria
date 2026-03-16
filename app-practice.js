@@ -1568,6 +1568,7 @@ function submitReviewMC() {
   const opts = document.querySelectorAll('#rev-mc-options .quiz-option');
   opts.forEach((o, i) => {
     o.classList.add('disabled');
+    o.setAttribute('aria-disabled', 'true');
     if (i === q.correct) o.classList.add('correct');
     else if (i === reviewSelected && i !== q.correct) o.classList.add('incorrect');
   });

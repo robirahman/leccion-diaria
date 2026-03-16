@@ -2,7 +2,7 @@
 
 // ════════════════════════════════════════════════════════════
 //  READING COMPREHENSION — Graded passages with vocabulary
-//  36 passages: 10 A1, 5 A2, 5 B1, 4 B2, 6 C1, 6 C2
+//  51 passages: 10 A1, 5 A2, 10 B1, 9 B2, 9 C1, 8 C2
 // ════════════════════════════════════════════════════════════
 
 const READING_DATA = [
@@ -2122,6 +2122,846 @@ const READING_DATA = [
         ],
         correct: 2,
         explanation: 'The text states these authors "exploraron la fractura entre memoria e identidad, entre el país recordado y el país real" — the rupture between remembered and actual homeland that defined the exile experience.'
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  B1  —  Additional passages: past tenses, subjunctive basics (120-160 words)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'read-37',
+    level: 'B1',
+    title: 'Un viaje inesperado a Portugal',
+    titleEn: 'An Unexpected Trip to Portugal',
+    text: 'El verano pasado, mis amigos y yo decidimos viajar a Portugal sin planificar nada. Cuando llegamos a Lisboa, no teníamos reserva de hotel, así que caminamos por las calles del barrio de Alfama buscando alojamiento. Un señor mayor nos recomendó una pensión pequeña que estaba escondida en una calle estrecha. El lugar era sencillo pero acogedor, y desde la ventana se veía el río Tajo. Durante los tres días que pasamos allí, visitamos monumentos históricos, probamos la gastronomía local y escuchamos fado en un bar tradicional. Fue una de las mejores experiencias de mi vida porque aprendimos que a veces los mejores viajes son los que no se planifican. Ojalá pudiéramos volver el próximo verano.',
+    vocab: [
+      { word: 'alojamiento', english: 'accommodation / lodging' },
+      { word: 'acogedor', english: 'cozy / welcoming' },
+      { word: 'gastronomía', english: 'gastronomy / cuisine' },
+      { word: 'fado', english: 'fado (traditional Portuguese music)' },
+      { word: 'planificar', english: 'to plan' }
+    ],
+    questions: [
+      {
+        prompt: '¿Por qué caminaron por las calles de Alfama?',
+        options: [
+          'Porque querían hacer turismo',
+          'Porque no tenían reserva de hotel',
+          'Porque les gustaba caminar',
+          'Porque estaban perdidos'
+        ],
+        correct: 1,
+        explanation: 'The text says "no teníamos reserva de hotel, así que caminamos por las calles del barrio de Alfama buscando alojamiento".'
+      },
+      {
+        prompt: '¿Qué se veía desde la ventana de la pensión?',
+        options: ['El océano Atlántico', 'El río Tajo', 'La Torre de Belém', 'Un parque grande'],
+        correct: 1,
+        explanation: 'The text says "desde la ventana se veía el río Tajo".'
+      },
+      {
+        prompt: '¿Cuál es la lección principal del viaje según el narrador?',
+        options: [
+          'Que hay que reservar hotel siempre',
+          'Que Portugal es un país bonito',
+          'Que los mejores viajes son los que no se planifican',
+          'Que viajar con amigos es divertido'
+        ],
+        correct: 2,
+        explanation: 'The narrator concludes that "a veces los mejores viajes son los que no se planifican".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-38',
+    level: 'B1',
+    title: 'Noticias del terremoto',
+    titleEn: 'Earthquake News',
+    text: 'Ayer por la noche, un terremoto de magnitud 5,4 sacudió la costa sur del país. Los habitantes de la zona sintieron un fuerte temblor que duró aproximadamente treinta segundos. Muchas personas salieron de sus casas corriendo y se reunieron en las plazas públicas. Afortunadamente, no hubo víctimas mortales, aunque varios edificios antiguos sufrieron daños importantes. Los equipos de emergencia trabajaron toda la noche para evaluar la situación. El gobierno anunció que enviaría ayuda económica a las familias afectadas. Los expertos explicaron que era probable que hubiera réplicas durante los próximos días y recomendaron que la población mantuviera la calma y siguiera las instrucciones de las autoridades.',
+    vocab: [
+      { word: 'terremoto', english: 'earthquake' },
+      { word: 'temblor', english: 'tremor / shaking' },
+      { word: 'víctimas mortales', english: 'fatalities / deaths' },
+      { word: 'réplicas', english: 'aftershocks' },
+      { word: 'autoridades', english: 'authorities' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuánto duró el temblor?',
+        options: ['Diez segundos', 'Treinta segundos', 'Un minuto', 'Cinco minutos'],
+        correct: 1,
+        explanation: 'The text says the tremor "duró aproximadamente treinta segundos".'
+      },
+      {
+        prompt: '¿Qué hizo el gobierno después del terremoto?',
+        options: [
+          'Evacuó la ciudad',
+          'Anunció que enviaría ayuda económica',
+          'Cerró las escuelas',
+          'Pidió ayuda internacional'
+        ],
+        correct: 1,
+        explanation: 'The text says "el gobierno anunció que enviaría ayuda económica a las familias afectadas".'
+      },
+      {
+        prompt: '¿Qué recomendaron los expertos a la población?',
+        options: [
+          'Que abandonaran la zona inmediatamente',
+          'Que mantuviera la calma y siguiera las instrucciones',
+          'Que repararan sus casas',
+          'Que compraran provisiones'
+        ],
+        correct: 1,
+        explanation: 'The experts "recomendaron que la población mantuviera la calma y siguiera las instrucciones de las autoridades".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-39',
+    level: 'B1',
+    title: 'La historia de mi abuela',
+    titleEn: 'My Grandmother\'s Story',
+    text: 'Mi abuela siempre nos contaba historias de su juventud. Cuando era joven, vivía en un pueblo pequeño donde no había electricidad ni agua corriente. Se levantaba antes del amanecer para ayudar a su madre con las tareas del hogar. A los dieciséis años se mudó a la ciudad para trabajar en una fábrica de textiles. Al principio se sentía muy sola porque no conocía a nadie, pero poco a poco hizo amigos entre sus compañeras de trabajo. Conoció a mi abuelo en una fiesta del pueblo y se casaron dos años después. Siempre decía que aquellos tiempos fueron difíciles pero que la hicieron más fuerte. Ojalá yo tuviera la misma valentía que ella tuvo.',
+    vocab: [
+      { word: 'juventud', english: 'youth' },
+      { word: 'amanecer', english: 'dawn / sunrise' },
+      { word: 'fábrica', english: 'factory' },
+      { word: 'compañeras', english: 'colleagues / co-workers (female)' },
+      { word: 'valentía', english: 'courage / bravery' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cómo era el pueblo donde vivía la abuela?',
+        options: [
+          'Grande y moderno',
+          'Pequeño, sin electricidad ni agua corriente',
+          'Costero y turístico',
+          'Industrial y ruidoso'
+        ],
+        correct: 1,
+        explanation: 'The text says she "vivía en un pueblo pequeño donde no había electricidad ni agua corriente".'
+      },
+      {
+        prompt: '¿Por qué se mudó a la ciudad?',
+        options: [
+          'Para estudiar en la universidad',
+          'Para trabajar en una fábrica de textiles',
+          'Para casarse con el abuelo',
+          'Porque su pueblo fue destruido'
+        ],
+        correct: 1,
+        explanation: 'The text says "se mudó a la ciudad para trabajar en una fábrica de textiles".'
+      },
+      {
+        prompt: '¿Dónde conoció al abuelo?',
+        options: [
+          'En la fábrica',
+          'En la ciudad',
+          'En una fiesta del pueblo',
+          'En el colegio'
+        ],
+        correct: 2,
+        explanation: 'The text says "conoció a mi abuelo en una fiesta del pueblo".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-40',
+    level: 'B1',
+    title: 'Cambiar de carrera profesional',
+    titleEn: 'Changing Careers',
+    text: 'Después de trabajar diez años como contable, Laura decidió que quería cambiar de profesión. Siempre le había interesado la cocina, así que se inscribió en una escuela de gastronomía. Sus amigos pensaban que estaba loca porque tenía un trabajo estable y bien pagado. Sin embargo, Laura sentía que le faltaba pasión en su vida profesional. Durante el primer año de estudios, trabajaba de día y estudiaba de noche. Fue muy agotador, pero no se arrepintió en ningún momento. Cuando terminó sus estudios, abrió un pequeño restaurante en su barrio. Al principio el negocio fue lento, pero después de que un crítico gastronómico escribiera una reseña positiva, los clientes empezaron a llegar. Hoy Laura dice que es la decisión más importante que ha tomado.',
+    vocab: [
+      { word: 'contable', english: 'accountant' },
+      { word: 'inscribirse', english: 'to enroll / sign up' },
+      { word: 'agotador', english: 'exhausting' },
+      { word: 'arrepentirse', english: 'to regret' },
+      { word: 'reseña', english: 'review' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué hacía Laura antes de cambiar de profesión?',
+        options: ['Era profesora', 'Era contable', 'Era cocinera', 'Era periodista'],
+        correct: 1,
+        explanation: 'The text says she worked "como contable" for ten years.'
+      },
+      {
+        prompt: '¿Qué opinaban sus amigos sobre su decisión?',
+        options: [
+          'Que era una buena idea',
+          'Que estaba loca',
+          'Que deberían acompañarla',
+          'No les importaba'
+        ],
+        correct: 1,
+        explanation: 'The text says "sus amigos pensaban que estaba loca porque tenía un trabajo estable y bien pagado".'
+      },
+      {
+        prompt: '¿Qué ayudó a que el restaurante tuviera éxito?',
+        options: [
+          'La publicidad en televisión',
+          'Una reseña positiva de un crítico gastronómico',
+          'La ubicación del restaurante',
+          'Los precios bajos'
+        ],
+        correct: 1,
+        explanation: 'The text says that "después de que un crítico gastronómico escribiera una reseña positiva, los clientes empezaron a llegar".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-41',
+    level: 'B1',
+    title: 'El problema del insomnio',
+    titleEn: 'The Problem of Insomnia',
+    text: 'Desde hacía varios meses, Carlos no podía dormir bien. Se acostaba cansado pero no conseguía conciliar el sueño hasta las tres de la madrugada. Durante el día se sentía agotado y le costaba concentrarse en el trabajo. Un compañero le sugirió que fuera al médico. El doctor le explicó que el estrés laboral era probablemente la causa de su insomnio y le recomendó que hiciera ejercicio regularmente y que evitara las pantallas antes de dormir. También le aconsejó que tomara infusiones de valeriana en lugar de pastillas para dormir. Carlos siguió todas las recomendaciones y, después de unas semanas, empezó a notar una mejora significativa. Ahora duerme siete horas cada noche y se despierta con más energía.',
+    vocab: [
+      { word: 'insomnio', english: 'insomnia' },
+      { word: 'conciliar el sueño', english: 'to fall asleep' },
+      { word: 'madrugada', english: 'early morning hours (1-5 AM)' },
+      { word: 'estrés laboral', english: 'work-related stress' },
+      { word: 'infusiones', english: 'herbal teas / infusions' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál era el problema principal de Carlos?',
+        options: [
+          'Trabajaba demasiado',
+          'No podía dormir bien',
+          'Tenía dolor de cabeza',
+          'No le gustaba su trabajo'
+        ],
+        correct: 1,
+        explanation: 'The text says "Carlos no podía dormir bien" and describes his insomnia.'
+      },
+      {
+        prompt: '¿Qué le recomendó el médico?',
+        options: [
+          'Que cambiara de trabajo',
+          'Que tomara pastillas para dormir',
+          'Que hiciera ejercicio y evitara pantallas antes de dormir',
+          'Que se fuera de vacaciones'
+        ],
+        correct: 2,
+        explanation: 'The doctor recommended "que hiciera ejercicio regularmente y que evitara las pantallas antes de dormir".'
+      },
+      {
+        prompt: '¿Cuál fue el resultado después de seguir las recomendaciones?',
+        options: [
+          'No mejoró nada',
+          'Tuvo que tomar medicamentos',
+          'Empezó a dormir siete horas y se despertaba con más energía',
+          'Dejó su trabajo'
+        ],
+        correct: 2,
+        explanation: 'The text says "ahora duerme siete horas cada noche y se despierta con más energía".'
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  B2  —  Additional passages: subjunctive, conditionals, complex clauses (160-200 words)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'read-42',
+    level: 'B2',
+    title: '¿Es necesaria la universidad?',
+    titleEn: 'Is University Necessary?',
+    text: 'En los últimos años se ha intensificado el debate sobre si la educación universitaria sigue siendo imprescindible para alcanzar el éxito profesional. Quienes defienden la formación académica tradicional argumentan que la universidad no solo proporciona conocimientos técnicos, sino que también desarrolla el pensamiento crítico y amplía la visión del mundo. No obstante, cada vez son más las voces que cuestionan este modelo, señalando que muchos de los emprendedores más exitosos del mundo —desde Steve Jobs hasta Amancio Ortega— nunca completaron una carrera universitaria. Los defensores de las rutas alternativas sostienen que la formación autodidacta, los cursos en línea y la experiencia práctica pueden ser igualmente valiosos, siempre y cuando el individuo posea la disciplina necesaria. Si los gobiernos invirtieran más en formación profesional y en programas de aprendizaje, quizá se reduciría la brecha entre lo que enseña la academia y lo que demanda el mercado laboral. Lo que resulta innegable es que la respuesta no es universal: depende del campo profesional, del contexto socioeconómico y, sobre todo, de las metas personales de cada individuo.',
+    vocab: [
+      { word: 'imprescindible', english: 'essential / indispensable' },
+      { word: 'emprendedores', english: 'entrepreneurs' },
+      { word: 'autodidacta', english: 'self-taught' },
+      { word: 'brecha', english: 'gap' },
+      { word: 'metas', english: 'goals / objectives' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué argumentan los defensores de la universidad?',
+        options: [
+          'Que es la única forma de ganar dinero',
+          'Que desarrolla el pensamiento crítico y amplía la visión del mundo',
+          'Que todos los emprendedores fueron universitarios',
+          'Que los cursos en línea no sirven'
+        ],
+        correct: 1,
+        explanation: 'The text says defenders argue the university "desarrolla el pensamiento crítico y amplía la visión del mundo".'
+      },
+      {
+        prompt: '¿Qué ejemplo usan quienes cuestionan el modelo universitario?',
+        options: [
+          'Que los universitarios ganan menos dinero',
+          'Que muchos emprendedores exitosos no completaron una carrera universitaria',
+          'Que las universidades son demasiado caras',
+          'Que los profesores no están cualificados'
+        ],
+        correct: 1,
+        explanation: 'The text mentions that "muchos de los emprendedores más exitosos del mundo nunca completaron una carrera universitaria".'
+      },
+      {
+        prompt: '¿Qué sugiere el texto que deberían hacer los gobiernos?',
+        options: [
+          'Cerrar universidades',
+          'Invertir más en formación profesional y programas de aprendizaje',
+          'Obligar a todos a ir a la universidad',
+          'Subir las tasas universitarias'
+        ],
+        correct: 1,
+        explanation: 'The text suggests "si los gobiernos invirtieran más en formación profesional y en programas de aprendizaje" the gap could be reduced.'
+      },
+      {
+        prompt: '¿Cuál es la conclusión del texto?',
+        options: [
+          'La universidad es siempre necesaria',
+          'La universidad nunca es necesaria',
+          'La respuesta depende del campo, el contexto y las metas personales',
+          'Solo los ricos deberían ir a la universidad'
+        ],
+        correct: 2,
+        explanation: 'The text concludes that "la respuesta no es universal: depende del campo profesional, del contexto socioeconómico y de las metas personales".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-43',
+    level: 'B2',
+    title: 'El Día de los Muertos: más allá del folclore',
+    titleEn: 'Day of the Dead: Beyond Folklore',
+    text: 'El Día de los Muertos, celebrado el primero y el dos de noviembre en México, es mucho más que una festividad pintoresca: constituye una cosmovisión profunda sobre la relación entre la vida y la muerte. Mientras que en muchas culturas occidentales la muerte es tratada como un tema tabú que debe ser evitado, la tradición mexicana la abraza con naturalidad e incluso con humor. Las familias construyen altares —conocidos como ofrendas— decorados con flores de cempasúchil, velas, fotografías y los alimentos favoritos del difunto, con la creencia de que las almas regresan durante esas noches para compartir con los vivos. Esta celebración, que fue declarada Patrimonio Cultural Inmaterial por la UNESCO en 2003, tiene raíces que se remontan a las civilizaciones prehispánicas, aunque fue transformada por la influencia del catolicismo español. Si se analizara esta tradición únicamente desde una perspectiva turística, se perdería su esencia más profunda: la idea de que la muerte no es el final, sino una continuación del vínculo afectivo que une a las generaciones. En los últimos años, la globalización ha popularizado esta festividad fuera de México, lo cual genera un debate legítimo sobre la línea entre apreciación cultural y apropiación.',
+    vocab: [
+      { word: 'cosmovisión', english: 'worldview' },
+      { word: 'cempasúchil', english: 'marigold (the traditional flower)' },
+      { word: 'difunto', english: 'deceased person' },
+      { word: 'prehispánicas', english: 'pre-Hispanic / pre-Columbian' },
+      { word: 'apropiación', english: 'appropriation' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cómo se diferencia la actitud mexicana ante la muerte de la occidental?',
+        options: [
+          'Los mexicanos tienen miedo de la muerte',
+          'Las culturas occidentales celebran la muerte más que México',
+          'La tradición mexicana abraza la muerte con naturalidad, mientras que en Occidente es tabú',
+          'No hay ninguna diferencia'
+        ],
+        correct: 2,
+        explanation: 'The text contrasts Western cultures where death "es tratada como un tema tabú" with the Mexican tradition that "la abraza con naturalidad e incluso con humor".'
+      },
+      {
+        prompt: '¿Cuál es el origen de esta celebración?',
+        options: [
+          'Es completamente católica',
+          'Fue inventada por la UNESCO',
+          'Tiene raíces prehispánicas transformadas por el catolicismo español',
+          'Es una tradición moderna del siglo XX'
+        ],
+        correct: 2,
+        explanation: 'The text says it "tiene raíces que se remontan a las civilizaciones prehispánicas, aunque fue transformada por la influencia del catolicismo español".'
+      },
+      {
+        prompt: '¿Cuál es la esencia profunda de la tradición según el texto?',
+        options: [
+          'Que la muerte es algo divertido',
+          'Que la muerte no es el final, sino una continuación del vínculo afectivo',
+          'Que los muertos pueden comer',
+          'Que las flores tienen poderes mágicos'
+        ],
+        correct: 1,
+        explanation: 'The text says the deepest meaning is "la idea de que la muerte no es el final, sino una continuación del vínculo afectivo que une a las generaciones".'
+      },
+      {
+        prompt: '¿Qué debate genera la globalización de esta festividad?',
+        options: [
+          'Si México debería prohibir la celebración',
+          'Si los extranjeros pueden participar',
+          'La línea entre apreciación cultural y apropiación',
+          'Si la UNESCO debería retirar su reconocimiento'
+        ],
+        correct: 2,
+        explanation: 'The text mentions "un debate legítimo sobre la línea entre apreciación cultural y apropiación".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-44',
+    level: 'B2',
+    title: 'Tecnología y soledad en la era digital',
+    titleEn: 'Technology and Loneliness in the Digital Age',
+    text: 'Resulta paradójico que en una época en la que estamos más conectados que nunca, los índices de soledad hayan alcanzado niveles alarmantes en todo el mundo. Las redes sociales, que fueron diseñadas para acercarnos, han acabado por crear una ilusión de conexión que, en muchos casos, sustituye las relaciones profundas por interacciones superficiales. Diversos estudios han demostrado que las personas que pasan más de tres horas diarias en redes sociales tienen un riesgo significativamente mayor de experimentar ansiedad y depresión. Si bien es cierto que la tecnología ha facilitado que mantengamos el contacto con personas que viven lejos, también ha erosionado nuestra capacidad para tolerar la soledad constructiva —ese tiempo a solas que tradicionalmente se dedicaba a la reflexión y al autoconocimiento—. Los psicólogos advierten de que, si no se tomaran medidas, esta tendencia podría convertirse en una crisis de salud pública. No se trata de demonizar la tecnología, sino de aprender a utilizarla de manera consciente, estableciendo límites claros y priorizando las relaciones que verdaderamente nos nutren emocionalmente.',
+    vocab: [
+      { word: 'paradójico', english: 'paradoxical' },
+      { word: 'índices', english: 'rates / levels' },
+      { word: 'erosionado', english: 'eroded' },
+      { word: 'autoconocimiento', english: 'self-knowledge / self-awareness' },
+      { word: 'demonizar', english: 'to demonize' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál es la paradoja central que plantea el texto?',
+        options: [
+          'Que la tecnología es cara pero todos la usan',
+          'Que estamos más conectados que nunca pero los niveles de soledad son alarmantes',
+          'Que las redes sociales son populares pero aburridas',
+          'Que los jóvenes prefieren la tecnología pero los mayores no'
+        ],
+        correct: 1,
+        explanation: 'The text opens with the paradox that "en una época en la que estamos más conectados que nunca, los índices de soledad hayan alcanzado niveles alarmantes".'
+      },
+      {
+        prompt: '¿Qué han demostrado los estudios sobre el uso excesivo de redes sociales?',
+        options: [
+          'Que mejora la productividad',
+          'Que no tiene ningún efecto',
+          'Que aumenta el riesgo de ansiedad y depresión',
+          'Que fortalece las amistades'
+        ],
+        correct: 2,
+        explanation: 'Studies show that heavy social media users "tienen un riesgo significativamente mayor de experimentar ansiedad y depresión".'
+      },
+      {
+        prompt: '¿Qué es la "soledad constructiva" según el texto?',
+        options: [
+          'Vivir solo en una casa grande',
+          'No tener amigos en las redes sociales',
+          'Tiempo a solas dedicado a la reflexión y al autoconocimiento',
+          'Trabajar desde casa sin compañeros'
+        ],
+        correct: 2,
+        explanation: 'The text defines it as "ese tiempo a solas que tradicionalmente se dedicaba a la reflexión y al autoconocimiento".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-45',
+    level: 'B2',
+    title: 'La desertificación del Mediterráneo',
+    titleEn: 'Desertification of the Mediterranean',
+    text: 'El sur de Europa se enfrenta a una amenaza medioambiental que rara vez recibe la atención que merece: la desertificación progresiva de amplias zonas del Mediterráneo. España, que ya es el país más árido de Europa, podría ver cómo un tercio de su territorio se convierte en desierto antes de que termine este siglo si no se adoptan medidas urgentes. Las causas son múltiples: el cambio climático ha provocado un aumento de las temperaturas y una disminución de las precipitaciones, pero la actividad humana —la sobreexplotación de acuíferos, la agricultura intensiva y la urbanización descontrolada— ha acelerado el proceso de manera dramática. Las consecuencias no son únicamente medioambientales; afectan directamente a la economía agrícola, al suministro de agua potable y a la biodiversidad. Si se hubiera actuado con mayor decisión hace dos décadas, la situación actual sería menos grave. Organizaciones como la FAO proponen soluciones que incluyen la reforestación con especies autóctonas, la modernización de los sistemas de riego y la implementación de políticas de uso sostenible del suelo. Sin embargo, mientras los beneficios de estas medidas se manifiestan a largo plazo, los costes políticos de implementarlas son inmediatos, lo que explica la reluctancia de muchos gobiernos a actuar.',
+    vocab: [
+      { word: 'desertificación', english: 'desertification' },
+      { word: 'acuíferos', english: 'aquifers (underground water sources)' },
+      { word: 'precipitaciones', english: 'rainfall / precipitation' },
+      { word: 'reforestación', english: 'reforestation' },
+      { word: 'autóctonas', english: 'native / indigenous (species)' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué porcentaje del territorio español podría convertirse en desierto?',
+        options: ['Un cuarto', 'Un tercio', 'La mitad', 'Dos tercios'],
+        correct: 1,
+        explanation: 'The text says "un tercio de su territorio se convierte en desierto" if urgent measures are not taken.'
+      },
+      {
+        prompt: '¿Qué actividades humanas aceleran la desertificación?',
+        options: [
+          'El turismo y la pesca',
+          'La sobreexplotación de acuíferos, la agricultura intensiva y la urbanización',
+          'La minería y la industria pesada',
+          'El transporte aéreo y marítimo'
+        ],
+        correct: 1,
+        explanation: 'The text lists "la sobreexplotación de acuíferos, la agricultura intensiva y la urbanización descontrolada" as human causes.'
+      },
+      {
+        prompt: '¿Por qué muchos gobiernos son reluctantes a actuar?',
+        options: [
+          'Porque no creen en el cambio climático',
+          'Porque los beneficios son a largo plazo pero los costes políticos son inmediatos',
+          'Porque no tienen dinero suficiente',
+          'Porque la tecnología necesaria no existe todavía'
+        ],
+        correct: 1,
+        explanation: 'The text explains that "los beneficios de estas medidas se manifiestan a largo plazo" but "los costes políticos de implementarlas son inmediatos".'
+      },
+      {
+        prompt: '¿Qué expresa la frase "si se hubiera actuado con mayor decisión hace dos décadas"?',
+        options: [
+          'Que se actuó correctamente en el pasado',
+          'Que no se hizo lo suficiente y ahora la situación es peor',
+          'Que la desertificación es un fenómeno reciente',
+          'Que los gobiernos anteriores fueron más eficaces'
+        ],
+        correct: 1,
+        explanation: 'The past subjunctive conditional expresses a counterfactual — insufficient action was taken, and the current situation would be less severe if more had been done.'
+      }
+    ]
+  },
+
+  {
+    id: 'read-46',
+    level: 'B2',
+    title: 'La caída del Muro de Berlín',
+    titleEn: 'The Fall of the Berlin Wall',
+    text: 'La noche del 9 de noviembre de 1989, miles de berlineses se congregaron frente al Muro que había dividido su ciudad durante veintiocho años. Lo que comenzó como una confusa conferencia de prensa en la que un funcionario de Alemania Oriental anunció, aparentemente por error, la apertura inmediata de las fronteras, se convirtió en uno de los acontecimientos más trascendentales del siglo XX. Los guardias fronterizos, desbordados por la multitud y sin instrucciones claras, optaron por abrir los puestos de control. Las imágenes de familias que fueron separadas durante décadas abrazándose bajo los focos de las cámaras dieron la vuelta al mundo. Si bien la caída del Muro fue celebrada como el triunfo de la libertad, sus consecuencias resultaron más complejas de lo que muchos habían anticipado. La reunificación alemana, formalizada en octubre de 1990, supuso un enorme desafío económico y social: las desigualdades entre el este y el oeste tardaron décadas en reducirse, y algunas persisten todavía. Los historiadores coinciden en que aquel acontecimiento no habría sido posible sin las reformas de Gorbachov en la Unión Soviética ni sin el movimiento pacifista que había cobrado fuerza en toda Europa del Este.',
+    vocab: [
+      { word: 'congregaron', english: 'gathered / congregated' },
+      { word: 'trascendentales', english: 'momentous / transcendental' },
+      { word: 'desbordados', english: 'overwhelmed' },
+      { word: 'reunificación', english: 'reunification' },
+      { word: 'pacifista', english: 'pacifist / peace (movement)' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué desencadenó la apertura del Muro?',
+        options: [
+          'Una orden directa del gobierno soviético',
+          'Una confusa conferencia de prensa que anunció la apertura de fronteras',
+          'Una revolución violenta',
+          'Una votación popular'
+        ],
+        correct: 1,
+        explanation: 'The text says it began with "una confusa conferencia de prensa en la que un funcionario de Alemania Oriental anunció, aparentemente por error, la apertura inmediata de las fronteras".'
+      },
+      {
+        prompt: '¿Qué complicaciones trajo la reunificación?',
+        options: [
+          'Una guerra civil entre el este y el oeste',
+          'La intervención de la OTAN',
+          'Desigualdades económicas y sociales entre el este y el oeste',
+          'El rechazo de la población a la unificación'
+        ],
+        correct: 2,
+        explanation: 'The text says "las desigualdades entre el este y el oeste tardaron décadas en reducirse, y algunas persisten todavía".'
+      },
+      {
+        prompt: '¿Qué factores hicieron posible la caída del Muro según los historiadores?',
+        options: [
+          'La presión militar de Estados Unidos',
+          'Las reformas de Gorbachov y el movimiento pacifista en Europa del Este',
+          'La crisis económica mundial',
+          'La intervención de la ONU'
+        ],
+        correct: 1,
+        explanation: 'The text says it "no habría sido posible sin las reformas de Gorbachov en la Unión Soviética ni sin el movimiento pacifista que había cobrado fuerza en toda Europa del Este".'
+      },
+      {
+        prompt: '¿Qué tipo de estructura gramatical utiliza "no habría sido posible sin"?',
+        options: [
+          'Futuro simple',
+          'Condicional compuesto para expresar una hipótesis sobre el pasado',
+          'Pretérito perfecto',
+          'Imperativo negativo'
+        ],
+        correct: 1,
+        explanation: 'The conditional perfect "no habría sido posible" expresses a counterfactual hypothesis about the past — what would not have been possible without certain conditions.'
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C1  —  Additional passages: advanced subjunctive, literary devices (200-250 words)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'read-47',
+    level: 'C1',
+    title: 'La crítica literaria ante la autoficción',
+    titleEn: 'Literary Criticism and Autofiction',
+    text: 'La autoficción —ese género híbrido en el que el autor se convierte en protagonista de una narración que oscila deliberadamente entre lo vivido y lo inventado— ha generado una de las polémicas más estimulantes de la crítica literaria contemporánea. Desde que Serge Doubrovsky acuñara el término en 1977, la frontera entre autobiografía y novela se ha ido difuminando hasta resultar casi irreconocible en obras como las de Karl Ove Knausgård o, en el ámbito hispanohablante, Javier Cercas y Fernando Aramburu. Los detractores de la autoficción la consideran un ejercicio de narcisismo disfrazado de literatura, una claudicación de la imaginación ante la facilidad de lo testimonial. Sostienen que, al refugiarse en la propia experiencia, el autor renuncia a la empresa más noble de la ficción: trascender lo individual para alcanzar lo universal. Sus defensores, en cambio, argumentan que toda ficción es, en última instancia, autobiográfica, y que la honestidad radical de exponer la propia vulnerabilidad constituye un acto de valentía literaria, no de pereza creativa. Lo que quizá resulte más interesante es que este debate revela una tensión más profunda: la ansiedad de una cultura que, saturada de relatos construidos en las redes sociales, busca desesperadamente alguna forma de autenticidad, aunque sea consciente de que toda narración —incluida la del yo— implica necesariamente una selección, una distorsión, una ficción. Que el lector nunca pueda estar seguro de dónde termina la verdad y comienza la invención no es una debilidad del género, sino precisamente su mayor logro estético.',
+    vocab: [
+      { word: 'autoficción', english: 'autofiction (fictionalized autobiography)' },
+      { word: 'acuñar', english: 'to coin (a term)' },
+      { word: 'claudicación', english: 'capitulation / surrender' },
+      { word: 'vulnerabilidad', english: 'vulnerability' },
+      { word: 'distorsión', english: 'distortion' }
+    ],
+    questions: [
+      {
+        prompt: '¿Quién acuñó el término "autoficción"?',
+        options: ['Karl Ove Knausgård', 'Javier Cercas', 'Serge Doubrovsky', 'Fernando Aramburu'],
+        correct: 2,
+        explanation: 'The text says "Serge Doubrovsky acuñara el término en 1977".'
+      },
+      {
+        prompt: '¿Qué critican los detractores de la autoficción?',
+        options: [
+          'Que es demasiado difícil de leer',
+          'Que es un narcisismo disfrazado de literatura y una renuncia a la imaginación',
+          'Que no vende suficientes libros',
+          'Que plagia la vida de otras personas'
+        ],
+        correct: 1,
+        explanation: 'Critics see it as "un ejercicio de narcisismo disfrazado de literatura, una claudicación de la imaginación ante la facilidad de lo testimonial".'
+      },
+      {
+        prompt: '¿Qué tensión cultural más profunda revela este debate según el autor?',
+        options: [
+          'La competencia entre editoriales por vender más',
+          'La ansiedad de una cultura saturada de relatos construidos que busca autenticidad',
+          'La rivalidad entre escritores europeos y latinoamericanos',
+          'La crisis del sistema educativo'
+        ],
+        correct: 1,
+        explanation: 'The text says the debate reveals "la ansiedad de una cultura que, saturada de relatos construidos en las redes sociales, busca desesperadamente alguna forma de autenticidad".'
+      },
+      {
+        prompt: '¿Por qué la ambigüedad entre verdad e invención es considerada un logro?',
+        options: [
+          'Porque confunde a los críticos literarios',
+          'Porque permite vender el libro como ficción y como autobiografía',
+          'Porque la incertidumbre del lector sobre dónde termina la verdad es el mayor logro estético del género',
+          'Porque así el autor evita demandas legales'
+        ],
+        correct: 2,
+        explanation: 'The text concludes that the reader\'s inability to distinguish truth from invention "no es una debilidad del género, sino precisamente su mayor logro estético".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-48',
+    level: 'C1',
+    title: 'La libertad y sus paradojas',
+    titleEn: 'Freedom and Its Paradoxes',
+    text: 'Pocos conceptos han sido tan invocados y, simultáneamente, tan mal comprendidos como el de libertad. La filosofía occidental ha oscilado entre dos concepciones fundamentales: la libertad negativa —la ausencia de coacción externa, el derecho a que nadie interfiera en nuestras decisiones— y la libertad positiva —la capacidad real de autogobernarse y realizar el propio proyecto vital—. Isaiah Berlin advirtió en su célebre ensayo que la segunda concepción, por seductora que pareciera, contenía un germen peligroso: si alguien puede determinar cuál es el "verdadero yo" que debe ser liberado, se abre la puerta al paternalismo e incluso al totalitarismo. Sin embargo, reducir la libertad a la mera ausencia de interferencia tampoco resulta satisfactorio, pues ignora las condiciones materiales sin las cuales la autonomía deviene ilusoria. ¿De qué le sirve la libertad de expresión a quien carece de educación para articular sus ideas? ¿Qué libertad de elección tiene quien nace en la miseria más absoluta? Estas preguntas, que atraviesan siglos de pensamiento político, adquieren una urgencia renovada en un mundo donde las desigualdades se han profundizado y donde nuevas formas de control —algorítmico, informático, biopolítico— operan de maneras tan sutiles que ni siquiera son percibidas como restricciones. Quizá la tarea filosófica más apremiante de nuestro tiempo sea reconciliar ambas dimensiones de la libertad, asumiendo que ninguna sociedad verdaderamente libre puede existir mientras sus miembros carezcan tanto de protección frente a la coerción como de las condiciones materiales para ejercer una autonomía genuina.',
+    vocab: [
+      { word: 'coacción', english: 'coercion / compulsion' },
+      { word: 'paternalismo', english: 'paternalism' },
+      { word: 'deviene', english: 'becomes (formal)' },
+      { word: 'algorítmico', english: 'algorithmic' },
+      { word: 'apremiante', english: 'pressing / urgent' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuáles son las dos concepciones de libertad que distingue el texto?',
+        options: [
+          'Libertad económica y libertad política',
+          'Libertad negativa (ausencia de coacción) y libertad positiva (capacidad de autogobernarse)',
+          'Libertad individual y libertad colectiva',
+          'Libertad de expresión y libertad de movimiento'
+        ],
+        correct: 1,
+        explanation: 'The text distinguishes "libertad negativa — la ausencia de coacción externa" from "libertad positiva — la capacidad real de autogobernarse".'
+      },
+      {
+        prompt: '¿Qué peligro identificó Isaiah Berlin en la libertad positiva?',
+        options: [
+          'Que genera anarquía',
+          'Que conduce al individualismo extremo',
+          'Que si alguien determina cuál es el "verdadero yo", se abre la puerta al paternalismo y al totalitarismo',
+          'Que es demasiado cara de implementar'
+        ],
+        correct: 2,
+        explanation: 'Berlin warned that if someone can determine the "true self" that must be liberated, "se abre la puerta al paternalismo e incluso al totalitarismo".'
+      },
+      {
+        prompt: '¿Qué nuevas formas de control menciona el texto?',
+        options: [
+          'Control militar y religioso',
+          'Control algorítmico, informático y biopolítico',
+          'Control familiar y educativo',
+          'Control económico y laboral'
+        ],
+        correct: 1,
+        explanation: 'The text mentions "nuevas formas de control — algorítmico, informático, biopolítico — que operan de maneras tan sutiles que ni siquiera son percibidas como restricciones".'
+      },
+      {
+        prompt: '¿Cuál es la tarea filosófica que propone el texto?',
+        options: [
+          'Elegir entre libertad negativa o positiva',
+          'Eliminar todas las formas de gobierno',
+          'Reconciliar ambas dimensiones asegurando protección frente a la coerción y condiciones materiales para la autonomía',
+          'Crear una nueva definición de libertad'
+        ],
+        correct: 2,
+        explanation: 'The text proposes reconciling both dimensions, ensuring "protección frente a la coerción" and "condiciones materiales para ejercer una autonomía genuina".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-49',
+    level: 'C1',
+    title: 'El principio de incertidumbre y sus implicaciones filosóficas',
+    titleEn: 'The Uncertainty Principle and Its Philosophical Implications',
+    text: 'Cuando Werner Heisenberg formuló el principio de incertidumbre en 1927, no solo revolucionó la física cuántica sino que desestabilizó los cimientos mismos de la epistemología occidental. La idea de que resulta imposible determinar simultáneamente, con precisión arbitraria, la posición y el momento de una partícula subatómica no era meramente un problema técnico de medición; revelaba un límite ontológico fundamental: la naturaleza, en su nivel más básico, se resiste a ser completamente conocida. Este descubrimiento asestó un golpe devastador al determinismo laplaciano, esa visión del universo como un reloj perfecto en el que, conocidas las condiciones iniciales, todo el futuro sería predecible. Las interpretaciones filosóficas del principio han sido diversas y, con frecuencia, abusivas. Algunos han pretendido utilizarlo para justificar el libre albedrío, argumentando que si la materia es indeterminada, la mente también podría serlo. Otros lo han invocado para legitimar el relativismo epistemológico, como si la incertidumbre cuántica demostrase que toda verdad es relativa. Ambas extrapolaciones cometen el error de trasladar un fenómeno del mundo subatómico al ámbito macroscópico sin las debidas cautelas. Lo que sí resulta legítimo afirmar es que Heisenberg nos obligó a repensar la relación entre el observador y lo observado, anticipando debates que décadas después resonarían en campos tan dispares como la sociología del conocimiento y la teoría literaria. La física cuántica no nos dice que la verdad no exista; nos recuerda, con una humildad que la filosofía haría bien en emular, que nuestro acceso a ella siempre será parcial e inevitablemente mediado por nuestros instrumentos de observación.',
+    vocab: [
+      { word: 'epistemología', english: 'epistemology (theory of knowledge)' },
+      { word: 'ontológico', english: 'ontological (relating to the nature of being)' },
+      { word: 'determinismo', english: 'determinism' },
+      { word: 'libre albedrío', english: 'free will' },
+      { word: 'extrapolaciones', english: 'extrapolations' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué estableció el principio de incertidumbre de Heisenberg?',
+        options: [
+          'Que toda medición es errónea',
+          'Que es imposible determinar simultáneamente con precisión la posición y el momento de una partícula',
+          'Que el universo es completamente aleatorio',
+          'Que la física clásica es incorrecta'
+        ],
+        correct: 1,
+        explanation: 'The text says it is impossible to determine simultaneously "con precisión arbitraria, la posición y el momento de una partícula subatómica".'
+      },
+      {
+        prompt: '¿Por qué el autor considera "abusivas" algunas interpretaciones filosóficas?',
+        options: [
+          'Porque contradicen a Einstein',
+          'Porque trasladan un fenómeno subatómico al ámbito macroscópico sin cautelas adecuadas',
+          'Porque son demasiado complicadas',
+          'Porque ignoran la historia de la física'
+        ],
+        correct: 1,
+        explanation: 'The text says these extrapolations "cometen el error de trasladar un fenómeno del mundo subatómico al ámbito macroscópico sin las debidas cautelas".'
+      },
+      {
+        prompt: '¿Qué contribución legítima atribuye el autor a Heisenberg?',
+        options: [
+          'Demostrar que la verdad no existe',
+          'Inventar la computación cuántica',
+          'Obligarnos a repensar la relación entre el observador y lo observado',
+          'Refutar completamente la filosofía clásica'
+        ],
+        correct: 2,
+        explanation: 'The text says Heisenberg\'s legitimate contribution was to force us to "repensar la relación entre el observador y lo observado".'
+      },
+      {
+        prompt: '¿Cuál es el mensaje final del texto sobre la verdad?',
+        options: [
+          'Que la verdad no existe',
+          'Que la verdad es completamente relativa',
+          'Que nuestro acceso a la verdad siempre será parcial y mediado por nuestros instrumentos',
+          'Que solo la física puede descubrir la verdad'
+        ],
+        correct: 2,
+        explanation: 'The text concludes that quantum physics "nos recuerda que nuestro acceso a ella siempre será parcial e inevitablemente mediado por nuestros instrumentos de observación".'
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  C2  —  Additional passages: sophisticated language, register shifts (250-300 words)
+  // ─────────────────────────────────────────────────────────
+
+  {
+    id: 'read-50',
+    level: 'C2',
+    title: 'La erosión del discurso público',
+    titleEn: 'The Erosion of Public Discourse',
+    text: 'Cabría preguntarse si el deterioro del discurso público que presenciamos constituye un fenómeno genuinamente nuevo o si, por el contrario, cada generación ha tenido la impresión de que el debate político se degradaba irremisiblemente. Lo cierto es que existen elementos estructurales inéditos que distinguen la coyuntura actual de cualquier precedente histórico. La economía de la atención —ese modelo en el que la indignación y la polarización son las mercancías más rentables— ha convertido la esfera pública en un circo donde la estridencia desplaza sistemáticamente al matiz. Los algoritmos de las plataformas digitales, optimizados para maximizar el tiempo de permanencia, privilegian el contenido que genera reacciones emocionales intensas, con independencia de su veracidad o de su contribución al bien común. Este mecanismo ha producido lo que algunos teóricos denominan "cámaras de eco epistémicas": burbujas informativas en las que los ciudadanos ya no discrepan sobre las soluciones a problemas compartidos, sino sobre los hechos mismos. Si un interlocutor no acepta la premisa de que la tierra es redonda, difícilmente podremos debatir sobre política medioambiental. La consecuencia más perniciosa de esta dinámica no es, como suele afirmarse, la proliferación de información falsa —que, después de todo, ha existido siempre—, sino la erosión de la categoría misma de verdad compartida. Cuando el escepticismo saludable degenera en un cinismo epistemológico generalizado, cuando cada dato es descartado como propaganda y cada experto como cómplice de una conspiración, la democracia deliberativa pierde la condición de posibilidad que la sustenta: un mínimo acuerdo sobre la realidad a partir del cual negociar las discrepancias. Restaurar ese suelo común exigirá algo más que regulación tecnológica o alfabetización mediática; requerirá, acaso, una transformación cultural profunda que restituya el valor de la honestidad intelectual y la disposición a ser persuadido por argumentos mejores que los propios.',
+    vocab: [
+      { word: 'irremisiblemente', english: 'irremediably / irreversibly' },
+      { word: 'estridencia', english: 'stridency / shrillness' },
+      { word: 'veracidad', english: 'veracity / truthfulness' },
+      { word: 'perniciosa', english: 'pernicious / harmful' },
+      { word: 'restituya', english: 'restore (subjunctive)' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué distingue la situación actual de precedentes históricos según el texto?',
+        options: [
+          'Que los políticos son peores que antes',
+          'Que la economía de la atención convierte la indignación y la polarización en mercancías rentables',
+          'Que la gente lee menos periódicos',
+          'Que hay más partidos políticos que nunca'
+        ],
+        correct: 1,
+        explanation: 'The text identifies "la economía de la atención — ese modelo en el que la indignación y la polarización son las mercancías más rentables" as the structurally unprecedented element.'
+      },
+      {
+        prompt: '¿Qué son las "cámaras de eco epistémicas"?',
+        options: [
+          'Estudios de grabación para podcasts políticos',
+          'Burbujas informativas donde los ciudadanos ya no discrepan sobre soluciones sino sobre los hechos mismos',
+          'Departamentos de universidades dedicados a la epistemología',
+          'Programas de televisión donde se repiten las mismas noticias'
+        ],
+        correct: 1,
+        explanation: 'The text defines them as "burbujas informativas en las que los ciudadanos ya no discrepan sobre las soluciones a problemas compartidos, sino sobre los hechos mismos".'
+      },
+      {
+        prompt: '¿Cuál es la consecuencia más perniciosa según el autor?',
+        options: [
+          'La proliferación de noticias falsas',
+          'La polarización política',
+          'La erosión de la categoría misma de verdad compartida',
+          'La pérdida de lectores de prensa tradicional'
+        ],
+        correct: 2,
+        explanation: 'The text says the most pernicious consequence is not false information but "la erosión de la categoría misma de verdad compartida".'
+      },
+      {
+        prompt: '¿Qué condición de posibilidad de la democracia deliberativa se ve amenazada?',
+        options: [
+          'El derecho al voto',
+          'La separación de poderes',
+          'Un mínimo acuerdo sobre la realidad a partir del cual negociar las discrepancias',
+          'La libertad de prensa'
+        ],
+        correct: 2,
+        explanation: 'The text says democracy loses "la condición de posibilidad que la sustenta: un mínimo acuerdo sobre la realidad a partir del cual negociar las discrepancias".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-51',
+    level: 'C2',
+    title: 'Borges y la disolución del autor',
+    titleEn: 'Borges and the Dissolution of the Author',
+    text: 'En "Pierre Menard, autor del Quijote", Borges ejecuta una de las operaciones intelectuales más vertiginosas de la literatura universal: demostrar que un texto idéntico, reproducido palabra por palabra, se convierte en una obra radicalmente distinta cuando cambian las circunstancias de su enunciación. El cuento, publicado en 1939, narra los esfuerzos de un oscuro escritor francés por escribir —no copiar ni transcribir, sino escribir de nuevo, desde su propia experiencia— varios capítulos del Quijote. El resultado es, letra a letra, indistinguible del original cervantino, y sin embargo, argumenta el narrador borgiano con una ironía devastadora, infinitamente más rico. Donde Cervantes escribía con la naturalidad de un hombre de su tiempo, Menard escribe contra la corriente de tres siglos de historia literaria, lo cual dota a cada frase de una complejidad hermenéutica insospechada. Este relato, que superficialmente podría parecer un divertimento erudito, anticipa con décadas de antelación las tesis que Roland Barthes formalizaría en "La muerte del autor" y que Michel Foucault exploraría en "¿Qué es un autor?". La provocación borgiana consiste en llevar al absurdo lógico una verdad incómoda: que el significado de un texto no reside exclusivamente en la intención de quien lo escribe, sino en la red de lecturas, convenciones y contextos que lo envuelven. Cada relectura es, en sentido estricto, una reescritura. Si aceptamos esta premisa —y resulta difícil refutarla sin caer en ingenuidades hermenéuticas—, la figura del autor como origen y garante del sentido se disuelve en favor de una concepción del texto como artefacto vivo, perpetuamente resignificado por cada nuevo lector. Lo que Borges intuyó con la elegancia de una paradoja, la teoría literaria del siglo XX tardaría décadas en articular con el aparato conceptual de la semiótica y el posestructuralismo. Acaso sea esta la mayor virtud de Borges: haber convertido las ideas más complejas en ficciones tan breves y cristalinas que parecen, como los mejores trucos de magia, absurdamente sencillas.',
+    vocab: [
+      { word: 'enunciación', english: 'enunciation / utterance (the act of producing discourse)' },
+      { word: 'hermenéutica', english: 'hermeneutics (theory of interpretation)' },
+      { word: 'semiótica', english: 'semiotics (study of signs and meaning)' },
+      { word: 'posestructuralismo', english: 'post-structuralism' },
+      { word: 'resignificado', english: 'resignified / given new meaning' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué hace Pierre Menard en el cuento de Borges?',
+        options: [
+          'Traduce el Quijote al francés',
+          'Escribe de nuevo, desde su propia experiencia, capítulos del Quijote idénticos al original',
+          'Publica una edición crítica del Quijote',
+          'Plagia el Quijote y lo presenta como propio'
+        ],
+        correct: 1,
+        explanation: 'The text says Menard attempts to "escribir de nuevo, desde su propia experiencia" chapters of the Quixote, producing text "letra a letra, indistinguible del original cervantino".'
+      },
+      {
+        prompt: '¿Por qué el texto de Menard sería "infinitamente más rico" que el de Cervantes?',
+        options: [
+          'Porque Menard era un mejor escritor',
+          'Porque usa un español más moderno',
+          'Porque Menard escribe contra la corriente de tres siglos de historia literaria, dotando cada frase de complejidad hermenéutica',
+          'Porque incluye notas a pie de página'
+        ],
+        correct: 2,
+        explanation: 'The text explains that Menard "escribe contra la corriente de tres siglos de historia literaria, lo cual dota a cada frase de una complejidad hermenéutica insospechada".'
+      },
+      {
+        prompt: '¿Qué tesis posteriores anticipa este cuento según el autor del texto?',
+        options: [
+          'Las teorías de Noam Chomsky sobre gramática generativa',
+          'Las ideas de Barthes en "La muerte del autor" y de Foucault en "¿Qué es un autor?"',
+          'Las propuestas del realismo mágico latinoamericano',
+          'Las teorías marxistas de la literatura'
+        ],
+        correct: 1,
+        explanation: 'The text says the story "anticipa con décadas de antelación las tesis que Roland Barthes formalizaría en \'La muerte del autor\' y que Michel Foucault exploraría en \'¿Qué es un autor?\'".'
+      },
+      {
+        prompt: '¿Cuál es la "verdad incómoda" que Borges lleva al absurdo lógico?',
+        options: [
+          'Que todos los escritores copian de otros',
+          'Que la literatura no tiene valor',
+          'Que el significado de un texto no reside exclusivamente en la intención del autor sino en la red de lecturas, convenciones y contextos',
+          'Que el español del siglo XVII es superior al moderno'
+        ],
+        correct: 2,
+        explanation: 'The "uncomfortable truth" is that "el significado de un texto no reside exclusivamente en la intención de quien lo escribe, sino en la red de lecturas, convenciones y contextos que lo envuelven".'
       }
     ]
   }

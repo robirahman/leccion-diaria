@@ -129,6 +129,42 @@ describe('Conjugation Engine', () => {
     assertEqual(conjugate('dormir', 'present', 3), 'dormimos');
   });
 
+  it('returns "?" for out-of-bounds personIdx', () => {
+    assertEqual(conjugate('hablar', 'present', -1), '?');
+    assertEqual(conjugate('hablar', 'present', 6), '?');
+    assertEqual(conjugate('hablar', 'present', 99), '?');
+  });
+
+  it('returns "?" for non-integer personIdx', () => {
+    assertEqual(conjugate('hablar', 'present', 1.5), '?');
+    assertEqual(conjugate('hablar', 'present', NaN), '?');
+  });
+
+  it('generates correct reflexive pronouns for all persons', () => {
+    assertEqual(conjugate('levantarse', 'present', 0), 'me levanto');
+    assertEqual(conjugate('levantarse', 'present', 1), 'te levantas');
+    assertEqual(conjugate('levantarse', 'present', 2), 'se levanta');
+    assertEqual(conjugate('levantarse', 'present', 3), 'nos levantamos');
+    assertEqual(conjugate('levantarse', 'present', 4), 'os levantáis');
+    assertEqual(conjugate('levantarse', 'present', 5), 'se levantan');
+  });
+
+  it('handles unknown/made-up verbs gracefully (returns a string, not crash)', () => {
+    // An unknown -ar verb should still get regular conjugation
+    const result = conjugate('xyzar', 'present', 0);
+    assert(typeof result === 'string', 'Should return a string');
+    assert(result.length > 0, 'Should return non-empty string');
+    assertEqual(result, 'xyzo');
+  });
+
+  it('handles unknown -er verb gracefully', () => {
+    assertEqual(conjugate('xyzer', 'present', 0), 'xyzo');
+  });
+
+  it('handles unknown -ir verb gracefully', () => {
+    assertEqual(conjugate('xyzir', 'present', 0), 'xyzo');
+  });
+
   it('returns a string for every verb × tense × person combination', () => {
     let failures = 0;
     const sampleVerbs = ['hablar', 'comer', 'vivir', 'ser', 'estar', 'ir', 'tener', 'hacer', 'poder', 'decir'];

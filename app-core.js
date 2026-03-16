@@ -355,6 +355,7 @@ function newProgress() {
     dictFsrs: {}, dictMastery: {},
     readingFsrs: {}, readingMastery: {},
     themedVocabDone: {},
+    bdDone: {},
     achievements: {},
     errorCounts: {},
     perfectQuizCount: 0,
@@ -770,10 +771,15 @@ function generateShareCard() {
   ctx.fillText(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), w / 2, h - 25);
 
   // Show the overlay
-  document.getElementById('share-overlay').classList.add('open');
+  const shareOv = document.getElementById('share-overlay');
+  shareOv.classList.add('open');
+  shareOv.setAttribute('aria-hidden', 'false');
   if (navigator.share && navigator.canShare) {
     document.getElementById('native-share-btn').style.display = '';
   }
+  // Focus first button in share overlay
+  const shareFirstBtn = shareOv.querySelector('button');
+  if (shareFirstBtn) setTimeout(() => shareFirstBtn.focus(), 50);
 }
 
 function downloadShareCard() {
@@ -943,9 +949,22 @@ function showScreen(id, pushStack = true) {
     setTimeout(() => el.classList.remove('fade-in'), 250);
     window.scrollTo(0, 0);
     // Accessibility: move focus to screen heading or container
-    const focusTarget = el.querySelector('h1, h2, h3, [tabindex="-1"]') || el;
+    const heading = el.querySelector('h1, h2, h3, [tabindex="-1"]');
+    const focusTarget = heading || el;
     if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
     focusTarget.focus({ preventScroll: true });
+    // Announce screen name for screen readers
+    let ann = document.getElementById('screen-announcer');
+    if (!ann) {
+      ann = document.createElement('div');
+      ann.id = 'screen-announcer';
+      ann.setAttribute('aria-live', 'polite');
+      ann.setAttribute('aria-atomic', 'true');
+      ann.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;';
+      document.body.appendChild(ann);
+    }
+    ann.textContent = '';
+    setTimeout(() => { ann.textContent = heading ? heading.textContent : id; }, 100);
   }
   if (pushStack && screenStack[screenStack.length - 1] !== id) screenStack.push(id);
 
@@ -1204,10 +1223,23 @@ document.addEventListener('keydown', e => {
     const shareOverlay = document.getElementById('share-overlay');
     if (shareOverlay?.classList.contains('open')) {
       shareOverlay.classList.remove('open');
+      shareOverlay.setAttribute('aria-hidden', 'true');
       e.preventDefault();
       return;
     }
   }
+  // Share overlay focus trap
+  const shareOvTrap = document.getElementById('share-overlay');
+  if (shareOvTrap?.classList.contains('open') && e.key === 'Tab') {
+    const focusable = shareOvTrap.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length > 0) {
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+    }
+    return;
+  }
+
   const overlay = document.getElementById('modal-overlay');
 
   // Modal focus trap

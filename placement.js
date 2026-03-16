@@ -440,6 +440,7 @@ function submitPlacementMC() {
   const btns = document.querySelectorAll('#pt-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
+    btn.setAttribute('aria-disabled', 'true');
     if (q.options[i] === q.answer) btn.classList.add('correct');
     if (i === idx && !isCorrect) btn.classList.add('incorrect');
   });

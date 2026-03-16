@@ -355,7 +355,7 @@ const REVIEW_HANDLERS = {
 const STATS_HANDLERS = {
   'open-stats':        ()  => { showScreen('stats'); renderStats(); },
   'share-progress':    ()  => generateShareCard(),
-  'close-share':       ()  => { document.getElementById('share-overlay').classList.remove('open'); },
+  'close-share':       ()  => { const el = document.getElementById('share-overlay'); el.classList.remove('open'); el.setAttribute('aria-hidden', 'true'); },
   'download-share':    ()  => downloadShareCard(),
   'native-share':      ()  => nativeShareCard(),
   'start-weak-review': ()  => startWeakReview(),
@@ -502,6 +502,14 @@ const NUMBER_HANDLERS = {
   'next-time-quiz':     ()  => { if (typeof nextTimeQuiz === 'function') nextTimeQuiz(); },
 };
 
+// Branching Dialogues
+const BRANCHING_HANDLERS = {
+  'open-branching-dialogues':   ()  => { if (typeof openBranchingDialogues === 'function') openBranchingDialogues(); },
+  'start-branching-dialogue':   (t) => { if (typeof startBranchingDialogue === 'function') startBranchingDialogue(t.dataset.id || t.closest('[data-id]')?.dataset.id); },
+  'bd-pick':                    (t) => { if (typeof bdPick === 'function') bdPick(parseInt(t.dataset.idx, 10)); },
+  'bd-continue':                ()  => { if (typeof bdContinue === 'function') bdContinue(); },
+};
+
 // TTS
 const TTS_HANDLERS = {
   'speak': (t) => speak(t.dataset.text),
@@ -538,6 +546,7 @@ const ACTION_HANDLERS = Object.assign({},
   WRITING_HANDLERS,
   COMP_GRAMMAR_HANDLERS,
   NUMBER_HANDLERS,
+  BRANCHING_HANDLERS,
   TTS_HANDLERS
 );
 
@@ -557,6 +566,14 @@ document.addEventListener('click', e => {
 
   const handler = ACTION_HANDLERS[action];
   if (handler) handler(target, e);
+});
+
+// Card keyboard activation (Enter/Space on .card[data-action])
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    const card = e.target.closest('.card[data-action]');
+    if (card) { e.preventDefault(); card.click(); }
+  }
 });
 
 // Keyboard shortcuts
@@ -796,7 +813,8 @@ const LAZY_SCRIPTS = [
   'themed_vocab.js', 'curriculum_tracks.js', 'phonetic_pairs.js',
   'homophones.js', 'connectors.js',
   'verb_prepositions.js', 'subjunctive_triggers.js', 'writing_prompts.js',
-  'comparative_grammar.js', 'number_practice.js', 'feature-modules.js'
+  'comparative_grammar.js', 'number_practice.js', 'branching_dialogues.js',
+  'feature-modules.js'
 ];
 let _lazyLoaded = false;
 function _resolveFile(name) {

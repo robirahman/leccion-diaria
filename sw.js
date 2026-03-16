@@ -1,4 +1,5 @@
-const CACHE_NAME = 'leccion-diaria-v18';
+const APP_CACHE = 'leccion-app-v1';
+const DATA_CACHE = 'leccion-data-v1';
 
 // App shell — precached on install (~500KB)
 const APP_SHELL = [
@@ -22,11 +23,13 @@ const DATA_FILES = new Set([
   './translation_drills.js', './dictation.js', './jokes.js',
   './reading.js', './reading_sat.js', './themed_vocab.js',
   './curriculum_tracks.js', './phonetic_pairs.js', './homophones.js',
-  './connectors.js',
+  './connectors.js', './branching_dialogues.js',
 ]);
 
+const KNOWN_CACHES = [APP_CACHE, DATA_CACHE];
+
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE_NAME).then(c =>
+  e.waitUntil(caches.open(APP_CACHE).then(c =>
     Promise.allSettled(APP_SHELL.map(url =>
       c.add(url).catch(err => console.warn('SW: failed to cache', url, err))
     ))
@@ -36,7 +39,7 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    Promise.all(keys.filter(k => !KNOWN_CACHES.includes(k)).map(k => caches.delete(k)))
   ));
   self.clients.claim();
 });
@@ -56,14 +59,20 @@ function isDataFile(url) {
   return false;
 }
 
+function cacheName(url) {
+  return isDataFile(url) ? DATA_CACHE : APP_CACHE;
+}
+
 self.addEventListener('fetch', e => {
-  const timeout = isDataFile(e.request.url) ? 5000 : 10000;
+  const isData = isDataFile(e.request.url);
+  const timeout = isData ? 5000 : 10000;
+  const targetCache = isData ? DATA_CACHE : APP_CACHE;
   e.respondWith(
     caches.match(e.request).then(cached => {
       const fetchPromise = fetchWithTimeout(e.request, timeout).then(response => {
         if (response.ok) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+          caches.open(targetCache).then(c => c.put(e.request, clone));
         }
         return response;
       }).catch(() => cached);

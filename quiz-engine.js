@@ -141,6 +141,7 @@ function createQuizFlow(config) {
     const btns = document.querySelectorAll(containerSel + ' .quiz-option');
     btns.forEach(function (btn, i) {
       btn.classList.add('disabled');
+      if (btn.setAttribute) btn.setAttribute('aria-disabled', 'true');
       if (i === correctIdx) btn.classList.add('correct');
       if (i === selectedIdx && !isCorrect) btn.classList.add('incorrect');
     });
@@ -209,6 +210,7 @@ function processMCSubmit(opts) {
   const btns = document.querySelectorAll(opts.optionsSel);
   btns.forEach(function (btn) {
     btn.classList.add('disabled');
+    if (btn.setAttribute) btn.setAttribute('aria-disabled', 'true');
     if (opts.isCorrectBtn(btn)) btn.classList.add('correct');
     else if (btn.classList.contains('selected')) btn.classList.add('incorrect');
   });

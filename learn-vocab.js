@@ -380,6 +380,7 @@ function submitVocabQuizMC() {
   const btns = document.querySelectorAll('#vocq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
+    btn.setAttribute('aria-disabled', 'true');
     if (item.options[i] === item.correct) btn.classList.add('correct');
     if (i === idx && selected !== item.correct) btn.classList.add('incorrect');
   });
@@ -408,6 +409,7 @@ function submitGenderQuizMC() {
   const btns = document.querySelectorAll('#vocq-container .quiz-option');
   btns.forEach((btn, i) => {
     btn.classList.add('disabled');
+    btn.setAttribute('aria-disabled', 'true');
     if (i === correctIdx) btn.classList.add('correct');
     if (i === idx && idx !== correctIdx) btn.classList.add('incorrect');
   });

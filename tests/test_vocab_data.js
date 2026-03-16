@@ -49,6 +49,48 @@ describe('Vocab Data Validation', () => {
     assert(dupes < 500, `${dupes} duplicate word+level entries (too many)`);
   });
 
+  it('all POS values are full words (no abbreviations)', () => {
+    const abbreviations = new Set(['adj', 'adv', 'v', 'n', 'prep', 'conj', 'pron', 'interj', 'num']);
+    const bad = data.filter(w => abbreviations.has(w.pos));
+    assertEqual(bad.length, 0, `${bad.length} entries use abbreviated POS (e.g. "${bad[0]?.pos}" for "${bad[0]?.word}")`);
+    // Also verify all POS values are non-empty strings
+    const empty = data.filter(w => typeof w.pos !== 'string' || w.pos.length === 0);
+    assertEqual(empty.length, 0, `${empty.length} entries have empty or non-string POS`);
+  });
+
+  it('all noun entries have a gender field', () => {
+    const nouns = data.filter(w => w.pos === 'noun');
+    const noGender = nouns.filter(w => w.gender === null || w.gender === undefined);
+    assertEqual(noGender.length, 0,
+      `${noGender.length} nouns missing gender (e.g. "${noGender[0]?.word}")`);
+  });
+
+  it('no entries with empty word or english fields', () => {
+    const badWord = data.filter(w => typeof w.word !== 'string' || w.word.trim().length === 0);
+    assertEqual(badWord.length, 0, `${badWord.length} entries have empty word field`);
+    const badEn = data.filter(w => typeof w.english !== 'string' || w.english.trim().length === 0);
+    assertEqual(badEn.length, 0, `${badEn.length} entries have empty english field`);
+  });
+
+  it('frequency values are within valid range (1-6)', () => {
+    const bad = data.filter(w => typeof w.freq !== 'number' || w.freq < 1 || w.freq > 6);
+    if (bad.length > 0 && bad.length <= 3) {
+      bad.forEach(w => console.log(`      BAD freq: "${w.word}" freq=${w.freq}`));
+    }
+    assertEqual(bad.length, 0, `${bad.length} entries have freq outside 1-6`);
+  });
+
+  it('all category values exist in VOCAB_CATEGORIES', () => {
+    const catData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'vocab-categories.js'), 'utf8')
+      .replace(/^const VOCAB_CATEGORIES = /, '').replace(/;\s*$/, ''));
+    const validCats = new Set(Object.keys(catData));
+    const bad = data.filter(w => !validCats.has(w.category));
+    if (bad.length > 0 && bad.length <= 5) {
+      bad.forEach(w => console.log(`      BAD category: "${w.word}" category="${w.category}"`));
+    }
+    assertEqual(bad.length, 0, `${bad.length} entries have category not in VOCAB_CATEGORIES`);
+  });
+
   it('split files sum to original', () => {
     const chunks = ['vocab-a1a2.json', 'vocab-b1.json', 'vocab-b2.json', 'vocab-c1.json', 'vocab-c2.json'];
     let total = 0;
