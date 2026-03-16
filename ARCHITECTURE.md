@@ -9,38 +9,42 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | File | Purpose |
 |------|---------|
 | **App modules** | |
-| `index.html` | 30+ screens, nav bar, tab bar, modal system |
-| `app-init.js` | Startup, profile loading, event delegation (ACTION_HANDLERS map), routing, search handlers |
-| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR), settings, TTS, toast error notifications |
-| `app-learn.js` | Today screen, verb learning/drill/quiz, grammar lessons, phrases, numbers, culture, results |
+| `index.html` | 30+ screens, nav bar, tab bar, modal system, share overlay |
+| `app-init.js` | Startup, profile loading, event delegation (ACTION_HANDLERS map), routing, search handlers, card keyboard support |
+| `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR), settings, TTS, toast error notifications, analytics tracking, screen announcer |
+| `app-learn.js` | Today screen, verb learning/drill/quiz, grammar lessons, phrases, numbers, culture, branching dialogues, results |
 | `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz (MC + production + gender), Learn New Words |
 | `placement.js` | IRT-adaptive placement test (Rasch model, per-domain scoring, Newton-Raphson MLE) |
-| `app-practice.js` | Export/import (JSON + CSV), admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
+| `app-practice.js` | Export/import (JSON + CSV), admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard with analytics, unified review queue |
 | `practice-reference.js` | Verb conjugation reference, conjugation rules/endings, pronunciation guide, reading comprehension, themed vocabulary, curriculum tracks |
-| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), quiz HTML helpers (`renderMCQuestionHTML`, `renderFIBQuestionHTML`), haptic feedback, `partialShuffle()` |
-| `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling (o>ue fix for preterite/imperfect subjunctive) |
-| `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters, input-validated) |
+| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), quiz HTML helpers (`renderMCQuestionHTML`, `renderFIBQuestionHTML`), haptic feedback, `partialShuffle()`, `aria-disabled` on disabled options |
+| `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling (o>ue fix for preterite/imperfect subjunctive). JSDoc typed. |
+| `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters, input-validated). JSDoc typed. |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search with prefix index |
-| `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout |
-| `sw.js` | Service worker: app shell precache + stale-while-revalidate for data + fetch timeout |
+| `styles.css` | Dark/light/auto themes, 4 color palettes, responsive mobile-first layout, 44px touch targets |
+| `sw.js` | Service worker: dual-cache (APP_CACHE + DATA_CACHE) with separate versioning, stale-while-revalidate, fetch timeout |
 | `manifest.json` | PWA metadata (maskable icons) |
 | **Build & Test** | |
-| `build.js` | esbuild-based build: minification, content-hash filenames, dist/ output, `escapeRegex()` helper, recursive `fs.cpSync`, per-file error handling |
-| `package.json` | Node.js project config (esbuild dev dependency) |
+| `build.js` | esbuild-based build: minification, content-hash filenames, dual-cache SW generation, `escapeRegex()` helper, recursive `fs.cpSync`, per-file error handling |
+| `jsconfig.json` | TypeScript/IDE type checking config (`checkJs: true`, ES2020, DOM libs) |
+| `playwright.config.js` | Playwright E2E test config (Chromium only, static file server) |
+| `package.json` | Node.js project config (esbuild, Playwright, serve as dev dependencies) |
 | `tests/run.js` | Minimal zero-dependency test runner |
-| `tests/test_*.js` | Unit tests for conjugation, FSRS, core utils, and vocab data validation |
+| `tests/test_*.js` | 142 unit tests for conjugation, FSRS, core utils, build helpers, quiz engine, placement, and vocab data validation |
+| `e2e/*.spec.js` | 14 Playwright E2E tests (navigation, learn flow, placement) |
 | **Data files** | |
 | `verbs.js` | 252 verbs with type, group, stem change, level, frequency |
 | `vocab-data.json` | ~28K words as JSON (monolithic fallback) |
 | `vocab-a1a2.json` | A1+A2 vocab (~2K words, 494KB — loaded first for fast startup) |
 | `vocab-b1.json` `vocab-b2.json` `vocab-c1.json` `vocab-c2.json` | Remaining vocab levels (loaded progressively in background) |
-| `vocab-categories.js` | 55+ vocabulary category definitions with titles and icons |
+| `vocab-categories.js` | 51 vocabulary category definitions with titles and icons |
 | `grammar.js` | 67 grammar lessons (A1–C2) with HTML content and quiz questions |
 | `phrases.js` | 260+ phrases across 21 situations with formality and reply |
 | `conversations.js` | 21 role-play dialogue scenarios with vocab and quiz |
+| `branching_dialogues.js` | 6 branching dialogue scenarios (A1–B2) with player choices and feedback |
 | `placement_questions.js` | 120 hand-crafted IRT-calibrated placement questions (A1–C2) |
 | `curriculum_tracks.js` | Guided curriculum tracks with leveled lesson sequences |
-| `reading.js` `reading_sat.js` | 36 reading comprehension passages (31 A1 + SAT-style) |
+| `reading.js` `reading_sat.js` | 51 reading comprehension passages (10 A1, 5 A2, 10 B1, 9 B2, 9 C1, 8 C2 + SAT-style) |
 | `cloze_passages.js` `dictation.js` | Cloze and dictation exercises |
 | `sentence_construction.js` `translation_drills.js` | Writing practice exercises |
 | `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises (49 phonetic pairs incl. b/v, intervocalic d, regional accents) |
@@ -59,18 +63,22 @@ User (browser)
   │
   ▼
 app-init.js ─── Event delegation (single click listener on document)
+  │              Card keyboard handler (Enter/Space for data-action cards)
   │              Vocab/grammar/verb search handlers (debounced, Worker-backed)
   │              Progressive vocab loading (A1-A2 first, then B1→C2)
   │              Lazy-loading: secondary scripts via requestIdleCallback
   │
   ├── app-core.js ──── Navigation: showScreen(id) / goBack() / switchTab(tab)
+  │                     Screen transition announcer (hidden aria-live region)
   │                     Progress state, FSRS helpers, recall/mastery computation
   │                     Settings (theme auto-detect, daily goals, streak freeze)
   │                     Bookmarks system (vocab, grammar, phrases)
   │                     Onboarding carousel for new users
   │                     Persistence (localStorage per profile)
+  │                     Analytics: session/quiz/feature/daily tracking
   │                     `pick()` guards against empty arrays
   │                     `bookmarkId()` handles malformed bookmarks
+  │                     `announceFlip()` shared flashcard flip announcer
   │                     TTS with regional voice selection + offline detection
   │                     TTS errors show one-time toast notification
   │                     IDB backup errors now logged
@@ -89,6 +97,7 @@ app-init.js ─── Event delegation (single click listener on document)
   │                      Grammar lessons with searchable browser
   │                      Phrases: browser with mastery indicators, flashcards, quiz
   │                      Numbers, culture modules, dialogue practice
+  │                      Branching dialogues: chat-style renderer, choice handling
   │                      Results screen
   │
   ├── placement.js ──── IRT adaptive placement test (Rasch model)
@@ -96,7 +105,7 @@ app-init.js ─── Event delegation (single click listener on document)
   │                      Newton-Raphson MLE, question selection
   │                      Post-test learning plan (A1-C2 module recommendations)
   │
-  ├── app-practice.js ── Stats dashboard, recall health, SRS card distribution
+  ├── app-practice.js ── Stats dashboard with analytics rendering
   │                       `VERB_DATA.length` used directly (not Object.keys)
   │                       Practice exercises: minimal pairs, phonetic pairs,
   │                         homophones, connectors, sentence build, cloze,
@@ -116,6 +125,7 @@ app-init.js ─── Event delegation (single click listener on document)
   │                      renderMCQuestionHTML / renderFIBQuestionHTML: shared quiz HTML
   │                      Haptic feedback (navigator.vibrate) on answers
   │                      HTML helpers (accent bar, progress bar)
+  │                      aria-disabled on quiz option disable
   │
   └── vocab-search-worker.js ── Web Worker for vocab search
                                  Builds prefix index (up to 4 chars) at init
@@ -134,11 +144,11 @@ All state is defined in `app-core.js` and accessible globally. The app modules r
 
 ### Navigation
 
-All screens are `<div>` elements in `index.html` with `display:none` by default. `showScreen(id)` hides the current screen, shows the target, and focuses the first `h1`/`h2`/`h3` heading for screen reader accessibility. The tab bar has 8 main tabs; Culture and Explore have dropdown submenus.
+All screens are `<div>` elements in `index.html` with `display:none` by default. `showScreen(id)` hides the current screen, shows the target, focuses the first `h1`/`h2`/`h3` heading for screen reader accessibility, and announces the transition via a hidden `aria-live="polite"` region (`#screen-announcer`). The tab bar has 8 main tabs; Culture and Explore have dropdown submenus.
 
 ### Event Handling
 
-A single delegated click handler on `document` routes all `data-action` attributes through the `ACTION_HANDLERS` map — a merged object of categorized handler groups (NAV_HANDLERS, VERB_HANDLERS, VOCAB_HANDLERS, QUIZ_HANDLERS, etc.) providing O(1) action lookup. Keyboard events handle Enter (submit/advance) and 1–4 (flashcard ratings).
+A single delegated click handler on `document` routes all `data-action` attributes through the `ACTION_HANDLERS` map — a merged object of categorized handler groups (NAV_HANDLERS, VERB_HANDLERS, VOCAB_HANDLERS, QUIZ_HANDLERS, BRANCHING_HANDLERS, etc.) providing O(1) action lookup. Keyboard events handle Enter (submit/advance), 1–4 (flashcard ratings), and Enter/Space on cards (`role="button" tabindex="0"`).
 
 ---
 
@@ -166,7 +176,7 @@ Vocabulary data (~28K entries) is split by CEFR level and loaded progressively:
 
 ### Other Data Files
 
-Secondary content modules (conversations, culture, exercises) are lazy-loaded via `requestIdleCallback` after app initialization. Each is appended as an async `<script>` tag. In production builds, script filenames are resolved via `window.__fileHash` (a hash map injected by `build.js`).
+Secondary content modules (conversations, culture, exercises, branching dialogues) are lazy-loaded via `requestIdleCallback` after app initialization. Each is appended as an async `<script>` tag. In production builds, script filenames are resolved via `window.__fileHash` (a hash map injected by `build.js`).
 
 ### Vocab Indexes
 
@@ -193,9 +203,10 @@ Types: `regular`, `irregular`, `stem-changing`, `reflexive`
 ```javascript
 { word: 'gato', english: 'cat', category: 'animals', pos: 'noun',
   gender: 'm', example: '¿Dónde está el gato?',
-  exampleEn: 'Where is the cat?', level: 'A1', freq: 50 }
+  exampleEn: 'Where is the cat?', level: 'A1', freq: 3,
+  cognate: false }
 ```
-POS values are full words (`noun`, `verb`, `adjective`, `adverb`, etc.) — 2,744 abbreviations were normalized. All nouns have gender values (`m`/`f`).
+POS values are full words (`noun`, `verb`, `adjective`, `adverb`, `phrase`, etc.) — 2,744 abbreviations were normalized. All nouns have gender values (`m`/`f`/`m/f`). 1,415 trivial cognates (word ≈ English after accent stripping) are flagged with `cognate: true`. 100 idiomatic verb phrases reclassified from `verb` to `phrase` POS. 441 A1/A2 examples rewritten to include the dictionary form of the word.
 
 ### Grammar Lesson (`grammar.js`)
 ```javascript
@@ -220,6 +231,22 @@ POS values are full words (`noun`, `verb`, `adjective`, `adverb`, etc.) — 2,74
   dialogue: [{ speaker: 0, spanish: '...', english: '...' }, ...],
   vocab: [{ word, english }], quiz: [{ prompt, options, correct }] }
 ```
+
+### Branching Dialogue (`branching_dialogues.js`)
+```javascript
+{ id: 'bd-1', title: 'En la cafetería', titleEn: 'At the café',
+  icon: '☕', level: 'A1', desc: 'Order a coffee and make small talk',
+  speakers: [{ name: 'Barista', role: 'npc' }, { name: 'Tú', role: 'player' }],
+  nodes: [
+    { id: 'start', speaker: 0, spanish: '...', english: '...', next: 'choice1' },
+    { id: 'choice1', speaker: 1, choices: [
+      { spanish: '...', english: '...', feedback: '...', next: 'resp1a' },
+    ]},
+    { id: 'end', type: 'end', spanish: '...', english: '...' }
+  ],
+  vocab: [{ word, english }] }
+```
+Nodes are either NPC lines (auto-advance with `next` pointer) or player choice points (`choices` array). End nodes mark dialogue completion.
 
 ### Placement Question (`placement_questions.js`)
 ```javascript
@@ -262,6 +289,7 @@ Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
   phraseFsrs: {},          // 'greet-1' → { s, d, lastRev }
   numberMastery: {},
   cultureDone: {},
+  bdDone: {},              // 'bd-1' → true (branching dialogues completed)
   practiceLog: {},         // 'YYYY-MM-DD' → number (XP earned that day)
   bookmarks: [],           // ['vocab:gato', 'grammar:gram-1', 'phrase:greet-1']
 
@@ -280,10 +308,69 @@ Returned by `newProgress()` in `app-core.js`, saved per-profile to localStorage:
     ttsRate: 1,            // 0.7 | 1 | 1.3
     dailyGoal: 200,        // 50 | 100 | 200 | 500 XP per day
   },
+
+  analytics: {
+    totalStudyTime: 0,       // milliseconds
+    sessions: [],            // last 30: { start, duration, screens[] }
+    quizzes: {},             // type → { completed, correct, incorrect, totalTime }
+    featureUsage: {},        // feature → visit count
+    dailyActivity: [],       // last 30 days: { date, xp, wordsLearned, studyTime, quizzes }
+  },
 }
 ```
 
 **Mastery levels**: 1 = learning, 2 = familiar, 3 = intermediate, 4 = mastered. Derived from FSRS stability via `masteryFromFsrs(s)`.
+
+---
+
+## Analytics (`app-core.js`)
+
+Privacy-first, local-only analytics system — zero network requests, all data in `progress.analytics`.
+
+### Tracking
+
+- **Sessions**: auto-start on profile load, pause/resume on `visibilitychange`, end on `beforeunload`. Last 30 sessions stored with start time, duration, and screens visited.
+- **Screen visits**: mapped to feature categories (vocab, verbs, grammar, etc.) via `analyticsTrackScreen()`.
+- **Quiz completions**: recorded via `analyticsTrackQuiz()` when `showResults()` fires — tracks type, correct/incorrect counts, and total time.
+- **New items**: counted when `reviewItem()` processes a first-ever FSRS rating.
+- **Daily activity**: 30-day rolling window of XP, words learned, study time, and quizzes per day.
+- **Saves**: debounced at 3 seconds via `_debouncedAnalyticsSave()` to avoid performance hits.
+
+### Display
+
+`renderAnalytics()` builds five cards in the Stats screen:
+1. **Study Time** — total time, session count, average session length
+2. **Daily XP** — 14-day CSS-only vertical bar chart with daily goal line
+3. **Quizzes By Type** — horizontal bar chart sorted by frequency, showing accuracy percentage
+4. **Most Used Features** — horizontal bar chart of feature visit counts
+5. **Learning Pace** — items learned, active days, items/day averages (all-time and 7-day)
+
+---
+
+## Branching Dialogues (`branching_dialogues.js`, `app-learn.js`)
+
+Interactive conversation practice where player choices affect the dialogue flow.
+
+### Data Structure
+
+Each dialogue has a flat `nodes` array. Nodes are keyed by `id` and come in three types:
+- **NPC nodes**: `{ speaker, spanish, english, next }` — auto-advance after a delay
+- **Player nodes**: `{ speaker, choices: [{ spanish, english, feedback, next }] }` — render buttons, wait for selection
+- **End nodes**: `{ type: 'end', spanish, english }` — show completion screen
+
+Branches can converge (multiple paths lead to the same node ID).
+
+### Renderer
+
+- `openBranchingDialogues()` — renders dialogue list with completion badges
+- `startBranchingDialogue(id)` — initializes session, shows first node
+- `_bdRenderNode()` — processes nodes: auto-advances NPC lines (500ms delay), shows player choice buttons
+- `bdPick(idx)` — handles player choice: adds message to chat, shows feedback, awards XP
+- `_bdShowEnd()` — completion screen with XP summary, vocab list, persists to `progress.bdDone`
+
+### UI
+
+Chat-style layout with NPC messages left-aligned and player messages right-aligned. CSS classes: `bd-msg`, `bd-msg-npc`, `bd-msg-player`, `bd-choice-btn`, `bd-feedback-box`.
 
 ---
 
@@ -299,7 +386,7 @@ When `autoSubmit: true`, tapping an option triggers submit immediately (skipping
 
 ### `processMCSubmit(opts)`
 
-Shared helper used by 6+ quiz types (minimal pairs, phonetic pairs, homophones, connectors, reading, phrases). Handles the common submit pattern: disable buttons, mark correct/incorrect CSS classes, render feedback, show next button, run FSRS review.
+Shared helper used by 6+ quiz types (minimal pairs, phonetic pairs, homophones, connectors, reading, phrases). Handles the common submit pattern: disable buttons, mark correct/incorrect CSS classes, set `aria-disabled="true"`, render feedback, show next button, run FSRS review.
 
 Config: `optionsSel`, `isCorrectBtn(btn)`, `feedbackId`, `nextBtnId`, `feedbackFn(isCorrect)`, `fsrs: { store, masteryStore, key }`.
 
@@ -323,7 +410,7 @@ Both `createQuizFlow.submit()` and `processMCSubmit()` call `_haptic(correct)` w
 
 ## FSRS Spaced Repetition (`fsrs.js`)
 
-Implementation of FSRS-4.5 with 17 trained weights. All functions include input validation clamps (rating to [1,4], stability to >0, difficulty to [1,10], recall to (0,1]) to prevent NaN propagation from invalid inputs.
+Implementation of FSRS-4.5 with 17 trained weights. All functions include input validation clamps (rating to [1,4], stability to >0, difficulty to [1,10], recall to (0,1]) to prevent NaN propagation from invalid inputs. Functions are annotated with JSDoc types for IDE support.
 
 **Per-item state**: `{ s: stability, d: difficulty, lastRev: timestamp }`
 
@@ -337,7 +424,7 @@ Implementation of FSRS-4.5 with 17 trained weights. All functions include input 
 **Review flow** (in `app-core.js`):
 1. User rates item 1–4 (Again/Hard/Good/Easy)
 2. `_saveRatingSnapshot()` captures pre-rating state for undo
-3. `reviewItem(fsrsStore, masteryStore, key, rating)` computes new s, d
+3. `reviewItem(fsrsStore, masteryStore, key, rating)` computes new s, d; triggers `analyticsTrackWordsLearned()` on first review
 4. Item is "due" when `fsrsR(s, elapsed) < 0.9`
 5. `getDueItems()` returns items needing review
 6. `undoLastRating()` restores the snapshot if user taps undo within the toast window
@@ -346,7 +433,7 @@ Implementation of FSRS-4.5 with 17 trained weights. All functions include input 
 
 ## Conjugation Engine (`conjugation.js`)
 
-Supports 19 tenses across 6 persons (yo, tú, él, nosotros, vosotros, ellos).
+Supports 19 tenses across 6 persons (yo, tú, él, nosotros, vosotros, ellos). Functions are annotated with JSDoc types for IDE support.
 
 **Tense categories**:
 - **Simple** (9): present, preterite, imperfect, future, conditional, subjunctive present/imperfect, imperative affirmative/negative
@@ -445,7 +532,7 @@ Mobile-first responsive design with max-width 640px centered container. Safe-are
 
 **Z-index scale**: nav/tab-bar=100, dropdowns=200, modals=1000, toasts=1100.
 
-**Accessibility**: All color combinations verified WCAG AA 4.5:1 contrast ratio. Interactive cards have `cursor:pointer`, hover lift (`translateY`), and shadow transitions. Flashcard rating buttons use semantic `<button>` elements. Flashcard flip uses `aria-live="polite"` announcer for screen readers. Quiz feedback divs have `aria-live="polite"`. Progress bars include `aria-valuenow` updates. Tabs use `aria-controls`. Focus-visible styling on tab elements. Grammar search input has `aria-label`. Share modal has proper dialog ARIA attributes. Arrow key navigation guards empty option lists.
+**Accessibility**: All color combinations verified WCAG AA 4.5:1 contrast ratio. Dark theme `--text2` set to `#cdd4e0` for improved contrast. Interactive cards have `role="button" tabindex="0"`, `cursor:pointer`, hover lift (`translateY`), shadow transitions, and `:focus-visible` outlines. All touch targets (nav buttons, accent buttons, tab bar) are ≥44px. Flashcard rating buttons use semantic `<button>` elements. Flashcard flip uses shared `announceFlip()` with `aria-live` announcer. Quiz feedback divs have `aria-live="assertive"`. Disabled quiz options have `aria-disabled="true"`. Progress bars include `aria-valuenow` updates. Tabs use `aria-controls`. Focus-visible styling on tab elements, cards, nav buttons. Grammar search input has `aria-label`. Share modal/overlay has proper dialog ARIA attributes, focus trap, and `aria-hidden` toggle. Arrow key navigation guards empty option lists. Screen transitions announced via hidden `aria-live` region. Nav streak has `aria-live="polite"`. Skip-to-content link. `@media prefers-reduced-motion` support. `.writing-area` and `.cloze-blank` use `:focus-visible`.
 
 Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must appear **after** `.quiz-option.selected` in the stylesheet to ensure answer highlighting overrides selection styling.
 
@@ -453,14 +540,16 @@ Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must 
 
 ## Service Worker (`sw.js`)
 
-Two-tier caching strategy:
+Dual-cache system with independent versioning:
 
-- **App shell** (~500KB) — precached on install: HTML, CSS, core JS modules, manifest, vocab search worker
-- **Data files** (~10MB+) — cached on first use via stale-while-revalidate: split vocab JSON files, grammar, phrases, all content modules
+- **`APP_CACHE`** (~500KB) — precached on install: HTML, CSS, core JS modules, manifest, vocab search worker
+- **`DATA_CACHE`** (~10MB+) — cached on first use via stale-while-revalidate: split vocab JSON files, grammar, phrases, branching dialogues, all content modules
 
-On fetch, the cached version is served immediately while a network fetch runs in the background to update the cache. Fetch requests have timeouts (5 seconds for data files, 10 seconds for app shell) — on timeout, the cached response is returned to avoid indefinite waits on slow connections.
+`KNOWN_CACHES = [APP_CACHE, DATA_CACHE]` — on activate, any cache not in this list is deleted.
 
-In development, the cache name is manually versioned (e.g., `leccion-diaria-v18`). In production builds, `build.js` generates a content-based hash (e.g., `leccion-diaria-ef2b709a`) and rewrites the SW with hashed filenames.
+On fetch, `isDataFile(url)` routes requests to the correct cache. The cached version is served immediately while a network fetch runs in the background to update the cache. Fetch requests have timeouts (5 seconds for data files, 10 seconds for app shell) — on timeout, the cached response is returned to avoid indefinite waits on slow connections.
+
+In development, cache names are manually versioned (e.g., `leccion-app-v1`, `leccion-data-v1`). In production builds, `build.js` computes separate content hashes for app shell and data files (e.g., `leccion-app-90810069`, `leccion-data-e9bd889a`). This means app shell code changes don't force re-download of large data files, and vice versa.
 
 ---
 
@@ -520,29 +609,39 @@ No build step needed — serve source files directly via `./serve.sh` or any HTT
 
 `npm run build` (or `node build.js`) produces an optimized `dist/` directory:
 
-1. **Minification** — All JS (via esbuild, with prominent fallback warning) and CSS are minified (~300KB savings, ~22% CSS reduction); per-file try/catch with file name in error messages
+1. **Minification** — All JS (via esbuild, with prominent fallback warning) and CSS are minified (~320KB savings, ~21% CSS reduction); per-file try/catch with file name in error messages
 2. **Cache-busting** — Each file gets a content hash in its filename (e.g., `app-core.d50c0d2d.js`), using `escapeRegex()` helper for safe filename regex replacement
 3. **HTML rewriting** — `index.html` is updated with hashed filenames and whitespace-collapsed
-4. **SW generation** — A new `sw.js` is generated with hashed filenames, fetch timeouts, and a content-based cache version
+4. **Dual-cache SW generation** — A new `sw.js` is generated with hashed filenames, fetch timeouts, and separate content-based version hashes for app shell (`APP_CACHE`) and data files (`DATA_CACHE`)
 5. **Lazy-script resolution** — A `window.__fileHash` map is injected so `app-init.js` can resolve lazy-loaded scripts and data files to their hashed names
 6. **Static copies** — Split vocab JSON files, manifest, and icons are copied via recursive `fs.cpSync`
 
 ### Testing
 
-`npm test` (or `node tests/run.js`) runs 108 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
-- **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes (incl. dormir o>ue), reflexives, compounds
+**Unit tests**: `npm test` (or `node tests/run.js`) runs 142 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
+- **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes (incl. dormir o>ue), reflexives, compounds, unknown verbs, bounds checking
 - **FSRS**: stability, difficulty, recall probability, mastery level mapping
-- **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping, `pick()`, `bookmarkId()`/`bookmarkType()`, `shuffle()`, `pickN()`
+- **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping, `pick()`, `bookmarkId()`/`bookmarkType()`, `shuffle()`, `pickN()`, localStorage round-trips (save/load, empty, corrupt JSON)
 - **Placement**: IRT probability, theta updates, question selection, cognate detection, levenshtein distance
 - **Quiz engine**: `createQuizFlow` API, score tracking, `processMCSubmit`, accent bar, progress bar
-- **Vocab data**: field validation, CEFR levels, category presence, split file integrity
+- **Build helpers**: `contentHash()` determinism/length/hex, `escapeRegex()` for all metacharacters
+- **Vocab data**: field validation, CEFR levels, POS normalization, noun genders, category presence, frequency range, split file integrity
+
+**E2E tests**: `npm run test:e2e` runs 14 Playwright tests with Chromium:
+- **Navigation** (6): app loads clean, stat cards + tab bar visible, tab navigation (Learn, Practice, Home), back button
+- **Learn flow** (5): navigate to Vocabulary, see categories, open category, start quiz with options, click answer and get feedback
+- **Placement** (3): reach level selection, start A1 test, answer question and verify progress
+
+### Type Checking
+
+`jsconfig.json` enables VS Code / IDE type checking with `checkJs: true`. JSDoc annotations on `fsrs.js` and `conjugation.js` provide type-aware autocompletion, hover info, and basic error detection. `strict: false` allows gradual migration.
 
 ## Deployment
 
 GitHub Pages deployment via `.github/workflows/deploy.yml`. On push to `main`, the workflow:
 1. Installs Node.js dependencies (`npm install`)
 2. Runs the test suite (`npm test`)
-3. Builds to `dist/` (`npm run build`) — minified, cache-busted output
+3. Builds to `dist/` (`npm run build`) — minified, cache-busted output with dual-cache SW
 4. Deploys `dist/` to GitHub Pages
 
 ---
@@ -553,7 +652,7 @@ GitHub Pages deployment via `.github/workflows/deploy.yml`. On push to `main`, t
 Add to `GRAMMAR_DATA` in `grammar.js`. Include `id`, `title`, `titleEn`, `level`, `order`, `content` (HTML), and `quiz` (array of 5 questions with `type`, `question`, `answer`, `options`, `explanation`).
 
 ### New vocabulary
-Add entries to `vocab-data.json`. If creating a new category, also add it to `VOCAB_CATEGORIES` in `vocab-categories.js`. After editing, re-split the vocab data by running `node -e` to regenerate `vocab-a1a2.json`, `vocab-b1.json`, `vocab-b2.json`, `vocab-c1.json`, and `vocab-c2.json` (see `build.js` or the split script used during development).
+Add entries to `vocab-data.json`. If creating a new category, also add it to `VOCAB_CATEGORIES` in `vocab-categories.js`. After editing, re-split the vocab data by running `node -e` to regenerate `vocab-a1a2.json`, `vocab-b1.json`, `vocab-b2.json`, `vocab-c1.json`, and `vocab-c2.json` (see `build.js` or the split script used during development). Ensure: POS is a full word, nouns have gender, examples contain the dictionary form of the word, freq is 1–6.
 
 ### New verbs
 Add to `VERB_DATA` in `verbs.js`. The conjugation engine handles regular verbs automatically. For irregular verbs, add overrides to `FULL_IRREGULARS` or `IRREGULAR_FUTURE_STEMS` in `conjugation.js`.
@@ -563,3 +662,9 @@ Add to `PLACEMENT_QUESTIONS` in `placement_questions.js`. Set `difficulty` on th
 
 ### New culture module
 Create a new `modulename.js` file following the culture item schema. Add the `<script>` tag to `index.html` (before the app modules), add it to the `DATA_FILES` set in `sw.js`, and register it in the `CULTURE_MODULES` object in `app-learn.js`.
+
+### New branching dialogue
+Add a new entry to `BRANCHING_DIALOGUES` in `branching_dialogues.js`. Follow the node structure: NPC nodes with `next`, player nodes with `choices` array, and an end node with `type: 'end'`. Each choice needs `spanish`, `english`, `feedback`, and `next` (node ID). Include a `vocab` array for the completion screen.
+
+### New reading passage
+Add to `READING_DATA` in `reading.js`. Include `id` (sequential), `title`, `titleEn`, `level`, `text` (Spanish passage), `vocab` array, and `questions` array with `prompt`, `options`, and `correct` index. Update the passage count comment at the top of the file.

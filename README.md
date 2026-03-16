@@ -7,23 +7,26 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **Adaptive Placement Test** — IRT-based (Rasch model) assessment that determines your grammar and vocabulary levels independently, so practice starts at the right difficulty
 - **Spaced Repetition** — FSRS-4.5 algorithm schedules reviews at optimal intervals for long-term retention across all content types
 - **Verb Conjugation** — 252 verbs across 19 tenses (simple, compound, progressive) with a full conjugation engine handling irregulars, stem changes, and spelling rules
-- **Vocabulary** — 28,000+ words across 55+ categories with translations, example sentences, and CEFR levels; normalized POS tags and noun genders; searchable browser with progress indicators
+- **Vocabulary** — 28,000+ words across 51 categories with translations, example sentences, and CEFR levels; normalized POS tags and noun genders; cognate flagging; searchable browser with progress indicators
 - **Grammar** — 67 lessons from A1 to C2 with interactive quizzes and searchable lesson browser
 - **Phrases & Conversations** — 260+ phrases across 21 situations with mastery tracking, plus role-play dialogues
+- **Branching Dialogues** — 6 interactive conversation scenarios (A1–B2) with player choices, branching paths, feedback per choice, and XP tracking
 - **Pronunciation** — Minimal pairs, homophones, 49 phonetic pairs (b/v distinction, intervocalic d, regional accents), and text-to-speech with regional voice selection (Latin American / Castilian)
-- **Reading & Listening** — 36 reading passages, cloze passages, dictation, SAT-style reading comprehension, translation drills, and sentence construction
+- **Reading & Listening** — 51 reading passages (A1–C2), cloze passages, dictation, SAT-style reading comprehension, translation drills, and sentence construction
 - **Culture** — Modules on recipes, music, movies, poetry, sports, proverbs, folktales, festivals, history, travel, trivia, and idioms
 - **CEFR Curriculum** — Comprehensive view of what you need to learn at each level with mastery tracking across vocabulary, verbs, and grammar
+- **Analytics** — Local-only stats dashboard: total study time, 14-day daily XP chart, quiz completion by type with accuracy, feature usage counts, and learning pace metrics
 - **Progress Tracking** — Daily XP goals with progress bar, streaks with freeze token protection, mastery levels, recall probability display, SRS card state distribution, tense/grammar mastery breakdowns, and per-level CEFR mastery percentages
 - **Bookmarks** — Star any vocab word, grammar lesson, or phrase for quick access from the Today screen
 - **Onboarding** — 4-step welcome carousel for new users explaining SRS, goals, and navigation, plus personalized learning plan after placement test
 - **Undo Ratings** — Undo accidental SRS ratings within a toast notification window
 - **CSV Export** — Export all progress data as CSV from settings
-- **Offline Support** — Service worker caches app shell on install, data files on first use; TTS buttons gray out when offline and re-enable on reconnect
+- **Offline Support** — Service worker with dual-cache system (app shell + data files cached separately with independent version hashes); TTS buttons gray out when offline and re-enable on reconnect
 - **Customization** — Dark/light/auto themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed, configurable daily goals
-- **Accessibility** — WCAG AA 4.5:1 contrast verified on all color combinations, semantic buttons, `aria-live` quiz feedback and flashcard flip announcer, `aria-valuenow` progress bars, focus-visible styling, focus management on screen transitions, ARIA dialog attributes on share modal
+- **Accessibility** — WCAG AA contrast verified, 44px touch targets, semantic button roles on all interactive cards, `aria-live="assertive"` quiz feedback, flashcard flip announcements, screen transition announcer, focus-visible styling, focus traps on modals/overlays, `aria-disabled` on quiz options, skip-to-content link, reduced motion support
 - **Security** — Content Security Policy, input-validated FSRS algorithm, bounds-checked conjugation engine, null-safe DOM operations throughout, `pick()` empty-array guard, `bookmarkId()` malformed-input handling, `parseInt` radix enforced throughout
 - **Performance** — Progressive vocab loading (A1-A2 first at 494KB, B1-C2 in parallel), Web Worker for search, batch DOM updates via `data-i18n` attributes, service worker with fetch timeouts, esbuild minification with content-hash cache-busting
+- **Type Safety** — JSDoc type annotations on core modules (fsrs.js, conjugation.js) with `jsconfig.json` enabling IDE type checking
 
 ## Running Locally
 
@@ -43,11 +46,12 @@ To create a minified, cache-busted build:
 
 ```bash
 npm install
-npm test       # 108 unit tests
-npm run build  # outputs to dist/
+npm test          # 142 unit tests
+npm run test:e2e  # 14 Playwright E2E tests
+npm run build     # outputs to dist/
 ```
 
-The build produces a `dist/` directory with content-hashed filenames, minified JS/CSS, and an auto-generated service worker. This is what gets deployed to GitHub Pages.
+The build produces a `dist/` directory with content-hashed filenames, minified JS/CSS, and an auto-generated service worker with separate app/data cache versions. This is what gets deployed to GitHub Pages.
 
 ### Alternative Dev Servers
 
@@ -69,34 +73,39 @@ php -S localhost:8000
 | **App modules** | |
 | `index.html` | All screens, navigation, modal system |
 | `app-init.js` | Startup, event delegation (ACTION_HANDLERS map), routing, search |
-| `app-core.js` | Progress state, FSRS helpers, settings, TTS, toast notifications, undo |
-| `app-learn.js` | Today screen, verbs, grammar, phrases, culture, results |
+| `app-core.js` | Progress state, FSRS helpers, settings, TTS, toast notifications, undo, analytics |
+| `app-learn.js` | Today screen, verbs, grammar, phrases, culture, branching dialogues, results |
 | `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz |
 | `placement.js` | IRT-adaptive placement test, personalized learning plans |
 | `app-practice.js` | Practice exercises, stats dashboard, review queue, CSV export |
 | `practice-reference.js` | Verb reference, reading, pronunciation, curriculum |
 | `quiz-engine.js` | Shared quiz rendering, HTML helpers, auto-submit, haptic feedback |
-| `fsrs.js` | FSRS-4.5 spaced repetition algorithm |
-| `conjugation.js` | Verb conjugation engine (19 tenses, irregulars) |
+| `fsrs.js` | FSRS-4.5 spaced repetition algorithm (JSDoc typed) |
+| `conjugation.js` | Verb conjugation engine (19 tenses, irregulars) (JSDoc typed) |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search |
 | `styles.css` | Dark/light/auto themes, 4 palettes, responsive layout |
-| `sw.js` | Service worker for offline caching |
+| `sw.js` | Service worker: dual-cache (app shell + data) with separate versioning |
+| `manifest.json` | PWA metadata (maskable icons) |
 | **Build & Test** | |
-| `build.js` | esbuild-based build: minification, cache-busting, dist/ |
+| `build.js` | esbuild-based build: minification, cache-busting, dual-cache SW generation |
+| `jsconfig.json` | TypeScript/IDE type checking config (checkJs, ES2020) |
+| `playwright.config.js` | Playwright E2E test configuration (Chromium) |
 | `package.json` | Node.js project config |
-| `tests/` | Unit tests for conjugation, FSRS, core utils, vocab data |
+| `tests/` | 142 unit tests for conjugation, FSRS, core utils, build helpers, vocab data |
+| `e2e/` | 14 Playwright E2E tests (navigation, learn flow, placement) |
 | **Data files** | |
 | `vocab-a1a2.json` | A1+A2 vocab (~2K words, loaded first for fast startup) |
 | `vocab-b1.json` ... `vocab-c2.json` | B1–C2 vocab (loaded progressively) |
 | `vocab-data.json` | ~28K words (monolithic fallback) |
-| `vocab-categories.js` | 55+ vocabulary category definitions |
+| `vocab-categories.js` | 51 vocabulary category definitions |
 | `verbs.js` | 252 verbs with type, group, level, frequency |
 | `grammar.js` | 67 grammar lessons (A1–C2) with quizzes |
 | `phrases.js` | 260+ phrases across 21 situations |
 | `conversations.js` | 21 role-play dialogue scenarios |
+| `branching_dialogues.js` | 6 branching dialogue scenarios (A1–B2) with player choices |
 | `placement_questions.js` | 120 IRT-calibrated placement questions |
 | `curriculum_tracks.js` | Guided curriculum tracks |
-| `reading.js` `reading_sat.js` | 36 reading comprehension passages |
+| `reading.js` `reading_sat.js` | 51 reading comprehension passages (A1–C2) |
 | `cloze_passages.js` `dictation.js` | Cloze and dictation exercises |
 | `sentence_construction.js` `translation_drills.js` | Writing practice |
 | `minimal_pairs.js` `homophones.js` `phonetic_pairs.js` | Pronunciation exercises (49 phonetic pairs) |
