@@ -2,7 +2,7 @@
 
 // ════════════════════════════════════════
 //  SPANISH PHONETIC PAIR DRILLS
-//  3 categories, 25 items
+//  6 categories, 49 items
 // ════════════════════════════════════════
 
 const PHONETIC_PAIR_CATEGORIES = {
@@ -35,6 +35,36 @@ const PHONETIC_PAIR_CATEGORIES = {
     ipa: ['/ʎ/', '/ʝ/'],
     tip: 'Even if you pronounce them the same (yeísmo), knowing the spelling difference is essential. LL pairs often share pronunciation but never meaning.',
     tipEs: 'Aunque los pronuncies igual (yeísmo), la diferencia ortográfica es fundamental. Los pares con LL comparten pronunciación pero nunca significado.',
+  },
+  b_v: {
+    id: 'b_v',
+    label: 'B vs V',
+    labelEs: 'B contra V',
+    description: 'In Spanish, B and V are pronounced identically. After a pause or nasal (m/n), both are the bilabial plosive [b]. Between vowels, both weaken to the bilabial fricative [β]. The distinction is purely orthographic.',
+    descriptionEs: 'En español, B y V se pronuncian igual. Después de pausa o nasal (m/n), ambas son la oclusiva bilabial [b]. Entre vocales, ambas se debilitan a la fricativa bilabial [β]. La diferencia es solo ortográfica.',
+    ipa: ['[b]', '[β]'],
+    tip: 'Never pronounce Spanish V as a labiodental (English V with teeth on lip). Both B and V use both lips. After a pause or nasal consonant, they are a hard [b]. Between vowels, the lips barely touch — this is the fricative [β].',
+    tipEs: 'Nunca pronuncies la V española como labiodental (la V inglesa con dientes sobre labio). Tanto B como V usan ambos labios. Después de pausa o consonante nasal, son una [b] fuerte. Entre vocales, los labios apenas se tocan — esto es la fricativa [β].',
+  },
+  d_intervocalic: {
+    id: 'd_intervocalic',
+    label: 'D: Plosive vs Fricative',
+    labelEs: 'D: Oclusiva contra Fricativa',
+    description: 'Spanish D has two allophones: the plosive [d] after a pause, nasal, or lateral (l), and the fricative [ð] (like English "th" in "the") between vowels and in most other positions. Many learners miss this softening.',
+    descriptionEs: 'La D española tiene dos alófonos: la oclusiva [d] después de pausa, nasal o lateral (l), y la fricativa [ð] (como la "th" inglesa en "the") entre vocales y en la mayoría de otras posiciones. Muchos estudiantes no captan este suavizamiento.',
+    ipa: ['[d]', '[ð]'],
+    tip: 'After a pause or n/l, press your tongue firmly behind your upper teeth for a hard [d]. Between vowels, barely touch your tongue to the teeth and let air pass through — like "th" in English "the." In casual speech, final -ado often sounds like [-aðo] or even [-ao].',
+    tipEs: 'Después de pausa o n/l, presiona la lengua firmemente detrás de los dientes superiores para una [d] fuerte. Entre vocales, apenas toca la lengua los dientes y deja pasar el aire — como "th" en inglés "the." En habla informal, -ado final suena como [-aðo] o incluso [-ao].',
+  },
+  regional_notes: {
+    id: 'regional_notes',
+    label: 'Regional Accent Notes',
+    labelEs: 'Notas de acento regional',
+    description: 'Key pronunciation differences between Latin American and Castilian (Spain) Spanish. This category provides awareness, not drills — no single accent is "correct."',
+    descriptionEs: 'Diferencias clave de pronunciación entre el español latinoamericano y el castellano (España). Esta categoría ofrece conciencia, no ejercicios — ningún acento es "correcto."',
+    ipa: [],
+    tip: 'Seseo (Latin America): C before e/i and Z are always [s]. Distinción (most of Spain): C before e/i and Z are [θ] ("th" in "think"), while S remains [s]. Yeísmo (most regions): LL and Y merge to [ʝ]. In Argentina/Uruguay, both become [ʃ] or [ʒ] (like "sh" or "zh"). Voseo (Argentina, Central America, etc.): "vos" replaces "tú," affecting verb stress — "vos tenés" vs "tú tienes," "vos hablás" vs "tú hablas."',
+    tipEs: 'Seseo (Latinoamérica): C ante e/i y Z siempre son [s]. Distinción (mayor parte de España): C ante e/i y Z son [θ] ("th" en "think"), mientras S sigue siendo [s]. Yeísmo (la mayoría de regiones): LL e Y se fusionan en [ʝ]. En Argentina/Uruguay, ambas se convierten en [ʃ] o [ʒ] (como "sh" o "zh"). Voseo (Argentina, Centroamérica, etc.): "vos" reemplaza a "tú," afectando la acentuación verbal — "vos tenés" vs "tú tienes," "vos hablás" vs "tú hablas."',
   },
 };
 
@@ -361,5 +391,256 @@ const PHONETIC_PAIRS = [
     meaningB: 'valley, basin', meaningBEs: 'depresión geográfica del terreno',
     exampleA: 'La ___ de sopa está en el fuego.', exampleAEn: 'The soup pot is on the stove.',
     exampleB: 'La ___ del río es muy fértil.', exampleBEn: 'The river basin is very fertile.',
+  },
+
+  // ──────────────────────────────────────
+  //  B vs V  (10 pairs)
+  //  B and V are pronounced identically in Spanish.
+  //  [b] after pause or nasal; [β] between vowels.
+  // ──────────────────────────────────────
+
+  // A1 — High-frequency words showing B/V are the same sound
+  {
+    id: 'pp-26', category: 'b_v', level: 'A1',
+    wordA: 'baca', wordB: 'vaca',
+    ipaA: '/ˈba.ka/', ipaB: '/ˈba.ka/',
+    meaningA: 'roof rack (on a car)', meaningAEs: 'portaequipajes del techo del coche',
+    meaningB: 'cow', meaningBEs: 'animal bovino hembra',
+    exampleA: 'Pon las maletas en la ___ del coche.', exampleAEn: 'Put the suitcases on the car roof rack.',
+    exampleB: 'La ___ está en el campo.', exampleBEn: 'The cow is in the field.',
+  },
+  {
+    id: 'pp-27', category: 'b_v', level: 'A1',
+    wordA: 'bienes', wordB: 'vienes',
+    ipaA: '/ˈbje.nes/', ipaB: '/ˈbje.nes/',
+    meaningA: 'goods, assets', meaningAEs: 'propiedades, posesiones',
+    meaningB: 'you come (from venir)', meaningBEs: 'segunda persona de venir',
+    exampleA: 'Tiene muchos ___ inmuebles.', exampleAEn: 'He has many real estate assets.',
+    exampleB: '¿___ a la fiesta mañana?', exampleBEn: 'Are you coming to the party tomorrow?',
+  },
+  {
+    id: 'pp-28', category: 'b_v', level: 'A1',
+    wordA: 'bello', wordB: 'vello',
+    ipaA: '/ˈbe.ʝo/', ipaB: '/ˈbe.ʝo/',
+    meaningA: 'beautiful', meaningAEs: 'hermoso',
+    meaningB: 'body hair, fuzz', meaningBEs: 'pelo fino del cuerpo',
+    exampleA: 'Es un paisaje muy ___.', exampleAEn: 'It is a very beautiful landscape.',
+    exampleB: 'Tiene ___ en los brazos.', exampleBEn: 'He has hair on his arms.',
+  },
+
+  // A2 — Common words, reinforcing identical pronunciation
+  {
+    id: 'pp-29', category: 'b_v', level: 'A2',
+    wordA: 'barón', wordB: 'varón',
+    ipaA: '/ba.ˈɾon/', ipaB: '/ba.ˈɾon/',
+    meaningA: 'baron (noble title)', meaningAEs: 'título nobiliario',
+    meaningB: 'male, man', meaningBEs: 'persona de sexo masculino',
+    exampleA: 'El ___ vivía en un castillo.', exampleAEn: 'The baron lived in a castle.',
+    exampleB: 'Es un ___ de cuarenta años.', exampleBEn: 'He is a forty-year-old male.',
+  },
+  {
+    id: 'pp-30', category: 'b_v', level: 'A2',
+    wordA: 'botar', wordB: 'votar',
+    ipaA: '/bo.ˈtaɾ/', ipaB: '/bo.ˈtaɾ/',
+    meaningA: 'to bounce; to throw away', meaningAEs: 'hacer rebotar; tirar a la basura',
+    meaningB: 'to vote', meaningBEs: 'emitir un voto',
+    exampleA: 'No ___ la basura en la calle.', exampleAEn: 'Don\'t throw trash in the street.',
+    exampleB: 'Mañana vamos a ___ en las elecciones.', exampleBEn: 'Tomorrow we are going to vote in the elections.',
+  },
+  {
+    id: 'pp-31', category: 'b_v', level: 'A2',
+    wordA: 'tubo', wordB: 'tuvo',
+    ipaA: '/ˈtu.βo/', ipaB: '/ˈtu.βo/',
+    meaningA: 'tube, pipe', meaningAEs: 'cilindro hueco',
+    meaningB: 'he/she had (from tener)', meaningBEs: 'tercera persona pretérito de tener',
+    exampleA: 'El ___ de agua está roto.', exampleAEn: 'The water pipe is broken.',
+    exampleB: 'Ella ___ un buen día.', exampleBEn: 'She had a good day.',
+  },
+
+  // B1 — Less frequent but illustrative
+  {
+    id: 'pp-32', category: 'b_v', level: 'B1',
+    wordA: 'sabia', wordB: 'savia',
+    ipaA: '/ˈsa.βja/', ipaB: '/ˈsa.βja/',
+    meaningA: 'wise (feminine)', meaningAEs: 'que tiene sabiduría',
+    meaningB: 'sap (of a plant)', meaningBEs: 'líquido que circula por las plantas',
+    exampleA: 'Mi abuela es una mujer muy ___.', exampleAEn: 'My grandmother is a very wise woman.',
+    exampleB: 'La ___ sube por el tronco del árbol.', exampleBEn: 'The sap rises through the tree trunk.',
+  },
+  {
+    id: 'pp-33', category: 'b_v', level: 'B1',
+    wordA: 'rebelar', wordB: 'revelar',
+    ipaA: '/re.βe.ˈlaɾ/', ipaB: '/re.βe.ˈlaɾ/',
+    meaningA: 'to rebel', meaningAEs: 'sublevarse contra la autoridad',
+    meaningB: 'to reveal; to develop (photos)', meaningBEs: 'descubrir algo oculto; procesar fotos',
+    exampleA: 'El pueblo decidió ___ contra el tirano.', exampleAEn: 'The people decided to rebel against the tyrant.',
+    exampleB: 'No quiso ___ el secreto.', exampleBEn: 'He refused to reveal the secret.',
+  },
+  {
+    id: 'pp-34', category: 'b_v', level: 'B1',
+    wordA: 'acerbo', wordB: 'acervo',
+    ipaA: '/a.ˈseɾ.βo/', ipaB: '/a.ˈseɾ.βo/',
+    meaningA: 'bitter, harsh', meaningAEs: 'áspero, cruel',
+    meaningB: 'heritage, collection', meaningBEs: 'conjunto de bienes culturales',
+    exampleA: 'Hizo un comentario ___ sobre la situación.', exampleAEn: 'He made a bitter comment about the situation.',
+    exampleB: 'El ___ cultural de México es enorme.', exampleBEn: 'Mexico\'s cultural heritage is enormous.',
+  },
+  {
+    id: 'pp-35', category: 'b_v', level: 'B1',
+    wordA: 'grabar', wordB: 'gravar',
+    ipaA: '/gɾa.ˈβaɾ/', ipaB: '/gɾa.ˈβaɾ/',
+    meaningA: 'to record; to engrave', meaningAEs: 'registrar sonido/imagen; tallar',
+    meaningB: 'to tax, to levy', meaningBEs: 'imponer un impuesto',
+    exampleA: 'Quiero ___ esta canción en el estudio.', exampleAEn: 'I want to record this song in the studio.',
+    exampleB: 'El gobierno decidió ___ las importaciones.', exampleBEn: 'The government decided to tax imports.',
+  },
+
+  // ──────────────────────────────────────
+  //  Intervocalic D  (8 pairs)
+  //  Hard [d] after pause/nasal/l vs soft [ð] between vowels.
+  // ──────────────────────────────────────
+
+  // A1 — Show the same word with [d] vs [ð] depending on position
+  {
+    id: 'pp-36', category: 'd_intervocalic', level: 'A1',
+    wordA: 'donde', wordB: 'todo',
+    ipaA: '/ˈdon.de/', ipaB: '/ˈto.ðo/',
+    meaningA: 'where', meaningAEs: 'adverbio de lugar',
+    meaningB: 'all, everything', meaningBEs: 'la totalidad',
+    exampleA: '¿___ está la biblioteca?', exampleAEn: 'Where is the library?',
+    exampleB: '___ está listo para la fiesta.', exampleBEn: 'Everything is ready for the party.',
+  },
+  {
+    id: 'pp-37', category: 'd_intervocalic', level: 'A1',
+    wordA: 'falda', wordB: 'nada',
+    ipaA: '/ˈfal.da/', ipaB: '/ˈna.ða/',
+    meaningA: 'skirt', meaningAEs: 'prenda de vestir',
+    meaningB: 'nothing', meaningBEs: 'ausencia total',
+    exampleA: 'Lleva una ___ azul.', exampleAEn: 'She is wearing a blue skirt.',
+    exampleB: 'No hay ___ en la nevera.', exampleBEn: 'There is nothing in the fridge.',
+  },
+  {
+    id: 'pp-38', category: 'd_intervocalic', level: 'A1',
+    wordA: 'dedo', wordB: 'lado',
+    ipaA: '/ˈde.ðo/', ipaB: '/ˈla.ðo/',
+    meaningA: 'finger', meaningAEs: 'parte de la mano',
+    meaningB: 'side', meaningBEs: 'costado, parte lateral',
+    exampleA: 'Me corté el ___ con un cuchillo.', exampleAEn: 'I cut my finger with a knife.',
+    exampleB: 'El banco está al otro ___ de la calle.', exampleBEn: 'The bank is on the other side of the street.',
+  },
+
+  // A2 — The -ado/-ido ending pattern
+  {
+    id: 'pp-39', category: 'd_intervocalic', level: 'A2',
+    wordA: 'cansado', wordB: 'perdido',
+    ipaA: '/kan.ˈsa.ðo/', ipaB: '/peɾ.ˈði.ðo/',
+    meaningA: 'tired', meaningAEs: 'fatigado',
+    meaningB: 'lost', meaningBEs: 'extraviado',
+    exampleA: 'Estoy muy ___ después del trabajo.', exampleAEn: 'I am very tired after work.',
+    exampleB: 'El gato está ___ desde ayer.', exampleBEn: 'The cat has been lost since yesterday.',
+  },
+  {
+    id: 'pp-40', category: 'd_intervocalic', level: 'A2',
+    wordA: 'mercado', wordB: 'helado',
+    ipaA: '/meɾ.ˈka.ðo/', ipaB: '/e.ˈla.ðo/',
+    meaningA: 'market', meaningAEs: 'lugar donde se compran cosas',
+    meaningB: 'ice cream; frozen', meaningBEs: 'postre helado; muy frío',
+    exampleA: 'Compré fruta en el ___.', exampleAEn: 'I bought fruit at the market.',
+    exampleB: 'Quiero un ___ de chocolate.', exampleBEn: 'I want a chocolate ice cream.',
+  },
+
+  // B1 — Contrasting the two allophones in one word
+  {
+    id: 'pp-41', category: 'd_intervocalic', level: 'B1',
+    wordA: 'dado', wordB: 'dedicado',
+    ipaA: '/ˈda.ðo/', ipaB: '/de.ði.ˈka.ðo/',
+    meaningA: 'die (singular of dice); given', meaningAEs: 'cubo para juegos; participio de dar',
+    meaningB: 'dedicated', meaningBEs: 'que pone empeño en algo',
+    exampleA: 'Lanza el ___ y avanza tres casillas.', exampleAEn: 'Roll the die and move forward three spaces.',
+    exampleB: 'Es un profesor muy ___.', exampleBEn: 'He is a very dedicated teacher.',
+  },
+  {
+    id: 'pp-42', category: 'd_intervocalic', level: 'B1',
+    wordA: 'duda', wordB: 'ciudad',
+    ipaA: '/ˈdu.ða/', ipaB: '/sju.ˈðað/',
+    meaningA: 'doubt', meaningAEs: 'incertidumbre',
+    meaningB: 'city', meaningBEs: 'población grande',
+    exampleA: 'Tengo una ___ sobre la tarea.', exampleAEn: 'I have a question about the homework.',
+    exampleB: 'Madrid es una ___ muy grande.', exampleBEn: 'Madrid is a very large city.',
+  },
+  {
+    id: 'pp-43', category: 'd_intervocalic', level: 'B1',
+    wordA: 'verdad', wordB: 'adelante',
+    ipaA: '/beɾ.ˈðað/', ipaB: '/a.ðe.ˈlan.te/',
+    meaningA: 'truth', meaningAEs: 'lo que es cierto',
+    meaningB: 'forward, go ahead', meaningBEs: 'hacia delante',
+    exampleA: 'Dime la ___, por favor.', exampleAEn: 'Tell me the truth, please.',
+    exampleB: 'Sigue ___, la puerta está abierta.', exampleBEn: 'Go ahead, the door is open.',
+  },
+
+  // ──────────────────────────────────────
+  //  Regional Accent Notes  (6 awareness items)
+  //  Not contrast pairs — these illustrate regional variation.
+  //  wordA = Latin American pronunciation, wordB = Castilian.
+  // ──────────────────────────────────────
+
+  // Seseo vs Distinción
+  {
+    id: 'pp-44', category: 'regional_notes', level: 'A2',
+    wordA: 'caza', wordB: 'casa',
+    ipaA: '/ˈka.sa/', ipaB: '/ˈka.sa/',
+    meaningA: 'hunting (merged with "casa" in seseo regions)', meaningAEs: 'acción de cazar (se confunde con "casa" en zonas de seseo)',
+    meaningB: 'house', meaningBEs: 'vivienda',
+    exampleA: 'La ___ del zorro está prohibida.', exampleAEn: 'Fox hunting is forbidden.',
+    exampleB: 'Mi ___ tiene un jardín grande.', exampleBEn: 'My house has a big garden.',
+  },
+  {
+    id: 'pp-45', category: 'regional_notes', level: 'A2',
+    wordA: 'cocer', wordB: 'coser',
+    ipaA: '/ko.ˈseɾ/', ipaB: '/ko.ˈseɾ/',
+    meaningA: 'to cook, to boil', meaningAEs: 'cocinar, hervir',
+    meaningB: 'to sew', meaningBEs: 'unir con hilo y aguja',
+    exampleA: 'Hay que ___ las verduras diez minutos.', exampleAEn: 'You need to cook the vegetables for ten minutes.',
+    exampleB: 'Mi abuela sabe ___ muy bien.', exampleBEn: 'My grandmother knows how to sew very well.',
+  },
+  {
+    id: 'pp-46', category: 'regional_notes', level: 'B1',
+    wordA: 'ciervo', wordB: 'siervo',
+    ipaA: '/ˈsjeɾ.βo/', ipaB: '/ˈsjeɾ.βo/',
+    meaningA: 'deer', meaningAEs: 'animal del bosque',
+    meaningB: 'servant, serf', meaningBEs: 'siervo, criado',
+    exampleA: 'Vimos un ___ en el bosque.', exampleAEn: 'We saw a deer in the forest.',
+    exampleB: 'El ___ trabajaba para el señor feudal.', exampleBEn: 'The serf worked for the feudal lord.',
+  },
+
+  // Yeísmo / Rehilamiento (Argentina/Uruguay)
+  {
+    id: 'pp-47', category: 'regional_notes', level: 'B1',
+    wordA: 'calle', wordB: 'calle',
+    ipaA: '/ˈka.ʝe/', ipaB: '/ˈka.ʃe/',
+    meaningA: 'street (standard yeísta)', meaningAEs: 'vía pública (pronunciación yeísta estándar)',
+    meaningB: 'street (rioplatense)', meaningBEs: 'vía pública (pronunciación rioplatense)',
+    exampleA: 'La ___ principal está cerrada.', exampleAEn: 'The main street is closed.',
+    exampleB: 'La ___ principal está cerrada.', exampleBEn: 'The main street is closed. (Rioplatense: [ˈka.ʃe])',
+  },
+
+  // Voseo effects on verb stress
+  {
+    id: 'pp-48', category: 'regional_notes', level: 'B1',
+    wordA: 'hablas', wordB: 'hablás',
+    ipaA: '/ˈa.βlas/', ipaB: '/a.ˈβlas/',
+    meaningA: 'you speak (tuteo)', meaningAEs: 'segunda persona de hablar (tuteo)',
+    meaningB: 'you speak (voseo)', meaningBEs: 'segunda persona de hablar (voseo)',
+    exampleA: 'Tú ___ muy rápido.', exampleAEn: 'You speak very fast. (tuteo)',
+    exampleB: 'Vos ___ muy rápido.', exampleBEn: 'You speak very fast. (voseo)',
+  },
+  {
+    id: 'pp-49', category: 'regional_notes', level: 'B1',
+    wordA: 'tienes', wordB: 'tenés',
+    ipaA: '/ˈtje.nes/', ipaB: '/te.ˈnes/',
+    meaningA: 'you have (tuteo)', meaningAEs: 'segunda persona de tener (tuteo)',
+    meaningB: 'you have (voseo)', meaningBEs: 'segunda persona de tener (voseo)',
+    exampleA: 'Tú ___ razón.', exampleAEn: 'You are right. (tuteo)',
+    exampleB: 'Vos ___ razón.', exampleBEn: 'You are right. (voseo)',
   },
 ];

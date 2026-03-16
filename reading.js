@@ -2,13 +2,13 @@
 
 // ════════════════════════════════════════════════════════════
 //  READING COMPREHENSION — Graded passages with vocabulary
-//  31 passages: 5 A1, 5 A2, 5 B1, 4 B2, 6 C1, 6 C2
+//  36 passages: 10 A1, 5 A2, 5 B1, 4 B2, 6 C1, 6 C2
 // ════════════════════════════════════════════════════════════
 
 const READING_DATA = [
 
   // ─────────────────────────────────────────────────────────
-  //  A1  —  Simple present, basic vocabulary (50-80 words)
+  //  A1  —  Simple present, basic vocabulary (50-80 words) — 10 passages
   // ─────────────────────────────────────────────────────────
 
   {
@@ -236,12 +236,187 @@ const READING_DATA = [
     ]
   },
 
+  {
+    id: 'read-6',
+    level: 'A1',
+    title: 'La familia de Carlos',
+    titleEn: 'Carlos\'s Family',
+    text: 'Carlos tiene una familia pequeña. Su madre se llama Rosa y es profesora. Su padre se llama Miguel y es doctor. Carlos tiene una hermana menor. Ella se llama Sofía y tiene seis años. Los sábados la familia va al parque. Carlos y Sofía juegan juntos y están muy contentos.',
+    vocab: [
+      { word: 'menor', english: 'younger' },
+      { word: 'profesora', english: 'teacher (female)' },
+      { word: 'sábados', english: 'Saturdays' },
+      { word: 'juegan', english: 'they play' },
+      { word: 'contentos', english: 'happy' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál es el trabajo de la madre de Carlos?',
+        options: ['Doctora', 'Profesora', 'Enfermera', 'Abogada'],
+        correct: 1,
+        explanation: 'The text says "su madre se llama Rosa y es profesora".'
+      },
+      {
+        prompt: '¿Cuántos años tiene Sofía?',
+        options: ['Cuatro', 'Cinco', 'Seis', 'Siete'],
+        correct: 2,
+        explanation: 'The text says "tiene seis años".'
+      },
+      {
+        prompt: '¿Adónde va la familia los sábados?',
+        options: ['Al cine', 'A la playa', 'Al parque', 'Al centro comercial'],
+        correct: 2,
+        explanation: 'The text says "los sábados la familia va al parque".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-7',
+    level: 'A1',
+    title: 'Por la mañana',
+    titleEn: 'In the Morning',
+    text: 'Elena se despierta a las seis y media. Primero se lava la cara y se cepilla los dientes. Después desayuna cereal con leche y un jugo de naranja. A las siete y media sale de casa. Camina a la escuela porque está cerca. Las clases empiezan a las ocho. Elena siempre llega temprano.',
+    vocab: [
+      { word: 'se despierta', english: 'she wakes up' },
+      { word: 'se cepilla', english: 'she brushes' },
+      { word: 'desayuna', english: 'she has breakfast' },
+      { word: 'camina', english: 'she walks' },
+      { word: 'temprano', english: 'early' }
+    ],
+    questions: [
+      {
+        prompt: '¿A qué hora se despierta Elena?',
+        options: ['A las seis', 'A las seis y media', 'A las siete', 'A las siete y media'],
+        correct: 1,
+        explanation: 'The text says "se despierta a las seis y media".'
+      },
+      {
+        prompt: '¿Cómo va Elena a la escuela?',
+        options: ['En autobús', 'En coche', 'Camina', 'En bicicleta'],
+        correct: 2,
+        explanation: 'The text says "camina a la escuela porque está cerca".'
+      },
+      {
+        prompt: '¿Qué desayuna Elena?',
+        options: ['Tostadas con café', 'Cereal con leche y jugo de naranja', 'Huevos y pan', 'Fruta y yogur'],
+        correct: 1,
+        explanation: 'The text says "desayuna cereal con leche y un jugo de naranja".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-8',
+    level: 'A1',
+    title: 'La comida favorita',
+    titleEn: 'Favorite Food',
+    text: 'A Pablo le gusta mucho la comida. Su comida favorita es la pizza. Los viernes su familia pide pizza para cenar. A su hermana le gustan las ensaladas. Su madre prepara una ensalada grande con tomate, lechuga y queso. El padre de Pablo bebe agua con la cena. Después de cenar todos comen helado de chocolate.',
+    vocab: [
+      { word: 'comida', english: 'food / meal' },
+      { word: 'pide', english: 'orders' },
+      { word: 'cenar', english: 'to have dinner' },
+      { word: 'ensalada', english: 'salad' },
+      { word: 'helado', english: 'ice cream' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál es la comida favorita de Pablo?',
+        options: ['La ensalada', 'La pizza', 'El helado', 'La pasta'],
+        correct: 1,
+        explanation: 'The text says "su comida favorita es la pizza".'
+      },
+      {
+        prompt: '¿Qué día pide pizza la familia?',
+        options: ['Los lunes', 'Los miércoles', 'Los viernes', 'Los domingos'],
+        correct: 2,
+        explanation: 'The text says "los viernes su familia pide pizza para cenar".'
+      },
+      {
+        prompt: '¿Qué comen todos después de cenar?',
+        options: ['Fruta', 'Galletas', 'Pastel', 'Helado de chocolate'],
+        correct: 3,
+        explanation: 'The text says "después de cenar todos comen helado de chocolate".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-9',
+    level: 'A1',
+    title: 'En la escuela',
+    titleEn: 'At School',
+    text: 'Marta es estudiante. Tiene doce años y está en la escuela secundaria. Su clase favorita es matemáticas porque le gustan mucho los números. También estudia ciencias, historia y español. Su profesor de historia es muy divertido. Marta tiene muchos amigos en la escuela. En el recreo hablan y juegan en el patio.',
+    vocab: [
+      { word: 'estudiante', english: 'student' },
+      { word: 'escuela secundaria', english: 'secondary school' },
+      { word: 'divertido', english: 'fun / funny' },
+      { word: 'recreo', english: 'recess / break' },
+      { word: 'patio', english: 'yard / playground' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuál es la clase favorita de Marta?',
+        options: ['Ciencias', 'Historia', 'Matemáticas', 'Español'],
+        correct: 2,
+        explanation: 'The text says "su clase favorita es matemáticas".'
+      },
+      {
+        prompt: '¿Cuántos años tiene Marta?',
+        options: ['Diez', 'Once', 'Doce', 'Trece'],
+        correct: 2,
+        explanation: 'The text says "tiene doce años".'
+      },
+      {
+        prompt: '¿Qué hacen Marta y sus amigos en el recreo?',
+        options: ['Estudian', 'Comen', 'Hablan y juegan en el patio', 'Leen libros'],
+        correct: 2,
+        explanation: 'The text says "en el recreo hablan y juegan en el patio".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-10',
+    level: 'A1',
+    title: 'Los pasatiempos de Ana',
+    titleEn: 'Ana\'s Hobbies',
+    text: 'Ana tiene muchos pasatiempos. Le gusta dibujar y pintar. Los fines de semana dibuja en su cuaderno. También le gusta escuchar música. Su cantante favorita es Shakira. Por las tardes Ana monta en bicicleta con su amiga Laura. A veces leen libros juntas en la biblioteca. Ana está contenta porque tiene tiempo libre para hacer cosas divertidas.',
+    vocab: [
+      { word: 'pasatiempos', english: 'hobbies' },
+      { word: 'dibujar', english: 'to draw' },
+      { word: 'cuaderno', english: 'notebook' },
+      { word: 'monta en bicicleta', english: 'she rides a bicycle' },
+      { word: 'biblioteca', english: 'library' }
+    ],
+    questions: [
+      {
+        prompt: '¿Qué le gusta hacer a Ana?',
+        options: ['Cocinar y bailar', 'Dibujar y pintar', 'Cantar y nadar', 'Correr y saltar'],
+        correct: 1,
+        explanation: 'The text says "le gusta dibujar y pintar".'
+      },
+      {
+        prompt: '¿Quién es la cantante favorita de Ana?',
+        options: ['Rosalía', 'Shakira', 'Selena', 'Gloria Estefan'],
+        correct: 1,
+        explanation: 'The text says "su cantante favorita es Shakira".'
+      },
+      {
+        prompt: '¿Qué hacen Ana y Laura a veces en la biblioteca?',
+        options: ['Estudian español', 'Usan la computadora', 'Leen libros', 'Dibujan'],
+        correct: 2,
+        explanation: 'The text says "a veces leen libros juntas en la biblioteca".'
+      }
+    ]
+  },
+
   // ─────────────────────────────────────────────────────────
   //  A2  —  Past tenses introduced, travel/shopping (80-120 words)
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-6',
+    id: 'read-11',
     level: 'A2',
     title: 'Un viaje a Barcelona',
     titleEn: 'A Trip to Barcelona',
@@ -293,7 +468,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-7',
+    id: 'read-12',
     level: 'A2',
     title: 'De compras',
     titleEn: 'Shopping',
@@ -349,7 +524,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-8',
+    id: 'read-13',
     level: 'A2',
     title: 'La fiesta de cumpleaños',
     titleEn: 'The Birthday Party',
@@ -400,7 +575,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-9',
+    id: 'read-14',
     level: 'A2',
     title: 'Mi pasatiempo favorito',
     titleEn: 'My Favorite Hobby',
@@ -451,7 +626,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-10',
+    id: 'read-15',
     level: 'A2',
     title: 'Una visita al médico',
     titleEn: 'A Visit to the Doctor',
@@ -506,7 +681,7 @@ const READING_DATA = [
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-11',
+    id: 'read-16',
     level: 'B1',
     title: 'El tango argentino',
     titleEn: 'Argentine Tango',
@@ -568,7 +743,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-12',
+    id: 'read-17',
     level: 'B1',
     title: 'La comida rápida y la salud',
     titleEn: 'Fast Food and Health',
@@ -629,7 +804,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-13',
+    id: 'read-18',
     level: 'B1',
     title: 'Trabajar desde casa',
     titleEn: 'Working from Home',
@@ -690,7 +865,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-14',
+    id: 'read-19',
     level: 'B1',
     title: 'El Camino de Santiago',
     titleEn: 'The Way of Saint James',
@@ -751,7 +926,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-15',
+    id: 'read-20',
     level: 'B1',
     title: 'Las redes sociales',
     titleEn: 'Social Media',
@@ -816,7 +991,7 @@ const READING_DATA = [
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-16',
+    id: 'read-21',
     level: 'B2',
     title: 'La inteligencia artificial y el empleo',
     titleEn: 'Artificial Intelligence and Employment',
@@ -877,7 +1052,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-17',
+    id: 'read-22',
     level: 'B2',
     title: 'Frida Kahlo: arte y dolor',
     titleEn: 'Frida Kahlo: Art and Pain',
@@ -949,7 +1124,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-18',
+    id: 'read-23',
     level: 'B2',
     title: 'El bilingüismo en España',
     titleEn: 'Bilingualism in Spain',
@@ -1005,7 +1180,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-19',
+    id: 'read-24',
     level: 'B2',
     title: 'El cambio climático y Latinoamérica',
     titleEn: 'Climate Change and Latin America',
@@ -1076,7 +1251,7 @@ const READING_DATA = [
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-20',
+    id: 'read-25',
     level: 'C1',
     title: 'La memoria histórica en España',
     titleEn: 'Historical Memory in Spain',
@@ -1148,7 +1323,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-21',
+    id: 'read-26',
     level: 'C1',
     title: 'El realismo mágico latinoamericano',
     titleEn: 'Latin American Magical Realism',
@@ -1220,7 +1395,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-22',
+    id: 'read-27',
     level: 'C1',
     title: 'La economía informal en Latinoamérica',
     titleEn: 'The Informal Economy in Latin America',
@@ -1296,7 +1471,7 @@ const READING_DATA = [
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-23',
+    id: 'read-28',
     level: 'C2',
     title: 'Borges y los espejos del infinito',
     titleEn: 'Borges and the Mirrors of Infinity',
@@ -1368,7 +1543,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-24',
+    id: 'read-29',
     level: 'C2',
     title: 'La crisis de las democracias liberales',
     titleEn: 'The Crisis of Liberal Democracies',
@@ -1440,7 +1615,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-25',
+    id: 'read-30',
     level: 'C2',
     title: 'La soledad contemporánea',
     titleEn: 'Contemporary Loneliness',
@@ -1516,7 +1691,7 @@ const READING_DATA = [
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-26',
+    id: 'read-31',
     level: 'C1',
     title: 'La arquitectura sostenible en Latinoamérica',
     titleEn: 'Sustainable Architecture in Latin America',
@@ -1588,7 +1763,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-27',
+    id: 'read-32',
     level: 'C1',
     title: 'El fenómeno de la posverdad',
     titleEn: 'The Post-Truth Phenomenon',
@@ -1660,7 +1835,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-28',
+    id: 'read-33',
     level: 'C1',
     title: 'La economía circular',
     titleEn: 'The Circular Economy',
@@ -1736,7 +1911,7 @@ const READING_DATA = [
   // ─────────────────────────────────────────────────────────
 
   {
-    id: 'read-29',
+    id: 'read-34',
     level: 'C2',
     title: 'El Quijote como espejo de la modernidad',
     titleEn: 'Don Quixote as a Mirror of Modernity',
@@ -1808,7 +1983,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-30',
+    id: 'read-35',
     level: 'C2',
     title: 'Neurolingüística y bilingüismo',
     titleEn: 'Neurolinguistics and Bilingualism',
@@ -1880,7 +2055,7 @@ const READING_DATA = [
   },
 
   {
-    id: 'read-31',
+    id: 'read-36',
     level: 'C2',
     title: 'El exilio republicano español',
     titleEn: 'The Spanish Republican Exile',
