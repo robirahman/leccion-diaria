@@ -16,10 +16,13 @@ A comprehensive Spanish learning app covering A1 through C2 proficiency levels. 
 - **CEFR Curriculum** — Comprehensive view of what you need to learn at each level with mastery tracking across vocabulary, verbs, and grammar
 - **Progress Tracking** — Daily XP goals with progress bar, streaks with freeze token protection, mastery levels, recall probability display, SRS card state distribution, tense/grammar mastery breakdowns, and per-level CEFR mastery percentages
 - **Bookmarks** — Star any vocab word, grammar lesson, or phrase for quick access from the Today screen
-- **Onboarding** — 4-step welcome carousel for new users explaining SRS, goals, and navigation
-- **Offline Support** — Service worker caches app shell on install, data files on first use
+- **Onboarding** — 4-step welcome carousel for new users explaining SRS, goals, and navigation, plus personalized learning plan after placement test
+- **Undo Ratings** — Undo accidental SRS ratings within a toast notification window
+- **CSV Export** — Export all progress data as CSV from settings
+- **Offline Support** — Service worker caches app shell on install, data files on first use; TTS buttons gray out when offline and re-enable on reconnect
 - **Customization** — Dark/light/auto themes, 4 color palettes, Latin American/Spain regional variants, display modes (standard/immersion/hints), adjustable TTS speed, configurable daily goals
-- **Performance** — Progressive vocab loading (A1-A2 first at 494KB, rest in background), Web Worker for search, esbuild minification with content-hash cache-busting
+- **Accessibility** — WCAG AA contrast ratios, semantic buttons, `aria-live` quiz feedback, `aria-valuenow` progress bars, focus-visible styling
+- **Performance** — Progressive vocab loading (A1-A2 first at 494KB, B1-C2 in parallel), Web Worker for search, batch DOM updates via `data-i18n` attributes, esbuild minification with content-hash cache-busting
 
 ## Running Locally
 
@@ -39,7 +42,7 @@ To create a minified, cache-busted build:
 
 ```bash
 npm install
-npm test       # 49 unit tests
+npm test       # 91 unit tests
 npm run build  # outputs to dist/
 ```
 
@@ -64,12 +67,12 @@ php -S localhost:8000
 |------|---------|
 | **App modules** | |
 | `index.html` | All screens, navigation, modal system |
-| `app-init.js` | Startup, event delegation, routing, search handlers |
-| `app-core.js` | Progress state, FSRS helpers, settings, TTS |
+| `app-init.js` | Startup, event delegation (ACTION_HANDLERS map), routing, search |
+| `app-core.js` | Progress state, FSRS helpers, settings, TTS, toast notifications, undo |
 | `app-learn.js` | Today screen, verbs, grammar, phrases, culture, results |
 | `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz |
-| `placement.js` | IRT-adaptive placement test |
-| `app-practice.js` | Practice exercises, stats dashboard, review queue |
+| `placement.js` | IRT-adaptive placement test, personalized learning plans |
+| `app-practice.js` | Practice exercises, stats dashboard, review queue, CSV export |
 | `practice-reference.js` | Verb reference, reading, pronunciation, curriculum |
 | `quiz-engine.js` | Shared quiz rendering, auto-submit, haptic feedback |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm |

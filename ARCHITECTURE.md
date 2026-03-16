@@ -10,14 +10,14 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 |------|---------|
 | **App modules** | |
 | `index.html` | 30+ screens, nav bar, tab bar, modal system |
-| `app-init.js` | Startup, profile loading, event delegation, routing, search handlers |
+| `app-init.js` | Startup, profile loading, event delegation (ACTION_HANDLERS map), routing, search handlers |
 | `app-core.js` | Progress state, FSRS helpers, shared computation (recall, mastery, CEFR), settings, TTS |
 | `app-learn.js` | Today screen, verb learning/drill/quiz, grammar lessons, phrases, numbers, culture, results |
 | `learn-vocab.js` | Vocabulary indexes, browser, flashcards, quiz (MC + production + gender), Learn New Words |
 | `placement.js` | IRT-adaptive placement test (Rasch model, per-domain scoring, Newton-Raphson MLE) |
-| `app-practice.js` | Export/import, admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
+| `app-practice.js` | Export/import (JSON + CSV), admin mode, practice exercises (minimal pairs, phonetic pairs, homophones, connectors, sentence build, cloze, translation, dictation), stats dashboard, unified review queue |
 | `practice-reference.js` | Verb conjugation reference, conjugation rules/endings, pronunciation guide, reading comprehension, themed vocabulary, curriculum tracks |
-| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), haptic feedback, HTML helpers |
+| `quiz-engine.js` | Shared quiz rendering (`createQuizFlow`), MC submit helper (`processMCSubmit`), haptic feedback, `partialShuffle()`, HTML helpers |
 | `conjugation.js` | Verb conjugation engine: 19 tenses, 252 verbs, irregular/stem-change handling |
 | `fsrs.js` | FSRS-4.5 spaced repetition algorithm (17 parameters) |
 | `vocab-search-worker.js` | Web Worker for non-blocking vocab search with prefix index |
@@ -47,7 +47,6 @@ A Progressive Web App for learning Spanish (A1–C2) using spaced repetition, ad
 | `connectors.js` `themed_vocab.js` `jokes.js` | Additional content modules |
 | `recipes.js` `music.js` `movies.js` `poetry.js` `sports.js` `proverbs.js` `folktales.js` `festivals.js` `history.js` `travel.js` `trivia.js` `idioms.js` | Cultural content modules with descriptions, vocab, and quizzes |
 | **Utilities** | |
-| **Utilities** | |
 | `generate_vocab.py` | Generates frequency vocabulary from the `wordfreq` Python library |
 | `serve.sh` | Local development server (Python 3) |
 
@@ -70,7 +69,10 @@ app-init.js ─── Event delegation (single click listener on document)
   │                     Bookmarks system (vocab, grammar, phrases)
   │                     Onboarding carousel for new users
   │                     Persistence (localStorage per profile)
-  │                     TTS with regional voice selection (es-MX / es-ES)
+  │                     TTS with regional voice selection + offline detection
+  │                     Toast/snackbar notifications (success/error/info/undo)
+  │                     Undo last SRS rating (snapshot/restore)
+  │                     getRecallColor() shared utility
   │
   ├── learn-vocab.js ── Vocab indexes (by category, level, word)
   │                      Vocab browser with progress indicators
@@ -87,13 +89,14 @@ app-init.js ─── Event delegation (single click listener on document)
   ├── placement.js ──── IRT adaptive placement test (Rasch model)
   │                      Per-domain scoring (grammar + vocab)
   │                      Newton-Raphson MLE, question selection
+  │                      Post-test learning plan (A1-C2 module recommendations)
   │
   ├── app-practice.js ── Stats dashboard, recall health, SRS card distribution
   │                       Practice exercises: minimal pairs, phonetic pairs,
   │                         homophones, connectors, sentence build, cloze,
   │                         translation, dictation
   │                       Unified review queue (multi-store FSRS)
-  │                       Export/import, admin mode
+  │                       Export/import (JSON + CSV), admin mode
   │
   ├── practice-reference.js ── Verb conjugation reference & search
   │                             Conjugation rules/endings tables
@@ -118,7 +121,7 @@ app-init.js ─── Event delegation (single click listener on document)
 - **`screenStack`** — array tracking navigation history for back button
 - **`currentProfile`** — active profile name
 - **Placement state** — `placementThetas`, `placementHistory`, etc. (session-scoped, saved to `sessionStorage` for tab-switch recovery)
-- **Practice state** — per-exercise queue/index/score variables (e.g., `mpQueue`, `mpIdx`, `mpScore`)
+- **Practice state** — per-exercise quiz state objects created via `createQuizState()` factory (e.g., `vpQuiz.queue`, `vpQuiz.idx`, `vpQuiz.score`)
 
 All state is defined in `app-core.js` and accessible globally. The app modules read and write this shared state.
 
@@ -128,7 +131,7 @@ All screens are `<div>` elements in `index.html` with `display:none` by default.
 
 ### Event Handling
 
-A single delegated click handler on `document` routes all `data-action` attributes to handler functions. Keyboard events handle Enter (submit/advance) and 1–4 (flashcard ratings).
+A single delegated click handler on `document` routes all `data-action` attributes through the `ACTION_HANDLERS` map — a merged object of categorized handler groups (NAV_HANDLERS, VERB_HANDLERS, VOCAB_HANDLERS, QUIZ_HANDLERS, etc.) providing O(1) action lookup. Keyboard events handle Enter (submit/advance) and 1–4 (flashcard ratings).
 
 ---
 
@@ -140,8 +143,8 @@ Vocabulary data (~28K entries) is split by CEFR level and loaded progressively:
 
 1. `vocab-categories.js` (5KB) loads eagerly via `<script defer>` — provides `VOCAB_CATEGORIES` for rendering category cards
 2. `vocab-a1a2.json` (494KB, ~2K entries) loads first via `fetch()` — enough for immediate A1-A2 use
-3. `vocab-b1.json`, `vocab-b2.json`, `vocab-c1.json`, `vocab-c2.json` load sequentially in the background
-4. After each chunk, `buildVocabIndexes()` runs and the vocab search Worker is updated
+3. `vocab-b1.json`, `vocab-b2.json`, `vocab-c1.json`, `vocab-c2.json` load in parallel via `Promise.all()` in the background
+4. After all chunks load, `buildVocabIndexes()` runs once and the vocab search Worker is updated
 5. The full dataset is cached in **IndexedDB** (`leccion-diaria` database, `cache` store, key `vocab-data-v2`) for instant loads on subsequent visits
 6. Fallback: if split files aren't found, loads the monolithic `vocab-data.json` (7MB)
 7. All code guards access with `typeof VOCAB_DATA === 'undefined'` checks
@@ -292,6 +295,10 @@ Shared helper used by 6+ quiz types (minimal pairs, phonetic pairs, homophones, 
 
 Config: `optionsSel`, `isCorrectBtn(btn)`, `feedbackId`, `nextBtnId`, `feedbackFn(isCorrect)`, `fsrs: { store, masteryStore, key }`.
 
+### `partialShuffle(arr, n)`
+
+Fisher-Yates partial shuffle — selects `n` random elements from `arr` in O(n) time instead of shuffling the entire array. Used by quiz builders that only need a subset of questions.
+
 ### Auto-Submit & Haptic Feedback
 
 Most MC quiz types now auto-submit when the user taps an option (via `selectMCOption(selector, idx, autoSubmitFn)`). This reduces the interaction from 3 taps (select + submit + next) to 2 (select + next). The placement test is excluded from auto-submit since it's high-stakes.
@@ -315,9 +322,11 @@ Implementation of FSRS-4.5 with 17 trained weights.
 
 **Review flow** (in `app-core.js`):
 1. User rates item 1–4 (Again/Hard/Good/Easy)
-2. `reviewItem(fsrsStore, masteryStore, key, rating)` computes new s, d
-3. Item is "due" when `fsrsR(s, elapsed) < 0.9`
-4. `getDueItems()` returns items needing review
+2. `_saveRatingSnapshot()` captures pre-rating state for undo
+3. `reviewItem(fsrsStore, masteryStore, key, rating)` computes new s, d
+4. Item is "due" when `fsrsR(s, elapsed) < 0.9`
+5. `getDueItems()` returns items needing review
+6. `undoLastRating()` restores the snapshot if user taps undo within the toast window
 
 ---
 
@@ -388,6 +397,10 @@ where x_i = 1 if correct, P_i = model probability. Converges in ~5 iterations.
 - Vocabulary words: unlocked at/below the **vocab** level
 - Unlocked items get mature FSRS state (`s: 30, d: 5`) so they appear as "mastered" and are reviewed infrequently
 
+### Personalized Learning Plan
+
+After placement, `showLearningPlan()` displays a level-specific module recommendation overlay. `LEARNING_PLANS` maps each CEFR level (A1–C2) to a prioritized list of modules, focus areas, and daily time recommendations. Users can start the plan or dismiss it; the plan is also accessible later via "See Your Learning Plan" on the placement results screen.
+
 ---
 
 ## Display Modes & Localization
@@ -397,6 +410,11 @@ All user-facing strings are in `UI_STRINGS` with `[english, spanish]` pairs.
 - **`t(key)`** — returns English in standard mode, Spanish in immersion, Spanish (English) in hints
 - **`tBtn(key)`** — same but no parenthetical in hints mode (for button labels)
 - **`tenseLabel(meta)`** — returns tense name adapted to display mode
+
+`applyDisplayMode()` batch-updates all translatable elements using data attributes:
+- `data-i18n="key"` → `el.textContent = t(key)` (headings, labels, descriptions)
+- `data-i18n-btn="key"` → `el.textContent = tBtn(key)` (buttons, tabs, pills)
+- `data-i18n-placeholder="key"` → `el.placeholder = t(key)` (input fields)
 
 Verb tense metadata has both `label` (Spanish) and `labelEn` (English), selected by `tenseLabel()`.
 
@@ -408,7 +426,9 @@ CSS custom properties drive the theme system. Four color palettes (Alhambra, Oax
 
 **Auto theme** resolves to dark or light based on the system's `prefers-color-scheme` media query. A `matchMedia` listener in `app-core.js` triggers instant theme switching when the system preference changes.
 
-Mobile-first responsive design with max-width 640px centered container. Safe-area insets for notched phones.
+Mobile-first responsive design with max-width 640px centered container. Safe-area insets for notched phones. Card grid uses `minmax(100px, 1fr)` for 320px screen support.
+
+**Accessibility**: Dark theme colors meet WCAG AA contrast ratios. Interactive cards have `cursor:pointer`, hover lift (`translateY`), and shadow transitions. Flashcard rating buttons use semantic `<button>` elements. Quiz feedback divs have `aria-live="polite"`. Progress bars include `aria-valuenow` updates. Tabs use `aria-controls`. Focus-visible styling on tab elements.
 
 Key CSS ordering note: `.quiz-option.correct` and `.quiz-option.incorrect` must appear **after** `.quiz-option.selected` in the stylesheet to ensure answer highlighting overrides selection styling.
 
@@ -427,6 +447,18 @@ In development, the cache name is manually versioned (e.g., `leccion-diaria-v18`
 
 ---
 
+## Toast Notifications
+
+`showToast(icon, text, type)` in `app-core.js` renders animated snackbar notifications. Types: `success`, `error`, `info`, `undo`. Toasts auto-dismiss after 3.5 seconds with a fade-out animation. The undo toast includes a button that calls `undoLastRating()` to restore the previous SRS state.
+
+---
+
+## Offline Indicator
+
+The app listens for `online`/`offline` events. When offline, all TTS buttons receive the `.offline-disabled` class (grayscale filter + reduced opacity) and `speak()` checks `navigator.onLine` before attempting speech synthesis. When connectivity returns, TTS buttons are re-enabled automatically.
+
+---
+
 ## Streak & Daily Goals
 
 ### Streak Freeze Tokens
@@ -442,6 +474,8 @@ Configurable in Settings (50/100/200/500 XP). The Today screen shows a progress 
 ## Onboarding
 
 New users see a 4-step onboarding carousel after creating their first profile (before the placement test offer). Steps cover: welcome, spaced repetition explanation, daily goals/streaks, and tab navigation. The carousel is implemented in `app-core.js` (`showOnboarding()`, `onboardingNext()`, `onboardingSkip()`).
+
+After completing the placement test, users see a personalized learning plan recommending specific modules and focus areas based on their assessed level (see Placement Test section).
 
 ---
 
@@ -477,10 +511,12 @@ No build step needed — serve source files directly via `./serve.sh` or any HTT
 
 ### Testing
 
-`npm test` (or `node tests/run.js`) runs 49 unit tests with zero dependencies:
+`npm test` (or `node tests/run.js`) runs 91 unit tests with zero dependencies (per-test timeout, full stack traces on failure):
 - **Conjugation**: regular/irregular verbs across all 19 tenses, stem changes, reflexives, compounds
 - **FSRS**: stability, difficulty, recall probability, mastery level mapping
 - **Core utils**: `checkAnswer()`, `stripAccents()`, `esc()` HTML escaping
+- **Placement**: IRT probability, theta updates, question selection, cognate detection, levenshtein distance
+- **Quiz engine**: `createQuizFlow` API, score tracking, `processMCSubmit`, accent bar, progress bar
 - **Vocab data**: field validation, CEFR levels, category presence, split file integrity
 
 ## Deployment
