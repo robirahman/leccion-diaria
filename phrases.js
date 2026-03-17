@@ -1807,7 +1807,7 @@ const PHRASES_DATA = [
   {
     id: 'work-1',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Buenos días. Vengo a la entrevista de trabajo.',
     english: 'Good morning. I\'m here for the job interview.',
     notes: '"Entrevista de trabajo" is job interview',
@@ -1817,7 +1817,7 @@ const PHRASES_DATA = [
   {
     id: 'work-2',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Tengo experiencia en atención al cliente',
     english: 'I have experience in customer service',
     notes: '"Atención al cliente" is customer service; a transferable skill everywhere',
@@ -1827,7 +1827,7 @@ const PHRASES_DATA = [
   {
     id: 'work-3',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Cuál es el horario de trabajo?',
     english: 'What are the working hours?',
     notes: '"Horario" is schedule; "jornada completa" (full-time), "media jornada" (part-time)',
@@ -1837,7 +1837,7 @@ const PHRASES_DATA = [
   {
     id: 'work-4',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Podemos programar una reunión para mañana?',
     english: 'Can we schedule a meeting for tomorrow?',
     notes: '"Programar" or "agendar" for scheduling',
@@ -1847,7 +1847,7 @@ const PHRASES_DATA = [
   {
     id: 'work-5',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Le envío el informe por correo electrónico',
     english: 'I\'ll send you the report by email',
     notes: '"Informe" is report; "correo electrónico" is email',
@@ -1857,7 +1857,7 @@ const PHRASES_DATA = [
   {
     id: 'work-6',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Cuándo es la fecha límite del proyecto?',
     english: 'When is the project deadline?',
     notes: '"Fecha límite" or "plazo" for deadline',
@@ -1867,7 +1867,7 @@ const PHRASES_DATA = [
   {
     id: 'work-7',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Necesito unos días libres la próxima semana',
     english: 'I need a few days off next week',
     notes: '"Días libres" is days off; "vacaciones" for vacation',
@@ -1877,7 +1877,7 @@ const PHRASES_DATA = [
   {
     id: 'work-8',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Podría explicar eso con más detalle?',
     english: 'Could you explain that in more detail?',
     notes: 'Polite way to ask for clarification in a meeting',
@@ -1887,7 +1887,7 @@ const PHRASES_DATA = [
   {
     id: 'work-9',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Estoy de acuerdo con su propuesta',
     english: 'I agree with your proposal',
     notes: '"Estar de acuerdo" is to agree; very common in business',
@@ -1897,7 +1897,7 @@ const PHRASES_DATA = [
   {
     id: 'work-10',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Cuál es el salario para este puesto?',
     english: 'What is the salary for this position?',
     notes: '"Puesto" is position; asking about salary in an interview is normal in Latin America',
@@ -1907,7 +1907,7 @@ const PHRASES_DATA = [
   {
     id: 'work-11',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Tengo una conferencia por videollamada a las tres',
     english: 'I have a video conference at three',
     notes: '"Videollamada" is video call; remote work vocabulary is increasingly common',
@@ -1917,7 +1917,7 @@ const PHRASES_DATA = [
   {
     id: 'work-12',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'El jefe quiere hablar con usted',
     english: 'The boss wants to speak with you',
     notes: '"Jefe" is boss; "gerente" is manager',
@@ -1927,7 +1927,7 @@ const PHRASES_DATA = [
   {
     id: 'work-13',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Trabajo desde casa los viernes',
     english: 'I work from home on Fridays',
     notes: '"Trabajo remoto" or "teletrabajo" for remote work',
@@ -1937,7 +1937,7 @@ const PHRASES_DATA = [
   {
     id: 'work-14',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Aquí tiene mi currículum vitae',
     english: 'Here is my résumé',
     notes: '"Currículum vitae" or just "currículum" (CV) is used instead of "résumé"',
@@ -1947,7 +1947,7 @@ const PHRASES_DATA = [
   {
     id: 'work-15',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Ofrecen beneficios como seguro médico?',
     english: 'Do you offer benefits like health insurance?',
     notes: '"Beneficios" or "prestaciones" for benefits; important to ask in interviews',
@@ -1957,7 +1957,7 @@ const PHRASES_DATA = [
   {
     id: 'work-16',
     situation: 'work',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Ha sido un placer. Espero tener noticias suyas pronto.',
     english: 'It\'s been a pleasure. I hope to hear from you soon.',
     notes: 'Professional closing for a job interview',
@@ -1971,7 +1971,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-1',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Tienes una sonrisa muy bonita',
     english: 'You have a very beautiful smile',
     notes: 'A sweet and respectful compliment to start with',
@@ -1981,7 +1981,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-2',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Te gustaría salir a cenar conmigo?',
     english: 'Would you like to go out to dinner with me?',
     notes: '"Salir a cenar" is to go out to dinner; a classic date invitation',
@@ -1991,7 +1991,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-3',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'La pasé muy bien contigo',
     english: 'I had a great time with you',
     notes: '"Pasarla bien" means to have a good time; said after a date',
@@ -2001,7 +2001,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-4',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Me gustas mucho',
     english: 'I like you a lot',
     notes: '"Gustar" with people means romantic attraction; this is a big step in Spanish',
@@ -2011,7 +2011,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-5',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Eres muy especial para mí',
     english: 'You are very special to me',
     notes: 'Expresses deep affection beyond initial attraction',
@@ -2021,7 +2021,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-6',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Quieres ser mi novio/novia?',
     english: 'Do you want to be my boyfriend/girlfriend?',
     notes: 'In Latin culture, making the relationship official is often done explicitly',
@@ -2031,7 +2031,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-7',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Te extraño mucho',
     english: 'I miss you a lot',
     notes: '"Extrañar" in Latin America; "echar de menos" in Spain',
@@ -2041,7 +2041,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-8',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Te quiero',
     english: 'I love you',
     notes: '"Te quiero" is the most common way to say "I love you" in romantic contexts; "te amo" is even stronger and more intense',
@@ -2051,7 +2051,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-9',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Eres la persona más guapa que he conocido',
     english: 'You\'re the most beautiful person I\'ve ever met',
     notes: '"Guapo/guapa" is handsome/beautiful; works for both genders',
@@ -2061,7 +2061,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-10',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Puedo invitarte a un café?',
     english: 'Can I buy you a coffee?',
     notes: '"Invitar" means to treat someone; a low-pressure way to ask someone out',
@@ -2071,7 +2071,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-11',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Contigo me siento muy a gusto',
     english: 'I feel very comfortable with you',
     notes: '"A gusto" means at ease, comfortable; a lovely thing to hear',
@@ -2081,7 +2081,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-12',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Bailamos?',
     english: 'Shall we dance?',
     notes: 'Asking someone to dance at a party or club is very natural in Latin culture',
@@ -2091,7 +2091,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-13',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Pienso en ti todo el tiempo',
     english: 'I think about you all the time',
     notes: '"Pensar en" means to think about; romantic and sincere',
@@ -2101,7 +2101,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-14',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Tienes unos ojos preciosos',
     english: 'You have beautiful eyes',
     notes: '"Precioso/preciosa" is a very romantic word for beautiful',
@@ -2111,7 +2111,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-15',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: 'Me haces muy feliz',
     english: 'You make me very happy',
     notes: 'A heartfelt expression for an established relationship',
@@ -2121,7 +2121,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-16',
     situation: 'romance',
-    level: 'B1',
+    level: 'B2',
     spanish: '¿Quieres conocer a mi familia?',
     english: 'Would you like to meet my family?',
     notes: 'Meeting the family is a significant step in Latin culture and shows serious commitment',
