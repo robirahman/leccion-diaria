@@ -1,5 +1,5 @@
 // conversations.js - Spanish Dialogue Practice Database
-// 21 role-play conversation scenarios for Spanish learners (A1-C2)
+// 28 role-play conversation scenarios for Spanish learners (A1-C2)
 
 const CONVERSATIONS_DATA = [
 
@@ -1132,6 +1132,136 @@ const CONVERSATIONS_DATA = [
       { prompt: 'What does "acervo jurídico" mean?', options: ['A legal dispute', 'Accumulated body of law / legal heritage', 'A court ruling', 'A legal representative'], correct: 1, explanation: "\"Acervo\" means a body of accumulated assets or heritage, and \"jurídico\" means legal. Together, \"acervo jurídico\" refers to the totality of laws, treaties, and legal precedents that form a legal tradition or framework." },
       { prompt: 'What is a "cláusula de salvaguardia"?', options: ['A penalty clause', 'A confidentiality agreement', 'A safeguard clause', 'A termination clause'], correct: 2, explanation: "\"Salvaguardia\" means safeguard or protection. A \"cláusula de salvaguardia\" is a contractual or treaty provision that protects parties against unforeseen circumstances, allowing for flexibility in exceptional situations." },
       { prompt: 'What does "competencias vinculantes" mean?', options: ['Competitive advantages', 'Binding powers / authority', 'Voluntary guidelines', 'Advisory opinions'], correct: 1, explanation: "\"Competencias\" here means powers or authority (not competitions), and \"vinculantes\" means binding (from \"vincular,\" to bind). Together they describe powers that produce legally obligatory results that parties must comply with." },
+    ],
+  },
+
+  // ============================================================
+  // 26. ENTREVISTA DE TRABAJO (B2)
+  // ============================================================
+  {
+    id: 'entrevista-b2',
+    title: 'Entrevista de Trabajo',
+    titleEn: 'Job Interview',
+    icon: '💼',
+    desc: 'Interview for a marketing position using professional vocabulary and conditional tenses',
+    level: 'B2',
+    speakers: [
+      { name: 'Sra. Montero', nameEn: 'Mrs. Montero', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 0, spanish: 'Buenos días. Tome asiento, por favor. He revisado su currículum y me gustaría que me hablara un poco sobre su experiencia en marketing digital.', english: 'Good morning. Please have a seat. I have reviewed your résumé and I would like you to tell me a bit about your experience in digital marketing.' },
+      { speaker: 1, spanish: 'Gracias por recibirme. Durante los últimos cuatro años he trabajado como coordinador de campañas digitales en una agencia de publicidad, donde me encargaba de la estrategia de redes sociales y la analítica web.', english: 'Thank you for seeing me. For the last four years I have worked as a digital campaign coordinator at an advertising agency, where I was in charge of social media strategy and web analytics.' },
+      { speaker: 0, spanish: '¿Podría darme un ejemplo concreto de una campaña que haya liderado y los resultados que obtuvo?', english: 'Could you give me a specific example of a campaign you led and the results you obtained?' },
+      { speaker: 1, spanish: 'Por supuesto. Diseñé una campaña de lanzamiento para un producto de cosmética que incrementó las ventas en un treinta por ciento en el primer trimestre. Si no hubiéramos segmentado la audiencia con tanta precisión, no habríamos logrado esos resultados.', english: 'Of course. I designed a launch campaign for a cosmetics product that increased sales by thirty percent in the first quarter. If we had not segmented the audience so precisely, we would not have achieved those results.' },
+      { speaker: 0, spanish: 'Impresionante. ¿Qué haría usted si tuviera que gestionar un presupuesto reducido para una campaña de gran alcance?', english: 'Impressive. What would you do if you had to manage a reduced budget for a large-scale campaign?' },
+      { speaker: 1, spanish: 'En ese caso, priorizaría el marketing de contenidos y las alianzas estratégicas con microinfluencers. Considero que la creatividad puede compensar la falta de recursos si se enfoca correctamente.', english: 'In that case, I would prioritize content marketing and strategic partnerships with micro-influencers. I believe that creativity can compensate for a lack of resources if focused correctly.' },
+      { speaker: 0, spanish: '¿Cómo se desenvuelve trabajando bajo presión? Este puesto exige cumplir plazos muy ajustados.', english: 'How do you handle working under pressure? This position requires meeting very tight deadlines.' },
+      { speaker: 1, spanish: 'Me considero una persona organizada y resolutiva. Suelo establecer prioridades claras y delegar tareas cuando es necesario. Además, el trabajo bajo presión me motiva a dar lo mejor de mí.', english: 'I consider myself an organized and resourceful person. I tend to set clear priorities and delegate tasks when necessary. Furthermore, working under pressure motivates me to give my best.' },
+      { speaker: 0, spanish: '¿Cuáles serían sus expectativas salariales para este puesto?', english: 'What would your salary expectations be for this position?' },
+      { speaker: 1, spanish: 'Teniendo en cuenta mi experiencia y las responsabilidades del cargo, esperaría un salario en torno a los cuarenta mil euros anuales, aunque estaría abierto a negociar según el paquete de beneficios.', english: 'Taking into account my experience and the responsibilities of the role, I would expect a salary of around forty thousand euros per year, although I would be open to negotiating based on the benefits package.' },
+      { speaker: 0, spanish: 'Muy bien. Le informaremos de nuestra decisión en un plazo de diez días. ¿Tendría alguna pregunta para nosotros?', english: 'Very well. We will inform you of our decision within ten days. Would you have any questions for us?' },
+      { speaker: 1, spanish: 'Sí, me gustaría saber qué oportunidades de desarrollo profesional ofrece la empresa. Valoro mucho la formación continua y la posibilidad de asumir nuevos retos.', english: 'Yes, I would like to know what professional development opportunities the company offers. I highly value continuous training and the possibility of taking on new challenges.' },
+    ],
+    vocab: [
+      { word: 'currículum', english: 'résumé / CV' },
+      { word: 'campaña de lanzamiento', english: 'launch campaign' },
+      { word: 'segmentar la audiencia', english: 'to segment the audience' },
+      { word: 'presupuesto reducido', english: 'reduced / tight budget' },
+      { word: 'expectativas salariales', english: 'salary expectations' },
+      { word: 'desarrollo profesional', english: 'professional development' },
+    ],
+    quiz: [
+      { prompt: 'How would you say "If we had not segmented the audience" in Spanish?', options: ['Si no segmentamos la audiencia', 'Si no hubiéramos segmentado la audiencia', 'Si no segmentaríamos la audiencia', 'Si no habremos segmentado la audiencia'], correct: 1, explanation: "This is a third conditional (past unreal) sentence requiring the pluperfect subjunctive: \"si no hubiéramos segmentado.\" It expresses a hypothetical condition contrary to what actually happened in the past." },
+      { prompt: 'What does "me considero una persona resolutiva" mean?', options: ['I consider myself a revolutionary person', 'I consider myself a resourceful person', 'I consider myself a resolute person', 'I consider myself an irresolute person'], correct: 1, explanation: "\"Resolutivo/a\" in a professional context means someone who is good at solving problems quickly and effectively — resourceful. It is a highly valued quality in Spanish job interviews." },
+      { prompt: 'Which verb form correctly completes: "¿Qué haría usted si ___ que gestionar un presupuesto reducido?"', options: ['tiene', 'tendría', 'tuviera', 'tendrá'], correct: 2, explanation: "The second conditional requires the imperfect subjunctive in the \"si\" clause: \"si tuviera.\" The main clause uses the conditional (\"haría\"). This structure expresses a hypothetical present or future situation." },
+    ],
+  },
+
+  // ============================================================
+  // 27. NEGOCIACIÓN DE APARTAMENTO (B2)
+  // ============================================================
+  {
+    id: 'apartamento-b2',
+    title: 'Negociación de Apartamento',
+    titleEn: 'Apartment Negotiation',
+    icon: '🏠',
+    desc: 'Negotiate apartment rental terms including conditions, compromises, and contract details',
+    level: 'B2',
+    speakers: [
+      { name: 'Sr. Vega', nameEn: 'Mr. Vega', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+      { name: 'Agente Inmobiliaria', nameEn: 'Real Estate Agent', role: 'npc' },
+    ],
+    dialogue: [
+      { speaker: 2, spanish: 'Buenas tardes a ambos. Les presento el apartamento: ochenta metros cuadrados, dos dormitorios, balcón y plaza de garaje incluida. El alquiler mensual es de mil doscientos euros.', english: 'Good afternoon to both. I present the apartment to you: eighty square meters, two bedrooms, balcony, and parking space included. The monthly rent is twelve hundred euros.' },
+      { speaker: 1, spanish: 'El apartamento me parece muy bien ubicado, pero el precio es algo elevado para la zona. ¿Sería posible negociar el importe mensual?', english: 'The apartment seems very well located to me, but the price is somewhat high for the area. Would it be possible to negotiate the monthly amount?' },
+      { speaker: 0, spanish: 'Entiendo su posición, pero tenga en cuenta que el piso se entrega completamente amueblado y los gastos de comunidad están incluidos en el precio.', english: 'I understand your position, but keep in mind that the apartment is handed over fully furnished and the community fees are included in the price.' },
+      { speaker: 1, spanish: 'Lo valoro, sin duda. No obstante, si firmáramos un contrato de al menos dos años, ¿estaría dispuesto a reducir el alquiler a mil cincuenta euros?', english: 'I do appreciate that. However, if we were to sign a lease of at least two years, would you be willing to reduce the rent to one thousand fifty euros?' },
+      { speaker: 0, spanish: 'Dos años me daría estabilidad, eso es cierto. Podría aceptar mil cien euros siempre y cuando usted se hiciera cargo de los suministros de luz y agua.', english: 'Two years would give me stability, that is true. I could accept eleven hundred euros as long as you take care of the electricity and water bills.' },
+      { speaker: 1, spanish: 'Me parece razonable. Ahora bien, he notado que el calentador es bastante antiguo. ¿Se comprometería a sustituirlo antes de que me mude?', english: 'That seems reasonable to me. Now then, I have noticed that the water heater is quite old. Would you commit to replacing it before I move in?' },
+      { speaker: 0, spanish: 'Preferiría no asumir ese gasto ahora mismo. Sin embargo, le propongo lo siguiente: si el calentador diera problemas durante los primeros seis meses, yo correría con los gastos de reparación o sustitución.', english: 'I would prefer not to take on that expense right now. However, I propose the following: if the water heater were to cause problems during the first six months, I would cover the repair or replacement costs.' },
+      { speaker: 2, spanish: 'Me parece una solución equilibrada. ¿Quieren que incluyamos esa cláusula por escrito en el contrato?', english: 'That seems like a balanced solution to me. Do you want me to include that clause in writing in the contract?' },
+      { speaker: 1, spanish: 'Sí, por favor. También querría que se especificara que la fianza se devolvería íntegramente al final del contrato, descontando únicamente los desperfectos que excedieran el desgaste normal.', english: 'Yes, please. I would also like it to be specified that the deposit would be returned in full at the end of the lease, deducting only damages that exceed normal wear and tear.' },
+      { speaker: 0, spanish: 'De acuerdo. La fianza será equivalente a dos mensualidades y se depositará en el organismo oficial correspondiente, tal como exige la ley.', english: 'Agreed. The deposit will be the equivalent of two months\' rent and will be deposited with the corresponding official body, as required by law.' },
+      { speaker: 1, spanish: 'Perfecto. Entonces, si estamos de acuerdo en las condiciones, me gustaría firmar el contrato a la mayor brevedad posible.', english: 'Perfect. Then, if we agree on the terms, I would like to sign the contract as soon as possible.' },
+      { speaker: 2, spanish: 'Redactaré el contrato con todas las cláusulas que hemos pactado y se lo enviaré por correo electrónico para su revisión antes de la firma.', english: 'I will draft the contract with all the clauses we have agreed upon and send it to you by email for your review before signing.' },
+    ],
+    vocab: [
+      { word: 'fianza', english: 'security deposit' },
+      { word: 'gastos de comunidad', english: 'community fees / building maintenance fees' },
+      { word: 'suministros', english: 'utilities / supplies' },
+      { word: 'desperfectos', english: 'damages / defects' },
+      { word: 'desgaste normal', english: 'normal wear and tear' },
+      { word: 'cláusula', english: 'clause (in a contract)' },
+    ],
+    quiz: [
+      { prompt: 'What does "siempre y cuando" mean?', options: ['Always and when', 'As long as / provided that', 'Sooner or later', 'Once and for all'], correct: 1, explanation: "\"Siempre y cuando\" is a conditional conjunction meaning \"as long as\" or \"provided that.\" It introduces a necessary condition and is followed by the subjunctive mood in Spanish." },
+      { prompt: 'Which sentence correctly uses the imperfect subjunctive to express a hypothetical condition?', options: ['Si el calentador da problemas, yo pago.', 'Si el calentador diera problemas, yo correría con los gastos.', 'Si el calentador dará problemas, yo correré con los gastos.', 'Si el calentador daría problemas, yo correría con los gastos.'], correct: 1, explanation: "The second conditional uses \"si\" + imperfect subjunctive (\"diera\") in the condition clause, and the conditional tense (\"correría\") in the result clause. Using the conditional after \"si\" (option 4) is a common error." },
+      { prompt: 'What is a "fianza" in the context of renting?', options: ['Monthly rent payment', 'Real estate agent commission', 'Security deposit', 'Rental insurance'], correct: 2, explanation: "\"Fianza\" means security deposit in the context of renting. In Spain, it is legally required and typically equals one or two months' rent. It must be deposited with an official body and is returned at the end of the lease minus any damages beyond normal wear." },
+    ],
+  },
+
+  // ============================================================
+  // 28. RECLAMACIÓN POR VUELO (B2)
+  // ============================================================
+  {
+    id: 'reclamacion-b2',
+    title: 'Reclamación por Vuelo Retrasado',
+    titleEn: 'Complaint About a Delayed Flight',
+    icon: '✈️',
+    desc: 'File a formal complaint about a delayed flight using polite but firm language',
+    level: 'B2',
+    speakers: [
+      { name: 'Agente de Atención al Cliente', nameEn: 'Customer Service Agent', role: 'npc' },
+      { name: 'Tú', nameEn: 'You', role: 'player' },
+    ],
+    dialogue: [
+      { speaker: 1, spanish: 'Disculpe, me gustaría presentar una reclamación formal. Mi vuelo con destino a Buenos Aires, previsto para las catorce horas, lleva ya un retraso de más de cinco horas y no hemos recibido información alguna.', english: 'Excuse me, I would like to file a formal complaint. My flight to Buenos Aires, scheduled for two o\'clock, has been delayed for over five hours now and we have not received any information.' },
+      { speaker: 0, spanish: 'Lamento mucho las molestias, señor. Permítame consultar el estado de su vuelo. ¿Me facilita su número de reserva, por favor?', english: 'I am very sorry for the inconvenience, sir. Allow me to check the status of your flight. Could you provide me with your booking number, please?' },
+      { speaker: 1, spanish: 'Aquí tiene: es el XR-4527. Comprenderá que esta situación es inaceptable. Tengo una reunión de negocios importante mañana a primera hora y, a este paso, no llegaré a tiempo.', english: 'Here it is: XR-4527. You will understand that this situation is unacceptable. I have an important business meeting tomorrow first thing in the morning, and at this rate, I will not arrive on time.' },
+      { speaker: 0, spanish: 'Entiendo perfectamente su frustración. Según el sistema, el retraso se debe a un problema técnico con la aeronave. Le aseguro que estamos trabajando para resolver la incidencia lo antes posible.', english: 'I perfectly understand your frustration. According to the system, the delay is due to a technical problem with the aircraft. I assure you that we are working to resolve the issue as soon as possible.' },
+      { speaker: 1, spanish: 'Con todo respeto, esa explicación no me resulta suficiente. Según la normativa europea, los pasajeros tenemos derecho a compensación económica cuando el retraso supera las tres horas. ¿Podría indicarme cómo proceder?', english: 'With all due respect, that explanation is not sufficient for me. According to European regulations, passengers have the right to financial compensation when the delay exceeds three hours. Could you tell me how to proceed?' },
+      { speaker: 0, spanish: 'Tiene usted razón. Le facilito ahora mismo el formulario de reclamación. Además, la compañía está obligada a proporcionarle comida y bebida mientras espera, así como acceso a comunicaciones.', english: 'You are right. I will provide you with the complaint form right now. Additionally, the airline is obligated to provide you with food and drink while you wait, as well as access to communications.' },
+      { speaker: 1, spanish: 'Se lo agradezco. Además, quisiera saber si existe la posibilidad de que me reubicaran en otro vuelo de otra compañía. Ya he perdido demasiado tiempo.', english: 'I appreciate that. Additionally, I would like to know if there is a possibility of being rebooked on a flight with another airline. I have already lost too much time.' },
+      { speaker: 0, spanish: 'Déjeme verificar la disponibilidad. Hay un vuelo de Iberia que sale a las veintiuna horas con escala en Madrid. ¿Le convendría esa opción?', english: 'Let me check availability. There is an Iberia flight departing at nine p.m. with a layover in Madrid. Would that option work for you?' },
+      { speaker: 1, spanish: 'Llegaría demasiado tarde con esa escala. Si no hubiera un vuelo directo disponible, preferiría que me proporcionaran alojamiento en un hotel cercano al aeropuerto y me reasignaran al primer vuelo directo de mañana.', english: 'I would arrive too late with that layover. If there were no direct flight available, I would prefer that you provide me with accommodation at a hotel near the airport and reassign me to the first direct flight tomorrow.' },
+      { speaker: 0, spanish: 'Eso podemos gestionarlo. Le reservaré una habitación en el hotel del aeropuerto con cena incluida y le confirmaré una plaza en el vuelo de las siete de la mañana. ¿Le parece aceptable?', english: 'We can arrange that. I will book you a room at the airport hotel with dinner included and confirm a seat on the seven a.m. flight. Does that seem acceptable to you?' },
+      { speaker: 1, spanish: 'Aceptaré esa solución, aunque insisto en que la reclamación quede registrada formalmente. Espero que la indemnización se tramite con la mayor celeridad posible.', english: 'I will accept that solution, although I insist that the complaint be formally registered. I hope that the compensation will be processed as quickly as possible.' },
+      { speaker: 0, spanish: 'Por supuesto. Le entrego el justificante de la reclamación con el número de expediente. Recibirá una respuesta por escrito en un plazo máximo de treinta días. Nuevamente, le pido disculpas en nombre de la compañía.', english: 'Of course. Here is the receipt for the complaint with the case number. You will receive a written response within a maximum period of thirty days. Once again, I apologize on behalf of the airline.' },
+    ],
+    vocab: [
+      { word: 'reclamación formal', english: 'formal complaint' },
+      { word: 'indemnización', english: 'compensation / indemnity' },
+      { word: 'incidencia', english: 'incident / issue' },
+      { word: 'normativa europea', english: 'European regulations' },
+      { word: 'justificante', english: 'receipt / proof of submission' },
+      { word: 'tramitar', english: 'to process / to handle (paperwork)' },
+    ],
+    quiz: [
+      { prompt: 'What does "con todo respeto" convey in this context?', options: ['A casual greeting', 'A polite but firm way to express disagreement', 'An apology', 'A formal farewell'], correct: 1, explanation: "\"Con todo respeto\" (with all due respect) is a formal softener used before expressing disagreement or criticism. It signals that the speaker is about to challenge something while maintaining a courteous tone — essential in B2-level formal register." },
+      { prompt: 'Which form correctly expresses "if there were no direct flight available"?', options: ['Si no hay un vuelo directo disponible', 'Si no hubiera un vuelo directo disponible', 'Si no habrá un vuelo directo disponible', 'Si no habría un vuelo directo disponible'], correct: 1, explanation: "The imperfect subjunctive \"hubiera\" is required after \"si\" to express a hypothetical or unlikely condition. Using the indicative (\"hay\") would make it a real condition, and using the conditional (\"habría\") after \"si\" is grammatically incorrect in standard Spanish." },
+      { prompt: 'What does "tramitar una indemnización" mean?', options: ['To deny a compensation claim', 'To process a compensation claim', 'To appeal a court ruling', 'To cancel a reservation'], correct: 1, explanation: "\"Tramitar\" means to process or handle official paperwork, and \"indemnización\" means compensation or indemnity. Together, \"tramitar una indemnización\" refers to the bureaucratic process of filing and processing a compensation claim." },
     ],
   },
 

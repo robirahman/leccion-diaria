@@ -547,6 +547,51 @@ const VERB_PREPOSITIONS_DATA = [
     level: 'A1',
     notes: 'NO preposition! English says "look AT" but Spanish uses no preposition.'
   },
+
+  // ──────────────────────────────────────
+  //  C2 — LITERARY / ARCHAIC REGISTER
+  // ──────────────────────────────────────
+
+  {
+    id: 'vp-64', verb: 'redundar', preposition: 'en',
+    english: 'to result in / to redound to',
+    example: 'Los recortes presupuestarios redundaron en una pérdida de calidad del servicio.',
+    exampleEn: 'The budget cuts resulted in a loss of service quality.',
+    level: 'C2',
+    notes: 'Formal/literary register. English uses "result in"; Spanish also uses "en". Common in academic and journalistic writing.'
+  },
+  {
+    id: 'vp-65', verb: 'atenerse', preposition: 'a',
+    english: 'to abide by / to accept the consequences of',
+    example: 'Quien incumpla las normas deberá atenerse a las consecuencias.',
+    exampleEn: 'Whoever breaks the rules must accept the consequences.',
+    level: 'C2',
+    notes: 'Very formal. Often in legal or institutional contexts: "atenerse a las consecuencias".'
+  },
+  {
+    id: 'vp-66', verb: 'propender', preposition: 'a',
+    english: 'to tend toward / to be inclined to',
+    example: 'Las sociedades posindustriales propenden a una mayor individualización.',
+    exampleEn: 'Post-industrial societies tend toward greater individualization.',
+    level: 'C2',
+    notes: 'Highly literary/academic. English equivalents "tend to" or "be inclined to" use different prepositions.'
+  },
+  {
+    id: 'vp-67', verb: 'versar', preposition: 'sobre',
+    english: 'to deal with / to be about',
+    example: 'La tesis versa sobre la influencia del surrealismo en la poesía hispanoamericana.',
+    exampleEn: 'The thesis deals with the influence of surrealism on Spanish-American poetry.',
+    level: 'C2',
+    notes: 'Formal academic usage. More elevated than "tratar de/sobre". Common in abstracts and scholarly reviews.'
+  },
+  {
+    id: 'vp-68', verb: 'desistir', preposition: 'de',
+    english: 'to desist from / to give up on',
+    example: 'El gobierno desistió de su propuesta tras la oposición generalizada.',
+    exampleEn: 'The government gave up on its proposal after widespread opposition.',
+    level: 'C2',
+    notes: 'Formal/legal register. English often drops the preposition ("desist"), but Spanish requires "de".'
+  },
 ];
 
 const VERB_PREPOSITIONS_QUIZ = [

@@ -33,6 +33,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-1',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¡Hola! ¿Cómo estás?',
     english: 'Hello! How are you?',
     notes: 'Informal greeting, used with friends and family',
@@ -42,6 +43,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-2',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¿Cómo está usted?',
     english: 'How are you? (formal)',
     notes: 'Use "usted" with elders, strangers, or in professional settings',
@@ -51,6 +53,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-3',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Buenos días',
     english: 'Good morning',
     notes: 'Used until around noon; the most common daytime greeting',
@@ -60,6 +63,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-4',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Buenas tardes',
     english: 'Good afternoon',
     notes: 'Used roughly from noon until sunset',
@@ -69,6 +73,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-5',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Buenas noches',
     english: 'Good evening / Good night',
     notes: 'Used both as a greeting and a farewell after dark',
@@ -78,6 +83,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-6',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¿Qué tal?',
     english: 'How\'s it going?',
     notes: 'Very common casual greeting across all Spanish-speaking countries',
@@ -87,6 +93,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-7',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¿Qué hay de nuevo?',
     english: 'What\'s new?',
     notes: 'Casual way to ask what someone has been up to',
@@ -96,6 +103,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-8',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¿Qué onda?',
     english: 'What\'s up?',
     notes: 'Very informal, popular in Mexico and Central America',
@@ -105,6 +113,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-9',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¡Tanto tiempo sin verte!',
     english: 'Long time no see!',
     notes: 'Warm expression when reuniting after a long time',
@@ -114,6 +123,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-10',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¡Adiós! ¡Cuídate!',
     english: 'Goodbye! Take care!',
     notes: 'Common farewell combination',
@@ -123,6 +133,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-11',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Hasta luego',
     english: 'See you later',
     notes: 'The most standard farewell, appropriate in any context',
@@ -132,6 +143,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-12',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Hasta mañana',
     english: 'See you tomorrow',
     notes: 'Used when you know you will see the person the next day',
@@ -141,6 +153,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-13',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Nos vemos pronto',
     english: 'See you soon',
     notes: 'Friendly and optimistic farewell',
@@ -150,6 +163,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-14',
     situation: 'greetings',
+    level: 'A1',
     spanish: 'Fue un placer verle',
     english: 'It was a pleasure seeing you',
     notes: 'Formal farewell, often used in professional settings',
@@ -159,6 +173,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-15',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¿Cómo te ha ido?',
     english: 'How have things been?',
     notes: 'Asking about someone\'s recent life, slightly deeper than "¿Qué tal?"',
@@ -168,6 +183,7 @@ const PHRASES_DATA = [
   {
     id: 'greet-16',
     situation: 'greetings',
+    level: 'A1',
     spanish: '¡Bienvenido! ¡Pasa, pasa!',
     english: 'Welcome! Come in, come in!',
     notes: 'Warm way to welcome someone into your home; repeating "pasa" adds warmth',
@@ -181,6 +197,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-1',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Por favor',
     english: 'Please',
     notes: 'Essential word; can be placed at the beginning or end of a sentence',
@@ -190,6 +207,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-2',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Muchas gracias',
     english: 'Thank you very much',
     notes: '"Muchas" intensifies the gratitude compared to a simple "gracias"',
@@ -199,6 +217,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-3',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Mil gracias',
     english: 'A thousand thanks',
     notes: 'Emphatic way to express deep gratitude',
@@ -208,6 +227,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-4',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Disculpe, ¿podría ayudarme?',
     english: 'Excuse me, could you help me?',
     notes: 'Polite way to approach a stranger for help',
@@ -217,6 +237,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-5',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Lo siento mucho',
     english: 'I\'m very sorry',
     notes: 'Expresses genuine remorse or sympathy',
@@ -226,6 +247,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-6',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Perdón, ¿me permite pasar?',
     english: 'Pardon me, may I pass?',
     notes: 'Used when navigating through a crowd or tight space',
@@ -235,6 +257,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-7',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Con permiso',
     english: 'Excuse me / With your permission',
     notes: 'Used when passing by someone or entering a room',
@@ -244,6 +267,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-8',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'No se preocupe',
     english: 'Don\'t worry about it',
     notes: 'Reassuring someone formally that all is well',
@@ -253,6 +277,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-9',
     situation: 'politeness',
+    level: 'A1',
     spanish: '¿Sería tan amable de repetir eso?',
     english: 'Would you be so kind as to repeat that?',
     notes: 'Very polite request, useful when learning Spanish',
@@ -262,6 +287,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-10',
     situation: 'politeness',
+    level: 'A1',
     spanish: '¡Que tenga un buen día!',
     english: 'Have a good day!',
     notes: 'Polite farewell often used in shops and offices',
@@ -271,6 +297,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-11',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Le agradezco mucho su ayuda',
     english: 'I really appreciate your help',
     notes: '"Agradecer" is more formal than "dar las gracias"',
@@ -280,6 +307,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-12',
     situation: 'politeness',
+    level: 'A1',
     spanish: '¡Salud!',
     english: 'Bless you! / Cheers!',
     notes: 'Said when someone sneezes or when making a toast',
@@ -289,6 +317,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-13',
     situation: 'politeness',
+    level: 'A1',
     spanish: '¡Buen provecho!',
     english: 'Enjoy your meal!',
     notes: 'Said to anyone who is eating, even strangers in a restaurant; very common culturally',
@@ -298,6 +327,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-14',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Fue sin querer, lo siento',
     english: 'It was an accident, I\'m sorry',
     notes: '"Sin querer" literally means "without wanting to"',
@@ -307,6 +337,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-15',
     situation: 'politeness',
+    level: 'A1',
     spanish: 'Muy amable de su parte',
     english: 'Very kind of you',
     notes: 'Formal expression of appreciation for a kindness',
@@ -316,6 +347,7 @@ const PHRASES_DATA = [
   {
     id: 'polite-16',
     situation: 'politeness',
+    level: 'A1',
     spanish: '¿Le importaría hablar más despacio?',
     english: 'Would you mind speaking more slowly?',
     notes: 'Essential phrase for language learners; very polite phrasing',
@@ -329,6 +361,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-1',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Me llamo María. ¿Y tú?',
     english: 'My name is María. And you?',
     notes: '"Me llamo" literally means "I call myself"',
@@ -338,6 +371,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-2',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Mucho gusto en conocerle',
     english: 'Pleased to meet you',
     notes: 'Formal introduction; "conocerle" uses the usted form',
@@ -347,6 +381,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-3',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿De dónde eres?',
     english: 'Where are you from?',
     notes: 'One of the most common questions when meeting someone new',
@@ -356,6 +391,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-4',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿A qué te dedicas?',
     english: 'What do you do for a living?',
     notes: 'More natural in Spanish than the literal "¿Cuál es tu trabajo?"',
@@ -365,6 +401,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-5',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Te presento a mi amigo Juan',
     english: 'Let me introduce you to my friend Juan',
     notes: 'Informal third-party introduction',
@@ -374,6 +411,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-6',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Le presento al señor García',
     english: 'Allow me to introduce Mr. García',
     notes: 'Formal third-party introduction using "usted" form',
@@ -383,6 +421,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-7',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿Cuántos años tienes?',
     english: 'How old are you?',
     notes: 'Literally "How many years do you have?" — Spanish uses "tener" (to have) for age',
@@ -392,6 +431,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-8',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿Hablas español?',
     english: 'Do you speak Spanish?',
     notes: 'A question you will hear often as a learner',
@@ -401,6 +441,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-9',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Hablo un poco de español',
     english: 'I speak a little Spanish',
     notes: 'Humble and endearing way to set expectations',
@@ -410,6 +451,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-10',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿Cuánto tiempo llevas aquí?',
     english: 'How long have you been here?',
     notes: '"Llevar + time" is the Spanish way to express duration',
@@ -419,6 +461,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-11',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Estoy aquí de vacaciones',
     english: 'I\'m here on vacation',
     notes: 'Common explanation for tourists',
@@ -428,6 +471,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-12',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿Estás casado o soltero?',
     english: 'Are you married or single?',
     notes: 'In Latin culture this is a common early question and is not considered rude',
@@ -437,6 +481,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-13',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿Tienes hermanos?',
     english: 'Do you have siblings?',
     notes: '"Hermanos" covers both brothers and sisters',
@@ -446,6 +491,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-14',
     situation: 'introductions',
+    level: 'A1',
     spanish: '¿Dónde vives?',
     english: 'Where do you live?',
     notes: 'Standard question for getting to know someone',
@@ -455,6 +501,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-15',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Soy estudiante de intercambio',
     english: 'I\'m an exchange student',
     notes: 'Useful introduction for students abroad',
@@ -464,6 +511,7 @@ const PHRASES_DATA = [
   {
     id: 'intro-16',
     situation: 'introductions',
+    level: 'A1',
     spanish: 'Encantada de conocerte',
     english: 'Delighted to meet you (said by a woman)',
     notes: 'Women say "encantada", men say "encantado" — the adjective agrees with the speaker',
@@ -477,6 +525,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-1',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Disculpe, ¿dónde está la estación de metro?',
     english: 'Excuse me, where is the metro station?',
     notes: 'Polite way to ask for directions from a stranger',
@@ -486,6 +535,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-2',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Cómo llego al centro de la ciudad?',
     english: 'How do I get to the city center?',
     notes: '"Llegar" is the key verb for reaching a destination',
@@ -495,6 +545,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-3',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Gire a la derecha en el semáforo',
     english: 'Turn right at the traffic light',
     notes: '"Semáforo" is traffic light; essential navigation vocabulary',
@@ -504,6 +555,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-4',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Siga todo derecho hasta la plaza',
     english: 'Go straight ahead until the square',
     notes: '"Todo derecho" means straight ahead; don\'t confuse "derecho" (straight) with "derecha" (right)',
@@ -513,6 +565,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-5',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Está lejos de aquí?',
     english: 'Is it far from here?',
     notes: 'Important follow-up question after getting directions',
@@ -522,6 +575,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-6',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Puede mostrarme en el mapa?',
     english: 'Can you show me on the map?',
     notes: 'Useful when verbal directions are hard to follow',
@@ -531,6 +585,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-7',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Está al lado de la farmacia',
     english: 'It\'s next to the pharmacy',
     notes: '"Al lado de" is one of the most useful location phrases',
@@ -540,6 +595,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-8',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Está enfrente del banco',
     english: 'It\'s across from the bank',
     notes: '"Enfrente de" means opposite or across from',
@@ -549,6 +605,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-9',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Creo que estoy perdido. ¿Me puede ayudar?',
     english: 'I think I\'m lost. Can you help me?',
     notes: 'Use "perdido" (masc.) or "perdida" (fem.) depending on speaker',
@@ -558,6 +615,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-10',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Hay un cajero automático cerca?',
     english: 'Is there an ATM nearby?',
     notes: '"Cajero automático" is ATM; in some countries just "cajero"',
@@ -567,6 +625,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-11',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Dónde está el baño, por favor?',
     english: 'Where is the bathroom, please?',
     notes: 'One of the most essential travel phrases; "baño" or "servicio" depending on the country',
@@ -576,6 +635,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-12',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Está entre la panadería y la librería',
     english: 'It\'s between the bakery and the bookstore',
     notes: '"Entre" is used for between two landmarks',
@@ -585,6 +645,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-13',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Cruce el puente y luego doble a la izquierda',
     english: 'Cross the bridge and then turn left',
     notes: '"Cruzar" means to cross; "doblar" is another word for turn',
@@ -594,6 +655,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-14',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Es mejor ir en autobús o caminando?',
     english: 'Is it better to go by bus or on foot?',
     notes: 'Practical question for gauging distance',
@@ -603,6 +665,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-15',
     situation: 'directions',
+    level: 'A2',
     spanish: '¿Cuál es la dirección exacta?',
     english: 'What is the exact address?',
     notes: '"Dirección" means both direction and address in Spanish',
@@ -612,6 +675,7 @@ const PHRASES_DATA = [
   {
     id: 'dir-16',
     situation: 'directions',
+    level: 'A2',
     spanish: 'Busco la calle Cervantes',
     english: 'I\'m looking for Cervantes Street',
     notes: '"Buscar" means to look for; no preposition needed in Spanish',
@@ -625,6 +689,7 @@ const PHRASES_DATA = [
   {
     id: 'food-1',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Tienen mesa para dos personas?',
     english: 'Do you have a table for two?',
     notes: 'Standard way to request seating at a restaurant',
@@ -634,6 +699,7 @@ const PHRASES_DATA = [
   {
     id: 'food-2',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Me puede traer la carta, por favor?',
     english: 'Can you bring me the menu, please?',
     notes: '"La carta" is the menu; "el menú" often refers to a set meal deal',
@@ -643,6 +709,7 @@ const PHRASES_DATA = [
   {
     id: 'food-3',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Cuál es el plato del día?',
     english: 'What is the dish of the day?',
     notes: 'Many restaurants in Spain and Latin America offer a daily special at a good price',
@@ -652,6 +719,7 @@ const PHRASES_DATA = [
   {
     id: 'food-4',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Qué me recomienda?',
     english: 'What do you recommend?',
     notes: 'Great way to try local specialties',
@@ -661,6 +729,7 @@ const PHRASES_DATA = [
   {
     id: 'food-5',
     situation: 'food',
+    level: 'A2',
     spanish: 'Soy alérgico a los mariscos',
     english: 'I\'m allergic to shellfish',
     notes: 'Critical safety phrase; use "alérgico" (masc.) or "alérgica" (fem.)',
@@ -670,6 +739,7 @@ const PHRASES_DATA = [
   {
     id: 'food-6',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Este plato es picante?',
     english: 'Is this dish spicy?',
     notes: 'Important question especially in Mexico and Central America',
@@ -679,6 +749,7 @@ const PHRASES_DATA = [
   {
     id: 'food-7',
     situation: 'food',
+    level: 'A2',
     spanish: 'Para mí, una cerveza, por favor',
     english: 'For me, a beer, please',
     notes: '"Para mí" is the standard way to order for yourself',
@@ -688,6 +759,7 @@ const PHRASES_DATA = [
   {
     id: 'food-8',
     situation: 'food',
+    level: 'A2',
     spanish: 'La cuenta, por favor',
     english: 'The check, please',
     notes: 'In many Spanish-speaking countries, you must ask for the check; it won\'t come automatically',
@@ -697,6 +769,7 @@ const PHRASES_DATA = [
   {
     id: 'food-9',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Aceptan tarjeta de crédito?',
     english: 'Do you accept credit cards?',
     notes: 'Many smaller restaurants are cash-only, so always ask',
@@ -706,6 +779,7 @@ const PHRASES_DATA = [
   {
     id: 'food-10',
     situation: 'food',
+    level: 'A2',
     spanish: '¡Está delicioso! ¿Cuál es la receta?',
     english: 'It\'s delicious! What\'s the recipe?',
     notes: 'A great compliment to the chef or host',
@@ -715,6 +789,7 @@ const PHRASES_DATA = [
   {
     id: 'food-11',
     situation: 'food',
+    level: 'A2',
     spanish: 'Quisiera un café con leche, por favor',
     english: 'I\'d like a coffee with milk, please',
     notes: '"Quisiera" is the polite conditional form of "querer" (to want)',
@@ -724,6 +799,7 @@ const PHRASES_DATA = [
   {
     id: 'food-12',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Tienen opciones vegetarianas?',
     english: 'Do you have vegetarian options?',
     notes: 'Increasingly common question in Spanish-speaking countries',
@@ -733,6 +809,7 @@ const PHRASES_DATA = [
   {
     id: 'food-13',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Está incluida la propina?',
     english: 'Is the tip included?',
     notes: 'Tipping customs vary: in Spain, small tips are common; in Mexico, 10-15% is standard',
@@ -742,6 +819,7 @@ const PHRASES_DATA = [
   {
     id: 'food-14',
     situation: 'food',
+    level: 'A2',
     spanish: 'Me falta un tenedor, ¿me trae uno?',
     english: 'I\'m missing a fork, can you bring me one?',
     notes: 'Useful for requesting utensils: cuchillo (knife), cuchara (spoon), tenedor (fork)',
@@ -751,6 +829,7 @@ const PHRASES_DATA = [
   {
     id: 'food-15',
     situation: 'food',
+    level: 'A2',
     spanish: '¿Puedo ver la carta de postres?',
     english: 'Can I see the dessert menu?',
     notes: '"Postre" is dessert; flan and churros are popular choices',
@@ -760,6 +839,7 @@ const PHRASES_DATA = [
   {
     id: 'food-16',
     situation: 'food',
+    level: 'A2',
     spanish: 'Yo invito. Esta cena va por mi cuenta.',
     english: 'My treat. This dinner is on me.',
     notes: '"Invitar" in this context means to pay for someone; a generous gesture',
@@ -773,6 +853,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-1',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Cuánto cuesta esto?',
     english: 'How much does this cost?',
     notes: 'The most essential shopping phrase',
@@ -782,6 +863,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-2',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Tienen esto en otra talla?',
     english: 'Do you have this in another size?',
     notes: '"Talla" is for clothing sizes; "número" for shoe sizes',
@@ -791,6 +873,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-3',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Puedo probármelo?',
     english: 'Can I try it on?',
     notes: '"Probarse" is reflexive; the fitting room is "el probador"',
@@ -800,6 +883,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-4',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Tienen esto en color azul?',
     english: 'Do you have this in blue?',
     notes: 'Common colors: rojo (red), verde (green), negro (black), blanco (white)',
@@ -809,6 +893,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-5',
     situation: 'shopping',
+    level: 'A2',
     spanish: 'Me queda un poco grande. ¿Tiene una talla menos?',
     english: 'It\'s a bit big on me. Do you have one size smaller?',
     notes: '"Quedar" describes how something fits: grande (big), pequeño (small), bien (well)',
@@ -818,6 +903,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-6',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Hay descuento si pago en efectivo?',
     english: 'Is there a discount if I pay in cash?',
     notes: 'In many Latin American markets, cash payment can get you a better price',
@@ -827,6 +913,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-7',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Cuál es el precio final?',
     english: 'What is the final price?',
     notes: 'Useful when negotiating or after discounts are applied',
@@ -836,6 +923,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-8',
     situation: 'shopping',
+    level: 'A2',
     spanish: 'Solo estoy mirando, gracias',
     english: 'I\'m just looking, thanks',
     notes: 'Polite way to let a salesperson know you don\'t need help yet',
@@ -845,6 +933,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-9',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Tiene garantía este producto?',
     english: 'Does this product have a warranty?',
     notes: '"Garantía" is important for electronics and appliances',
@@ -854,6 +943,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-10',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Puedo devolver esto si no me queda bien?',
     english: 'Can I return this if it doesn\'t fit?',
     notes: '"Devolver" means to return an item; policies vary by country',
@@ -863,6 +953,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-11',
     situation: 'shopping',
+    level: 'A2',
     spanish: 'Me lo llevo',
     english: 'I\'ll take it',
     notes: 'The phrase that seals the deal when you decide to buy',
@@ -872,6 +963,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-12',
     situation: 'shopping',
+    level: 'A2',
     spanish: 'Es demasiado caro. ¿No tiene algo más barato?',
     english: 'It\'s too expensive. Don\'t you have something cheaper?',
     notes: 'Direct but acceptable, especially in markets',
@@ -881,6 +973,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-13',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿A qué hora cierran?',
     english: 'What time do you close?',
     notes: 'In Spain, many shops close for siesta from 2-5 PM',
@@ -890,6 +983,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-14',
     situation: 'shopping',
+    level: 'A2',
     spanish: '¿Me puede envolver esto para regalo?',
     english: 'Can you gift-wrap this for me?',
     notes: 'Many shops offer free gift wrapping, especially during holidays',
@@ -899,6 +993,7 @@ const PHRASES_DATA = [
   {
     id: 'shop-15',
     situation: 'shopping',
+    level: 'A2',
     spanish: 'Necesito una bolsa, por favor',
     english: 'I need a bag, please',
     notes: 'In many countries, plastic bags now cost extra or are not available',
@@ -912,6 +1007,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-1',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Dónde está la parada de autobús?',
     english: 'Where is the bus stop?',
     notes: '"Parada" is the stop; "estación" is a larger station',
@@ -921,6 +1017,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-2',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Cuánto cuesta un boleto sencillo?',
     english: 'How much is a single ticket?',
     notes: '"Boleto" in Latin America, "billete" in Spain',
@@ -930,6 +1027,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-3',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Este autobús va al aeropuerto?',
     english: 'Does this bus go to the airport?',
     notes: 'Always confirm the route before boarding',
@@ -939,6 +1037,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-4',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Me puede llevar a esta dirección, por favor?',
     english: 'Can you take me to this address, please?',
     notes: 'Essential taxi phrase; showing the address on your phone helps',
@@ -948,6 +1047,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-5',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿A qué hora sale el próximo tren?',
     english: 'What time does the next train leave?',
     notes: '"Salir" for departures; "llegar" for arrivals',
@@ -957,6 +1057,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-6',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Dónde puedo comprar un abono de transporte?',
     english: 'Where can I buy a transit pass?',
     notes: '"Abono" is a multi-ride or monthly pass; much cheaper than individual tickets',
@@ -966,6 +1067,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-7',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Me avisa cuando lleguemos, por favor?',
     english: 'Can you let me know when we arrive, please?',
     notes: 'Useful request for bus drivers or taxi drivers',
@@ -975,6 +1077,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-8',
     situation: 'transport',
+    level: 'B1',
     spanish: 'Necesito ir a la terminal de autobuses',
     english: 'I need to go to the bus terminal',
     notes: '"Terminal" is used for major intercity bus stations',
@@ -984,6 +1087,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-9',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Tiene taxímetro?',
     english: 'Do you have a meter?',
     notes: 'Always ask; in some cities, unmetered taxis may overcharge tourists',
@@ -993,6 +1097,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-10',
     situation: 'transport',
+    level: 'B1',
     spanish: 'Pare aquí, por favor',
     english: 'Stop here, please',
     notes: '"Pare" is the formal imperative of "parar"; essential for taxis',
@@ -1002,6 +1107,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-11',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Hay conexión de wifi en el tren?',
     english: 'Is there wifi on the train?',
     notes: 'Modern trains often have wifi, especially high-speed ones like AVE in Spain',
@@ -1011,6 +1117,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-12',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Dónde está la puerta de embarque?',
     english: 'Where is the boarding gate?',
     notes: 'Airport vocabulary: "embarque" (boarding), "facturación" (check-in)',
@@ -1020,6 +1127,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-13',
     situation: 'transport',
+    level: 'B1',
     spanish: 'Mi vuelo tiene retraso. ¿Cuánto tiempo más?',
     english: 'My flight is delayed. How much longer?',
     notes: '"Retraso" means delay; very useful airport vocabulary',
@@ -1029,6 +1137,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-14',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Dónde puedo alquilar un coche?',
     english: 'Where can I rent a car?',
     notes: '"Alquilar" is to rent; "coche" in Spain, "carro" in Latin America',
@@ -1038,6 +1147,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-15',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Es necesario hacer trasbordo?',
     english: 'Do I need to transfer?',
     notes: '"Trasbordo" or "transbordo" means a transfer between lines or vehicles',
@@ -1047,6 +1157,7 @@ const PHRASES_DATA = [
   {
     id: 'trans-16',
     situation: 'transport',
+    level: 'B1',
     spanish: '¿Cuánto se tarda en llegar al centro?',
     english: 'How long does it take to get to the center?',
     notes: '"Tardar" is the verb for how long something takes',
@@ -1060,6 +1171,7 @@ const PHRASES_DATA = [
   {
     id: 'health-1',
     situation: 'health',
+    level: 'B1',
     spanish: 'No me siento bien. Necesito ver a un médico.',
     english: 'I don\'t feel well. I need to see a doctor.',
     notes: '"Médico" is the standard term; "doctor" is also widely used',
@@ -1069,6 +1181,7 @@ const PHRASES_DATA = [
   {
     id: 'health-2',
     situation: 'health',
+    level: 'B1',
     spanish: 'Me duele mucho la cabeza',
     english: 'I have a bad headache',
     notes: '"Doler" works like "gustar": the body part is the subject. Me duele la cabeza (singular), me duelen los pies (plural)',
@@ -1078,6 +1191,7 @@ const PHRASES_DATA = [
   {
     id: 'health-3',
     situation: 'health',
+    level: 'B1',
     spanish: 'Tengo fiebre y escalofríos',
     english: 'I have a fever and chills',
     notes: '"Fiebre" is fever; "escalofríos" are chills',
@@ -1087,6 +1201,7 @@ const PHRASES_DATA = [
   {
     id: 'health-4',
     situation: 'health',
+    level: 'B1',
     spanish: 'Soy alérgico a la penicilina',
     english: 'I\'m allergic to penicillin',
     notes: 'Critical medical information to communicate clearly',
@@ -1096,6 +1211,7 @@ const PHRASES_DATA = [
   {
     id: 'health-5',
     situation: 'health',
+    level: 'B1',
     spanish: '¿Dónde está la farmacia más cercana?',
     english: 'Where is the nearest pharmacy?',
     notes: 'In Spain and Latin America, pharmacists can recommend medications for minor ailments',
@@ -1105,6 +1221,7 @@ const PHRASES_DATA = [
   {
     id: 'health-6',
     situation: 'health',
+    level: 'B1',
     spanish: 'Necesito algo para el dolor de estómago',
     english: 'I need something for a stomachache',
     notes: '"Dolor de estómago" or "dolor de barriga" for stomachache',
@@ -1114,6 +1231,7 @@ const PHRASES_DATA = [
   {
     id: 'health-7',
     situation: 'health',
+    level: 'B1',
     spanish: '¿Necesito receta para comprar este medicamento?',
     english: 'Do I need a prescription to buy this medication?',
     notes: '"Receta" is prescription; many drugs available OTC in Latin America require prescriptions elsewhere',
@@ -1123,6 +1241,7 @@ const PHRASES_DATA = [
   {
     id: 'health-8',
     situation: 'health',
+    level: 'B1',
     spanish: 'Me torcí el tobillo',
     english: 'I twisted my ankle',
     notes: '"Torcer" is to twist or sprain; common travel injury',
@@ -1132,6 +1251,7 @@ const PHRASES_DATA = [
   {
     id: 'health-9',
     situation: 'health',
+    level: 'B1',
     spanish: 'Tengo tos y me duele la garganta',
     english: 'I have a cough and my throat hurts',
     notes: '"Tos" is cough; "garganta" is throat',
@@ -1141,6 +1261,7 @@ const PHRASES_DATA = [
   {
     id: 'health-10',
     situation: 'health',
+    level: 'B1',
     spanish: '¿Cada cuántas horas debo tomar la medicina?',
     english: 'How often should I take the medicine?',
     notes: 'Essential question at the pharmacy or doctor\'s office',
@@ -1150,6 +1271,7 @@ const PHRASES_DATA = [
   {
     id: 'health-11',
     situation: 'health',
+    level: 'B1',
     spanish: 'Creo que tengo una infección',
     english: 'I think I have an infection',
     notes: '"Infección" is pronounced with stress on the last syllable',
@@ -1159,6 +1281,7 @@ const PHRASES_DATA = [
   {
     id: 'health-12',
     situation: 'health',
+    level: 'B1',
     spanish: '¿Tiene seguro médico?',
     english: 'Do you have health insurance?',
     notes: '"Seguro médico" is health insurance; always carry your card when traveling',
@@ -1168,6 +1291,7 @@ const PHRASES_DATA = [
   {
     id: 'health-13',
     situation: 'health',
+    level: 'B1',
     spanish: 'Me corté el dedo y no deja de sangrar',
     english: 'I cut my finger and it won\'t stop bleeding',
     notes: '"Sangrar" is to bleed; "cortar" is to cut',
@@ -1177,6 +1301,7 @@ const PHRASES_DATA = [
   {
     id: 'health-14',
     situation: 'health',
+    level: 'B1',
     spanish: 'Estoy embarazada de tres meses',
     english: 'I\'m three months pregnant',
     notes: 'Be careful: "embarazada" means pregnant, NOT embarrassed (a famous false friend)',
@@ -1186,6 +1311,7 @@ const PHRASES_DATA = [
   {
     id: 'health-15',
     situation: 'health',
+    level: 'B1',
     spanish: 'Necesito renovar mi receta',
     english: 'I need to renew my prescription',
     notes: '"Renovar" means to renew or refill',
@@ -1195,6 +1321,7 @@ const PHRASES_DATA = [
   {
     id: 'health-16',
     situation: 'health',
+    level: 'B1',
     spanish: 'Me siento mareado y con náuseas',
     english: 'I feel dizzy and nauseous',
     notes: '"Mareado" can mean dizzy or motion-sick',
@@ -1208,6 +1335,7 @@ const PHRASES_DATA = [
   {
     id: 'time-1',
     situation: 'time',
+    level: 'A1',
     spanish: '¿Qué hora es?',
     english: 'What time is it?',
     notes: 'The most basic time question; Spanish uses "ser" for telling time',
@@ -1217,6 +1345,7 @@ const PHRASES_DATA = [
   {
     id: 'time-2',
     situation: 'time',
+    level: 'A1',
     spanish: 'Es la una y media',
     english: 'It\'s one thirty',
     notes: 'Only 1:00 uses "Es la una" (singular); all others use "Son las..."',
@@ -1226,6 +1355,7 @@ const PHRASES_DATA = [
   {
     id: 'time-3',
     situation: 'time',
+    level: 'A1',
     spanish: '¿A qué hora empieza la reunión?',
     english: 'What time does the meeting start?',
     notes: '"Empezar" or "comenzar" both mean to start',
@@ -1235,6 +1365,7 @@ const PHRASES_DATA = [
   {
     id: 'time-4',
     situation: 'time',
+    level: 'A1',
     spanish: 'Llego en quince minutos',
     english: 'I\'ll be there in fifteen minutes',
     notes: 'In many Latin cultures, time is more flexible than in the US or northern Europe',
@@ -1244,6 +1375,7 @@ const PHRASES_DATA = [
   {
     id: 'time-5',
     situation: 'time',
+    level: 'A1',
     spanish: '¿Qué día es hoy?',
     english: 'What day is today?',
     notes: 'Days in Spanish are not capitalized: lunes, martes, miércoles...',
@@ -1253,6 +1385,7 @@ const PHRASES_DATA = [
   {
     id: 'time-6',
     situation: 'time',
+    level: 'A1',
     spanish: '¿Cuál es la fecha de hoy?',
     english: 'What is today\'s date?',
     notes: 'Dates use day/month format: "el 15 de marzo" (March 15)',
@@ -1262,6 +1395,7 @@ const PHRASES_DATA = [
   {
     id: 'time-7',
     situation: 'time',
+    level: 'A1',
     spanish: 'Tengo una cita el lunes a las nueve',
     english: 'I have an appointment on Monday at nine',
     notes: '"Cita" means appointment or date depending on context',
@@ -1271,6 +1405,7 @@ const PHRASES_DATA = [
   {
     id: 'time-8',
     situation: 'time',
+    level: 'A1',
     spanish: '¿Podemos cambiar la hora de la cita?',
     english: 'Can we change the appointment time?',
     notes: 'Useful for rescheduling',
@@ -1280,6 +1415,7 @@ const PHRASES_DATA = [
   {
     id: 'time-9',
     situation: 'time',
+    level: 'A1',
     spanish: 'Perdona, llego tarde. Había mucho tráfico.',
     english: 'Sorry, I\'m late. There was a lot of traffic.',
     notes: '"Llegar tarde" is to arrive late; a very common excuse in big cities',
@@ -1289,6 +1425,7 @@ const PHRASES_DATA = [
   {
     id: 'time-10',
     situation: 'time',
+    level: 'A1',
     spanish: 'El vuelo sale a las seis de la mañana',
     english: 'The flight leaves at six in the morning',
     notes: 'Spanish specifies "de la mañana" (AM), "de la tarde" (PM), "de la noche" (evening/night)',
@@ -1298,6 +1435,7 @@ const PHRASES_DATA = [
   {
     id: 'time-11',
     situation: 'time',
+    level: 'A1',
     spanish: 'La tienda abre de lunes a sábado',
     english: 'The store is open Monday through Saturday',
     notes: 'Many shops in Spain close on Sundays',
@@ -1307,6 +1445,7 @@ const PHRASES_DATA = [
   {
     id: 'time-12',
     situation: 'time',
+    level: 'A1',
     spanish: '¿Hasta qué hora están abiertos?',
     english: 'Until what time are you open?',
     notes: '"Hasta" means until; important for planning visits',
@@ -1316,6 +1455,7 @@ const PHRASES_DATA = [
   {
     id: 'time-13',
     situation: 'time',
+    level: 'A1',
     spanish: 'Faltan veinte minutos para las cinco',
     english: 'It\'s twenty minutes to five',
     notes: '"Faltar" is used to express how much time remains before the hour',
@@ -1325,6 +1465,7 @@ const PHRASES_DATA = [
   {
     id: 'time-14',
     situation: 'time',
+    level: 'A1',
     spanish: 'Mi cumpleaños es el doce de agosto',
     english: 'My birthday is August twelfth',
     notes: 'Months are not capitalized in Spanish: enero, febrero, marzo...',
@@ -1334,6 +1475,7 @@ const PHRASES_DATA = [
   {
     id: 'time-15',
     situation: 'time',
+    level: 'A1',
     spanish: 'Nos vemos el próximo fin de semana',
     english: 'See you next weekend',
     notes: '"Fin de semana" is weekend; "entre semana" is weekdays',
@@ -1347,6 +1489,7 @@ const PHRASES_DATA = [
   {
     id: 'social-1',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Qué te gusta hacer en tu tiempo libre?',
     english: 'What do you like to do in your free time?',
     notes: '"Tiempo libre" is free time; "pasatiempos" or "hobbies" for hobbies',
@@ -1356,6 +1499,7 @@ const PHRASES_DATA = [
   {
     id: 'social-2',
     situation: 'social',
+    level: 'B1',
     spanish: '¡Qué buen tiempo hace hoy!',
     english: 'What nice weather today!',
     notes: '"Hacer" is used for weather: hace calor (it\'s hot), hace frío (it\'s cold)',
@@ -1365,6 +1509,7 @@ const PHRASES_DATA = [
   {
     id: 'social-3',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Has visto alguna buena película últimamente?',
     english: 'Have you seen any good movies lately?',
     notes: 'Great conversation starter',
@@ -1374,6 +1519,7 @@ const PHRASES_DATA = [
   {
     id: 'social-4',
     situation: 'social',
+    level: 'B1',
     spanish: 'Me encanta la música latina',
     english: 'I love Latin music',
     notes: '"Encantar" is stronger than "gustar"; it works the same grammatically',
@@ -1383,6 +1529,7 @@ const PHRASES_DATA = [
   {
     id: 'social-5',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Qué planes tienes para el fin de semana?',
     english: 'What are your plans for the weekend?',
     notes: 'Common way to suggest hanging out or making plans',
@@ -1392,6 +1539,7 @@ const PHRASES_DATA = [
   {
     id: 'social-6',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Te apetece tomar un café?',
     english: 'Do you feel like having a coffee?',
     notes: '"Apetecer" is very common in Spain; in Latin America you might hear "¿Se te antoja?"',
@@ -1401,6 +1549,7 @@ const PHRASES_DATA = [
   {
     id: 'social-7',
     situation: 'social',
+    level: 'B1',
     spanish: '¡Qué interesante! Cuéntame más.',
     english: 'How interesting! Tell me more.',
     notes: 'Shows genuine interest in the conversation',
@@ -1410,6 +1559,7 @@ const PHRASES_DATA = [
   {
     id: 'social-8',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Conoces algún buen restaurante por aquí?',
     english: 'Do you know any good restaurants around here?',
     notes: '"Conocer" for knowing places or people; "saber" for knowing facts',
@@ -1419,6 +1569,7 @@ const PHRASES_DATA = [
   {
     id: 'social-9',
     situation: 'social',
+    level: 'B1',
     spanish: 'Parece que va a llover',
     english: 'It looks like it\'s going to rain',
     notes: 'Classic small talk; "llover" is to rain, "nevar" is to snow',
@@ -1428,6 +1579,7 @@ const PHRASES_DATA = [
   {
     id: 'social-10',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Eres aficionado al fútbol?',
     english: 'Are you a soccer fan?',
     notes: 'Football (soccer) is by far the most popular sport in the Spanish-speaking world',
@@ -1437,6 +1589,7 @@ const PHRASES_DATA = [
   {
     id: 'social-11',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Has viajado mucho por Latinoamérica?',
     english: 'Have you traveled much through Latin America?',
     notes: 'Great topic for connecting with other travelers',
@@ -1446,6 +1599,7 @@ const PHRASES_DATA = [
   {
     id: 'social-12',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Quieres que salgamos a bailar esta noche?',
     english: 'Want to go out dancing tonight?',
     notes: 'Dancing is a huge part of social culture in Latin America',
@@ -1455,6 +1609,7 @@ const PHRASES_DATA = [
   {
     id: 'social-13',
     situation: 'social',
+    level: 'B1',
     spanish: 'La verdad es que no me gusta mucho el calor',
     english: 'To be honest, I don\'t really like the heat',
     notes: '"La verdad es que..." is a natural way to express honest opinions',
@@ -1464,6 +1619,7 @@ const PHRASES_DATA = [
   {
     id: 'social-14',
     situation: 'social',
+    level: 'B1',
     spanish: '¿Cómo se llama tu mascota?',
     english: 'What\'s your pet\'s name?',
     notes: '"Mascota" is pet; pets are beloved conversation topics everywhere',
@@ -1473,6 +1629,7 @@ const PHRASES_DATA = [
   {
     id: 'social-15',
     situation: 'social',
+    level: 'B1',
     spanish: '¡Qué bonita foto! ¿Dónde la tomaste?',
     english: 'What a beautiful photo! Where did you take it?',
     notes: 'Great for social media conversations or looking at someone\'s phone gallery',
@@ -1482,6 +1639,7 @@ const PHRASES_DATA = [
   {
     id: 'social-16',
     situation: 'social',
+    level: 'B1',
     spanish: 'Me cae muy bien tu amigo. Es muy simpático.',
     english: 'I really like your friend. He\'s very nice.',
     notes: '"Caer bien" means to like someone (personality); not romantic',
@@ -1495,6 +1653,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-1',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¡Ayuda! ¡Necesito ayuda!',
     english: 'Help! I need help!',
     notes: 'The single most important emergency phrase to know',
@@ -1504,6 +1663,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-2',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¡Llame a una ambulancia, por favor!',
     english: 'Call an ambulance, please!',
     notes: 'Emergency numbers vary by country: 112 in Spain, 911 in Mexico',
@@ -1513,6 +1673,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-3',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Necesito llamar a la policía',
     english: 'I need to call the police',
     notes: '"Policía" is both the police force and an individual officer',
@@ -1522,6 +1683,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-4',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¡Fuego! ¡Hay un incendio!',
     english: 'Fire! There\'s a fire!',
     notes: '"Fuego" is fire; "incendio" is a fire (the event); "bomberos" are firefighters',
@@ -1531,6 +1693,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-5',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Me han robado la cartera',
     english: 'My wallet has been stolen',
     notes: '"Robar" is to steal; you should file a "denuncia" (police report)',
@@ -1540,6 +1703,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-6',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¡Cuidado! ¡Es peligroso!',
     english: 'Watch out! It\'s dangerous!',
     notes: '"Cuidado" is the universal warning word',
@@ -1549,6 +1713,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-7',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'He perdido mi pasaporte',
     english: 'I\'ve lost my passport',
     notes: 'Contact your embassy or consulate immediately: "embajada" (embassy), "consulado" (consulate)',
@@ -1558,6 +1723,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-8',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¿Dónde está la salida de emergencia?',
     english: 'Where is the emergency exit?',
     notes: 'Always locate emergency exits when entering buildings',
@@ -1567,6 +1733,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-9',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Alguien se ha desmayado',
     english: 'Someone has fainted',
     notes: '"Desmayarse" is to faint; check if they are breathing',
@@ -1576,6 +1743,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-10',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¿Alguien aquí sabe primeros auxilios?',
     english: 'Does anyone here know first aid?',
     notes: '"Primeros auxilios" is first aid',
@@ -1585,6 +1753,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-11',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Hay un accidente de tráfico en la carretera',
     english: 'There\'s a traffic accident on the highway',
     notes: '"Accidente de tráfico" or "accidente de tránsito" depending on the country',
@@ -1594,6 +1763,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-12',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Mi hijo se ha perdido. Tiene cinco años.',
     english: 'My child is lost. He\'s five years old.',
     notes: 'Describe the child: clothing, hair color, name',
@@ -1603,6 +1773,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-13',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Necesito contactar a mi embajada',
     english: 'I need to contact my embassy',
     notes: 'Embassies can help with lost documents, legal issues, and emergencies abroad',
@@ -1612,6 +1783,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-14',
     situation: 'emergency',
+    level: 'B1',
     spanish: 'Tengo una emergencia médica. ¿Hay un hospital cerca?',
     english: 'I have a medical emergency. Is there a hospital nearby?',
     notes: '"Urgencias" is the emergency room at a hospital',
@@ -1621,6 +1793,7 @@ const PHRASES_DATA = [
   {
     id: 'emerg-15',
     situation: 'emergency',
+    level: 'B1',
     spanish: '¡No se mueva! Ya viene la ayuda.',
     english: 'Don\'t move! Help is on the way.',
     notes: 'Important instruction if someone is injured',
@@ -1634,6 +1807,7 @@ const PHRASES_DATA = [
   {
     id: 'work-1',
     situation: 'work',
+    level: 'B1',
     spanish: 'Buenos días. Vengo a la entrevista de trabajo.',
     english: 'Good morning. I\'m here for the job interview.',
     notes: '"Entrevista de trabajo" is job interview',
@@ -1643,6 +1817,7 @@ const PHRASES_DATA = [
   {
     id: 'work-2',
     situation: 'work',
+    level: 'B1',
     spanish: 'Tengo experiencia en atención al cliente',
     english: 'I have experience in customer service',
     notes: '"Atención al cliente" is customer service; a transferable skill everywhere',
@@ -1652,6 +1827,7 @@ const PHRASES_DATA = [
   {
     id: 'work-3',
     situation: 'work',
+    level: 'B1',
     spanish: '¿Cuál es el horario de trabajo?',
     english: 'What are the working hours?',
     notes: '"Horario" is schedule; "jornada completa" (full-time), "media jornada" (part-time)',
@@ -1661,6 +1837,7 @@ const PHRASES_DATA = [
   {
     id: 'work-4',
     situation: 'work',
+    level: 'B1',
     spanish: '¿Podemos programar una reunión para mañana?',
     english: 'Can we schedule a meeting for tomorrow?',
     notes: '"Programar" or "agendar" for scheduling',
@@ -1670,6 +1847,7 @@ const PHRASES_DATA = [
   {
     id: 'work-5',
     situation: 'work',
+    level: 'B1',
     spanish: 'Le envío el informe por correo electrónico',
     english: 'I\'ll send you the report by email',
     notes: '"Informe" is report; "correo electrónico" is email',
@@ -1679,6 +1857,7 @@ const PHRASES_DATA = [
   {
     id: 'work-6',
     situation: 'work',
+    level: 'B1',
     spanish: '¿Cuándo es la fecha límite del proyecto?',
     english: 'When is the project deadline?',
     notes: '"Fecha límite" or "plazo" for deadline',
@@ -1688,6 +1867,7 @@ const PHRASES_DATA = [
   {
     id: 'work-7',
     situation: 'work',
+    level: 'B1',
     spanish: 'Necesito unos días libres la próxima semana',
     english: 'I need a few days off next week',
     notes: '"Días libres" is days off; "vacaciones" for vacation',
@@ -1697,6 +1877,7 @@ const PHRASES_DATA = [
   {
     id: 'work-8',
     situation: 'work',
+    level: 'B1',
     spanish: '¿Podría explicar eso con más detalle?',
     english: 'Could you explain that in more detail?',
     notes: 'Polite way to ask for clarification in a meeting',
@@ -1706,6 +1887,7 @@ const PHRASES_DATA = [
   {
     id: 'work-9',
     situation: 'work',
+    level: 'B1',
     spanish: 'Estoy de acuerdo con su propuesta',
     english: 'I agree with your proposal',
     notes: '"Estar de acuerdo" is to agree; very common in business',
@@ -1715,6 +1897,7 @@ const PHRASES_DATA = [
   {
     id: 'work-10',
     situation: 'work',
+    level: 'B1',
     spanish: '¿Cuál es el salario para este puesto?',
     english: 'What is the salary for this position?',
     notes: '"Puesto" is position; asking about salary in an interview is normal in Latin America',
@@ -1724,6 +1907,7 @@ const PHRASES_DATA = [
   {
     id: 'work-11',
     situation: 'work',
+    level: 'B1',
     spanish: 'Tengo una conferencia por videollamada a las tres',
     english: 'I have a video conference at three',
     notes: '"Videollamada" is video call; remote work vocabulary is increasingly common',
@@ -1733,6 +1917,7 @@ const PHRASES_DATA = [
   {
     id: 'work-12',
     situation: 'work',
+    level: 'B1',
     spanish: 'El jefe quiere hablar con usted',
     english: 'The boss wants to speak with you',
     notes: '"Jefe" is boss; "gerente" is manager',
@@ -1742,6 +1927,7 @@ const PHRASES_DATA = [
   {
     id: 'work-13',
     situation: 'work',
+    level: 'B1',
     spanish: 'Trabajo desde casa los viernes',
     english: 'I work from home on Fridays',
     notes: '"Trabajo remoto" or "teletrabajo" for remote work',
@@ -1751,6 +1937,7 @@ const PHRASES_DATA = [
   {
     id: 'work-14',
     situation: 'work',
+    level: 'B1',
     spanish: 'Aquí tiene mi currículum vitae',
     english: 'Here is my résumé',
     notes: '"Currículum vitae" or just "currículum" (CV) is used instead of "résumé"',
@@ -1760,6 +1947,7 @@ const PHRASES_DATA = [
   {
     id: 'work-15',
     situation: 'work',
+    level: 'B1',
     spanish: '¿Ofrecen beneficios como seguro médico?',
     english: 'Do you offer benefits like health insurance?',
     notes: '"Beneficios" or "prestaciones" for benefits; important to ask in interviews',
@@ -1769,6 +1957,7 @@ const PHRASES_DATA = [
   {
     id: 'work-16',
     situation: 'work',
+    level: 'B1',
     spanish: 'Ha sido un placer. Espero tener noticias suyas pronto.',
     english: 'It\'s been a pleasure. I hope to hear from you soon.',
     notes: 'Professional closing for a job interview',
@@ -1782,6 +1971,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-1',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Tienes una sonrisa muy bonita',
     english: 'You have a very beautiful smile',
     notes: 'A sweet and respectful compliment to start with',
@@ -1791,6 +1981,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-2',
     situation: 'romance',
+    level: 'B1',
     spanish: '¿Te gustaría salir a cenar conmigo?',
     english: 'Would you like to go out to dinner with me?',
     notes: '"Salir a cenar" is to go out to dinner; a classic date invitation',
@@ -1800,6 +1991,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-3',
     situation: 'romance',
+    level: 'B1',
     spanish: 'La pasé muy bien contigo',
     english: 'I had a great time with you',
     notes: '"Pasarla bien" means to have a good time; said after a date',
@@ -1809,6 +2001,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-4',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Me gustas mucho',
     english: 'I like you a lot',
     notes: '"Gustar" with people means romantic attraction; this is a big step in Spanish',
@@ -1818,6 +2011,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-5',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Eres muy especial para mí',
     english: 'You are very special to me',
     notes: 'Expresses deep affection beyond initial attraction',
@@ -1827,6 +2021,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-6',
     situation: 'romance',
+    level: 'B1',
     spanish: '¿Quieres ser mi novio/novia?',
     english: 'Do you want to be my boyfriend/girlfriend?',
     notes: 'In Latin culture, making the relationship official is often done explicitly',
@@ -1836,6 +2031,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-7',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Te extraño mucho',
     english: 'I miss you a lot',
     notes: '"Extrañar" in Latin America; "echar de menos" in Spain',
@@ -1845,6 +2041,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-8',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Te quiero',
     english: 'I love you',
     notes: '"Te quiero" is the most common way to say "I love you" in romantic contexts; "te amo" is even stronger and more intense',
@@ -1854,6 +2051,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-9',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Eres la persona más guapa que he conocido',
     english: 'You\'re the most beautiful person I\'ve ever met',
     notes: '"Guapo/guapa" is handsome/beautiful; works for both genders',
@@ -1863,6 +2061,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-10',
     situation: 'romance',
+    level: 'B1',
     spanish: '¿Puedo invitarte a un café?',
     english: 'Can I buy you a coffee?',
     notes: '"Invitar" means to treat someone; a low-pressure way to ask someone out',
@@ -1872,6 +2071,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-11',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Contigo me siento muy a gusto',
     english: 'I feel very comfortable with you',
     notes: '"A gusto" means at ease, comfortable; a lovely thing to hear',
@@ -1881,6 +2081,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-12',
     situation: 'romance',
+    level: 'B1',
     spanish: '¿Bailamos?',
     english: 'Shall we dance?',
     notes: 'Asking someone to dance at a party or club is very natural in Latin culture',
@@ -1890,6 +2091,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-13',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Pienso en ti todo el tiempo',
     english: 'I think about you all the time',
     notes: '"Pensar en" means to think about; romantic and sincere',
@@ -1899,6 +2101,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-14',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Tienes unos ojos preciosos',
     english: 'You have beautiful eyes',
     notes: '"Precioso/preciosa" is a very romantic word for beautiful',
@@ -1908,6 +2111,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-15',
     situation: 'romance',
+    level: 'B1',
     spanish: 'Me haces muy feliz',
     english: 'You make me very happy',
     notes: 'A heartfelt expression for an established relationship',
@@ -1917,6 +2121,7 @@ const PHRASES_DATA = [
   {
     id: 'romance-16',
     situation: 'romance',
+    level: 'B1',
     spanish: '¿Quieres conocer a mi familia?',
     english: 'Would you like to meet my family?',
     notes: 'Meeting the family is a significant step in Latin culture and shows serious commitment',
@@ -1930,6 +2135,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-1',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Discrepo respetuosamente con su planteamiento.',
     english: 'I respectfully disagree with your approach.',
     notes: 'A polite way to express disagreement in formal debate settings',
@@ -1939,6 +2145,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-2',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Si bien es cierto que hay argumentos a favor, también los hay en contra.',
     english: 'While it is true that there are arguments in favor, there are also arguments against.',
     notes: '"Si bien es cierto que..." is a key C1 concessive structure',
@@ -1948,6 +2155,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-3',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Habría que matizar que la situación es más compleja de lo que parece.',
     english: 'It should be clarified that the situation is more complex than it seems.',
     notes: '"Habría que matizar" softens the correction — very common in Spanish intellectual discourse',
@@ -1957,6 +2165,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-4',
     situation: 'debates',
+    level: 'C1',
     spanish: 'No comparto esa opinión porque carece de fundamento empírico.',
     english: 'I do not share that opinion because it lacks empirical basis.',
     notes: '"Carecer de" (to lack) is a formal verb common in academic and debate contexts',
@@ -1966,6 +2175,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-5',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Reconozco que tiene razón en cuanto a ese punto específico.',
     english: 'I acknowledge that you are right regarding that specific point.',
     notes: 'Making a concession while keeping room to disagree on other points',
@@ -1975,6 +2185,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-6',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Permítame puntualizar una cuestión importante.',
     english: 'Allow me to clarify an important issue.',
     notes: '"Puntualizar" means to specify or clarify — more precise than "aclarar"',
@@ -1984,6 +2195,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-7',
     situation: 'debates',
+    level: 'C1',
     spanish: 'A mi modo de ver, estamos enfocando mal el problema.',
     english: 'In my view, we are approaching the problem the wrong way.',
     notes: '"A mi modo de ver" is a sophisticated alternative to "en mi opinión"',
@@ -1993,6 +2205,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-8',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Es preciso tener en cuenta que los datos han cambiado desde entonces.',
     english: 'It is necessary to take into account that the data has changed since then.',
     notes: '"Es preciso" is stronger than "es necesario" — used in formal argumentation',
@@ -2002,6 +2215,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-9',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Eso no invalida el hecho de que el problema persiste.',
     english: 'That does not invalidate the fact that the problem persists.',
     notes: 'A strong rebuttal structure that acknowledges the other point while reasserting your own',
@@ -2011,6 +2225,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-10',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Dicho esto, cabe señalar que hay otras variables en juego.',
     english: 'That said, it should be noted that there are other variables at play.',
     notes: '"Dicho esto" is a smooth transition phrase; "cabe señalar" adds formality',
@@ -2020,6 +2235,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-11',
     situation: 'debates',
+    level: 'C1',
     spanish: 'El quid de la cuestión es si estamos dispuestos a asumir ese riesgo.',
     english: 'The crux of the matter is whether we are willing to assume that risk.',
     notes: '"El quid de la cuestión" — a Latin-derived expression meaning the heart of the issue',
@@ -2029,6 +2245,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-12',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Desde otra perspectiva, podríamos interpretarlo de manera distinta.',
     english: 'From another perspective, we could interpret it differently.',
     notes: 'Inviting a shift in viewpoint without directly contradicting',
@@ -2038,6 +2255,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-13',
     situation: 'debates',
+    level: 'C1',
     spanish: 'En resumidas cuentas, no hay consenso sobre este tema.',
     english: 'In short, there is no consensus on this topic.',
     notes: '"En resumidas cuentas" is a formal way to summarize — equivalent to "to sum up"',
@@ -2047,6 +2265,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-14',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Hemos llegado a un punto muerto y necesitamos replantear el debate.',
     english: 'We have reached a deadlock and need to reframe the debate.',
     notes: '"Punto muerto" (deadlock) is used in debates, negotiations, and traffic',
@@ -2056,6 +2275,7 @@ const PHRASES_DATA = [
   {
     id: 'debate-15',
     situation: 'debates',
+    level: 'C1',
     spanish: 'Propongo buscar un punto medio que satisfaga a ambas partes.',
     english: 'I propose we find a middle ground that satisfies both sides.',
     notes: '"Punto medio" (middle ground) signals willingness to compromise',
@@ -2069,6 +2289,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-1',
     situation: 'academic',
+    level: 'C1',
     spanish: 'El objetivo de esta presentación es analizar los factores subyacentes.',
     english: 'The objective of this presentation is to analyze the underlying factors.',
     notes: 'A standard opening line for academic presentations',
@@ -2078,6 +2299,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-2',
     situation: 'academic',
+    level: 'C1',
     spanish: 'A continuación analizaremos los resultados obtenidos.',
     english: 'Next, we will analyze the results obtained.',
     notes: '"A continuación" is the standard academic transition to the next section',
@@ -2087,6 +2309,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-3',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Los datos arrojan resultados significativos que respaldan nuestra hipótesis.',
     english: 'The data yields significant results that support our hypothesis.',
     notes: '"Arrojar resultados" is the standard collocation for presenting findings',
@@ -2096,6 +2319,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-4',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Cabe destacar que estos hallazgos son preliminares.',
     english: 'It should be noted that these findings are preliminary.',
     notes: '"Cabe destacar" is used to draw attention to an important caveat',
@@ -2105,6 +2329,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-5',
     situation: 'academic',
+    level: 'C1',
     spanish: 'En lo que respecta a la metodología, empleamos un enfoque mixto.',
     english: 'With regard to the methodology, we used a mixed approach.',
     notes: '"En lo que respecta a" is a formal prepositional phrase for topic introduction',
@@ -2114,6 +2339,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-6',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Como se puede observar en el gráfico, la tendencia es ascendente.',
     english: 'As can be observed in the graph, the trend is upward.',
     notes: 'Standard phrasing for referring to visual data in presentations',
@@ -2123,6 +2349,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-7',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Conviene subrayar que la muestra es representativa de la población estudiada.',
     english: 'It is worth emphasizing that the sample is representative of the studied population.',
     notes: '"Conviene subrayar" is a formal alternative to "es importante señalar"',
@@ -2132,6 +2359,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-8',
     situation: 'academic',
+    level: 'C1',
     spanish: 'De los datos se desprende que existe una correlación directa.',
     english: 'From the data it follows that there is a direct correlation.',
     notes: '"Desprenderse de" means to be inferred from — highly academic register',
@@ -2141,6 +2369,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-9',
     situation: 'academic',
+    level: 'C1',
     spanish: 'A modo de conclusión, los resultados confirman nuestra tesis inicial.',
     english: 'By way of conclusion, the results confirm our initial thesis.',
     notes: '"A modo de conclusión" signals the closing section of an academic talk',
@@ -2150,6 +2379,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-10',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Quedo a su disposición para preguntas y comentarios.',
     english: 'I am at your disposal for questions and comments.',
     notes: 'The standard closing line inviting Q&A in Spanish academia',
@@ -2159,6 +2389,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-11',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Esa es una observación muy pertinente que merece consideración.',
     english: 'That is a very pertinent observation that deserves consideration.',
     notes: 'A gracious way to acknowledge a question during Q&A',
@@ -2168,6 +2399,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-12',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Permítanme reformular la idea para mayor claridad.',
     english: 'Allow me to reformulate the idea for greater clarity.',
     notes: '"Reformular" is preferred over "repetir" in academic settings',
@@ -2177,6 +2409,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-13',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Según los hallazgos de nuestro estudio, la variable principal es el entorno.',
     english: 'According to the findings of our study, the main variable is the environment.',
     notes: '"Según los hallazgos" attributes claims to the research rather than personal opinion',
@@ -2186,6 +2419,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-14',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Los resultados corroboran la hipótesis planteada al inicio.',
     english: 'The results corroborate the hypothesis presented at the beginning.',
     notes: '"Corroborar" is more formal than "confirmar" in academic writing',
@@ -2195,6 +2429,7 @@ const PHRASES_DATA = [
   {
     id: 'academic-15',
     situation: 'academic',
+    level: 'C1',
     spanish: 'Quedan abiertas varias líneas de investigación para futuros trabajos.',
     english: 'Several lines of research remain open for future work.',
     notes: 'A standard way to end an academic presentation by pointing to future research',
@@ -2208,6 +2443,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-1',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Estamos dispuestos a considerar su propuesta si se ajustan los plazos.',
     english: 'We are willing to consider your proposal if the deadlines are adjusted.',
     notes: '"Estar dispuesto a" signals openness while maintaining conditions',
@@ -2217,6 +2453,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-2',
     situation: 'negotiations',
+    level: 'C2',
     spanish: '¿Podríamos llegar a un acuerdo intermedio que beneficie a ambas partes?',
     english: 'Could we reach a compromise that benefits both parties?',
     notes: '"Acuerdo intermedio" is a diplomatic way to propose compromise',
@@ -2226,6 +2463,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-3',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Necesitaríamos ciertas garantías antes de comprometernos.',
     english: 'We would need certain guarantees before committing.',
     notes: 'The conditional "necesitaríamos" softens the demand diplomatically',
@@ -2235,6 +2473,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-4',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'A cambio de eso, podríamos ofrecer una extensión del contrato.',
     english: 'In exchange for that, we could offer a contract extension.',
     notes: '"A cambio de" introduces a quid pro quo — essential negotiation language',
@@ -2244,6 +2483,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-5',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Hagamos una contrapropuesta que aborde sus inquietudes.',
     english: 'Let us make a counterproposal that addresses your concerns.',
     notes: '"Contrapropuesta" is the standard term for a counter-offer in formal negotiations',
@@ -2253,6 +2493,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-6',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Eso no es negociable; es una condición sine qua non.',
     english: 'That is non-negotiable; it is an essential condition.',
     notes: '"Sine qua non" (Latin) is commonly used in Spanish formal/legal contexts',
@@ -2262,6 +2503,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-7',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Vamos a buscar una solución satisfactoria para ambas partes.',
     english: 'Let us look for a solution that is satisfactory for both parties.',
     notes: 'A conciliatory statement that reaffirms collaborative intent',
@@ -2271,6 +2513,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-8',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Le planteo la siguiente alternativa para desbloquear la situación.',
     english: 'I present the following alternative to unblock the situation.',
     notes: '"Plantear" is preferred over "proponer" for presenting formal alternatives',
@@ -2280,6 +2523,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-9',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Estamos en disposición de ceder en ese punto concreto.',
     english: 'We are prepared to yield on that specific point.',
     notes: '"Estar en disposición de" is more formal than "estar dispuesto a"',
@@ -2289,6 +2533,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-10',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Siempre y cuando se cumplan estas condiciones, aceptamos el acuerdo.',
     english: 'As long as these conditions are met, we accept the agreement.',
     notes: '"Siempre y cuando" is the formal conditional — stronger than "si"',
@@ -2298,6 +2543,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-11',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Cerremos el acuerdo y procedamos a la firma del contrato.',
     english: 'Let us close the deal and proceed to sign the contract.',
     notes: '"Cerrar el acuerdo" is the standard phrase for finalizing a deal',
@@ -2307,6 +2553,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-12',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Nos reservamos el derecho de rescindir el acuerdo si se incumplen los términos.',
     english: 'We reserve the right to rescind the agreement if the terms are breached.',
     notes: '"Reservarse el derecho" and "rescindir" are key legal/negotiation terms',
@@ -2316,6 +2563,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-13',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Bajo estas premisas, aceptamos los términos propuestos.',
     english: 'Under these premises, we accept the proposed terms.',
     notes: '"Bajo estas premisas" formally establishes the conditions of acceptance',
@@ -2325,6 +2573,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-14',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Necesitamos tiempo para evaluar la oferta con nuestro equipo directivo.',
     english: 'We need time to evaluate the offer with our management team.',
     notes: 'A standard way to delay commitment without rejecting outright',
@@ -2334,6 +2583,7 @@ const PHRASES_DATA = [
   {
     id: 'negotiations-15',
     situation: 'negotiations',
+    level: 'C2',
     spanish: 'Le aseguro que es nuestra mejor oferta; no hay margen para más concesiones.',
     english: 'I assure you that this is our best offer; there is no room for further concessions.',
     notes: 'A firm closing statement signaling the final position in a negotiation',
@@ -2347,6 +2597,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-1',
     situation: 'literary',
+    level: 'C2',
     spanish: 'La obra aborda temas universales como la soledad y la identidad.',
     english: 'The work addresses universal themes such as solitude and identity.',
     notes: '"Abordar temas" is the standard verb-noun collocation in literary criticism',
@@ -2356,6 +2607,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-2',
     situation: 'literary',
+    level: 'C2',
     spanish: 'El autor emplea un recurso narrativo innovador al fragmentar la cronología.',
     english: 'The author employs an innovative narrative device by fragmenting the chronology.',
     notes: '"Recurso narrativo" (narrative device) is essential literary analysis vocabulary',
@@ -2365,6 +2617,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-3',
     situation: 'literary',
+    level: 'C2',
     spanish: 'Se percibe una influencia del realismo mágico en el tratamiento de lo cotidiano.',
     english: 'An influence of magical realism is perceived in the treatment of the everyday.',
     notes: '"Se percibe" uses the impersonal "se" typical of critical analysis',
@@ -2374,6 +2627,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-4',
     situation: 'literary',
+    level: 'C2',
     spanish: 'El personaje experimenta una transformación profunda a lo largo de la narrativa.',
     english: 'The character undergoes a profound transformation throughout the narrative.',
     notes: '"Experimentar una transformación" is more literary than "cambiar"',
@@ -2383,6 +2637,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-5',
     situation: 'literary',
+    level: 'C2',
     spanish: 'La metáfora central de la obra es el río como fluir del tiempo.',
     english: 'The central metaphor of the work is the river as the flow of time.',
     notes: 'Identifying and interpreting central metaphors is key to literary analysis',
@@ -2392,6 +2647,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-6',
     situation: 'literary',
+    level: 'C2',
     spanish: 'El desenlace resulta deliberadamente ambiguo, invitando a múltiples lecturas.',
     english: 'The ending is deliberately ambiguous, inviting multiple readings.',
     notes: '"Desenlace" is the literary term for the resolution or ending of a work',
@@ -2401,6 +2657,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-7',
     situation: 'literary',
+    level: 'C2',
     spanish: 'La prosa destaca por su riqueza léxica y su ritmo casi poético.',
     english: 'The prose stands out for its lexical richness and its almost poetic rhythm.',
     notes: '"Riqueza léxica" and commenting on prose style are hallmarks of C2 literary discussion',
@@ -2410,6 +2667,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-8',
     situation: 'literary',
+    level: 'C2',
     spanish: 'Subyace una crítica social en el texto que trasciende lo anecdótico.',
     english: 'An underlying social critique in the text transcends the anecdotal.',
     notes: '"Subyacer" (to underlie) is a sophisticated verb for discussing subtext',
@@ -2419,6 +2677,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-9',
     situation: 'literary',
+    level: 'C2',
     spanish: 'El narrador no es del todo fiable, lo cual genera una tensión constante.',
     english: 'The narrator is not entirely reliable, which generates a constant tension.',
     notes: '"Narrador no fiable" (unreliable narrator) is a key literary concept',
@@ -2428,6 +2687,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-10',
     situation: 'literary',
+    level: 'C2',
     spanish: 'La obra se enmarca en el contexto de la posguerra civil española.',
     english: 'The work is situated within the context of the Spanish Civil War aftermath.',
     notes: '"Enmarcarse en" is the standard phrase for placing a work in historical context',
@@ -2437,6 +2697,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-11',
     situation: 'literary',
+    level: 'C2',
     spanish: 'El simbolismo de este pasaje es notable y admite varias interpretaciones.',
     english: 'The symbolism of this passage is notable and admits several interpretations.',
     notes: '"Admitir interpretaciones" suggests openness typical of literary discourse',
@@ -2446,6 +2707,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-12',
     situation: 'literary',
+    level: 'C2',
     spanish: 'Hay una tensión constante entre lo individual y lo colectivo en toda la novela.',
     english: 'There is a constant tension between the individual and the collective throughout the novel.',
     notes: 'Identifying thematic tensions is a fundamental analytical technique',
@@ -2455,6 +2717,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-13',
     situation: 'literary',
+    level: 'C2',
     spanish: 'El estilo oscila entre lo lírico y lo prosaico, creando un contraste deliberado.',
     english: 'The style oscillates between the lyrical and the prosaic, creating a deliberate contrast.',
     notes: '"Oscilar entre" describes stylistic variation — a sophisticated analytical observation',
@@ -2464,6 +2727,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-14',
     situation: 'literary',
+    level: 'C2',
     spanish: 'La intertextualidad enriquece la lectura al establecer diálogos con otras obras.',
     english: 'The intertextuality enriches the reading by establishing dialogues with other works.',
     notes: '"Intertextualidad" is a key term in post-structuralist literary theory',
@@ -2473,6 +2737,7 @@ const PHRASES_DATA = [
   {
     id: 'literary-15',
     situation: 'literary',
+    level: 'C2',
     spanish: 'Es una obra que trasciende su época y sigue vigente en la actualidad.',
     english: 'It is a work that transcends its era and remains relevant today.',
     notes: '"Trascender su época" and "seguir vigente" express timelessness of literature',
@@ -2486,6 +2751,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-1',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Nuestro gobierno insta a todas las partes a retomar el diálogo.',
     english: 'Our government urges all parties to resume dialogue.',
     notes: '"Instar a" is the standard diplomatic verb for urging action',
@@ -2495,6 +2761,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-2',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Hacemos un llamamiento a la comunidad internacional para que actúe de forma coordinada.',
     english: 'We call on the international community to act in a coordinated manner.',
     notes: '"Hacer un llamamiento" is the formal equivalent of "make an appeal"',
@@ -2504,6 +2771,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-3',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Condenamos enérgicamente toda forma de violencia contra la población civil.',
     english: 'We strongly condemn all forms of violence against the civilian population.',
     notes: '"Condenar enérgicamente" is standard phrasing in official communiqués',
@@ -2513,6 +2781,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-4',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Esta delegación desea expresar su más firme rechazo a la propuesta presentada.',
     english: 'This delegation wishes to express its firmest rejection of the proposal presented.',
     notes: '"Expresar su más firme rechazo" is a measured way to voice strong opposition',
@@ -2522,6 +2791,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-5',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Proponemos la creación de un grupo de trabajo bilateral para abordar esta cuestión.',
     english: 'We propose the creation of a bilateral working group to address this issue.',
     notes: '"Grupo de trabajo bilateral" is standard institutional terminology',
@@ -2531,6 +2801,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-6',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Reafirmamos nuestro compromiso inquebrantable con los derechos humanos.',
     english: 'We reaffirm our unwavering commitment to human rights.',
     notes: '"Compromiso inquebrantable" conveys the strongest level of diplomatic commitment',
@@ -2540,6 +2811,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-7',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Lamentamos profundamente la decisión unilateral adoptada por el país vecino.',
     english: 'We deeply regret the unilateral decision taken by the neighbouring country.',
     notes: '"Lamentar profundamente" expresses diplomatic disapproval without breaking relations',
@@ -2549,6 +2821,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-8',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Solicitamos que se convoque una sesión extraordinaria del Consejo de Seguridad.',
     english: 'We request that an extraordinary session of the Security Council be convened.',
     notes: '"Convocar una sesión extraordinaria" is used for urgent multilateral matters',
@@ -2558,6 +2831,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-9',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Las relaciones entre ambos países atraviesan un momento delicado.',
     english: 'Relations between both countries are going through a delicate moment.',
     notes: '"Momento delicado" is diplomatic understatement for a tense situation',
@@ -2567,6 +2841,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-10',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Abogamos por una solución pacífica y negociada del conflicto.',
     english: 'We advocate for a peaceful and negotiated solution to the conflict.',
     notes: '"Abogar por" is formal for championing a cause or position',
@@ -2576,6 +2851,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-11',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'El memorando de entendimiento será rubricado por ambas cancillerías.',
     english: 'The memorandum of understanding will be initialled by both foreign ministries.',
     notes: '"Rubricar" means to initial or sign; "cancillería" is the foreign ministry',
@@ -2585,6 +2861,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-12',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Exhortamos a las partes a respetar el alto el fuego acordado.',
     english: 'We exhort the parties to respect the agreed ceasefire.',
     notes: '"Exhortar" is a formal, strong call to action; "alto el fuego" = ceasefire',
@@ -2594,6 +2871,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-13',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'La posición de nuestro país ha sido clara y consistente a lo largo de los años.',
     english: 'Our country\'s position has been clear and consistent over the years.',
     notes: 'Used to reinforce continuity of foreign policy across administrations',
@@ -2603,6 +2881,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-14',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Manifestamos nuestra plena solidaridad con el pueblo afectado por la catástrofe.',
     english: 'We express our full solidarity with the people affected by the catastrophe.',
     notes: '"Manifestar solidaridad" is standard diplomatic language for expressing support',
@@ -2612,6 +2891,7 @@ const PHRASES_DATA = [
   {
     id: 'diplo-15',
     situation: 'diplomacy',
+    level: 'C1',
     spanish: 'Instamos al cumplimiento íntegro de las resoluciones adoptadas por este organismo.',
     english: 'We urge full compliance with the resolutions adopted by this body.',
     notes: '"Cumplimiento íntegro" emphasises complete, not partial, compliance',
@@ -2625,6 +2905,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-1',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'Según fuentes cercanas al gobierno, el acuerdo se firmará la próxima semana.',
     english: 'According to sources close to the government, the agreement will be signed next week.',
     notes: '"Según fuentes cercanas a" is the standard attribution formula in Spanish journalism',
@@ -2634,6 +2915,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-2',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'En declaraciones a este medio, la ministra afirmó que no dimitirá.',
     english: 'In statements to this outlet, the minister stated that she will not resign.',
     notes: '"En declaraciones a este medio" is a journalistic formula indicating an exclusive',
@@ -2643,6 +2925,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-3',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'El portavoz se limitó a señalar que la investigación sigue su curso.',
     english: 'The spokesperson merely pointed out that the investigation is ongoing.',
     notes: '"Limitarse a señalar" implies the spokesperson refused to elaborate',
@@ -2652,6 +2935,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-4',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'La noticia ha causado un gran revuelo en las redes sociales.',
     english: 'The news has caused a great stir on social media.',
     notes: '"Causar revuelo" means to create a commotion or buzz',
@@ -2661,6 +2945,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-5',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'Hasta el cierre de esta edición, no se había emitido un comunicado oficial.',
     english: 'As of press time, no official statement had been issued.',
     notes: '"Hasta el cierre de esta edición" is the standard press-time disclaimer',
@@ -2670,6 +2955,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-6',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'Nuestro enviado especial informa desde la zona del conflicto.',
     english: 'Our special correspondent reports from the conflict zone.',
     notes: '"Enviado especial" is the title for a reporter dispatched to cover a specific event',
@@ -2679,6 +2965,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-7',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'La rueda de prensa ha sido convocada de forma extraordinaria a las cinco de la tarde.',
     english: 'The press conference has been called on an extraordinary basis for five in the afternoon.',
     notes: '"Rueda de prensa" is the standard term; "convocada de forma extraordinaria" signals urgency',
@@ -2688,6 +2975,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-8',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'Los datos que maneja esta redacción apuntan a una crisis sin precedentes.',
     english: 'The data available to this newsroom points to an unprecedented crisis.',
     notes: '"Los datos que maneja esta redacción" conveys journalistic authority and sourcing',
@@ -2697,6 +2985,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-9',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'El reportaje ha sido galardonado con el premio de periodismo de investigación.',
     english: 'The report has been awarded the investigative journalism prize.',
     notes: '"Galardonar" is formal for "to award"; "periodismo de investigación" = investigative journalism',
@@ -2706,6 +2995,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-10',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'Fuentes que han pedido el anonimato confirman la dimisión inminente del director.',
     english: 'Sources who have requested anonymity confirm the imminent resignation of the director.',
     notes: '"Pedir el anonimato" is the journalistic way of saying sources spoke on condition of anonymity',
@@ -2715,6 +3005,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-11',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'En una entrevista en exclusiva, el presidente reveló los detalles del plan económico.',
     english: 'In an exclusive interview, the president revealed the details of the economic plan.',
     notes: '"En exclusiva" indicates the interview was granted only to this outlet',
@@ -2724,6 +3015,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-12',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'El editorial de hoy aborda la polémica reforma educativa.',
     english: 'Today\'s editorial addresses the controversial education reform.',
     notes: '"El editorial" (masculine) refers to the opinion piece; "la editorial" means publishing house',
@@ -2733,6 +3025,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-13',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'Hemos podido acceder a documentos clasificados que revelan irregularidades graves.',
     english: 'We have been able to access classified documents that reveal serious irregularities.',
     notes: '"Acceder a documentos clasificados" implies investigative journalism with leaked material',
@@ -2742,6 +3035,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-14',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'La audiencia del informativo ha alcanzado cifras históricas este trimestre.',
     english: 'The news programme\'s audience has reached historic figures this quarter.',
     notes: '"Informativo" is the common term for a TV news programme in Spain',
@@ -2751,6 +3045,7 @@ const PHRASES_DATA = [
   {
     id: 'journal-15',
     situation: 'journalism',
+    level: 'C1',
     spanish: 'El medio se retractó de la información publicada y emitió una fe de erratas.',
     english: 'The outlet retracted the published information and issued an erratum.',
     notes: '"Retractarse" = to retract; "fe de erratas" = errata/correction notice',
@@ -2764,6 +3059,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-1',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'Si partimos de la premisa de que el ser es anterior al ente, la ontología cobra otro sentido.',
     english: 'If we start from the premise that Being is prior to beings, ontology takes on a different meaning.',
     notes: '"Ser" vs "ente" mirrors Heidegger\'s ontological difference; highly academic register',
@@ -2773,6 +3069,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-2',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'Desde una óptica fenomenológica, la conciencia es siempre conciencia de algo.',
     english: 'From a phenomenological perspective, consciousness is always consciousness of something.',
     notes: 'Refers to Husserl\'s concept of intentionality; "óptica fenomenológica" = phenomenological lens',
@@ -2782,6 +3079,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-3',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'La aporía radica en que no podemos fundamentar la razón sin recurrir a la razón misma.',
     english: 'The aporia lies in the fact that we cannot ground reason without resorting to reason itself.',
     notes: '"Aporía" = aporia, an irresolvable contradiction; key term in philosophical argumentation',
@@ -2791,6 +3089,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-4',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'El imperativo categórico exige que actuemos según máximas universalizables.',
     english: 'The categorical imperative demands that we act according to universalizable maxims.',
     notes: 'Core Kantian ethics terminology; "máximas universalizables" = universalizable maxims',
@@ -2800,6 +3099,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-5',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'La dialéctica hegeliana supera la contradicción mediante la síntesis de los opuestos.',
     english: 'Hegelian dialectics overcomes contradiction through the synthesis of opposites.',
     notes: '"Superar" here means to sublate (aufheben); thesis-antithesis-synthesis triad',
@@ -2809,6 +3109,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-6',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'El cogito cartesiano establece la autoconciencia como fundamento indubitable del saber.',
     english: 'The Cartesian cogito establishes self-consciousness as the indubitable foundation of knowledge.',
     notes: '"Fundamento indubitable" = indubitable foundation, echoing Descartes\' method of doubt',
@@ -2818,6 +3119,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-7',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'El nihilismo, lejos de ser una postura estéril, plantea preguntas radicales sobre el sentido.',
     english: 'Nihilism, far from being a sterile stance, raises radical questions about meaning.',
     notes: '"Preguntas radicales" = radical questions, going to the root (radix) of the issue',
@@ -2827,6 +3129,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-8',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'La hermenéutica nos enseña que toda interpretación está condicionada por un horizonte previo.',
     english: 'Hermeneutics teaches us that all interpretation is conditioned by a prior horizon.',
     notes: '"Horizonte previo" echoes Gadamer\'s concept of Vorverständnis (pre-understanding)',
@@ -2836,6 +3139,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-9',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'El problema mente-cuerpo sigue sin una solución que satisfaga a ambas tradiciones.',
     english: 'The mind-body problem remains without a solution that satisfies both traditions.',
     notes: 'Refers to the dualism debate between materialists and dualists',
@@ -2845,6 +3149,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-10',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'La ética del cuidado cuestiona la primacía de la justicia abstracta en la filosofía moral.',
     english: 'The ethics of care challenges the primacy of abstract justice in moral philosophy.',
     notes: 'References Carol Gilligan and Nel Noddings\' feminist ethical theory',
@@ -2854,6 +3159,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-11',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'El existencialismo sostiene que la existencia precede a la esencia.',
     english: 'Existentialism holds that existence precedes essence.',
     notes: 'Sartre\'s famous formulation; "preceder a la esencia" is the key philosophical claim',
@@ -2863,6 +3169,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-12',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'La deconstrucción pone de manifiesto las oposiciones binarias que sustentan el discurso.',
     english: 'Deconstruction reveals the binary oppositions that underpin discourse.',
     notes: '"Poner de manifiesto" = to reveal; references Derrida\'s method',
@@ -2872,6 +3179,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-13',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'El velo de ignorancia rawlsiano garantiza la imparcialidad en la posición original.',
     english: 'The Rawlsian veil of ignorance guarantees impartiality in the original position.',
     notes: 'Key concept from Rawls\' "A Theory of Justice"; "posición original" = original position',
@@ -2881,6 +3189,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-14',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'La voluntad de poder nietzscheana no debe entenderse como mero dominio, sino como autoafirmación creativa.',
     english: 'The Nietzschean will to power should not be understood as mere domination, but as creative self-affirmation.',
     notes: '"Voluntad de poder" = Wille zur Macht; a frequently misinterpreted Nietzschean concept',
@@ -2890,6 +3199,7 @@ const PHRASES_DATA = [
   {
     id: 'philo-15',
     situation: 'philosophy',
+    level: 'C2',
     spanish: 'Toda epistemología presupone una antropología, ya que el sujeto cognoscente no es un ente abstracto.',
     english: 'All epistemology presupposes an anthropology, since the knowing subject is not an abstract entity.',
     notes: '"Sujeto cognoscente" = knowing subject; links epistemology to philosophical anthropology',
@@ -2903,6 +3213,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-1',
     situation: 'legal',
+    level: 'C2',
     spanish: 'Con la venia de Su Señoría, esta parte solicita la palabra.',
     english: 'With Your Honour\'s permission, this party requests the floor.',
     notes: '"Con la venia de Su Señoría" is the mandatory courtroom opening when addressing the judge',
@@ -2912,6 +3223,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-2',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El acusado queda absuelto de todos los cargos que se le imputaban.',
     english: 'The defendant is acquitted of all charges brought against them.',
     notes: '"Quedar absuelto" is the judicial formula for acquittal; "imputar cargos" = to bring charges',
@@ -2921,6 +3233,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-3',
     situation: 'legal',
+    level: 'C2',
     spanish: 'Se declara nulo de pleno derecho el contrato por vicio del consentimiento.',
     english: 'The contract is declared null and void due to vitiation of consent.',
     notes: '"Nulo de pleno derecho" = null and void ab initio; "vicio del consentimiento" = defect in consent',
@@ -2930,6 +3243,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-4',
     situation: 'legal',
+    level: 'C2',
     spanish: 'La parte demandante interpone recurso de apelación ante la Audiencia Provincial.',
     english: 'The plaintiff files an appeal before the Provincial Court.',
     notes: '"Interponer recurso de apelación" is the formal legal term for filing an appeal',
@@ -2939,6 +3253,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-5',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El tribunal admite a trámite la querella criminal presentada por el denunciante.',
     english: 'The court admits the criminal complaint filed by the complainant for processing.',
     notes: '"Admitir a trámite" means to accept for judicial processing; a key procedural step',
@@ -2948,6 +3263,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-6',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El letrado de la defensa alega indefensión por falta de pruebas aportadas en plazo.',
     english: 'Defence counsel alleges a denial of due process due to evidence not submitted on time.',
     notes: '"Indefensión" is a constitutional concept meaning denial of the right to a fair defence',
@@ -2957,6 +3273,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-7',
     situation: 'legal',
+    level: 'C2',
     spanish: 'Se impone al condenado una pena de tres años de prisión, con suspensión condicional.',
     english: 'The convicted person is sentenced to three years in prison, with a conditional suspension.',
     notes: '"Suspensión condicional" = suspended sentence; common for first-time, non-violent offences',
@@ -2966,6 +3283,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-8',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El juez instructor decreta prisión provisional comunicada y sin fianza.',
     english: 'The examining judge orders pre-trial detention without bail.',
     notes: '"Prisión provisional comunicada y sin fianza" is the strictest form of pre-trial custody',
@@ -2975,6 +3293,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-9',
     situation: 'legal',
+    level: 'C2',
     spanish: 'La jurisprudencia del Tribunal Supremo es clara al respecto de esta cuestión.',
     english: 'The Supreme Court case law is clear on this matter.',
     notes: '"Jurisprudencia" refers to the body of judicial precedent, not the study of law',
@@ -2984,6 +3303,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-10',
     situation: 'legal',
+    level: 'C2',
     spanish: 'Se levanta la sesión y se señala nueva fecha para la continuación de la vista oral.',
     english: 'The session is adjourned and a new date is set for the continuation of the oral hearing.',
     notes: '"Levantar la sesión" = to adjourn; "vista oral" = oral hearing/trial',
@@ -2993,6 +3313,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-11',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El perito judicial ratifica en sede judicial el informe pericial emitido.',
     english: 'The court-appointed expert ratifies in court the expert report issued.',
     notes: '"Perito judicial" = expert witness; "ratificar en sede judicial" = to confirm before the court',
@@ -3002,6 +3323,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-12',
     situation: 'legal',
+    level: 'C2',
     spanish: 'La prescripción del delito se ha producido al transcurrir el plazo legalmente establecido.',
     english: 'The statute of limitations on the offence has expired as the legally established period has elapsed.',
     notes: '"Prescripción del delito" = expiry of the statute of limitations on a criminal offence',
@@ -3011,6 +3333,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-13',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El acta notarial da fe de los hechos presenciados por el fedatario público.',
     english: 'The notarial deed attests to the facts witnessed by the public notary.',
     notes: '"Dar fe" = to attest officially; "fedatario público" = public notary/authenticating officer',
@@ -3020,6 +3343,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-14',
     situation: 'legal',
+    level: 'C2',
     spanish: 'Se estima parcialmente la demanda y se condena al demandado al pago de daños y perjuicios.',
     english: 'The claim is partially upheld and the defendant is ordered to pay damages.',
     notes: '"Estimar parcialmente" = to partially uphold; "daños y perjuicios" = damages (compensatory)',
@@ -3029,6 +3353,7 @@ const PHRASES_DATA = [
   {
     id: 'legal-15',
     situation: 'legal',
+    level: 'C2',
     spanish: 'El recurso de amparo se fundamenta en la vulneración del derecho a la tutela judicial efectiva.',
     english: 'The constitutional appeal is based on the violation of the right to effective judicial protection.',
     notes: '"Recurso de amparo" is the constitutional complaint filed before Spain\'s Constitutional Court',

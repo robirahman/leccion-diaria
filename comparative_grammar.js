@@ -786,4 +786,126 @@ const COMPARATIVE_GRAMMAR_DATA = [
       { spanish: 'coger (Spain vs Latin America)', english: 'to catch / to grab', trap: 'In Spain, "coger" means to catch/grab/take. In much of Latin America, it\'s vulgar slang for sex. Use "tomar" or "agarrar" to be safe.' },
     ]
   },
+
+  // ──────────────────────────────────────
+  //  C1 — Advanced structural contrasts
+  // ──────────────────────────────────────
+
+  {
+    id: 'cg-28',
+    title: 'Registros de formalidad',
+    titleEn: 'Register and Formality — More Than Tú vs Usted',
+    level: 'C1',
+    content: `<h3>Register and Formality</h3>
+<p>English shifts register mainly through vocabulary ("commence" vs "start"). Spanish does too, but <strong>also</strong> shifts grammar: verb forms, pronoun systems, and even tense usage change with formality.</p>
+<p><strong>Pronoun systems by register:</strong></p>
+<ul>
+<li>Intimate: <em>tú / vos</em> (varies by region)</li>
+<li>Polite: <em>usted</em> — triggers 3rd-person verb forms</li>
+<li>Institutional: <em>se</em> + 3rd person (impersonal) — avoids addressing anyone directly</li>
+</ul>
+<p><strong>Tense shifts:</strong> Formal Spanish prefers the imperfect subjunctive (<em>quisiera</em>) over the conditional (<em>querría</em>) for polite requests.</p>
+<p><strong>Lexical register pairs:</strong></p>
+<ul>
+<li>Casual: <em>acabar</em> → Formal: <em>concluir, finalizar</em></li>
+<li>Casual: <em>empezar</em> → Formal: <em>iniciar, comenzar</em></li>
+<li>Casual: <em>ayudar</em> → Formal: <em>asistir, prestar asistencia</em></li>
+</ul>`,
+    examples: [
+      { spanish: 'Quisiera solicitar información.', english: 'I would like to request information.', note: 'Imperfect subjunctive for extra politeness — more formal than "querría"' },
+      { spanish: 'Se ruega no fumar.', english: 'You are requested not to smoke.', note: 'Impersonal "se" avoids a direct command — institutional register' },
+      { spanish: '¿Sería tan amable de indicarme...?', english: 'Would you be so kind as to show me...?', note: 'Conditional + courtesy formula — very formal request' },
+    ],
+    falseAmigos: [
+      { spanish: 'asistir', english: 'to attend (NOT to assist)', trap: '"Asistir" means "to attend/be present at" in most contexts. "To assist" = "ayudar". In formal register, "asistir" can mean "to assist" — but only in very elevated usage.' },
+    ]
+  },
+  {
+    id: 'cg-29',
+    title: 'Oraciones escindidas',
+    titleEn: 'Cleft Sentences — Focusing Information',
+    level: 'C1',
+    content: `<h3>Cleft Sentences</h3>
+<p>English uses "it is/was... that/who" to focus information: <em>"It was María who called."</em> Spanish has several strategies, and they don't map one-to-one.</p>
+<p><strong>Spanish focusing strategies:</strong></p>
+<ul>
+<li><strong>Ser + quien/que:</strong> <em>Fue María quien llamó.</em> (It was María who called.)</li>
+<li><strong>Lo que... es/fue:</strong> <em>Lo que necesitas es descansar.</em> (What you need is to rest.)</li>
+<li><strong>El/la que:</strong> <em>El que no esté de acuerdo puede irse.</em> (Anyone who disagrees can leave.)</li>
+<li><strong>Word-order fronting:</strong> <em>A María la vi ayer.</em> (María is who I saw yesterday.) — topicalization with pronoun doubling</li>
+</ul>
+<p><strong>Key difference:</strong> English clefts always use "it is/was". Spanish uses the focused element's own article or a relative pronoun.</p>`,
+    examples: [
+      { spanish: 'Fue Juan quien rompió el vaso.', english: 'It was Juan who broke the glass.', note: '"Ser + quien" — subject focus. "Quien" for people, "que" for things.' },
+      { spanish: 'Lo que me molesta es la falta de respeto.', english: 'What bothers me is the lack of respect.', note: '"Lo que" fronts the topic — very common in spoken Spanish' },
+      { spanish: 'A tu hermano lo vi en el parque.', english: 'Your brother, I saw him in the park.', note: 'Topicalization with accusative pronoun doubling — "lo" is required' },
+    ],
+    falseAmigos: []
+  },
+
+  // ──────────────────────────────────────
+  //  C2 — Rare / literary contrasts
+  // ──────────────────────────────────────
+
+  {
+    id: 'cg-30',
+    title: 'El futuro de subjuntivo',
+    titleEn: 'The Future Subjunctive — Alive in Legal Spanish',
+    level: 'C2',
+    content: `<h3>The Future Subjunctive</h3>
+<p>English has no future subjunctive. Modern spoken Spanish doesn't use it either — <strong>but it is alive in legal, bureaucratic, and proverbial language</strong>.</p>
+<p><strong>Formation:</strong> Same stem as the preterite 3rd-person plural, with endings: <em>-re, -res, -re, -remos, -reis, -ren</em>.</p>
+<ul>
+<li><em>hablar → hablaren</em></li>
+<li><em>tener → tuviere</em> (irregular preterite stem)</li>
+<li><em>ser → fuere</em></li>
+</ul>
+<p><strong>Where you'll encounter it:</strong></p>
+<ul>
+<li>Legal codes: <em>"Si el acusado no compareciere..."</em> (If the accused should fail to appear...)</li>
+<li>Constitutions: <em>"Quien resultare electo..."</em> (Whoever shall be elected...)</li>
+<li>Proverbs: <em>"Donde fueres, haz lo que vieres."</em> (When in Rome, do as the Romans do.)</li>
+</ul>
+<p>In modern speech, the present subjunctive replaces it entirely: <em>"Si el acusado no comparezca..."</em></p>`,
+    examples: [
+      { spanish: 'Donde fueres, haz lo que vieres.', english: 'When in Rome, do as the Romans do.', note: 'Classic proverb — "fueres" and "vieres" are future subjunctive of "ir" and "ver"' },
+      { spanish: 'Si así no lo hiciere, que Dios y la Patria me lo demanden.', english: 'If I should fail to do so, may God and the Nation hold me accountable.', note: 'Presidential oath of office formula — still used today in several countries' },
+      { spanish: 'El que incumpliere esta disposición será sancionado.', english: 'Whoever violates this provision shall be penalized.', note: 'Legal boilerplate — "incumpliere" = future subjunctive of "incumplir"' },
+    ],
+    falseAmigos: [
+      { spanish: 'compareciere vs comparezca', english: 'future subj. vs present subj.', trap: 'Both mean "should appear" but "compareciere" is the future subjunctive (legal/archaic) and "comparezca" is the present subjunctive (modern). They are interchangeable in meaning — the future subjunctive just signals a formal register.' },
+    ]
+  },
+  {
+    id: 'cg-31',
+    title: 'Morfología regional: voseo y más',
+    titleEn: 'Regional Morphology — Voseo and Beyond',
+    level: 'C2',
+    content: `<h3>Regional Morphology</h3>
+<p>Standard textbook Spanish teaches the "tú/vosotros" paradigm, but <strong>vast regions use different pronoun systems with different verb morphology</strong>.</p>
+<p><strong>Voseo (Argentina, Uruguay, Central America, parts of Colombia):</strong></p>
+<ul>
+<li>Present: <em>vos hablás, vos comés, vos vivís</em> (stressed final syllable)</li>
+<li>Imperative: <em>hablá, comé, viví</em> (no diphthong in stem-changers: <em>vos podés</em>, not *<em>vos puedés</em>)</li>
+<li>Subjunctive varies: some regions use tuteo subjunctive (<em>que vos hables</em>), others voseo forms (<em>que vos hablés</em>)</li>
+</ul>
+<p><strong>Ustedes-only regions (Latin America, Canary Islands, western Andalusia):</strong></p>
+<ul>
+<li><em>Vosotros</em> does not exist — <em>ustedes</em> serves as both formal and informal plural "you"</li>
+<li>This simplifies conjugation: only 5 distinct persons instead of 6</li>
+</ul>
+<p><strong>Leísmo, laísmo, loísmo (central Spain):</strong></p>
+<ul>
+<li><em>Le vi ayer</em> instead of <em>Lo vi ayer</em> — using indirect object pronoun for direct objects (leísmo)</li>
+<li><em>La dije que no</em> instead of <em>Le dije que no</em> — laísmo (considered incorrect by RAE)</li>
+</ul>`,
+    examples: [
+      { spanish: '¿Vos sabés dónde queda la estación?', english: 'Do you know where the station is?', note: 'Rioplatense voseo — "sabés" instead of "sabes". Perfectly standard in Argentina.' },
+      { spanish: 'Sentate y contame todo.', english: 'Sit down and tell me everything.', note: 'Voseo imperatives — "sentate" (sentarse), "contame" (contarme). No diphthong.' },
+      { spanish: 'Le vi en el parque. (leísmo)', english: 'I saw him in the park.', note: 'Leísmo — "le" for masculine singular direct object instead of "lo". Accepted by RAE for people.' },
+    ],
+    falseAmigos: [
+      { spanish: 'vos podés vs tú puedes', english: 'you can (voseo vs tuteo)', trap: 'Voseo eliminates the stem change: "podés" (not *"puedés"). This is systematic — e>ie and o>ue changes do not occur with vos forms.' },
+    ]
+  },
 ];

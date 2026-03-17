@@ -616,6 +616,240 @@ const THEMED_VOCAB_DATA = [
       { prompt: 'Someone is hurt. How do you call for help?', options: ['¡Perdón!', '¡Ayuda! ¡Llamen a una ambulancia!', '¡Hola! ¿Qué tal?', '¡Cuidado con el coche!'], correct: 1, explanation: '"¡Ayuda!" or "¡Socorro!" means help. "Llamen a una ambulancia" means "call an ambulance" (plural command).' },
       { prompt: '¿Qué es "el seguro de viaje"?', options: ['a safe in the hotel', 'travel insurance', 'a seatbelt', 'a safety deposit box'], correct: 1, explanation: '"El seguro de viaje" is travel insurance. "Seguro" can mean insurance, safe (adjective), or sure.' }
     ]
+  },
+
+  // ─────────────────────────────────────────────
+  // 11. WORKPLACE CONFLICT (B2)
+  // ─────────────────────────────────────────────
+  {
+    id: 'theme-workplace-conflict',
+    theme: 'Resolving Workplace Conflicts',
+    themeEs: 'Resolución de conflictos laborales',
+    icon: '🤝',
+    level: 'B2',
+    scenario: 'You are mediating a disagreement between two colleagues who have conflicting views on how to handle a project deadline.',
+    scenarioEs: 'Estás mediando un desacuerdo entre dos compañeros que tienen puntos de vista opuestos sobre cómo manejar la fecha límite de un proyecto.',
+    phrases: [
+      { spanish: 'Entiendo tu punto de vista, pero creo que deberíamos buscar un compromiso.', english: 'I understand your point of view, but I think we should look for a compromise.', notes: 'compromiso = compromise (not "commitment" in this context)' },
+      { spanish: 'Propongo que nos reunamos para aclarar las expectativas.', english: 'I propose that we meet to clarify expectations.', notes: 'aclarar = to clarify' },
+      { spanish: 'No se trata de quién tiene razón, sino de encontrar una solución.', english: 'It\'s not about who is right, but about finding a solution.', notes: 'tener razón = to be right' },
+      { spanish: 'Me parece que hay un malentendido que debemos resolver.', english: 'It seems to me there is a misunderstanding we need to resolve.', notes: 'malentendido = misunderstanding' },
+      { spanish: 'Sugiero que cada uno exponga sus argumentos sin interrupciones.', english: 'I suggest each person present their arguments without interruptions.', notes: 'exponer = to present / lay out' }
+    ],
+    vocab: [
+      { word: 'el conflicto', english: 'conflict', gender: 'm' },
+      { word: 'la mediación', english: 'mediation', gender: 'f' },
+      { word: 'el desacuerdo', english: 'disagreement', gender: 'm' },
+      { word: 'la queja', english: 'complaint / grievance', gender: 'f' },
+      { word: 'el compromiso', english: 'compromise', gender: 'm' },
+      { word: 'la negociación', english: 'negotiation', gender: 'f' }
+    ],
+    dialogue: [
+      { speaker: 'Mediador', text: 'Gracias por aceptar esta reunión. El objetivo es que ambos expongan su perspectiva con respeto.' },
+      { speaker: 'Empleado A', text: 'Creo que el plazo es imposible de cumplir con los recursos actuales y necesitamos pedir una extensión.' },
+      { speaker: 'Empleado B', text: 'Yo opino que si reorganizamos las tareas, podemos entregar a tiempo sin pedir más plazo.' },
+      { speaker: 'Mediador', text: 'Ambas propuestas tienen mérito. ¿Qué les parece si combinamos las ideas: redistribuimos las tareas y, si aun así no alcanza, solicitamos una extensión breve?' }
+    ],
+    quiz: [
+      { prompt: '¿Qué significa "un malentendido"?', options: ['a deadline', 'a misunderstanding', 'a promotion', 'a complaint'], correct: 1, explanation: '"Malentendido" means misunderstanding, from "mal" (badly) + "entendido" (understood).' },
+      { prompt: '¿Cómo se dice "to reach a compromise"?', options: ['alcanzar un conflicto', 'llegar a un compromiso', 'poner una queja', 'tomar una decisión'], correct: 1, explanation: '"Llegar a un compromiso" is the standard way to say "reach a compromise" in a workplace context.' },
+      { prompt: 'Which phrase best introduces mediation?', options: ['¡Esto es culpa tuya!', 'El objetivo es que ambos expongan su perspectiva.', 'No me importa tu opinión.', 'Yo tengo razón y punto.'], correct: 1, explanation: 'A mediator sets a respectful tone by inviting both sides to share their perspective.' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────
+  // 12. LEGAL BASICS (B2)
+  // ─────────────────────────────────────────────
+  {
+    id: 'theme-legal-basics',
+    theme: 'Basic Legal Procedures',
+    themeEs: 'Procedimientos legales básicos',
+    icon: '⚖️',
+    level: 'B2',
+    scenario: 'You are filing a small claims complaint at a Spanish courthouse after a contractor failed to complete agreed-upon work.',
+    scenarioEs: 'Estás presentando una demanda de menor cuantía en un juzgado español después de que un contratista no completó el trabajo acordado.',
+    phrases: [
+      { spanish: 'Quisiera presentar una demanda de menor cuantía.', english: 'I would like to file a small claims complaint.', notes: 'demanda de menor cuantía = small claims complaint' },
+      { spanish: '¿Qué documentos necesito para iniciar el proceso?', english: 'What documents do I need to start the process?', notes: 'iniciar el proceso = to start the proceedings' },
+      { spanish: 'Tengo pruebas del incumplimiento del contrato.', english: 'I have evidence of the breach of contract.', notes: 'incumplimiento = breach / non-compliance' },
+      { spanish: '¿Es necesario contar con un abogado para esta reclamación?', english: 'Is it necessary to have a lawyer for this claim?', notes: 'reclamación = claim' },
+      { spanish: 'Me gustaría saber cuánto tarda en resolverse el caso.', english: 'I would like to know how long it takes to resolve the case.', notes: 'resolverse = to be resolved' }
+    ],
+    vocab: [
+      { word: 'el juzgado', english: 'courthouse / court', gender: 'm' },
+      { word: 'la demanda', english: 'lawsuit / complaint', gender: 'f' },
+      { word: 'el abogado', english: 'lawyer', gender: 'm' },
+      { word: 'la prueba', english: 'evidence / proof', gender: 'f' },
+      { word: 'el contrato', english: 'contract', gender: 'm' },
+      { word: 'la sentencia', english: 'sentence / ruling', gender: 'f' }
+    ],
+    dialogue: [
+      { speaker: 'Demandante', text: 'Buenos días. Vengo a presentar una reclamación contra un contratista que no terminó una obra en mi vivienda.' },
+      { speaker: 'Funcionario', text: 'Entendido. ¿Tiene usted el contrato original y algún comprobante de los pagos realizados?' },
+      { speaker: 'Demandante', text: 'Sí, aquí tengo el contrato firmado, los recibos de pago y también fotos del trabajo incompleto.' },
+      { speaker: 'Funcionario', text: 'Perfecto. Rellene este formulario con sus datos y los del demandado. Le asignaremos una fecha de audiencia en las próximas semanas.' }
+    ],
+    quiz: [
+      { prompt: '¿Qué significa "el juzgado"?', options: ['the jail', 'the courthouse', 'the jury', 'the judge'], correct: 1, explanation: '"El juzgado" is the courthouse or court. "El juez" is the judge, and "el jurado" is the jury.' },
+      { prompt: '¿Cómo se dice "breach of contract"?', options: ['firma del contrato', 'incumplimiento del contrato', 'renovación del contrato', 'lectura del contrato'], correct: 1, explanation: '"Incumplimiento del contrato" means breach of contract. "Incumplimiento" comes from "no cumplir" (to not fulfill).' },
+      { prompt: 'What does "la sentencia" mean in a legal context?', options: ['the sentence (prison)', 'the court ruling', 'the feeling', 'the complaint'], correct: 1, explanation: '"La sentencia" in legal Spanish refers to the court\'s ruling or judgment, not just a prison sentence.' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────
+  // 13. ACADEMIC CONFERENCE (C1)
+  // ─────────────────────────────────────────────
+  {
+    id: 'theme-academic-conference',
+    theme: 'At an Academic Conference',
+    themeEs: 'En un congreso académico',
+    icon: '🎓',
+    level: 'C1',
+    scenario: 'You are presenting your research at an international academic conference in Madrid and networking with fellow scholars during the coffee break.',
+    scenarioEs: 'Estás presentando tu investigación en un congreso académico internacional en Madrid y estableciendo contactos con otros académicos durante la pausa para el café.',
+    phrases: [
+      { spanish: 'Mi ponencia aborda el impacto de la digitalización en las humanidades.', english: 'My paper addresses the impact of digitalization on the humanities.', notes: 'ponencia = conference paper / presentation' },
+      { spanish: 'Los hallazgos preliminares sugieren una correlación significativa.', english: 'The preliminary findings suggest a significant correlation.', notes: 'hallazgos = findings' },
+      { spanish: '¿Podría ampliar su argumento sobre la metodología empleada?', english: 'Could you expand on your argument about the methodology used?', notes: 'ampliar = to expand / elaborate' },
+      { spanish: 'Me gustaría plantear una objeción respecto a las variables de control.', english: 'I would like to raise an objection regarding the control variables.', notes: 'plantear una objeción = to raise an objection' },
+      { spanish: 'Su línea de investigación es afín a la mía; deberíamos colaborar.', english: 'Your line of research is related to mine; we should collaborate.', notes: 'afín = related / akin' }
+    ],
+    vocab: [
+      { word: 'el congreso', english: 'conference / congress', gender: 'm' },
+      { word: 'la ponencia', english: 'conference paper / presentation', gender: 'f' },
+      { word: 'el hallazgo', english: 'finding / discovery', gender: 'm' },
+      { word: 'la hipótesis', english: 'hypothesis', gender: 'f' },
+      { word: 'el marco teórico', english: 'theoretical framework', gender: 'm' },
+      { word: 'la investigación', english: 'research / investigation', gender: 'f' }
+    ],
+    dialogue: [
+      { speaker: 'Ponente', text: 'En resumen, nuestros datos indican que la implementación temprana del modelo reduce los sesgos en un treinta por ciento.' },
+      { speaker: 'Moderadora', text: 'Gracias, doctora. Abrimos ahora el turno de preguntas. ¿Alguien del público desea intervenir?' },
+      { speaker: 'Asistente', text: 'Sí, me pregunto si han considerado la replicabilidad del estudio en contextos no europeos.' },
+      { speaker: 'Ponente', text: 'Excelente pregunta. Justamente estamos diseñando una fase de replicación con universidades latinoamericanas para abordar esa limitación.' }
+    ],
+    quiz: [
+      { prompt: '¿Qué es "una ponencia"?', options: ['a university degree', 'a conference paper or presentation', 'a research grant', 'a thesis defense'], correct: 1, explanation: '"Una ponencia" is a conference paper or presentation, typically given at an academic congress.' },
+      { prompt: '¿Cómo se dice "theoretical framework"?', options: ['el marco legal', 'el marco teórico', 'la base de datos', 'el índice temático'], correct: 1, explanation: '"El marco teórico" is the theoretical framework that underpins a research study.' },
+      { prompt: 'What does "los hallazgos" mean?', options: ['the hypotheses', 'the findings', 'the participants', 'the abstracts'], correct: 1, explanation: '"Los hallazgos" means the findings or discoveries of a study, from "hallar" (to find).' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────
+  // 14. POLITICAL DEBATE (C1)
+  // ─────────────────────────────────────────────
+  {
+    id: 'theme-political-debate',
+    theme: 'Political Debate',
+    themeEs: 'Debate político',
+    icon: '🏛️',
+    level: 'C1',
+    scenario: 'You are participating in a televised political debate on public education reform, defending your position against an opposing candidate.',
+    scenarioEs: 'Estás participando en un debate político televisado sobre la reforma de la educación pública, defendiendo tu postura frente a un candidato opositor.',
+    phrases: [
+      { spanish: 'Con el debido respeto, discrepo de su planteamiento.', english: 'With all due respect, I disagree with your approach.', notes: 'discrepar = to disagree (formal)' },
+      { spanish: 'Las cifras demuestran que nuestra propuesta es viable.', english: 'The figures demonstrate that our proposal is viable.', notes: 'cifras = figures / statistics' },
+      { spanish: 'No podemos seguir posponiendo una reforma estructural del sistema educativo.', english: 'We cannot keep postponing a structural reform of the education system.', notes: 'posponer = to postpone' },
+      { spanish: 'Mi rival simplifica un problema que requiere matices.', english: 'My opponent oversimplifies a problem that requires nuance.', notes: 'matices = nuances' },
+      { spanish: 'Apelo a la ciudadanía para que exija transparencia en la gestión pública.', english: 'I appeal to the public to demand transparency in public administration.', notes: 'apelar = to appeal; ciudadanía = citizenry' }
+    ],
+    vocab: [
+      { word: 'el debate', english: 'debate', gender: 'm' },
+      { word: 'la propuesta', english: 'proposal', gender: 'f' },
+      { word: 'el candidato', english: 'candidate', gender: 'm' },
+      { word: 'la reforma', english: 'reform', gender: 'f' },
+      { word: 'el electorado', english: 'electorate', gender: 'm' },
+      { word: 'la transparencia', english: 'transparency', gender: 'f' }
+    ],
+    dialogue: [
+      { speaker: 'Moderador', text: 'Pasamos al tema de educación. Candidata López, tiene dos minutos para exponer su postura.' },
+      { speaker: 'Candidata López', text: 'Nuestra propuesta destina un quince por ciento más del presupuesto a la educación pública, priorizando la formación docente y la reducción de la ratio alumno-profesor.' },
+      { speaker: 'Candidato Herrera', text: 'Esas cifras son insostenibles sin una subida de impuestos. Nuestro plan apuesta por la eficiencia administrativa y la colaboración público-privada.' },
+      { speaker: 'Candidata López', text: 'La eficiencia no puede ser una excusa para recortar recursos. Los países con mejores resultados educativos invierten más, no menos, en sus escuelas públicas.' }
+    ],
+    quiz: [
+      { prompt: '¿Qué significa "discrepar"?', options: ['to agree', 'to disagree', 'to describe', 'to discard'], correct: 1, explanation: '"Discrepar" means to disagree or differ in opinion. It is more formal than "no estar de acuerdo".' },
+      { prompt: '¿Cómo se dice "electorate" en español?', options: ['el candidato', 'el electorado', 'el parlamento', 'el ayuntamiento'], correct: 1, explanation: '"El electorado" is the electorate, the body of voters eligible to vote in an election.' },
+      { prompt: 'What does "matices" mean?', options: ['mistakes', 'nuances', 'materials', 'mathematics'], correct: 1, explanation: '"Matices" means nuances or shades of meaning. A single nuance is "un matiz".' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────
+  // 15. LITERARY SALON (C2)
+  // ─────────────────────────────────────────────
+  {
+    id: 'theme-literary-salon',
+    theme: 'Literary Salon',
+    themeEs: 'Tertulia literaria',
+    icon: '📚',
+    level: 'C2',
+    scenario: 'You are discussing a contemporary Latin American novel at an intimate literary gathering, analyzing narrative techniques and thematic depth.',
+    scenarioEs: 'Estás comentando una novela latinoamericana contemporánea en una tertulia literaria íntima, analizando técnicas narrativas y profundidad temática.',
+    phrases: [
+      { spanish: 'La polifonía narrativa desdibuja la frontera entre el narrador y los personajes.', english: 'The narrative polyphony blurs the boundary between the narrator and the characters.', notes: 'polifonía = polyphony; desdibujar = to blur / efface' },
+      { spanish: 'El autor recurre a la analepsis para desvelar el trauma colectivo.', english: 'The author resorts to analepsis to unveil the collective trauma.', notes: 'analepsis = flashback (literary term); desvelar = to unveil' },
+      { spanish: 'Percibo una intertextualidad evidente con la obra de Rulfo.', english: 'I perceive a clear intertextuality with Rulfo\'s work.', notes: 'intertextualidad = intertextuality' },
+      { spanish: 'El desenlace subvierte las expectativas del lector de manera magistral.', english: 'The ending subverts the reader\'s expectations in a masterful way.', notes: 'desenlace = ending / denouement; subvertir = to subvert' },
+      { spanish: 'La prosa oscila entre lo lírico y lo descarnado, creando un efecto de extrañamiento.', english: 'The prose oscillates between the lyrical and the stark, creating an effect of defamiliarization.', notes: 'descarnado = stark / raw; extrañamiento = defamiliarization' }
+    ],
+    vocab: [
+      { word: 'la tertulia', english: 'literary gathering / salon', gender: 'f' },
+      { word: 'el desenlace', english: 'denouement / ending', gender: 'm' },
+      { word: 'la metáfora', english: 'metaphor', gender: 'f' },
+      { word: 'el narrador', english: 'narrator', gender: 'm' },
+      { word: 'la verosimilitud', english: 'verisimilitude / plausibility', gender: 'f' },
+      { word: 'el leitmotiv', english: 'leitmotif / recurring theme', gender: 'm' }
+    ],
+    dialogue: [
+      { speaker: 'Anfitriona', text: 'La novela me parece un ejercicio de virtuosismo lingüístico, pero me pregunto si la complejidad formal no eclipsa la carga emocional de la historia.' },
+      { speaker: 'Invitado 1', text: 'Al contrario, creo que la fragmentación temporal refleja fielmente la experiencia del duelo: los recuerdos no llegan en orden cronológico.' },
+      { speaker: 'Invitada 2', text: 'Coincido, y añadiría que el uso del monólogo interior libre nos sumerge en la subjetividad de cada personaje sin la mediación de un narrador omnisciente.' },
+      { speaker: 'Anfitriona', text: 'Es un punto válido. Quizá lo que me incomoda no es la técnica en sí, sino que el autor sacrifica la accesibilidad en favor de la experimentación.' }
+    ],
+    quiz: [
+      { prompt: '¿Qué significa "la verosimilitud"?', options: ['versatility', 'verisimilitude / plausibility', 'verbosity', 'verification'], correct: 1, explanation: '"La verosimilitud" refers to the appearance of being true or real, a key concept in literary criticism.' },
+      { prompt: '¿Qué es "una tertulia"?', options: ['a theater performance', 'a literary gathering or discussion group', 'a book fair', 'a poetry recital'], correct: 1, explanation: '"Una tertulia" is an informal gathering for discussion, typically of literary or intellectual topics, deeply rooted in Spanish culture.' },
+      { prompt: 'What does "desdibujar" mean?', options: ['to draw again', 'to blur or efface', 'to describe', 'to discover'], correct: 1, explanation: '"Desdibujar" means to blur or efface, from "des-" (un-) + "dibujar" (to draw). It is often used figuratively for blurring boundaries.' }
+    ]
+  },
+
+  // ─────────────────────────────────────────────
+  // 16. PHILOSOPHICAL SEMINAR (C2)
+  // ─────────────────────────────────────────────
+  {
+    id: 'theme-philosophical-seminar',
+    theme: 'Philosophy Seminar',
+    themeEs: 'Seminario de filosofía',
+    icon: '🧠',
+    level: 'C2',
+    scenario: 'You are debating epistemology in a university seminar, challenging assumptions about the nature of knowledge and justified belief.',
+    scenarioEs: 'Estás debatiendo sobre epistemología en un seminario universitario, cuestionando los supuestos sobre la naturaleza del conocimiento y la creencia justificada.',
+    phrases: [
+      { spanish: 'Si aceptamos el falibilismo, ninguna creencia queda exenta de revisión.', english: 'If we accept fallibilism, no belief is exempt from revision.', notes: 'falibilismo = fallibilism; exento = exempt' },
+      { spanish: 'La distinción entre conocimiento a priori y a posteriori es más porosa de lo que parece.', english: 'The distinction between a priori and a posteriori knowledge is more porous than it seems.', notes: 'poroso = porous / permeable' },
+      { spanish: 'Esa postura incurre en una petición de principio que invalida el argumento.', english: 'That position commits a begging of the question that invalidates the argument.', notes: 'petición de principio = begging the question (logical fallacy)' },
+      { spanish: 'Habría que preguntarse si la justificación epistémica es internista o externista.', english: 'One should ask whether epistemic justification is internalist or externalist.', notes: 'internista / externista = internalist / externalist (epistemology)' },
+      { spanish: 'El escepticismo radical nos conduce a un callejón sin salida metodológico.', english: 'Radical skepticism leads us to a methodological dead end.', notes: 'callejón sin salida = dead end (lit. alley with no exit)' }
+    ],
+    vocab: [
+      { word: 'la epistemología', english: 'epistemology', gender: 'f' },
+      { word: 'el supuesto', english: 'assumption / presupposition', gender: 'm' },
+      { word: 'la falacia', english: 'fallacy', gender: 'f' },
+      { word: 'el silogismo', english: 'syllogism', gender: 'm' },
+      { word: 'la premisa', english: 'premise', gender: 'f' },
+      { word: 'el paradigma', english: 'paradigm', gender: 'm' }
+    ],
+    dialogue: [
+      { speaker: 'Profesora', text: 'Retomemos el problema de Gettier. ¿Es posible tener una creencia verdadera y justificada que, sin embargo, no constituya conocimiento?' },
+      { speaker: 'Estudiante 1', text: 'Los contraejemplos de Gettier demuestran precisamente eso: la justificación y la verdad pueden coincidir por azar, lo cual socava la definición tripartita.' },
+      { speaker: 'Estudiante 2', text: 'Pero si añadimos una cláusula de no-derrota, podemos rescatar la definición clásica sin abandonar la intuición de que el conocimiento requiere justificación.' },
+      { speaker: 'Profesora', text: 'Interesante, aunque la cláusula de no-derrota plantea un regreso al infinito: ¿quién determina qué cuenta como un derrotador legítimo?' }
+    ],
+    quiz: [
+      { prompt: '¿Qué estudia la epistemología?', options: ['ethics and morality', 'the nature of knowledge and belief', 'the structure of language', 'political systems'], correct: 1, explanation: '"La epistemología" is the branch of philosophy that studies the nature, origin, and limits of knowledge.' },
+      { prompt: '¿Qué es una "petición de principio"?', options: ['a formal request', 'a begging of the question (circular reasoning)', 'a first principle', 'a philosophical petition'], correct: 1, explanation: '"Petición de principio" is the logical fallacy of begging the question, where the conclusion is assumed in the premises.' },
+      { prompt: 'What does "callejón sin salida" mean?', options: ['a narrow street', 'a dead end', 'a shortcut', 'a crossroads'], correct: 1, explanation: '"Callejón sin salida" literally means "alley with no exit" and is used figuratively to mean a dead end or impasse.' }
+    ]
   }
 ];
 

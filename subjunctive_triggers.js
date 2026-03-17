@@ -564,6 +564,80 @@ const SUBJUNCTIVE_TRIGGERS_DATA = [
     level: 'B1',
     notes: 'Verb of influence. Common in everyday advice-giving.'
   },
+
+  // ──────────────────────────────────────
+  //  C1 — ADVANCED TRIGGERS
+  // ──────────────────────────────────────
+
+  {
+    id: 'subj-59', trigger: 'no sea que', category: 'purpose',
+    english: 'lest / in case',
+    example: 'Lleva un paraguas, no sea que llueva.',
+    exampleEn: 'Take an umbrella, lest it rain.',
+    level: 'C1',
+    notes: 'Archaic in English ("lest"), but very much alive in Spanish. Always followed by subjunctive. Common in everyday cautionary advice.'
+  },
+  {
+    id: 'subj-60', trigger: 'por mucho que', category: 'concession',
+    english: 'no matter how much / however much',
+    example: 'Por mucho que estudies, este examen es muy difícil.',
+    exampleEn: 'No matter how much you study, this exam is very difficult.',
+    level: 'C1',
+    notes: 'Concessive clause. Always subjunctive when the outcome is uncertain or hypothetical. Compare: "por mucho que estudió" (indicative, factual).'
+  },
+  {
+    id: 'subj-61', trigger: 'a no ser que', category: 'concession',
+    english: 'unless',
+    example: 'Iremos a la playa, a no ser que haga mal tiempo.',
+    exampleEn: 'We\'ll go to the beach, unless the weather is bad.',
+    level: 'C1',
+    notes: 'Synonym of "a menos que". Slightly more formal register. Always requires subjunctive.'
+  },
+  {
+    id: 'subj-62', trigger: 'en caso de que', category: 'purpose',
+    english: 'in the event that / in case',
+    example: 'En caso de que necesite asistencia, pulse el botón rojo.',
+    exampleEn: 'In the event that you need assistance, press the red button.',
+    level: 'C1',
+    notes: 'Formal conditional. Always subjunctive because the situation is hypothetical. Common in instructions and formal writing.'
+  },
+
+  // ──────────────────────────────────────
+  //  C2 — LITERARY / RARE TRIGGERS
+  // ──────────────────────────────────────
+
+  {
+    id: 'subj-63', trigger: 'comoquiera que', category: 'concession',
+    english: 'however / in whatever way',
+    example: 'Comoquiera que se analice el problema, la conclusión es la misma.',
+    exampleEn: 'However one analyzes the problem, the conclusion is the same.',
+    level: 'C2',
+    notes: 'Highly literary concessive. Related to "quienquiera que" (whoever), "dondequiera que" (wherever). All require subjunctive.'
+  },
+  {
+    id: 'subj-64', trigger: 'así + subjunctive', category: 'concession',
+    english: 'even if / no matter if',
+    example: 'Así me lo jure mil veces, no le creo.',
+    exampleEn: 'Even if he swears it to me a thousand times, I don\'t believe him.',
+    level: 'C2',
+    notes: 'Literary/emphatic concessive. "Así" here means "even if", not "thus". Very expressive, common in literature and passionate speech.'
+  },
+  {
+    id: 'subj-65', trigger: 'ya sea que... o que', category: 'concession',
+    english: 'whether... or',
+    example: 'Ya sea que acepten o que rechacen la oferta, debemos estar preparados.',
+    exampleEn: 'Whether they accept or reject the offer, we must be prepared.',
+    level: 'C2',
+    notes: 'Formal disjunctive. Both clauses require subjunctive. Common in legal and academic texts.'
+  },
+  {
+    id: 'subj-66', trigger: 'no porque + subjunctive', category: 'concession',
+    english: 'not because (denying the reason)',
+    example: 'Lo hago no porque me obliguen, sino porque quiero.',
+    exampleEn: 'I do it not because they force me, but because I want to.',
+    level: 'C2',
+    notes: 'When "porque" is negated to deny a reason, it takes subjunctive. Compare affirmative "porque me obligan" (indicative, stating the reason).'
+  },
 ];
 
 const SUBJUNCTIVE_TRIGGERS_QUIZ = [

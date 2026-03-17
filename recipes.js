@@ -5,6 +5,7 @@ const RECIPES_DATA = [
     englishName: "Valencian Paella",
     icon: "🥘",
     tags: ["España", "arroz", "mariscos", "Valencia", "tradicional"],
+    level: 'B1',
     descEs: "La paella es el plato más emblemático de la cocina española, originario de Valencia. Se prepara con arroz, azafrán, verduras y, según la variante, mariscos, pollo o conejo. Se cocina en una sartén ancha y poco profunda llamada 'paellera' sobre fuego abierto. El socarrat, la capa crujiente de arroz en el fondo, es considerado la mejor parte del plato.",
     descEn: "Paella is the most iconic dish in Spanish cuisine, originating from Valencia. It is prepared with rice, saffron, vegetables, and depending on the variant, seafood, chicken, or rabbit. It is cooked in a wide, shallow pan called a 'paellera' over an open flame. The socarrat, the crispy layer of rice at the bottom, is considered the best part of the dish.",
     vocab: [
@@ -43,6 +44,7 @@ const RECIPES_DATA = [
     englishName: "Shepherd-Style Tacos",
     icon: "🌮",
     tags: ["México", "carne", "callejero", "cerdo", "piña"],
+    level: 'A2',
     descEs: "Los tacos al pastor son uno de los platillos más populares de la cocina mexicana callejera. Se preparan con carne de cerdo marinada en una mezcla de chiles secos, especias y achiote, luego se apila en un trompo vertical similar al shawarma. La carne se rebana finamente y se sirve en tortillas de maíz con piña, cebolla, cilantro y salsa verde.",
     descEn: "Tacos al pastor are one of the most popular dishes in Mexican street food. They are prepared with pork marinated in a mixture of dried chiles, spices, and achiote, then stacked on a vertical spit similar to shawarma. The meat is thinly sliced and served on corn tortillas with pineapple, onion, cilantro, and green salsa.",
     vocab: [
@@ -81,6 +83,7 @@ const RECIPES_DATA = [
     englishName: "Stuffed Pastries",
     icon: "🥟",
     tags: ["Argentina", "masa", "relleno", "horno", "latinoamérica"],
+    level: 'B1',
     descEs: "Las empanadas son pasteles rellenos que se encuentran en toda Latinoamérica y España. En Argentina, las empanadas son especialmente populares y cada provincia tiene su propia variante. La masa se rellena con carne picada, pollo, jamón y queso, o verduras, y se puede hornear o freír. El repulgue, el plegado decorativo del borde, indica el tipo de relleno.",
     descEn: "Empanadas are stuffed pastries found throughout Latin America and Spain. In Argentina, empanadas are especially popular and each province has its own variant. The dough is filled with ground meat, chicken, ham and cheese, or vegetables, and can be baked or fried. The repulgue, the decorative edge folding, indicates the type of filling.",
     vocab: [
@@ -119,6 +122,7 @@ const RECIPES_DATA = [
     englishName: "Ceviche",
     icon: "🐟",
     tags: ["Perú", "mariscos", "limón", "fresco", "crudo"],
+    level: 'B2',
     descEs: "El ceviche es el plato nacional del Perú, declarado Patrimonio Cultural de la Nación. Consiste en pescado fresco cortado en trozos y marinado en jugo de limón, lo que 'cocina' el pescado mediante un proceso de desnaturalización. Se sazona con ají, cebolla morada, cilantro y sal. Se sirve con camote, choclo y lechuga. El líquido resultante se llama 'leche de tigre'.",
     descEn: "Ceviche is the national dish of Peru, declared Cultural Heritage of the Nation. It consists of fresh fish cut into pieces and marinated in lime juice, which 'cooks' the fish through a denaturation process. It is seasoned with chili pepper, red onion, cilantro, and salt. It is served with sweet potato, corn, and lettuce. The resulting liquid is called 'leche de tigre' (tiger's milk).",
     vocab: [
@@ -157,6 +161,7 @@ const RECIPES_DATA = [
     englishName: "Rice with Chicken",
     icon: "🍗",
     tags: ["latinoamérica", "arroz", "pollo", "familiar", "reconfortante"],
+    level: 'A2',
     descEs: "El arroz con pollo es un plato fundamental de la cocina latinoamericana, con variaciones en casi todos los países hispanohablantes. Se prepara dorando piezas de pollo, luego cocinándolas con arroz, sofrito de cebolla, ajo, pimientos y tomate, y caldo. Según el país se le añaden ingredientes como cerveza, culantro, arvejas, zanahorias o aceitunas. Es un plato familiar por excelencia.",
     descEn: "Rice with chicken is a fundamental dish in Latin American cuisine, with variations in almost every Spanish-speaking country. It is prepared by browning chicken pieces, then cooking them with rice, a sofrito of onion, garlic, peppers, and tomato, and broth. Depending on the country, ingredients such as beer, culantro, peas, carrots, or olives are added. It is the quintessential family dish.",
     vocab: [
@@ -195,6 +200,7 @@ const RECIPES_DATA = [
     englishName: "Churros",
     icon: "🍩",
     tags: ["España", "México", "postre", "desayuno", "frito"],
+    level: 'A2',
     descEs: "Los churros son una masa frita alargada y estriada, popular en España y toda Latinoamérica. En España, los churros se sirven tradicionalmente para el desayuno o la merienda, acompañados de una taza de chocolate espeso para mojar. En México, los churros suelen ser más gruesos y se rellenan con cajeta, chocolate o crema. La masa se hace con harina, agua y sal, y se fríe en aceite caliente.",
     descEn: "Churros are elongated, ridged fried dough, popular in Spain and throughout Latin America. In Spain, churros are traditionally served for breakfast or afternoon snack, accompanied by a cup of thick chocolate for dipping. In Mexico, churros tend to be thicker and are filled with cajeta, chocolate, or cream. The dough is made with flour, water, and salt, and fried in hot oil.",
     vocab: [
@@ -233,6 +239,7 @@ const RECIPES_DATA = [
     englishName: "Guacamole",
     icon: "🥑",
     tags: ["México", "aguacate", "salsa", "azteca", "fresco"],
+    level: 'B1',
     descEs: "El guacamole es una salsa mexicana de origen azteca cuyo nombre proviene del náhuatl 'ahuacamolli' (salsa de aguacate). Se prepara machacando aguacates maduros y mezclándolos con cebolla picada, tomate, cilantro, chile serrano, jugo de limón y sal. Es un acompañamiento esencial de la cocina mexicana, servido con totopos, tacos y otros platillos. El aguacate es originario de Mesoamérica.",
     descEn: "Guacamole is a Mexican sauce of Aztec origin whose name comes from the Nahuatl 'ahuacamolli' (avocado sauce). It is prepared by mashing ripe avocados and mixing them with chopped onion, tomato, cilantro, serrano chile, lime juice, and salt. It is an essential accompaniment in Mexican cuisine, served with tortilla chips, tacos, and other dishes. The avocado is native to Mesoamerica.",
     vocab: [
@@ -271,6 +278,7 @@ const RECIPES_DATA = [
     englishName: "Spanish Omelette",
     icon: "🍳",
     tags: ["España", "huevos", "patatas", "tapas", "clásico"],
+    level: 'B1',
     descEs: "La tortilla española, también llamada tortilla de patatas, es uno de los platos más queridos de España. Se elabora con huevos batidos, patatas cortadas en rodajas finas y fritas lentamente en aceite de oliva, y opcionalmente cebolla. La mezcla se cuaja en la sartén y se da la vuelta con un plato para cocinar ambos lados. El gran debate español es si la tortilla debe llevar cebolla o no. Se sirve como tapa, pincho o plato principal.",
     descEn: "The Spanish omelette, also called tortilla de patatas, is one of Spain's most beloved dishes. It is made with beaten eggs, potatoes sliced thin and slowly fried in olive oil, and optionally onion. The mixture is set in the pan and flipped with a plate to cook both sides. The great Spanish debate is whether the tortilla should include onion or not. It is served as a tapa, pincho, or main dish.",
     vocab: [
@@ -309,6 +317,7 @@ const RECIPES_DATA = [
     englishName: "Caramel Custard",
     icon: "🍮",
     tags: ["España", "latinoamérica", "postre", "caramelo", "huevos"],
+    level: 'A2',
     descEs: "El flan es un postre de natillas con caramelo presente en toda la cocina hispana. Se prepara con huevos, leche, azúcar y vainilla, cocinado a baño maría en el horno. El molde se recubre primero con caramelo líquido que, al enfriar, forma una salsa dorada que baña el flan al desmoldarlo. En México se hace con leche condensada y queso crema. En Cuba se prepara con leche evaporada. Cada país tiene su versión única.",
     descEn: "Flan is a caramel custard dessert found throughout Hispanic cuisine. It is prepared with eggs, milk, sugar, and vanilla, cooked in a water bath in the oven. The mold is first coated with liquid caramel that, when cooled, forms a golden sauce that covers the flan when unmolded. In Mexico it is made with condensed milk and cream cheese. In Cuba it is prepared with evaporated milk. Each country has its unique version.",
     vocab: [
@@ -347,6 +356,7 @@ const RECIPES_DATA = [
     englishName: "Pupusas",
     icon: "🫓",
     tags: ["El Salvador", "maíz", "queso", "frijoles", "tradicional"],
+    level: 'B2',
     descEs: "Las pupusas son el plato nacional de El Salvador y se celebran el segundo domingo de noviembre en el Día Nacional de la Pupusa. Son tortillas gruesas de masa de maíz rellenas de queso, frijoles refritos, chicharrón (cerdo molido) o loroco (una flor comestible centroamericana). Se cocinan en una plancha o comal y se sirven con curtido (ensalada de repollo fermentado) y salsa de tomate. Su origen es precolombino.",
     descEn: "Pupusas are the national dish of El Salvador and are celebrated on the second Sunday of November on National Pupusa Day. They are thick corn dough tortillas filled with cheese, refried beans, chicharrón (ground pork), or loroco (an edible Central American flower). They are cooked on a griddle or comal and served with curtido (fermented cabbage salad) and tomato sauce. Their origin is pre-Columbian.",
     vocab: [

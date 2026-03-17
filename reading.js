@@ -2,7 +2,7 @@
 
 // ════════════════════════════════════════════════════════════
 //  READING COMPREHENSION — Graded passages with vocabulary
-//  51 passages: 10 A1, 5 A2, 10 B1, 9 B2, 9 C1, 8 C2
+//  56 passages: 10 A1, 10 A2, 10 B1, 9 B2, 9 C1, 8 C2
 // ════════════════════════════════════════════════════════════
 
 const READING_DATA = [
@@ -2962,6 +2962,211 @@ const READING_DATA = [
         ],
         correct: 2,
         explanation: 'The "uncomfortable truth" is that "el significado de un texto no reside exclusivamente en la intención de quien lo escribe, sino en la red de lecturas, convenciones y contextos que lo envuelven".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-52',
+    level: 'A2',
+    title: 'Mi rutina diaria',
+    titleEn: 'My Daily Routine',
+    text: 'Todos los días me despierto a las siete de la mañana. Primero me ducho y después desayuno café con tostadas. Salgo de casa a las ocho y camino hasta la parada del autobús. Trabajo en una oficina en el centro de la ciudad. Normalmente almuerzo con mis compañeros en la cafetería. Por la tarde vuelvo a casa y hago la compra en el supermercado. Preparo la cena y como mientras veo las noticias en la televisión. Antes de dormir leo un poco. Los fines de semana mi rutina es diferente porque me levanto más tarde y salgo con mis amigos.',
+    vocab: [
+      { word: 'me despierto', english: 'I wake up' },
+      { word: 'tostadas', english: 'toast' },
+      { word: 'parada del autobús', english: 'bus stop' },
+      { word: 'almuerzo', english: 'I have lunch' },
+      { word: 'hago la compra', english: 'I do the shopping' }
+    ],
+    questions: [
+      {
+        prompt: '¿A qué hora se despierta?',
+        options: ['A las seis', 'A las siete', 'A las ocho', 'A las nueve'],
+        correct: 1,
+        explanation: 'The text says "me despierto a las siete de la mañana".'
+      },
+      {
+        prompt: '¿Cómo va al trabajo?',
+        options: ['En coche', 'En metro', 'En autobús', 'En bicicleta'],
+        correct: 2,
+        explanation: 'The text says "camino hasta la parada del autobús".'
+      },
+      {
+        prompt: '¿Dónde almuerza normalmente?',
+        options: ['En un restaurante', 'En su casa', 'En la cafetería', 'En el parque'],
+        correct: 2,
+        explanation: 'The text says "almuerzo con mis compañeros en la cafetería".'
+      },
+      {
+        prompt: '¿Qué hace antes de dormir?',
+        options: ['Ve la televisión', 'Lee un poco', 'Escucha música', 'Hace ejercicio'],
+        correct: 1,
+        explanation: 'The text says "antes de dormir leo un poco".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-53',
+    level: 'A2',
+    title: 'El fin de semana pasado',
+    titleEn: 'Last Weekend',
+    text: 'El sábado pasado me levanté tarde porque no tenía que trabajar. Desayuné tranquilamente y después llamé a mi amiga Laura. Quedamos a las doce en el parque del centro. Hacía buen tiempo y había mucha gente paseando. Caminamos un rato y luego fuimos a comer a una pizzería nueva. La pizza estaba deliciosa y el camarero fue muy amable. Por la tarde fuimos al cine y vimos una película de comedia. Nos reímos mucho. El domingo descansé en casa, lavé la ropa y preparé las cosas para la semana. Fue un fin de semana muy agradable.',
+    vocab: [
+      { word: 'quedamos', english: 'we arranged to meet' },
+      { word: 'hacía buen tiempo', english: 'the weather was nice' },
+      { word: 'pizzería', english: 'pizza restaurant' },
+      { word: 'camarero', english: 'waiter' },
+      { word: 'agradable', english: 'pleasant / enjoyable' }
+    ],
+    questions: [
+      {
+        prompt: '¿Por qué se levantó tarde el sábado?',
+        options: ['Estaba enfermo', 'No tenía que trabajar', 'Se acostó muy tarde', 'No escuchó el despertador'],
+        correct: 1,
+        explanation: 'The text says "me levanté tarde porque no tenía que trabajar".'
+      },
+      {
+        prompt: '¿Dónde quedaron con Laura?',
+        options: ['En su casa', 'En la pizzería', 'En el parque del centro', 'En el cine'],
+        correct: 2,
+        explanation: 'The text says "quedamos a las doce en el parque del centro".'
+      },
+      {
+        prompt: '¿Qué tipo de película vieron?',
+        options: ['De acción', 'De terror', 'De comedia', 'De ciencia ficción'],
+        correct: 2,
+        explanation: 'The text says "vimos una película de comedia".'
+      },
+      {
+        prompt: '¿Qué hizo el domingo?',
+        options: ['Salió con amigos', 'Fue al cine otra vez', 'Descansó en casa y lavó la ropa', 'Fue de compras'],
+        correct: 2,
+        explanation: 'The text says "el domingo descansé en casa, lavé la ropa y preparé las cosas para la semana".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-54',
+    level: 'A2',
+    title: 'Una carta a un amigo',
+    titleEn: 'A Letter to a Friend',
+    text: 'Querido Miguel: Te escribo desde mi nueva ciudad. El mes pasado me mudé a Valencia por trabajo. Al principio estaba un poco nervioso porque no conocía a nadie. Pero mis vecinos son muy simpáticos y me ayudaron con la mudanza. Vivo en un piso pequeño cerca de la playa. Todos los días después del trabajo paseo por la orilla del mar. El clima aquí es fantástico, siempre hace sol. Ya encontré un gimnasio cerca de casa y voy tres veces por semana. Echo de menos a mi familia y a mis amigos, pero estoy contento con el cambio. Espero tu visita pronto. Un abrazo, Carlos.',
+    vocab: [
+      { word: 'me mudé', english: 'I moved (house)' },
+      { word: 'vecinos', english: 'neighbors' },
+      { word: 'mudanza', english: 'move / moving (house)' },
+      { word: 'orilla del mar', english: 'seashore' },
+      { word: 'echo de menos', english: 'I miss' }
+    ],
+    questions: [
+      {
+        prompt: '¿Por qué se mudó Carlos a Valencia?',
+        options: ['Por estudios', 'Por trabajo', 'Por su familia', 'Por el clima'],
+        correct: 1,
+        explanation: 'The text says "me mudé a Valencia por trabajo".'
+      },
+      {
+        prompt: '¿Cómo son los vecinos de Carlos?',
+        options: ['Antipáticos', 'Ruidosos', 'Simpáticos', 'Tímidos'],
+        correct: 2,
+        explanation: 'The text says "mis vecinos son muy simpáticos y me ayudaron con la mudanza".'
+      },
+      {
+        prompt: '¿Qué hace Carlos después del trabajo?',
+        options: ['Va al gimnasio', 'Pasea por la orilla del mar', 'Llama a su familia', 'Estudia español'],
+        correct: 1,
+        explanation: 'The text says "todos los días después del trabajo paseo por la orilla del mar".'
+      },
+      {
+        prompt: '¿Con qué frecuencia va al gimnasio?',
+        options: ['Todos los días', 'Dos veces por semana', 'Tres veces por semana', 'Los fines de semana'],
+        correct: 2,
+        explanation: 'The text says "voy tres veces por semana".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-55',
+    level: 'A2',
+    title: 'Mi restaurante favorito',
+    titleEn: 'My Favorite Restaurant',
+    text: 'Mi restaurante favorito se llama "Casa Antonio" y está en una calle tranquila del centro. Lo descubrí hace dos años cuando un compañero de trabajo me lo recomendó. El dueño se llama Antonio y siempre recibe a los clientes con una sonrisa. La comida es casera y muy sabrosa. Mi plato favorito es el pollo al horno con patatas. También tienen postres increíbles, especialmente la tarta de chocolate. Los precios son bastante razonables para la calidad de la comida. Normalmente voy los viernes por la noche con mi pareja. Siempre reservamos mesa porque el restaurante se llena rápido.',
+    vocab: [
+      { word: 'dueño', english: 'owner' },
+      { word: 'casera', english: 'homemade' },
+      { word: 'sabrosa', english: 'tasty / flavorful' },
+      { word: 'pollo al horno', english: 'roast chicken' },
+      { word: 'reservamos mesa', english: 'we book a table' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cómo descubrió el restaurante?',
+        options: ['Lo vio en internet', 'Un compañero se lo recomendó', 'Lo encontró caminando', 'Un amigo lo llevó'],
+        correct: 1,
+        explanation: 'The text says "un compañero de trabajo me lo recomendó".'
+      },
+      {
+        prompt: '¿Cuál es su plato favorito?',
+        options: ['Paella', 'Tarta de chocolate', 'Pollo al horno con patatas', 'Ensalada'],
+        correct: 2,
+        explanation: 'The text says "mi plato favorito es el pollo al horno con patatas".'
+      },
+      {
+        prompt: '¿Cuándo va normalmente al restaurante?',
+        options: ['Los sábados al mediodía', 'Los domingos por la tarde', 'Los viernes por la noche', 'Todos los días'],
+        correct: 2,
+        explanation: 'The text says "normalmente voy los viernes por la noche".'
+      },
+      {
+        prompt: '¿Por qué reservan mesa?',
+        options: ['Porque es muy caro', 'Porque está lejos', 'Porque el restaurante se llena rápido', 'Porque Antonio se lo pide'],
+        correct: 2,
+        explanation: 'The text says "siempre reservamos mesa porque el restaurante se llena rápido".'
+      }
+    ]
+  },
+
+  {
+    id: 'read-56',
+    level: 'A2',
+    title: 'El mercado del pueblo',
+    titleEn: 'The Town Market',
+    text: 'Todos los sábados por la mañana hay un mercado en la plaza principal de mi pueblo. Los vendedores llegan muy temprano para preparar sus puestos. Hay frutas, verduras, quesos, pan recién hecho y también ropa y artesanías. A mí me gusta ir pronto porque hay más variedad y todo está más fresco. Siempre compro tomates, naranjas y un pan grande para toda la semana. La señora que vende queso me conoce y a veces me da una muestra para probar. El ambiente del mercado es muy alegre, la gente habla, ríe y saluda a sus vecinos. Es una tradición que me encanta de vivir en un pueblo pequeño.',
+    vocab: [
+      { word: 'puestos', english: 'stalls / stands' },
+      { word: 'artesanías', english: 'handicrafts' },
+      { word: 'variedad', english: 'variety' },
+      { word: 'muestra', english: 'sample' },
+      { word: 'ambiente', english: 'atmosphere' }
+    ],
+    questions: [
+      {
+        prompt: '¿Cuándo hay mercado en el pueblo?',
+        options: ['Los domingos', 'Los sábados por la mañana', 'Todos los días', 'Los viernes por la tarde'],
+        correct: 1,
+        explanation: 'The text says "todos los sábados por la mañana hay un mercado".'
+      },
+      {
+        prompt: '¿Por qué le gusta ir pronto al mercado?',
+        options: ['Porque hay menos gente', 'Porque es más barato', 'Porque hay más variedad y todo está más fresco', 'Porque la señora del queso solo está por la mañana'],
+        correct: 2,
+        explanation: 'The text says "me gusta ir pronto porque hay más variedad y todo está más fresco".'
+      },
+      {
+        prompt: '¿Qué compra siempre en el mercado?',
+        options: ['Queso y pan', 'Ropa y artesanías', 'Tomates, naranjas y pan', 'Frutas y verduras variadas'],
+        correct: 2,
+        explanation: 'The text says "siempre compro tomates, naranjas y un pan grande".'
+      },
+      {
+        prompt: '¿Qué hace la señora que vende queso?',
+        options: ['Le da un descuento', 'Le guarda los mejores quesos', 'Le da una muestra para probar', 'Le recomienda recetas'],
+        correct: 2,
+        explanation: 'The text says "a veces me da una muestra para probar".'
       }
     ]
   }

@@ -45,7 +45,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Which article goes with 'chicas'?", answer: "las", options: ["el","la","los","las"], explanation: "'Chicas' is feminine plural → las chicas." },
       { type: "fib", question: "Me gusta ___ música. (I like music.)", answer: "la", options: null, explanation: "General concepts use the definite article: la música." },
       { type: "mc", question: "How do you say 'on Monday' in Spanish?", answer: "el lunes", options: ["en lunes","lunes","el lunes","un lunes"], explanation: "Days of the week use 'el': el lunes." },
-      { type: "mc", question: "What is the plural of 'el perro'?", answer: "los perros", options: ["las perros","los perros","el perros","les perros"], explanation: "Masculine singular 'el' becomes 'los' in plural." }
+      { type: "mc", question: "What is the plural of 'el perro'?", answer: "los perros", options: ["las perros","los perros","el perros","les perros"], explanation: "Masculine singular 'el' becomes 'los' in plural." },
+      { type: "error-correct", sentence: "Me duele el cabeza.", answer: "Me duele la cabeza.", explanation: "'Cabeza' is feminine, so it requires the feminine article 'la', not 'el'." },
+      { type: "error-correct", sentence: "La lunes tengo clase.", answer: "El lunes tengo clase.", explanation: "Days of the week are masculine: el lunes, el martes, etc." }
     ]
   },
   {
@@ -61,7 +63,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "How do you say 'some flowers'?", answer: "unas flores", options: ["unos flores","unas flores","una flores","las flores"], explanation: "'Flores' is feminine plural → unas flores." },
       { type: "mc", question: "Which is correct: 'Soy profesor' or 'Soy un profesor'?", answer: "Soy profesor", options: ["Soy profesor","Soy un profesor","Soy el profesor","Both are always correct"], explanation: "With unmodified professions after ser, omit the article." },
       { type: "fib", question: "Hay ___ chicas en la clase. (There are some girls.)", answer: "unas", options: null, explanation: "'Chicas' is feminine plural → unas chicas." },
-      { type: "mc", question: "What is the masculine plural indefinite article?", answer: "unos", options: ["un","unas","unos","los"], explanation: "Masculine plural indefinite = unos." }
+      { type: "mc", question: "What is the masculine plural indefinite article?", answer: "unos", options: ["un","unas","unos","los"], explanation: "Masculine plural indefinite = unos." },
+      { type: "error-correct", sentence: "Ella es una profesora. Él es un doctor.", answer: "Ella es profesora. Él es doctor.", explanation: "In Spanish, the indefinite article is omitted with unmodified professions after 'ser': Soy profesor, not *Soy un profesor." }
     ]
   },
   {
@@ -78,7 +81,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "In Latin America, 'you all' is:", answer: "ustedes", options: ["vosotros","ustedes","ellos","nosotros"], explanation: "Latin America uses 'ustedes' for all plural 'you' forms." },
       { type: "mc", question: "Why are subject pronouns often omitted in Spanish?", answer: "The verb ending shows the subject", options: ["It's rude to use them","They're optional in writing only","The verb ending shows the subject","Only in questions"], explanation: "Verb conjugations indicate the subject, so pronouns are often dropped." },
       { type: "fib", question: "___ somos estudiantes. (We are students.)", answer: "Nosotros", options: null, explanation: "First person plural = nosotros." },
-      { type: "mc", question: "'Vosotros' is used primarily in:", answer: "Spain", options: ["Mexico","Argentina","Spain","Colombia"], explanation: "Vosotros is used in Spain; Latin America uses ustedes." }
+      { type: "mc", question: "'Vosotros' is used primarily in:", answer: "Spain", options: ["Mexico","Argentina","Spain","Colombia"], explanation: "Vosotros is used in Spain; Latin America uses ustedes." },
+      { type: "error-correct", sentence: "Yo soy estudiante. Él somos profesor.", answer: "Yo soy estudiante. Él es profesor.", explanation: "'Él' requires the third person singular form 'es', not the first person plural 'somos'." }
     ]
   },
   {
@@ -97,7 +101,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Ellos ___ de Argentina.' Fill in with ser.", answer: "son", options: ["es","somos","son","soy"], explanation: "Ellos + ser = son." },
       { type: "fib", question: "María ___ profesora. (María is a teacher.)", answer: "es", options: null, explanation: "Ella/María + ser = es." },
       { type: "mc", question: "Which use is correct for ser?", answer: "Nationality", options: ["Location","Mood","Nationality","Health"], explanation: "Ser is used for nationality: Soy español." },
-      { type: "fib", question: "Nosotros ___ amigos. (We are friends.)", answer: "somos", options: null, explanation: "Nosotros + ser = somos." }
+      { type: "fib", question: "Nosotros ___ amigos. (We are friends.)", answer: "somos", options: null, explanation: "Nosotros + ser = somos." },
+      { type: "error-correct", sentence: "Tú es muy amable.", answer: "Tú eres muy amable.", explanation: "'Tú' requires the second person singular form 'eres', not the third person 'es'." },
+      { type: "transform", question: "Change to third person singular (él):", sentence: "Yo soy estudiante.", answer: "Él es estudiante.", explanation: "Yo soy → Él es. The verb 'ser' changes from first person (soy) to third person (es)." }
     ]
   },
   {
@@ -116,7 +122,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Nosotros ___ cansados.' Fill in.", answer: "estamos", options: ["somos","estamos","están","estoy"], explanation: "Temporary state (tired) + nosotros = estamos." },
       { type: "fib", question: "Yo ___ feliz hoy. (I am happy today.)", answer: "estoy", options: null, explanation: "Temporary emotion uses estar: estoy feliz." },
       { type: "mc", question: "Which situation uses estar?", answer: "Telling where something is located", options: ["Telling time","Telling where something is located","Describing nationality","Stating profession"], explanation: "Estar is used for location." },
-      { type: "fib", question: "Ellos ___ en la escuela. (They are at school.)", answer: "están", options: null, explanation: "Location + ellos = están." }
+      { type: "fib", question: "Ellos ___ en la escuela. (They are at school.)", answer: "están", options: null, explanation: "Location + ellos = están." },
+      { type: "error-correct", sentence: "Yo soy cansado hoy.", answer: "Yo estoy cansado hoy.", explanation: "Temporary states like being tired use 'estar', not 'ser': estoy cansado." }
     ]
   },
   {
@@ -160,7 +167,9 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "Ella _____ mucho. (estudiar)", answer: "estudia", options: null, explanation: "Ella + estudiar → estudia (-a ending)." },
       { type: "mc", question: "What is the 'nosotros' ending for -ar verbs?", answer: "-amos", options: ["-emos","-amos","-imos","-imos"], explanation: "Nosotros -ar ending is -amos." },
       { type: "fib", question: "Ellos _____ en la oficina. (trabajar)", answer: "trabajan", options: null, explanation: "Ellos + trabajar → trabajan (-an ending)." },
-      { type: "mc", question: "Conjugate: tú + bailar", answer: "bailas", options: ["bailo","bailas","baila","bailan"], explanation: "Tú + -ar verb → -as ending: bailas." }
+      { type: "mc", question: "Conjugate: tú + bailar", answer: "bailas", options: ["bailo","bailas","baila","bailan"], explanation: "Tú + -ar verb → -as ending: bailas." },
+      { type: "error-correct", sentence: "Nosotros hablo español en clase.", answer: "Nosotros hablamos español en clase.", explanation: "'Nosotros' requires the -amos ending: hablamos, not the yo form 'hablo'." },
+      { type: "transform", question: "Change to the ellos form:", sentence: "Yo estudio mucho.", answer: "Ellos estudian mucho.", explanation: "Yo estudio → Ellos estudian. The -ar verb ending changes from -o (yo) to -an (ellos)." }
     ]
   },
   {
@@ -199,7 +208,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Where do most adjectives go in Spanish?", answer: "After the noun", options: ["Before the noun","After the noun","Either position","It varies by tense"], explanation: "Most adjectives follow the noun: un coche rojo." },
       { type: "fib", question: "Es un _____ día. (good)", answer: "buen", options: null, explanation: "Bueno shortens to 'buen' before a masculine singular noun." },
       { type: "mc", question: "'Una ciudad grande' — does 'grande' change for feminine?", answer: "No, -e adjectives don't change gender", options: ["Yes, it becomes 'granda'","No, -e adjectives don't change gender","Yes, it becomes 'grandes'","Only in plural"], explanation: "Adjectives ending in -e are the same for masculine and feminine." },
-      { type: "fib", question: "Los exámenes son _____ (difícil)", answer: "difíciles", options: null, explanation: "Consonant-ending adjective + plural: add -es → difíciles." }
+      { type: "fib", question: "Los exámenes son _____ (difícil)", answer: "difíciles", options: null, explanation: "Consonant-ending adjective + plural: add -es → difíciles." },
+      { type: "error-correct", sentence: "Las flores son bonito y los árboles son verdes.", answer: "Las flores son bonitas y los árboles son verdes.", explanation: "'Flores' is feminine plural, so the adjective must agree: bonitas, not the masculine singular 'bonito'." }
     ]
   },
   {
@@ -259,7 +269,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Why don't nosotros forms stem-change?", answer: "The stem change only happens in stressed syllables", options: ["It's an exception","The stem change only happens in stressed syllables","Nosotros uses a different conjugation","It does change"], explanation: "The change occurs when the stem vowel is stressed (not in nosotros/vosotros)." },
       { type: "fib", question: "Ellos _____ bien. (dormir)", answer: "duermen", options: null, explanation: "Dormir is o→ue: duermen." },
       { type: "mc", question: "What type of stem change does 'pedir' have?", answer: "e → i", options: ["e → ie","o → ue","e → i","u → ue"], explanation: "Pedir changes e → i: pido, pides, pide..." },
-      { type: "fib", question: "Nosotros _____ a las 8. (volver)", answer: "volvemos", options: null, explanation: "Nosotros doesn't stem-change: volvemos (not vuelvemos)." }
+      { type: "fib", question: "Nosotros _____ a las 8. (volver)", answer: "volvemos", options: null, explanation: "Nosotros doesn't stem-change: volvemos (not vuelvemos)." },
+      { type: "error-correct", sentence: "Yo podo ir contigo mañana.", answer: "Yo puedo ir contigo mañana.", explanation: "Poder is an o→ue stem-changing verb: puedo, not 'podo'. The stem vowel changes in stressed forms." }
     ]
   },
   {
@@ -278,7 +289,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Which is correct for 'She showers'?", answer: "Se ducha", options: ["Ella ducha","Se ducha","Me ducha","Te ducha"], explanation: "Ella + reflexive = se ducha." },
       { type: "fib", question: "Nosotros ___ despertamos a las 7. (despertarse)", answer: "nos", options: null, explanation: "Nosotros → nos: Nos despertamos." },
       { type: "mc", question: "What makes a verb reflexive?", answer: "The subject acts on itself", options: ["It's irregular","The subject acts on itself","It's in past tense","It has two objects"], explanation: "Reflexive means the action reflects back on the subject." },
-      { type: "fib", question: "Ellos ___ acuestan tarde. (acostarse)", answer: "se", options: null, explanation: "Ellos → se: Se acuestan." }
+      { type: "fib", question: "Ellos ___ acuestan tarde. (acostarse)", answer: "se", options: null, explanation: "Ellos → se: Se acuestan." },
+      { type: "error-correct", sentence: "Yo me levanto y tú me levantas también.", answer: "Yo me levanto y tú te levantas también.", explanation: "The reflexive pronoun must match the subject: tú requires 'te', not 'me'." },
+      { type: "transform", question: "Make the verb reflexive:", sentence: "Ella lava el carro.", answer: "Ella se lava.", explanation: "Adding the reflexive pronoun 'se' changes the meaning from washing the car to washing herself." }
     ]
   },
   {
@@ -295,7 +308,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "A ella ___ gusta bailar.", answer: "le", options: null, explanation: "A ella → le: Le gusta bailar." },
       { type: "mc", question: "Why do we say 'me gusta' not 'yo gusto'?", answer: "The thing liked is the grammatical subject", options: ["It's an irregular verb","The thing liked is the grammatical subject","'Yo' is never used with gustar","It's a reflexive verb"], explanation: "In gustar constructions, what you like is the subject that 'pleases' you." },
       { type: "fib", question: "Nos _____ las películas de terror. (encantar)", answer: "encantan", options: null, explanation: "Plural subject (películas) → encantan." },
-      { type: "mc", question: "'Me gusta' vs 'me gustan' depends on:", answer: "Whether what you like is singular or plural", options: ["The person who likes","Whether what you like is singular or plural","The tense","Formal vs informal"], explanation: "Gusta for singular/infinitive, gustan for plural things." }
+      { type: "mc", question: "'Me gusta' vs 'me gustan' depends on:", answer: "Whether what you like is singular or plural", options: ["The person who likes","Whether what you like is singular or plural","The tense","Formal vs informal"], explanation: "Gusta for singular/infinitive, gustan for plural things." },
+      { type: "error-correct", sentence: "Yo gusto el chocolate.", answer: "Me gusta el chocolate.", explanation: "'Gustar' works differently from English 'to like'. The thing liked is the subject: Me gusta el chocolate (chocolate pleases me), not *Yo gusto." }
     ]
   },
   {
@@ -316,7 +330,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Where do direct object pronouns (lo, la, los, las) go with conjugated verbs?", answer: "Before the verb", options: ["After the verb","Before the verb","Either position","Attached to the verb"], explanation: "Direct object pronouns go before conjugated verbs: Lo compro." },
       { type: "fib", question: "¿Las flores? ___ compré ayer.", answer: "Las", options: null, explanation: "Las flores (feminine plural) → las." },
       { type: "mc", question: "'Quiero verla' — where is the pronoun?", answer: "Attached to the infinitive", options: ["Before quiero","Attached to the infinitive","Between the verbs","After both verbs"], explanation: "Pronouns can attach to infinitives: ver + la = verla." },
-      { type: "fib", question: "Ella ___ llama todos los días. (me)", answer: "me", options: null, explanation: "She calls me → Ella me llama." }
+      { type: "fib", question: "Ella ___ llama todos los días. (me)", answer: "me", options: null, explanation: "She calls me → Ella me llama." },
+      { type: "error-correct", sentence: "¿El libro? Le leo cada noche.", answer: "¿El libro? Lo leo cada noche.", explanation: "'El libro' is a masculine direct object, so it requires 'lo', not the indirect object pronoun 'le'." }
     ]
   },
   {
@@ -335,7 +350,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "In 'Le doy un libro', what does 'le' tell us?", answer: "To/for whom the action is done", options: ["What is given","To/for whom the action is done","Where it happens","How it is done"], explanation: "Indirect object pronouns tell us to whom or for whom: le = to him/her." },
       { type: "fib", question: "El profesor ___ explica la lección. (to us)", answer: "nos", options: null, explanation: "To us → nos." },
       { type: "mc", question: "Why add 'a María' if we already have 'le'?", answer: "To clarify who 'le' refers to", options: ["It's required grammar","To clarify who 'le' refers to","For emphasis only","It's optional decoration"], explanation: "'Le' is ambiguous (him/her/you), so 'a + person' clarifies." },
-      { type: "fib", question: "¿___ puedes prestar tu carro? (to me)", answer: "Me", options: null, explanation: "To me → me: ¿Me puedes prestar?" }
+      { type: "fib", question: "¿___ puedes prestar tu carro? (to me)", answer: "Me", options: null, explanation: "To me → me: ¿Me puedes prestar?" },
+      { type: "error-correct", sentence: "Yo lo dije la verdad a María.", answer: "Yo le dije la verdad a María.", explanation: "'Decir la verdad a alguien' requires the indirect object pronoun 'le' (to her), not the direct object pronoun 'lo'." }
     ]
   },
   {
@@ -354,7 +370,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Preterite is used for:", answer: "Completed actions in the past", options: ["Ongoing past actions","Completed actions in the past","Habitual past actions","Future plans"], explanation: "Preterite = completed, finished past actions." },
       { type: "fib", question: "Ellos _____ toda la pizza. (comer)", answer: "comieron", options: null, explanation: "Ellos + comer preterite → comieron." },
       { type: "mc", question: "Which word signals preterite?", answer: "ayer", options: ["siempre","ayer","normalmente","cada día"], explanation: "Ayer (yesterday) signals a completed past action." },
-      { type: "fib", question: "Tú _____ en esa casa. (vivir)", answer: "viviste", options: null, explanation: "Tú + vivir preterite → viviste." }
+      { type: "fib", question: "Tú _____ en esa casa. (vivir)", answer: "viviste", options: null, explanation: "Tú + vivir preterite → viviste." },
+      { type: "error-correct", sentence: "Ayer yo hablo con mi madre.", answer: "Ayer yo hablé con mi madre.", explanation: "'Ayer' (yesterday) signals a completed past action requiring the preterite: hablé, not the present tense 'hablo'." },
+      { type: "transform", question: "Rewrite in the preterite:", sentence: "Ella come una manzana.", answer: "Ella comió una manzana.", explanation: "Present 'come' becomes preterite 'comió' (third person -er verb: -ió ending)." }
     ]
   },
   {
@@ -393,7 +411,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "How many irregular imperfect verbs are there?", answer: "Three (ir, ser, ver)", options: ["None","Three (ir, ser, ver)","Ten","Same as preterite"], explanation: "Only ir (iba), ser (era), and ver (veía) are irregular." },
       { type: "fib", question: "Ella _____ 15 años cuando se mudó. (tener)", answer: "tenía", options: null, explanation: "Age in the past uses imperfect: tenía." },
       { type: "mc", question: "Which trigger word signals imperfect?", answer: "siempre", options: ["ayer","siempre","una vez","de repente"], explanation: "Siempre (always) signals habitual action → imperfect." },
-      { type: "fib", question: "Nosotros _____ a la escuela cada día. (ir)", answer: "íbamos", options: null, explanation: "Ir imperfect nosotros → íbamos." }
+      { type: "fib", question: "Nosotros _____ a la escuela cada día. (ir)", answer: "íbamos", options: null, explanation: "Ir imperfect nosotros → íbamos." },
+      { type: "transform", question: "Rewrite in the imperfect (habitual past):", sentence: "Todos los veranos viajamos a la playa.", answer: "Todos los veranos viajábamos a la playa.", explanation: "Present 'viajamos' becomes imperfect 'viajábamos' for habitual past actions." }
     ]
   },
   {
@@ -413,7 +432,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Siempre comía arroz de niño' uses imperfect because:", answer: "It was a habitual action", options: ["It happened once","It was a habitual action","It has a specific end time","The speaker is uncertain"], explanation: "Habitual past actions use imperfect." },
       { type: "fib", question: "_____ las 8 cuando empezó la película. (ser)", answer: "Eran", options: null, explanation: "Time in the past → imperfect: Eran las 8." },
       { type: "transform", question: "Rewrite in the imperfect (habitual past):", sentence: "Todos los días como arroz.", answer: "Todos los días comía arroz.", explanation: "Habitual past actions use imperfect: como → comía." },
-      { type: "transform", question: "Rewrite in the preterite (completed action):", sentence: "Llego a las diez.", answer: "Llegué a las diez.", explanation: "Completed past action uses preterite: llego → llegué (note spelling change g → gu before é)." }
+      { type: "transform", question: "Rewrite in the preterite (completed action):", sentence: "Llego a las diez.", answer: "Llegué a las diez.", explanation: "Completed past action uses preterite: llego → llegué (note spelling change g → gu before é)." },
+      { type: "error-correct", sentence: "Cuando era niño, de repente jugué en el parque todos los días.", answer: "Cuando era niño, jugaba en el parque todos los días.", explanation: "Habitual past actions ('todos los días') require the imperfect 'jugaba', not the preterite 'jugué'. 'De repente' doesn't fit with a habitual action." }
     ]
   },
   {
@@ -432,7 +452,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "The irregular comparative of 'bueno' is:", answer: "mejor", options: ["más bueno","mejor","más bien","buenísimo"], explanation: "Bueno → mejor (better), not 'más bueno'." },
       { type: "fib", question: "Pedro es tan inteligente _____ su hermana.", answer: "como", options: null, explanation: "As...as = tan + adj + como." },
       { type: "mc", question: "How do you say 'the tallest in the class'?", answer: "el más alto de la clase", options: ["el más alto de la clase","el más alto que la clase","el alto más de la clase","más el alto de la clase"], explanation: "Superlative: el/la + más + adj + de." },
-      { type: "fib", question: "Mi hermano es _____ que yo. (older)", answer: "mayor", options: null, explanation: "For age: grande → mayor (older)." }
+      { type: "fib", question: "Mi hermano es _____ que yo. (older)", answer: "mayor", options: null, explanation: "For age: grande → mayor (older)." },
+      { type: "error-correct", sentence: "Este libro es más bueno que el otro.", answer: "Este libro es mejor que el otro.", explanation: "'Bueno' has an irregular comparative form: 'mejor', not 'más bueno'." }
     ]
   },
   // ===== B1 =====
@@ -472,7 +493,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Conditional uses the same irregular stems as:", answer: "Future tense", options: ["Preterite","Imperfect","Future tense","Subjunctive"], explanation: "Conditional and future share the same stems." },
       { type: "fib", question: "¿_____ abrir la ventana? (poder - could you?)", answer: "Podrías", options: null, explanation: "Poder → podr- + -ías = Podrías (polite request)." },
       { type: "mc", question: "'Dijo que vendría' means:", answer: "He said he would come", options: ["He said he came","He said he would come","He says he will come","He would say he comes"], explanation: "Conditional for 'would' in reported speech." },
-      { type: "fib", question: "Nosotros _____ más. (estudiar - would)", answer: "estudiaríamos", options: null, explanation: "Estudiar + -íamos = estudiaríamos." }
+      { type: "fib", question: "Nosotros _____ más. (estudiar - would)", answer: "estudiaríamos", options: null, explanation: "Estudiar + -íamos = estudiaríamos." },
+      { type: "transform", question: "Rewrite as a polite request using the conditional:", sentence: "¿Puedes ayudarme?", answer: "¿Podrías ayudarme?", explanation: "The conditional makes requests more polite: puedes → podrías (could you instead of can you)." }
     ]
   },
   {
@@ -492,7 +514,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Subjunctive of 'tener' (yo) is:", answer: "tenga", options: ["tiene","tenga","tena","tengo"], explanation: "Tengo → teng- + -a = tenga." },
       { type: "fib", question: "Es importante que ellos _____ la verdad. (saber)", answer: "sepan", options: null, explanation: "Saber is irregular in subjunctive: sepan." },
       { type: "mc", question: "The 'opposite ending' rule means:", answer: "-ar verbs get -e endings, -er/-ir get -a endings", options: ["-ar verbs get -a endings","-ar verbs get -e endings, -er/-ir get -a endings","All verbs get -a endings","Endings are reversed"], explanation: "-ar → -e, -es, -e, -emos, -en; -er/-ir → -a, -as, -a, -amos, -an." },
-      { type: "fib", question: "Espero que ella _____ bien. (estar)", answer: "esté", options: null, explanation: "Estar is irregular in subjunctive: esté." }
+      { type: "fib", question: "Espero que ella _____ bien. (estar)", answer: "esté", options: null, explanation: "Estar is irregular in subjunctive: esté." },
+      { type: "error-correct", sentence: "Es importante que tú estudias más.", answer: "Es importante que tú estudies más.", explanation: "Impersonal expressions like 'es importante que' trigger the subjunctive: estudies, not the indicative estudias." },
+      { type: "transform", question: "Rewrite using 'quiero que...':", sentence: "María habla español.", answer: "Quiero que María hable español.", explanation: "The wish trigger 'quiero que' requires the subjunctive: habla → hable." }
     ]
   },
   {
@@ -554,7 +578,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Pagué $20 ___ el libro.' Which one?", answer: "por", options: ["por","para","Both work","Neither"], explanation: "Exchange/payment = por." },
       { type: "fib", question: "Caminé _____ el parque. (through)", answer: "por", options: null, explanation: "Movement through = por." },
       { type: "mc", question: "'Estudio ___ ser doctor' uses:", answer: "para (purpose)", options: ["por (cause)","para (purpose)","por (duration)","para (destination)"], explanation: "Purpose/goal = para: para ser doctor." },
-      { type: "fib", question: "La tarea es _____ el viernes. (deadline)", answer: "para", options: null, explanation: "Deadline = para: para el viernes." }
+      { type: "fib", question: "La tarea es _____ el viernes. (deadline)", answer: "para", options: null, explanation: "Deadline = para: para el viernes." },
+      { type: "error-correct", sentence: "Este regalo es por ti.", answer: "Este regalo es para ti.", explanation: "Recipient ('for you') uses 'para', not 'por'. 'Por' indicates cause/exchange, while 'para' indicates recipient/purpose." },
+      { type: "error-correct", sentence: "Caminé para el parque durante una hora.", answer: "Caminé por el parque durante una hora.", explanation: "Movement through a place uses 'por', not 'para'. 'Para' would indicate destination/purpose." }
     ]
   },
   {
@@ -627,7 +653,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Se habla español' is an example of:", answer: "Pasiva refleja", options: ["Active voice","Ser passive","Pasiva refleja","Imperative"], explanation: "Se + verb = pasiva refleja (reflexive passive)." },
       { type: "fib", question: "Aquí ___ venden libros.", answer: "se", options: null, explanation: "Pasiva refleja: Se venden libros." },
       { type: "mc", question: "In ser passive, the participle must:", answer: "Agree with the subject in gender and number", options: ["Stay in masculine singular","Agree with the subject in gender and number","Always end in -ado","Match the agent"], explanation: "Las cartas fueron escritas (fem. plural agreement)." },
-      { type: "fib", question: "El cuadro fue _____ por Picasso. (pintar)", answer: "pintado", options: null, explanation: "Masculine subject → pintado." }
+      { type: "fib", question: "El cuadro fue _____ por Picasso. (pintar)", answer: "pintado", options: null, explanation: "Masculine subject → pintado." },
+      { type: "transform", question: "Rewrite in the passive voice (ser + participle):", sentence: "Gabriel García Márquez escribió la novela.", answer: "La novela fue escrita por Gabriel García Márquez.", explanation: "Active → passive: the object becomes the subject, the verb becomes ser + participle (agreeing with subject), and the agent follows 'por'." }
     ]
   },
   // ===== B2 =====
@@ -648,7 +675,9 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Imperfect subjunctive is formed from:", answer: "Ellos preterite minus -ron", options: ["Yo present minus -o","Infinitive plus endings","Ellos preterite minus -ron","Imperfect indicative"], explanation: "Take ellos preterite (hablaron), drop -ron (habla-), add -ra/-se endings." },
       { type: "fib", question: "Si yo _____ rico, viajaría. (ser)", answer: "fuera", options: null, explanation: "Ser ellos preterite: fueron → fuer- → fuera." },
       { type: "mc", question: "Which form is more common in Latin America?", answer: "-ra form", options: ["-ra form","-se form","Both equally","Neither"], explanation: "The -ra form is preferred in Latin America." },
-      { type: "fib", question: "Era necesario que ellos _____. (venir)", answer: "vinieran", options: null, explanation: "Venir → vinieron → vinier- → vinieran." }
+      { type: "fib", question: "Era necesario que ellos _____. (venir)", answer: "vinieran", options: null, explanation: "Venir → vinieron → vinier- → vinieran." },
+      { type: "error-correct", sentence: "Si yo sería rico, compraría una casa.", answer: "Si yo fuera rico, compraría una casa.", explanation: "After 'si' in hypothetical conditions, use the imperfect subjunctive (fuera), never the conditional (sería)." },
+      { type: "transform", question: "Rewrite as a hypothetical past condition:", sentence: "Si tengo tiempo, voy al cine.", answer: "Si tuviera tiempo, iría al cine.", explanation: "Real condition (present + present) becomes hypothetical: si + imperfect subjunctive (tuviera) + conditional (iría)." }
     ]
   },
   {
@@ -684,7 +713,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "No conozco a nadie que _____ japonés. (hablar)", answer: "hable", options: null, explanation: "Nonexistent referent → subjunctive: que hable." },
       { type: "mc", question: "'Tengo un amigo que habla chino' uses indicative because:", answer: "The friend exists and is known", options: ["It's in present tense","The friend exists and is known","'Tener' requires indicative","It's a positive sentence"], explanation: "Known, existing referent → indicative." },
       { type: "fib", question: "¿Hay alguien que _____ cocinar? (saber)", answer: "sepa", options: null, explanation: "Uncertain existence (question) → subjunctive: que sepa." },
-      { type: "mc", question: "Indicative vs subjunctive in adjective clauses depends on:", answer: "Whether the referent is known to exist", options: ["The tense of the main verb","Whether the referent is known to exist","Whether the sentence is positive","The formality level"], explanation: "Known/existing → indicative. Unknown/hypothetical → subjunctive." }
+      { type: "mc", question: "Indicative vs subjunctive in adjective clauses depends on:", answer: "Whether the referent is known to exist", options: ["The tense of the main verb","Whether the referent is known to exist","Whether the sentence is positive","The formality level"], explanation: "Known/existing → indicative. Unknown/hypothetical → subjunctive." },
+      { type: "error-correct", sentence: "Busco un apartamento que tiene balcón.", answer: "Busco un apartamento que tenga balcón.", explanation: "When looking for something unspecified or hypothetical, the adjective clause requires the subjunctive: tenga, not the indicative tiene." }
     ]
   },
   {
@@ -703,7 +733,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Cuando llegue' vs 'Cuando llego' — which refers to the future?", answer: "Cuando llegue (subjunctive)", options: ["Cuando llego","Cuando llegue (subjunctive)","Both","Neither"], explanation: "Future reference after cuando → subjunctive: cuando llegue." },
       { type: "fib", question: "No salgas sin que yo lo _____. (saber)", answer: "sepa", options: null, explanation: "'Sin que' always takes subjunctive: sepa." },
       { type: "mc", question: "Which conjunction ALWAYS requires subjunctive?", answer: "antes de que", options: ["cuando","porque","antes de que","donde"], explanation: "'Antes de que' (before) always takes subjunctive." },
-      { type: "fib", question: "Cuando _____ a casa, descansaré. (llegar, yo)", answer: "llegue", options: null, explanation: "Future action after cuando → subjunctive: llegue." }
+      { type: "fib", question: "Cuando _____ a casa, descansaré. (llegar, yo)", answer: "llegue", options: null, explanation: "Future action after cuando → subjunctive: llegue." },
+      { type: "error-correct", sentence: "Antes de que llegas, voy a preparar la cena.", answer: "Antes de que llegues, voy a preparar la cena.", explanation: "'Antes de que' always requires the subjunctive: llegues, not the indicative 'llegas'." }
     ]
   },
   {
@@ -740,7 +771,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "'Habría ido' means:", answer: "I would have gone", options: ["I will have gone","I would have gone","I had gone","I will go"], explanation: "Conditional perfect = would have: habría ido." },
       { type: "fib", question: "Si hubiera podido, _____ _____ contigo. (ir)", answer: "habría ido", options: null, explanation: "Would have gone = habría ido." },
       { type: "mc", question: "'Habrán llegado ya' expresses:", answer: "Probability (They've probably arrived)", options: ["Certainty","Probability (They've probably arrived)","A command","A wish"], explanation: "Future perfect for past probability: they've probably arrived." },
-      { type: "fib", question: "Ella _____ _____ si la hubieras invitado. (venir)", answer: "habría venido", options: null, explanation: "She would have come = habría venido." }
+      { type: "fib", question: "Ella _____ _____ si la hubieras invitado. (venir)", answer: "habría venido", options: null, explanation: "She would have come = habría venido." },
+      { type: "error-correct", sentence: "Si hubiera sabido, yo habría ido. Pero no habré podido.", answer: "Si hubiera sabido, yo habría ido. Pero no habría podido.", explanation: "In hypothetical past contexts, use the conditional perfect 'habría podido', not the future perfect 'habré podido'." }
     ]
   },
   {
@@ -760,7 +792,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "'Estudiaré mañana' → Dijo que _____ al día siguiente.", answer: "estudiaría", options: null, explanation: "Future → conditional: estudiaré → estudiaría." },
       { type: "mc", question: "In reported speech, 'hoy' becomes:", answer: "ese día", options: ["hoy","mañana","ese día","ayer"], explanation: "Hoy → ese día in reported speech." },
       { type: "fib", question: "'He comido' → Dijo que _____ _____.", answer: "había comido", options: null, explanation: "Present perfect → pluperfect: he comido → había comido." },
-      { type: "mc", question: "If the reporting verb is present tense ('dice que'), do tenses shift?", answer: "No, they stay the same", options: ["Yes, always","No, they stay the same","Only future shifts","Only past shifts"], explanation: "If the main verb is present (dice), no tense shift needed." }
+      { type: "mc", question: "If the reporting verb is present tense ('dice que'), do tenses shift?", answer: "No, they stay the same", options: ["Yes, always","No, they stay the same","Only future shifts","Only past shifts"], explanation: "If the main verb is present (dice), no tense shift needed." },
+      { type: "transform", question: "Change to indirect (reported) speech:", sentence: "María dijo: \"Iré mañana.\"", answer: "María dijo que iría al día siguiente.", explanation: "Future → conditional (iré → iría), and 'mañana' → 'al día siguiente' in reported speech." }
     ]
   },
   {
@@ -781,7 +814,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "_____ me cayó el teléfono. (accidental)", answer: "Se", options: null, explanation: "Accidental se: Se me cayó (it fell on me / I dropped it)." },
       { type: "mc", question: "'Se dice que va a llover' — what type of se?", answer: "Impersonal", options: ["Reflexive","Impersonal","Passive","Accidental"], explanation: "Se dice = it is said / people say (impersonal)." },
       { type: "mc", question: "'Se quieren mucho' means:", answer: "They love each other", options: ["They love themselves","They love each other","People love","One is loved"], explanation: "With plural subject: se = each other (reciprocal)." },
-      { type: "fib", question: "_____ me olvidó la cita. (accidental se)", answer: "Se", options: null, explanation: "Accidental: Se me olvidó (it slipped my mind)." }
+      { type: "fib", question: "_____ me olvidó la cita. (accidental se)", answer: "Se", options: null, explanation: "Accidental: Se me olvidó (it slipped my mind)." },
+      { type: "error-correct", sentence: "Se vende coches usados.", answer: "Se venden coches usados.", explanation: "In the pasiva refleja, the verb must agree with the logical subject: 'coches' is plural, so the verb must be 'venden', not 'vende'." }
     ]
   },
   {
@@ -797,7 +831,8 @@ const GRAMMAR_DATA = [
       { type: "mc", question: "Why do we say 'Veo a María' but 'Veo la mesa'?", answer: "Personal a is required before people as direct objects", options: ["María is a proper noun","Personal a is required before people as direct objects","'A' means 'the' here","It's optional"], explanation: "Personal a is used before specific people as direct objects." },
       { type: "fib", question: "El reloj es _____ oro. (made of)", answer: "de", options: null, explanation: "Material: de oro (made of gold)." },
       { type: "mc", question: "'Voy contigo' means:", answer: "I'm going with you", options: ["I'm going with me","I'm going with you","I'm going with him","I'm going alone"], explanation: "Con + ti = contigo (with you)." },
-      { type: "fib", question: "Viajamos _____ avión. (by)", answer: "en", options: null, explanation: "Means of transport: en avión." }
+      { type: "fib", question: "Viajamos _____ avión. (by)", answer: "en", options: null, explanation: "Means of transport: en avión." },
+      { type: "transform", question: "Rewrite using the correct preposition (personal a):", sentence: "Conozco tu hermano.", answer: "Conozco a tu hermano.", explanation: "The personal 'a' is required before specific people used as direct objects: Conozco a tu hermano." }
     ]
   },
   {
@@ -813,7 +848,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "No tengo dinero; _____ _____, no puedo ir. (therefore)", answer: "por eso", options: null, explanation: "Por eso = therefore/that's why." },
       { type: "mc", question: "Which connector adds information?", answer: "además", options: ["sin embargo","además","por eso","aunque"], explanation: "Además = moreover/in addition." },
       { type: "fib", question: "_____ de que llueve, hace frío. (despite/apart from)", answer: "Aparte", options: null, explanation: "Aparte de = apart from / besides the fact that." },
-      { type: "mc", question: "'Ya que estás aquí, ayúdame' — 'ya que' means:", answer: "Since", options: ["Already","Since","Even though","When"], explanation: "Ya que = since/given that." }
+      { type: "mc", question: "'Ya que estás aquí, ayúdame' — 'ya que' means:", answer: "Since", options: ["Already","Since","Even though","When"], explanation: "Ya que = since/given that." },
+      { type: "transform", question: "Combine the sentences using 'sin embargo' (however):", sentence: "Estudié mucho. No aprobé el examen.", answer: "Estudié mucho; sin embargo, no aprobé el examen.", explanation: "'Sin embargo' (however) is a contrast connector that joins opposing ideas." }
     ]
   },
   // ===== C1 =====
@@ -833,7 +869,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "Ojalá tú _____ _____ allí. (haber + estar, past perfect subj.)", answer: "hubieras estado", options: null, explanation: "Hubiera/hubieras + past participle for wishes about the past." },
       { type: "mc", question: "Which two forms of the past perfect subjunctive are interchangeable?", answer: "-ra and -se forms", options: ["-ra and -se forms","-ra and -ría forms","-se and -ado forms","-re and -ra forms"], explanation: "Hubiera/hubiese are both valid past perfect subjunctive forms." },
       { type: "fib", question: "Me sorprendió que no _____ _____ (haber + venir, ellos).", answer: "hubieran venido", options: null, explanation: "Past perfect subjunctive after expressions of emotion about past events." },
-      { type: "mc", question: "'Si hubiésemos llegado antes, habríamos conseguido entradas.' What does 'hubiésemos llegado' express?", answer: "An unreal past action", options: ["A future possibility","A present habit","An unreal past action","A command"], explanation: "The -se form of the past perfect subjunctive expresses unrealized past actions." }
+      { type: "mc", question: "'Si hubiésemos llegado antes, habríamos conseguido entradas.' What does 'hubiésemos llegado' express?", answer: "An unreal past action", options: ["A future possibility","A present habit","An unreal past action","A command"], explanation: "The -se form of the past perfect subjunctive expresses unrealized past actions." },
+      { type: "error-correct", sentence: "Ojalá que hayas estado allí ayer.", answer: "Ojalá hubieras estado allí ayer.", explanation: "For wishes about the past, use the past perfect subjunctive (hubiera/hubieras), not the present perfect subjunctive (haya/hayas)." }
     ]
   },
   {
@@ -851,7 +888,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "Si yo _____ más alto, habría jugado al baloncesto. (ser, imperfect subj.)", answer: "fuera", options: null, explanation: "Present condition (being tall) → past result (would have played)." },
       { type: "mc", question: "'De haberlo sabido' is equivalent to:", answer: "Si lo hubiera sabido", options: ["Si lo sabía","Si lo hubiera sabido","Si lo sepa","Si lo sabrá"], explanation: "De + compound infinitive is a formal alternative to si + pluperfect subjunctive." },
       { type: "fib", question: "De _____ _____ antes, habríamos conseguido mesa. (llegar, compound inf.)", answer: "haber llegado", options: null, explanation: "De haber llegado = Si hubiéramos llegado." },
-      { type: "mc", question: "Which combination creates a mixed conditional with present condition → past result?", answer: "Imperfect subjunctive + conditional perfect", options: ["Imperfect subjunctive + conditional perfect","Pluperfect subjunctive + conditional","Present subjunctive + preterite","Imperfect + conditional"], explanation: "Si fuera (present unreal) + habría hecho (past unreal result)." }
+      { type: "mc", question: "Which combination creates a mixed conditional with present condition → past result?", answer: "Imperfect subjunctive + conditional perfect", options: ["Imperfect subjunctive + conditional perfect","Pluperfect subjunctive + conditional","Present subjunctive + preterite","Imperfect + conditional"], explanation: "Si fuera (present unreal) + habría hecho (past unreal result)." },
+      { type: "transform", question: "Rewrite using 'de + infinitive' (formal alternative):", sentence: "Si hubiera tenido tiempo, habría ido.", answer: "De haber tenido tiempo, habría ido.", explanation: "'De + compound infinitive' is a formal/literary alternative to 'si + pluperfect subjunctive': de haber tenido = si hubiera tenido." }
     ]
   },
   {
@@ -872,7 +910,8 @@ const GRAMMAR_DATA = [
       { type: "fib", question: "Los cuadros _____ _____ por Picasso. (ser + pintar, preterite)", answer: "fueron pintados", options: null, explanation: "Ser passive: fueron (preterite of ser) + pintados (agrees with cuadros, masc. pl.)." },
       { type: "mc", question: "Which passive construction is preferred in everyday spoken Spanish?", answer: "Se pasiva", options: ["Ser + participle","Se pasiva","Estar + participle","Haber + participle"], explanation: "Spanish prefers se constructions over ser passives in speech." },
       { type: "transform", question: "Rewrite using passive se:", sentence: "La gente habla español aquí.", answer: "Se habla español aquí.", explanation: "Passive se removes the agent: Se habla español aquí." },
-      { type: "transform", question: "Rewrite using ser-passive:", sentence: "Picasso pintó el cuadro.", answer: "El cuadro fue pintado por Picasso.", explanation: "Ser-passive: subject + ser + participle + por + agent." }
+      { type: "transform", question: "Rewrite using ser-passive:", sentence: "Picasso pintó el cuadro.", answer: "El cuadro fue pintado por Picasso.", explanation: "Ser-passive: subject + ser + participle + por + agent." },
+      { type: "transform", question: "Rewrite using estar + participle (resultant state):", sentence: "Alguien cerró las ventanas.", answer: "Las ventanas están cerradas.", explanation: "Estar + participle describes the resulting state: las ventanas están cerradas (the windows are closed)." }
     ]
   },
   {
@@ -914,7 +953,8 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "La empresa para la _____ trabajo es grande. (which, formal)", answer: "cual", options: null, explanation: "El/la cual is the formal relative pronoun used after prepositions." },
       { type: "mc", question: "'Busco un apartamento que tenga balcón.' Why subjunctive?", answer: "The apartment is unspecified/hypothetical", options: ["It's a command","The apartment is unspecified/hypothetical","It's in the past","It expresses certainty"], explanation: "Subjunctive in relative clauses when the antecedent is unknown or nonexistent." },
       { type: "fib", question: "La ciudad _____ nací es pequeña. (where)", answer: "donde", options: null, explanation: "Donde replaces en que / en la que for places." },
-      { type: "mc", question: "'Los estudiantes cuyos exámenes aprobé...' 'Cuyos' is:", answer: "Masculine plural, agreeing with 'exámenes'", options: ["Masculine plural, agreeing with 'exámenes'","Masculine plural, agreeing with 'estudiantes'","A verb form","An adverb"], explanation: "Cuyos agrees with the possessed noun (exámenes), not the possessor (estudiantes)." }
+      { type: "mc", question: "'Los estudiantes cuyos exámenes aprobé...' 'Cuyos' is:", answer: "Masculine plural, agreeing with 'exámenes'", options: ["Masculine plural, agreeing with 'exámenes'","Masculine plural, agreeing with 'estudiantes'","A verb form","An adverb"], explanation: "Cuyos agrees with the possessed noun (exámenes), not the possessor (estudiantes)." },
+      { type: "transform", question: "Combine into one sentence using 'que':", sentence: "Tengo un amigo. Mi amigo habla cinco idiomas.", answer: "Tengo un amigo que habla cinco idiomas.", explanation: "The relative pronoun 'que' replaces the repeated noun to combine the sentences into a relative clause." }
     ]
   },
   {
@@ -976,7 +1016,9 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "Un coche muy impresionante → un coch_____ (augmentative with -azo)", answer: "cochazo", options: null, explanation: "-azo augmentative: cochazo = great/impressive car." },
       { type: "mc", question: "'Casucha' conveys:", answer: "A negative opinion of the house", options: ["A tiny, cute house","A big house","A negative opinion of the house","A formal house"], explanation: "-ucha is a pejorative suffix expressing negative quality." },
       { type: "fib", question: "Espera un moment_____. (just a moment, diminutive)", answer: "momentito", options: null, explanation: "Momentito = just a moment — diminutive softens the request." },
-      { type: "mc", question: "'Sillón' (armchair) comes from 'silla' (chair) with suffix -ón. This is:", answer: "A lexicalized augmentative", options: ["A regular augmentative","A lexicalized augmentative","A diminutive","A pejorative"], explanation: "Some augmentatives have become independent words (lexicalized)." }
+      { type: "mc", question: "'Sillón' (armchair) comes from 'silla' (chair) with suffix -ón. This is:", answer: "A lexicalized augmentative", options: ["A regular augmentative","A lexicalized augmentative","A diminutive","A pejorative"], explanation: "Some augmentatives have become independent words (lexicalized)." },
+      { type: "error-correct", sentence: "Quiero un cafecito. Dame un momentico.", answer: "Quiero un cafecito. Dame un momentito.", explanation: "While '-ico' is used in some regions (Colombia, Costa Rica), the standard diminutive is '-ito': momentito. Regional variation is valid but mixing regional forms can be inconsistent." },
+      { type: "transform", question: "Transform from indicative to subjunctive using 'ojalá que':", sentence: "Ellos llegan a tiempo.", answer: "Ojalá que ellos lleguen a tiempo.", explanation: "'Ojalá que' expresses a wish and triggers the present subjunctive: llegan → lleguen." }
     ]
   },
   {
@@ -993,7 +1035,9 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "¡Que _____ buen viaje! (tener, tú — exclamatory wish)", answer: "tengas", options: null, explanation: "¡Que + subjunctive! for exclamatory wishes." },
       { type: "mc", question: "'Quizás venga mañana' vs. 'Quizás viene mañana.' The subjunctive version expresses:", answer: "More doubt/uncertainty", options: ["More certainty","More doubt/uncertainty","Past tense","A command"], explanation: "Subjunctive after quizás/tal vez expresses greater uncertainty." },
       { type: "fib", question: "_____ lo que sea, no me rindo. (ser, concessive: whatever it may be)", answer: "Sea", options: null, explanation: "Sea lo que sea = whatever it may be — concessive subjunctive." },
-      { type: "mc", question: "'Digan lo que digan, seguiré adelante.' This structure is:", answer: "A concessive subjunctive construction", options: ["A conditional","A concessive subjunctive construction","A relative clause","Reported speech"], explanation: "Verb (subj.) + lo que + verb (subj.) = whatever/no matter what." }
+      { type: "mc", question: "'Digan lo que digan, seguiré adelante.' This structure is:", answer: "A concessive subjunctive construction", options: ["A conditional","A concessive subjunctive construction","A relative clause","Reported speech"], explanation: "Verb (subj.) + lo que + verb (subj.) = whatever/no matter what." },
+      { type: "error-correct", sentence: "Quizás él viene mañana, pero lo dudo mucho.", answer: "Quizás él venga mañana, pero lo dudo mucho.", explanation: "When expressing doubt (as reinforced by 'lo dudo mucho'), 'quizás' should be followed by the subjunctive 'venga', not the indicative 'viene'." },
+      { type: "transform", question: "Transform from indicative to subjunctive using 'tal vez':", sentence: "Ella tiene razón.", answer: "Tal vez ella tenga razón.", explanation: "'Tal vez' with subjunctive expresses uncertainty: tiene (indicative) → tenga (subjunctive)." }
     ]
   },
   {
@@ -1015,7 +1059,8 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "In Spain, 'ustedes' is used for _____ plural contexts. (formal/informal)", answer: "formal", options: null, explanation: "In Spain, ustedes is formal plural; vosotros is informal plural." },
       { type: "mc", question: "Which is a marker of informal spoken Spanish?", answer: "Using diminutives and filler words", options: ["Using passive voice","Using diminutives and filler words","Using subjunctive extensively","Using long complex sentences"], explanation: "Informal speech uses diminutives, fillers (bueno, o sea, pues), and colloquialisms." },
       { type: "fib", question: "'Vos _____ muy bien.' (hablar, voseo present)", answer: "hablás", options: null, explanation: "Voseo present: -ás (ar), -és (er), -ís (ir)." },
-      { type: "mc", question: "'Vosotros' is used only in:", answer: "Spain", options: ["Argentina","Spain","Mexico","All Spanish-speaking countries"], explanation: "Vosotros is exclusive to Spain for informal plural address." }
+      { type: "mc", question: "'Vosotros' is used only in:", answer: "Spain", options: ["Argentina","Spain","Mexico","All Spanish-speaking countries"], explanation: "Vosotros is exclusive to Spain for informal plural address." },
+      { type: "transform", question: "Rewrite in formal register using usted:", sentence: "¿Tú quieres un café?", answer: "¿Usted quiere un café?", explanation: "Formal register changes 'tú' to 'usted' and the verb to third person: quieres → quiere." }
     ]
   },
   // ===== C2 =====
@@ -1049,7 +1094,8 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "Donde _____, haz lo que vieres. (ir, future subj., tú)", answer: "fueres", options: null, explanation: "Fueres = future subjunctive of ir (wherever you may go)." },
       { type: "mc", question: "The future subjunctive shares its stem with:", answer: "The imperfect subjunctive (-ra form)", options: ["The present subjunctive","The imperfect subjunctive (-ra form)","The future indicative","The conditional"], explanation: "Same stem as -ra form but with -re/-res/-re/-remos/-reis/-ren endings." },
       { type: "fib", question: "Si el contrato no se _____ en el plazo establecido… (cumplir, future subj.)", answer: "cumpliere", options: null, explanation: "Legal language: cumpliere = future subjunctive of cumplir." },
-      { type: "mc", question: "'Sea lo que fuere' means:", answer: "Be that as it may", options: ["Whatever happens","Be that as it may","As long as it lasts","If it were so"], explanation: "A set phrase using future subjunctive: sea lo que fuere = be that as it may." }
+      { type: "mc", question: "'Sea lo que fuere' means:", answer: "Be that as it may", options: ["Whatever happens","Be that as it may","As long as it lasts","If it were so"], explanation: "A set phrase using future subjunctive: sea lo que fuere = be that as it may." },
+      { type: "error-correct", sentence: "Si el contrato no se cumpla en el plazo, será anulado.", answer: "Si el contrato no se cumpliere en el plazo, será anulado.", explanation: "In legal/formal texts, 'si' clauses about future contingencies use the future subjunctive (cumpliere), not the present subjunctive (cumpla)." }
     ]
   },
   {
@@ -1068,7 +1114,9 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "fib", question: "_____ _____ he explicado muchas veces. (it to you, masc.)", answer: "Te lo", options: null, explanation: "Te (indirect) + lo (direct) before the conjugated verb (he)." },
       { type: "mc", question: "Why does 'le lo' become 'se lo'?", answer: "Le changes to se before lo/la/los/las", options: ["It's a spelling rule","Le changes to se before lo/la/los/las","Se is always used for third person","It's optional"], explanation: "When le/les precedes lo/la/los/las, le/les → se to avoid cacophony." },
       { type: "fib", question: "A María _____ regalé un libro. (clitic doubling, indirect)", answer: "le", options: null, explanation: "Clitic doubling: A + noun requires the redundant indirect object pronoun." },
-      { type: "mc", question: "Where do clitics go in compound tenses?", answer: "Before the auxiliary (haber)", options: ["After the participle","Between haber and participle","Before the auxiliary (haber)","After the entire verb phrase"], explanation: "Clitics always precede haber: Se lo he dicho, not *He se lo dicho." }
+      { type: "mc", question: "Where do clitics go in compound tenses?", answer: "Before the auxiliary (haber)", options: ["After the participle","Between haber and participle","Before the auxiliary (haber)","After the entire verb phrase"], explanation: "Clitics always precede haber: Se lo he dicho, not *He se lo dicho." },
+      { type: "error-correct", sentence: "He se lo dicho muchas veces.", answer: "Se lo he dicho muchas veces.", explanation: "Clitics must go before the auxiliary 'haber', never between 'haber' and the participle: Se lo he dicho." },
+      { type: "transform", question: "Rewrite with clitic climbing (move pronouns before the conjugated verb):", sentence: "Estoy explicándoselo.", answer: "Se lo estoy explicando.", explanation: "Clitics can climb from the gerund to before the conjugated verb: explicándoselo → Se lo estoy explicando." }
     ]
   },
   {
@@ -1270,7 +1318,8 @@ Subjunctive for unknown/nonexistent referents: <em>Busco un profesor que hable f
       { type: "mc", question: "Which is correct for 'I have'?", answer: "tengo", options: ["tiene","tener","tengo","tenemos"], explanation: "Tener is a 'go' verb: yo tengo." },
       { type: "fib", question: "Ella ___ la verdad. (decir)", answer: "dice", options: null, explanation: "Decir: él/ella dice (stem change e→i plus irregular yo: digo)." },
       { type: "mc", question: "What is the 'yo' form of hacer?", answer: "hago", options: ["haco","hago","hacio","hizo"], explanation: "Hacer is a 'go' verb: yo hago." },
-      { type: "fib", question: "Nosotros ___ al parque. (ir)", answer: "vamos", options: null, explanation: "Ir is completely irregular: nosotros vamos." }
+      { type: "fib", question: "Nosotros ___ al parque. (ir)", answer: "vamos", options: null, explanation: "Ir is completely irregular: nosotros vamos." },
+      { type: "error-correct", sentence: "Yo haco la tarea todos los días.", answer: "Yo hago la tarea todos los días.", explanation: "Hacer is a 'go' verb in the yo form: hago, not 'haco'. The c changes to g in the first person." }
     ]
   },
   {

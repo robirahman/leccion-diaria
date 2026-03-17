@@ -19,16 +19,16 @@ function assertFields(obj, fields, label) {
 describe('Data availability — all content types load', () => {
   var arrays = {
     verbs: 200, vocab: 25000, grammar: 60, phrases: 300,
-    reading: 40, readingSat: 10, cloze: 20, dictation: 40,
+    reading: 50, readingSat: 10, cloze: 20, dictation: 40,
     sentenceConstruction: 40, translationDrills: 50,
     branchingDialogues: 5, minimalPairs: 100, phoneticPairs: 40,
     homophones: 20, connectors: 40,
     recipes: 8, music: 8, movies: 8, poetry: 8, sports: 8,
     proverbs: 15, folktales: 10, festivals: 8, history: 8,
     travel: 8, trivia: 30, idioms: 20,
-    conversations: 5, jokes: 5, themedVocab: 5,
-    verbPrepositions: 10, subjunctiveTriggers: 10,
-    writingPrompts: 5, comparativeGrammar: 5,
+    conversations: 25, jokes: 5, themedVocab: 15,
+    verbPrepositions: 65, subjunctiveTriggers: 60,
+    writingPrompts: 5, comparativeGrammar: 27,
   };
   Object.keys(arrays).forEach(function (key) {
     it('api.data.' + key + ' has >= ' + arrays[key] + ' entries', () => {
@@ -1143,5 +1143,99 @@ describe('Curriculum tracks data integrity', () => {
       assert(Array.isArray(t.modules) && t.modules.length > 0,
         t.id + ' has no modules');
     });
+  });
+});
+
+// ════════════════════════════════════════════════════════════════
+//  Group 20 — Level fields on cultural modules, phrases, trivia
+// ════════════════════════════════════════════════════════════════
+
+describe('Cultural modules have level fields', () => {
+  var modulesWithLevel = [
+    'recipes', 'music', 'movies', 'sports', 'folktales',
+    'festivals', 'history', 'travel', 'trivia', 'jokes'
+  ];
+
+  modulesWithLevel.forEach(function (mod) {
+    it(mod + ' entries all have a valid level field', () => {
+      api.data[mod].forEach(function (entry) {
+        assert(entry.level, mod + ' entry ' + entry.id + ' missing level');
+        assert(VALID_LEVELS.indexOf(entry.level) !== -1,
+          mod + ' entry ' + entry.id + ' has invalid level: ' + entry.level);
+      });
+    });
+  });
+});
+
+describe('Phrases have level fields', () => {
+  it('every phrase has a valid level field', () => {
+    api.data.phrases.forEach(function (p) {
+      assert(p.level, 'phrase ' + p.id + ' missing level');
+      assert(VALID_LEVELS.indexOf(p.level) !== -1,
+        'phrase ' + p.id + ' has invalid level: ' + p.level);
+    });
+  });
+
+  it('phrases span at least 4 CEFR levels', () => {
+    var levels = {};
+    api.data.phrases.forEach(function (p) { levels[p.level] = true; });
+    assert(Object.keys(levels).length >= 4,
+      'Expected phrases at >= 4 levels, got: ' + Object.keys(levels).join(', '));
+  });
+});
+
+describe('Grammar quiz type diversity', () => {
+  it('has at least 20 error-correct quizzes', () => {
+    var count = 0;
+    api.data.grammar.forEach(function (g) {
+      g.quiz.forEach(function (q) { if (q.type === 'error-correct') count++; });
+    });
+    assert(count >= 20, 'Expected >= 20 error-correct quizzes, got ' + count);
+  });
+
+  it('has at least 15 transform quizzes', () => {
+    var count = 0;
+    api.data.grammar.forEach(function (g) {
+      g.quiz.forEach(function (q) { if (q.type === 'transform') count++; });
+    });
+    assert(count >= 15, 'Expected >= 15 transform quizzes, got ' + count);
+  });
+});
+
+describe('CEFR gap coverage — previously missing levels', () => {
+  it('conversations has B2 entries', () => {
+    var b2 = api.data.conversations.filter(function (c) { return c.level === 'B2'; });
+    assert(b2.length > 0, 'No B2 conversations');
+  });
+
+  it('themedVocab has B2, C1, C2 entries', () => {
+    ['B2', 'C1', 'C2'].forEach(function (lvl) {
+      var items = api.data.themedVocab.filter(function (t) { return t.level === lvl; });
+      assert(items.length > 0, 'No themedVocab at level ' + lvl);
+    });
+  });
+
+  it('verbPrepositions has C2 entries', () => {
+    var c2 = api.data.verbPrepositions.filter(function (v) { return v.level === 'C2'; });
+    assert(c2.length > 0, 'No C2 verb prepositions');
+  });
+
+  it('subjunctiveTriggers has C1 and C2 entries', () => {
+    ['C1', 'C2'].forEach(function (lvl) {
+      var items = api.data.subjunctiveTriggers.filter(function (s) { return s.level === lvl; });
+      assert(items.length > 0, 'No subjunctive triggers at level ' + lvl);
+    });
+  });
+
+  it('comparativeGrammar has C1 and C2 entries', () => {
+    ['C1', 'C2'].forEach(function (lvl) {
+      var items = api.data.comparativeGrammar.filter(function (c) { return c.level === lvl; });
+      assert(items.length > 0, 'No comparative grammar at level ' + lvl);
+    });
+  });
+
+  it('reading has >= 10 A2 passages', () => {
+    var a2 = api.data.reading.filter(function (r) { return r.level === 'A2'; });
+    assert(a2.length >= 10, 'Expected >= 10 A2 reading passages, got ' + a2.length);
   });
 });
