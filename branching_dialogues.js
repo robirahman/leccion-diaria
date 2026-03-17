@@ -368,4 +368,81 @@ const BRANCHING_DIALOGUES = [
     ]
   },
 
+  // C1 — Academic conference
+  {
+    id: 'bd-7',
+    title: 'En la conferencia académica',
+    titleEn: 'At the Academic Conference',
+    icon: '🎓',
+    level: 'C1',
+    desc: 'Present research findings and handle challenging questions from peers',
+    speakers: [
+      { name: 'Moderadora', role: 'npc' },
+      { name: 'Tú', role: 'player' },
+      { name: 'Dr. Ramos', role: 'npc' },
+    ],
+    nodes: [
+      { id: 'start', speaker: 0, spanish: 'A continuación, tenemos la ponencia sobre los efectos del cambio climático en la biodiversidad costera. Tiene usted veinte minutos. Adelante.', english: 'Next, we have the presentation on the effects of climate change on coastal biodiversity. You have twenty minutes. Go ahead.', next: 'choice1' },
+      { id: 'choice1', speaker: 1, choices: [
+        { spanish: 'Muchas gracias. Los hallazgos que presento hoy se derivan de un estudio longitudinal de cinco años en el que se analizaron más de trescientas especies.', english: 'Thank you very much. The findings I present today derive from a five-year longitudinal study analyzing over three hundred species.', feedback: 'Excelente apertura formal con registro académico apropiado.', next: 'q1' },
+        { spanish: 'Gracias. Antes de empezar, quisiera contextualizar brevemente el marco teórico que sustenta nuestra investigación.', english: 'Thank you. Before I begin, I would like to briefly contextualize the theoretical framework underpinning our research.', feedback: '"Quisiera contextualizar" — uso elegante del condicional de cortesía en registro académico.', next: 'q1' },
+      ]},
+      { id: 'q1', speaker: 2, spanish: 'Disculpe que le interrumpa, pero ¿no adolece su metodología de un sesgo de muestreo al haberse limitado a zonas tropicales?', english: 'Forgive the interruption, but doesn\'t your methodology suffer from a sampling bias, having been limited to tropical zones?', next: 'choice2' },
+      { id: 'choice2', speaker: 1, choices: [
+        { spanish: 'Es una observación pertinente. Si bien el alcance geográfico podría ampliarse, los datos recabados son estadísticamente significativos y extrapolables, como demuestra el análisis de sensibilidad incluido en el apéndice.', english: 'That is a pertinent observation. While the geographical scope could be expanded, the data collected are statistically significant and extrapolatable, as the sensitivity analysis in the appendix demonstrates.', feedback: 'Respuesta diplomática que reconoce la limitación sin ceder terreno. "Pertinente", "extrapolables" — vocabulario académico preciso.', next: 'closing' },
+        { spanish: 'Agradezco la pregunta. De hecho, hemos contemplado esa limitación en el diseño experimental y estamos preparando una fase complementaria que abarcará latitudes templadas.', english: 'I appreciate the question. In fact, we have accounted for that limitation in the experimental design and are preparing a complementary phase that will cover temperate latitudes.', feedback: '"Hemos contemplado esa limitación" — demuestra que la crítica ya fue considerada. Registro profesional impecable.', next: 'closing' },
+      ]},
+      { id: 'closing', speaker: 0, spanish: 'Muy interesante. Lamentablemente se nos agota el tiempo. ¿Podría resumir sus conclusiones principales?', english: 'Very interesting. Unfortunately we are running out of time. Could you summarize your main conclusions?', next: 'choice3' },
+      { id: 'choice3', speaker: 1, choices: [
+        { spanish: 'En síntesis, nuestros resultados evidencian una correlación directa entre el aumento de la temperatura marina y la disminución de la biodiversidad en un treinta y dos por ciento en las últimas dos décadas.', english: 'In summary, our results demonstrate a direct correlation between rising sea temperatures and a thirty-two percent decrease in biodiversity over the last two decades.', feedback: '"En síntesis", "evidencian una correlación directa" — cierre conciso con datos concretos.', next: 'end1' },
+        { spanish: 'Para concluir, cabe destacar que, si no se implementan políticas de mitigación a corto plazo, las proyecciones indican que la pérdida de especies costeras podría duplicarse para 2050.', english: 'To conclude, it should be noted that if short-term mitigation policies are not implemented, projections indicate that the loss of coastal species could double by 2050.', feedback: '"Cabe destacar que" — conector de conclusión sofisticado. Cierre con proyección futura impactante.', next: 'end1' },
+      ]},
+      { id: 'end1', speaker: 0, spanish: 'Muchas gracias por esta aportación tan valiosa. Pasamos a la ronda de preguntas.' , english: 'Thank you very much for this valuable contribution. We will now move on to the question session.' },
+    ],
+    vocab: [
+      { word: 'ponencia', english: 'academic presentation' },
+      { word: 'hallazgos', english: 'findings' },
+      { word: 'sesgo de muestreo', english: 'sampling bias' },
+      { word: 'extrapolable', english: 'extrapolatable' },
+      { word: 'marco teórico', english: 'theoretical framework' },
+      { word: 'análisis de sensibilidad', english: 'sensitivity analysis' },
+    ]
+  },
+
+  // C2 — Philosophical debate
+  {
+    id: 'bd-8',
+    title: 'Debate filosófico',
+    titleEn: 'Philosophical Debate',
+    icon: '🏛️',
+    level: 'C2',
+    desc: 'Engage in a nuanced philosophical debate about artificial intelligence and consciousness',
+    speakers: [
+      { name: 'Profesora Velázquez', role: 'npc' },
+      { name: 'Tú', role: 'player' },
+    ],
+    nodes: [
+      { id: 'start', speaker: 0, spanish: 'El problema mente-cuerpo, tal como lo planteó Descartes, adquiere una dimensión inédita con la inteligencia artificial. ¿Cabría atribuir consciencia a un sistema suficientemente complejo? Le cedo la palabra.', english: 'The mind-body problem, as Descartes framed it, acquires an unprecedented dimension with artificial intelligence. Could consciousness be attributed to a sufficiently complex system? I yield the floor to you.', next: 'choice1' },
+      { id: 'choice1', speaker: 1, choices: [
+        { spanish: 'Habría que distinguir, en primer lugar, entre consciencia fenomenológica —el qualia, la experiencia subjetiva— y la mera capacidad de procesamiento. Por sofisticado que sea un algoritmo, adolecería siempre de esa dimensión experiencial que Nagel denominó "cómo es ser".', english: 'One would first need to distinguish between phenomenological consciousness — qualia, subjective experience — and mere processing capacity. However sophisticated an algorithm might be, it would always lack that experiential dimension that Nagel called "what it is like."', feedback: 'Brillante uso del condicional hipotético ("adolecería"), "por sofisticado que sea" (concesiva con subjuntivo), y referencia filosófica precisa a Thomas Nagel.', next: 'resp1' },
+        { spanish: 'La pregunta misma presupone un dualismo que quizá convenga cuestionar. Si aceptásemos una ontología puramente materialista, no habría razón de principio para negar que la consciencia pueda emerger de cualquier sustrato suficientemente organizado, sea biológico o digital.', english: 'The question itself presupposes a dualism that perhaps should be questioned. If we were to accept a purely materialist ontology, there would be no reason in principle to deny that consciousness could emerge from any sufficiently organized substrate, whether biological or digital.', feedback: '"Si aceptásemos" — imperfecto de subjuntivo perfecto para hipótesis filosófica. "No habría razón de principio" — registro filosófico impecable.', next: 'resp1' },
+      ]},
+      { id: 'resp1', speaker: 0, spanish: 'Interesante. Pero ¿no incurriríamos en una petición de principio al definir la consciencia en términos exclusivamente funcionales? El argumento de la habitación china de Searle sugiere que la simulación perfecta de comprensión no equivale a comprensión genuina.', english: 'Interesting. But wouldn\'t we be begging the question by defining consciousness in exclusively functional terms? Searle\'s Chinese Room argument suggests that a perfect simulation of understanding is not equivalent to genuine understanding.', next: 'choice2' },
+      { id: 'choice2', speaker: 1, choices: [
+        { spanish: 'El argumento de Searle, con todo su mérito, parte de una intuición que no resiste un escrutinio riguroso. Si el sistema en su conjunto —no el operador individual— manifestara todas las propiedades funcionales de la comprensión, ¿en virtud de qué criterio le negaríamos comprensión genuina, a menos que apeláramos a un concepto esencialista de la mente?', english: 'Searle\'s argument, for all its merit, starts from an intuition that does not withstand rigorous scrutiny. If the system as a whole — not the individual operator — were to manifest all functional properties of understanding, on what grounds would we deny it genuine understanding, unless we appealed to an essentialist concept of mind?', feedback: '"Con todo su mérito" — concesión elegante. "En virtud de qué criterio" — pregunta retórica de alto registro. Subjuntivo en "manifestara", "negaríamos", "apeláramos" — cadena hipotética impecable.', next: 'end1' },
+        { spanish: 'Concedo que la objeción de Searle plantea una aporía difícil de sortear. No obstante, cabría argüir que nuestro propio cerebro opera como una suerte de habitación china a nivel neuronal: ninguna neurona individual "comprende", y sin embargo del conjunto emerge algo que denominamos consciencia. La emergencia, más que la sustancia, sería la clave.', english: 'I concede that Searle\'s objection poses an aporia difficult to circumvent. Nevertheless, one could argue that our own brain operates as a sort of Chinese Room at the neuronal level: no individual neuron "understands," and yet from the whole something we call consciousness emerges. Emergence, rather than substance, would be the key.', feedback: '"Aporía", "argüir", "sortear" — vocabulario filosófico y literario de máximo nivel. Analogía original con las neuronas que recontextualiza el argumento.', next: 'end1' },
+      ]},
+      { id: 'end1', speaker: 0, spanish: 'Excelente reflexión. Creo que hemos puesto de manifiesto que, lejos de resolverse, el problema se complejiza a medida que avanza la tecnología. Queda pendiente, como siempre, la pregunta fundamental.' , english: 'Excellent reflection. I believe we have made clear that, far from being resolved, the problem grows more complex as technology advances. The fundamental question remains, as always.' },
+    ],
+    vocab: [
+      { word: 'qualia', english: 'qualia (subjective experience)' },
+      { word: 'aporía', english: 'aporia (irresolvable difficulty)' },
+      { word: 'petición de principio', english: 'begging the question' },
+      { word: 'escrutinio', english: 'scrutiny' },
+      { word: 'dualismo', english: 'dualism' },
+      { word: 'ontología', english: 'ontology' },
+      { word: 'sustrato', english: 'substrate' },
+    ]
+  },
+
 ];

@@ -120,6 +120,17 @@ function createAPI() {
     'travel.js',
     'trivia.js',
     'idioms.js',
+    // Additional content modules
+    'conversations.js',
+    'jokes.js',
+    'themed_vocab.js',
+    'curriculum_tracks.js',
+    'verb_prepositions.js',
+    'subjunctive_triggers.js',
+    'writing_prompts.js',
+    'comparative_grammar.js',
+    'number_practice.js',
+    'feature-modules.js',
   ];
 
   for (var i = 0; i < files.length; i++) {
@@ -212,6 +223,17 @@ function createAPI() {
       'this.TRAVEL_DATA = typeof TRAVEL_DATA !== "undefined" ? TRAVEL_DATA : undefined;',
       'this.TRIVIA_DATA = typeof TRIVIA_DATA !== "undefined" ? TRIVIA_DATA : undefined;',
       'this.IDIOMS_DATA = typeof IDIOMS_DATA !== "undefined" ? IDIOMS_DATA : undefined;',
+      // Additional content modules
+      'this.CONVERSATIONS_DATA = typeof CONVERSATIONS_DATA !== "undefined" ? CONVERSATIONS_DATA : undefined;',
+      'this.JOKES_DATA = typeof JOKES_DATA !== "undefined" ? JOKES_DATA : undefined;',
+      'this.THEMED_VOCAB_DATA = typeof THEMED_VOCAB_DATA !== "undefined" ? THEMED_VOCAB_DATA : undefined;',
+      'this.CURRICULUM_TRACKS = typeof CURRICULUM_TRACKS !== "undefined" ? CURRICULUM_TRACKS : undefined;',
+      'this.VERB_PREPOSITIONS_DATA = typeof VERB_PREPOSITIONS_DATA !== "undefined" ? VERB_PREPOSITIONS_DATA : undefined;',
+      'this.SUBJUNCTIVE_TRIGGER_CATEGORIES = typeof SUBJUNCTIVE_TRIGGER_CATEGORIES !== "undefined" ? SUBJUNCTIVE_TRIGGER_CATEGORIES : undefined;',
+      'this.SUBJUNCTIVE_TRIGGERS_DATA = typeof SUBJUNCTIVE_TRIGGERS_DATA !== "undefined" ? SUBJUNCTIVE_TRIGGERS_DATA : undefined;',
+      'this.WRITING_PROMPTS_DATA = typeof WRITING_PROMPTS_DATA !== "undefined" ? WRITING_PROMPTS_DATA : undefined;',
+      'this.COMPARATIVE_GRAMMAR_DATA = typeof COMPARATIVE_GRAMMAR_DATA !== "undefined" ? COMPARATIVE_GRAMMAR_DATA : undefined;',
+      'this.NUMBER_PRACTICE_DATA = typeof NUMBER_PRACTICE_DATA !== "undefined" ? NUMBER_PRACTICE_DATA : undefined;',
       // Setter/getter helpers for let-scoped placement state (let vars are not on global object)
       'this._setPlacementState = function(state) {',
       '  placementQuestions = state.questions;',

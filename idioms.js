@@ -748,5 +748,155 @@ const IDIOMS_DATA = [
         explanation: "The idiom describes a persistent state of pessimism and hopelessness — the person's negative emotional state colors their entire perception of reality, making everything seem bleak."
       }
     ]
+  },
+  {
+    id: "idiom-26",
+    spanish: "Tener hambre",
+    literal: "To have hunger",
+    meaning: "To be hungry. One of the most basic idiomatic expressions using 'tener' instead of 'ser/estar'.",
+    example: "Después de la clase, siempre tengo mucha hambre.",
+    exampleEn: "After class, I am always very hungry.",
+    category: "food",
+    level: "A1",
+    quiz: [
+      {
+        prompt: "¿Cómo se dice 'I am hungry' en español?",
+        options: ["Soy hambre", "Tengo hambre", "Estoy hambre", "Hay hambre"],
+        correct: 1,
+        explanation: "In Spanish, hunger is expressed with 'tener' (to have), not 'ser' or 'estar'. 'Tengo hambre' literally means 'I have hunger.'"
+      },
+      {
+        prompt: "¿Qué verbo se usa en español para expresar hambre?",
+        options: ["Ser", "Estar", "Tener", "Haber"],
+        correct: 2,
+        explanation: "Spanish uses 'tener' for many physical and emotional states: tener hambre (hungry), tener sed (thirsty), tener frío (cold), tener sueño (sleepy)."
+      },
+      {
+        prompt: "Si alguien dice 'Tengo mucha hambre', ¿qué necesita?",
+        options: ["Dormir", "Comer", "Beber", "Descansar"],
+        correct: 1,
+        explanation: "'Tengo mucha hambre' means 'I am very hungry,' so the person needs to eat (comer)."
+      }
+    ]
+  },
+  {
+    id: "idiom-27",
+    spanish: "Costar un ojo de la cara",
+    literal: "To cost an eye from the face",
+    meaning: "To be extremely expensive; to cost a fortune. Used in formal and informal contexts to emphasize the prohibitive price of something.",
+    example: "El apartamento en el centro cuesta un ojo de la cara, pero la ubicación es inmejorable.",
+    exampleEn: "The apartment downtown costs an arm and a leg, but the location is unbeatable.",
+    category: "money",
+    level: "C1",
+    quiz: [
+      {
+        prompt: "¿Qué significa 'costar un ojo de la cara'?",
+        options: ["Ser muy barato", "Causar dolor físico", "Ser extremadamente caro", "Tener mala calidad"],
+        correct: 2,
+        explanation: "The idiom uses the hyperbolic image of losing an eye to emphasize an extremely high price — something so expensive it's as if you're giving up a vital body part."
+      },
+      {
+        prompt: "¿Cuál es el equivalente en inglés de 'costar un ojo de la cara'?",
+        options: ["To cost pennies", "To cost an arm and a leg", "To have an eye for detail", "To turn a blind eye"],
+        correct: 1,
+        explanation: "Both idioms use body parts hyperbolically to express extreme cost — 'an eye from the face' in Spanish, 'an arm and a leg' in English."
+      },
+      {
+        prompt: "'La matrícula de esa universidad cuesta un ojo de la cara.' ¿Qué quiere decir?",
+        options: ["La matrícula es gratuita", "La matrícula es muy cara", "La universidad es mala", "La matrícula incluye seguro médico"],
+        correct: 1,
+        explanation: "The sentence means the tuition at that university is extremely expensive, using the idiom to emphasize the prohibitive cost."
+      }
+    ]
+  },
+  {
+    id: "idiom-28",
+    spanish: "No dar puntada sin hilo",
+    literal: "Not to make a stitch without thread",
+    meaning: "To never do anything without a hidden motive; every action is calculated. Describes someone who is shrewd and strategic, never acting without purpose.",
+    example: "Ten cuidado con su generosidad repentina; ese hombre no da puntada sin hilo.",
+    exampleEn: "Be careful with his sudden generosity; that man never does anything without an ulterior motive.",
+    category: "personality",
+    level: "C1",
+    quiz: [
+      {
+        prompt: "Si alguien 'no da puntada sin hilo', ¿cómo es esa persona?",
+        options: ["Generosa y desinteresada", "Calculadora y estratégica", "Torpe y descuidada", "Honesta y transparente"],
+        correct: 1,
+        explanation: "The sewing metaphor — never stitching without thread — means every action has a purpose. The person is calculating and strategic, never acting without self-interest."
+      },
+      {
+        prompt: "¿De qué oficio proviene la metáfora 'no dar puntada sin hilo'?",
+        options: ["Carpintería", "Cocina", "Costura", "Agricultura"],
+        correct: 2,
+        explanation: "The idiom comes from sewing (costura). 'Puntada' means stitch and 'hilo' means thread — a stitch without thread would be pointless, just as this person never acts without purpose."
+      },
+      {
+        prompt: "¿En qué contexto usarías 'no da puntada sin hilo'?",
+        options: ["Para elogiar la creatividad de alguien", "Para advertir sobre los motivos ocultos de alguien", "Para describir a alguien que es muy generoso", "Para hablar de alguien que cose bien"],
+        correct: 1,
+        explanation: "The idiom is typically used as a warning — alerting someone that a person's actions, however benign they seem, always conceal a self-serving motive."
+      }
+    ]
+  },
+  {
+    id: "idiom-29",
+    spanish: "Donde las dan, las toman",
+    literal: "Where they give them, they take them",
+    meaning: "What goes around comes around; if you dish it out, you must be prepared to take it. Often used in the context of poetic justice or retaliation.",
+    example: "Después de años burlándose de sus colegas, ahora le critican a él. Donde las dan, las toman.",
+    exampleEn: "After years of mocking his colleagues, now they criticize him. What goes around comes around.",
+    category: "justice",
+    level: "C2",
+    quiz: [
+      {
+        prompt: "¿Qué significa 'donde las dan, las toman'?",
+        options: ["Hay que ser generoso", "Lo que haces te será devuelto", "Es mejor dar que recibir", "Hay que aceptar regalos con gracia"],
+        correct: 1,
+        explanation: "The idiom expresses the concept of reciprocity or poetic justice: if you treat others badly, expect the same treatment in return."
+      },
+      {
+        prompt: "¿Cuál es el equivalente en inglés de 'donde las dan, las toman'?",
+        options: ["The early bird catches the worm", "What goes around comes around", "A bird in the hand is worth two in the bush", "Don't count your chickens before they hatch"],
+        correct: 1,
+        explanation: "'What goes around comes around' captures the same idea of karmic reciprocity — your actions, good or bad, will eventually return to you."
+      },
+      {
+        prompt: "¿En qué situación se usaría 'donde las dan, las toman'?",
+        options: ["En una fiesta de cumpleaños", "Cuando alguien recibe lo mismo que hizo a otros", "Al dar un regalo", "En una negociación comercial"],
+        correct: 1,
+        explanation: "The idiom is used when someone receives the same treatment they gave others, especially when that treatment was negative — a form of poetic justice."
+      }
+    ]
+  },
+  {
+    id: "idiom-30",
+    spanish: "Pedir peras al olmo",
+    literal: "To ask pears from the elm tree",
+    meaning: "To expect the impossible; to ask for something that cannot be given. An elm tree cannot bear pears — used when someone has unrealistic expectations.",
+    example: "Pedirle puntualidad a Roberto es como pedir peras al olmo; lleva treinta años llegando tarde.",
+    exampleEn: "Asking Roberto for punctuality is like asking pears from an elm tree; he's been arriving late for thirty years.",
+    category: "nature",
+    level: "C2",
+    quiz: [
+      {
+        prompt: "¿Qué significa 'pedir peras al olmo'?",
+        options: ["Ser muy exigente con la comida", "Esperar algo imposible de alguien o algo", "Cultivar árboles frutales", "Ser muy generoso"],
+        correct: 1,
+        explanation: "Since an elm tree (olmo) naturally cannot produce pears (peras), 'pedir peras al olmo' means to expect the impossible — to ask for something that simply cannot be."
+      },
+      {
+        prompt: "¿Qué tipo de árbol es un 'olmo'?",
+        options: ["Un árbol frutal que da peras", "Un árbol ornamental que no da fruta comestible", "Un tipo de manzano", "Un árbol tropical"],
+        correct: 1,
+        explanation: "The elm (olmo) is an ornamental tree that does not produce edible fruit, which is the basis for the idiom — asking it for pears is inherently futile."
+      },
+      {
+        prompt: "Si alguien le pide a un niño de tres años que escriba un ensayo, ¿qué expresión usarías?",
+        options: ["Estar en las nubes", "Pedir peras al olmo", "No dar puntada sin hilo", "Verlo todo negro"],
+        correct: 1,
+        explanation: "Asking a three-year-old to write an essay is expecting the impossible — a perfect context for 'pedir peras al olmo.'"
+      }
+    ]
   }
 ];

@@ -391,6 +391,20 @@ const CLOZE_PASSAGES = [
     ]
   },
   {
+    id: 'cloze-28', level: 'A1', topic: 'present_basics',
+    title: 'Mi familia', titleEn: 'My Family',
+    passage: 'Hola, me {1} Ana. Yo {2} de España. Mi familia {3} muy grande. Tengo dos hermanos. Mi hermano se {4} Pablo y mi hermana se llama Lucía. Nosotros {5} en Madrid. Mi padre {6} en un hospital y mi madre {7} profesora.',
+    blanks: [
+      { id: 1, answer: 'llamo',  acceptable: [],       explanation: 'Llamarse in first person: me llamo — I am called / my name is.' },
+      { id: 2, answer: 'soy',    acceptable: [],       explanation: 'SER for origin: yo soy de España — I am from Spain.' },
+      { id: 3, answer: 'es',     acceptable: [],       explanation: 'SER for description: mi familia es grande — my family is big.' },
+      { id: 4, answer: 'llama',  acceptable: [],       explanation: 'Llamarse in third person: se llama — he is called / his name is.' },
+      { id: 5, answer: 'vivimos', acceptable: [],      explanation: 'VIVIR in first person plural: nosotros vivimos — we live.' },
+      { id: 6, answer: 'trabaja', acceptable: [],      explanation: 'TRABAJAR in third person: mi padre trabaja — my father works.' },
+      { id: 7, answer: 'es',     acceptable: [],       explanation: 'SER for profession: mi madre es profesora — my mother is a teacher.' },
+    ]
+  },
+  {
     id: 'cloze-27', level: 'C2', topic: 'dialectal',
     title: 'Variación lingüística', titleEn: 'Linguistic Variation',
     passage: 'En el Río de la Plata, los hablantes {1} "vos" en lugar de "tú". Mientras que en España se {2} el pretérito perfecto para acciones recientes, en Hispanoamérica {3} preferirse el indefinido. Lo que en Madrid llaman "{4}", en México se conoce como "computadora". No es que una variante {5} más correcta que otra, sino que cada dialecto responde a su propia evolución. Si se {6} con detenimiento la fonética del español andino, se apreciarían rasgos del contacto con el quechua. El voseo, lejos de ser un {7}, constituye una forma legítima y arraigada. Convendría que los manuales de enseñanza {8} esta riqueza dialectal en lugar de imponer un único modelo.',

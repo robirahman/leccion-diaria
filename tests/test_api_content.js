@@ -26,6 +26,9 @@ describe('Data availability — all content types load', () => {
     recipes: 8, music: 8, movies: 8, poetry: 8, sports: 8,
     proverbs: 15, folktales: 10, festivals: 8, history: 8,
     travel: 8, trivia: 30, idioms: 20,
+    conversations: 5, jokes: 5, themedVocab: 5,
+    verbPrepositions: 10, subjunctiveTriggers: 10,
+    writingPrompts: 5, comparativeGrammar: 5,
   };
   Object.keys(arrays).forEach(function (key) {
     it('api.data.' + key + ' has >= ' + arrays[key] + ' entries', () => {
@@ -62,6 +65,21 @@ describe('Data availability — all content types load', () => {
 
   it('api.data.connectorCategories is a non-empty object', () => {
     assert(Object.keys(api.data.connectorCategories).length >= 5);
+  });
+
+  it('api.data.curriculumTracks is a non-empty array', () => {
+    assert(Array.isArray(api.data.curriculumTracks), 'curriculumTracks should be an array');
+    assert(api.data.curriculumTracks.length >= 3, 'Should have >= 3 curriculum tracks');
+  });
+
+  it('api.data.numberPractice is a non-empty object', () => {
+    assert(api.data.numberPractice, 'numberPractice should be defined');
+    assert(api.data.numberPractice.CARDINAL_NUMBERS, 'Should have CARDINAL_NUMBERS');
+  });
+
+  it('api.data.subjunctiveTriggerCategories is a non-empty object', () => {
+    assert(api.data.subjunctiveTriggerCategories, 'subjunctiveTriggerCategories should be defined');
+    assert(Object.keys(api.data.subjunctiveTriggerCategories).length >= 3);
   });
 });
 
@@ -946,5 +964,184 @@ describe('Cross-content consistency', () => {
     var unique = {};
     picked.forEach(function (v) { unique[v] = true; });
     assertEqual(Object.keys(unique).length, 5, 'All picked values should be unique');
+  });
+});
+
+// ════════════════════════════════════════════════════════════════
+//  Group 19 — Newly exposed content modules
+// ════════════════════════════════════════════════════════════════
+
+describe('Conversations data integrity', () => {
+  it('every conversation has required fields', () => {
+    api.data.conversations.forEach(function (c, i) {
+      assertFields(c, ['id', 'title', 'level', 'speakers', 'dialogue'],
+        'conversations[' + i + '] (' + c.id + ')');
+    });
+  });
+
+  it('dialogue entries have speaker, spanish, english', () => {
+    api.data.conversations.forEach(function (c) {
+      c.dialogue.forEach(function (d, di) {
+        assert(d.speaker !== undefined, c.id + ' dialogue[' + di + '] missing speaker');
+        assert(d.spanish, c.id + ' dialogue[' + di + '] missing spanish');
+        assert(d.english, c.id + ' dialogue[' + di + '] missing english');
+      });
+    });
+  });
+
+  it('quiz questions have valid structure when present', () => {
+    api.data.conversations.forEach(function (c) {
+      if (c.quiz) {
+        c.quiz.forEach(function (q, qi) {
+          assertFields(q, ['prompt', 'options', 'correct'], c.id + ' quiz[' + qi + ']');
+          assert(q.correct >= 0 && q.correct < q.options.length,
+            c.id + ' quiz[' + qi + '] correct out of bounds');
+        });
+      }
+    });
+  });
+
+  it('all conversation levels are valid CEFR', () => {
+    api.data.conversations.forEach(function (c) {
+      assert(VALID_LEVELS.indexOf(c.level) !== -1, c.id + ' has invalid level: ' + c.level);
+    });
+  });
+});
+
+describe('Jokes data integrity', () => {
+  it('every joke has required fields', () => {
+    api.data.jokes.forEach(function (j, i) {
+      assertFields(j, ['id', 'spanishName', 'englishName', 'vocab', 'quiz'],
+        'jokes[' + i + '] (' + j.id + ')');
+    });
+  });
+
+  it('quiz questions have valid structure', () => {
+    api.data.jokes.forEach(function (j) {
+      j.quiz.forEach(function (q, qi) {
+        assertFields(q, ['prompt', 'options', 'correct'], j.id + ' quiz[' + qi + ']');
+        assert(q.correct >= 0 && q.correct < q.options.length,
+          j.id + ' quiz[' + qi + '] correct out of bounds');
+      });
+    });
+  });
+});
+
+describe('Themed vocabulary data integrity', () => {
+  it('every themed vocab has required fields', () => {
+    api.data.themedVocab.forEach(function (t, i) {
+      assertFields(t, ['id', 'theme', 'level'],
+        'themedVocab[' + i + '] (' + t.id + ')');
+    });
+  });
+
+  it('all themed vocab levels are valid CEFR', () => {
+    api.data.themedVocab.forEach(function (t) {
+      assert(VALID_LEVELS.indexOf(t.level) !== -1, t.id + ' has invalid level: ' + t.level);
+    });
+  });
+});
+
+describe('Verb prepositions data integrity', () => {
+  it('every entry has required fields', () => {
+    api.data.verbPrepositions.forEach(function (v, i) {
+      assertFields(v, ['id', 'verb', 'preposition', 'english', 'level'],
+        'verbPrepositions[' + i + '] (' + v.id + ')');
+    });
+  });
+
+  it('all levels are valid CEFR', () => {
+    api.data.verbPrepositions.forEach(function (v) {
+      assert(VALID_LEVELS.indexOf(v.level) !== -1, v.id + ' has invalid level: ' + v.level);
+    });
+  });
+});
+
+describe('Subjunctive triggers data integrity', () => {
+  it('every trigger has required fields', () => {
+    api.data.subjunctiveTriggers.forEach(function (s, i) {
+      assertFields(s, ['id', 'trigger', 'category', 'english', 'level'],
+        'subjunctiveTriggers[' + i + '] (' + s.id + ')');
+    });
+  });
+
+  it('categories referenced by triggers exist', () => {
+    var cats = api.data.subjunctiveTriggerCategories;
+    api.data.subjunctiveTriggers.forEach(function (s) {
+      assert(cats[s.category], s.id + ' references missing category: ' + s.category);
+    });
+  });
+});
+
+describe('Writing prompts data integrity', () => {
+  it('every prompt has required fields', () => {
+    api.data.writingPrompts.forEach(function (w, i) {
+      assertFields(w, ['id', 'level', 'prompt', 'promptEn'],
+        'writingPrompts[' + i + '] (' + w.id + ')');
+    });
+  });
+
+  it('all levels are valid CEFR', () => {
+    api.data.writingPrompts.forEach(function (w) {
+      assert(VALID_LEVELS.indexOf(w.level) !== -1, w.id + ' has invalid level: ' + w.level);
+    });
+  });
+});
+
+describe('Comparative grammar data integrity', () => {
+  it('every entry has required fields', () => {
+    api.data.comparativeGrammar.forEach(function (c, i) {
+      assertFields(c, ['id', 'title', 'titleEn', 'level'],
+        'comparativeGrammar[' + i + '] (' + c.id + ')');
+    });
+  });
+
+  it('all levels are valid CEFR', () => {
+    api.data.comparativeGrammar.forEach(function (c) {
+      assert(VALID_LEVELS.indexOf(c.level) !== -1, c.id + ' has invalid level: ' + c.level);
+    });
+  });
+});
+
+describe('Number practice data integrity', () => {
+  it('has cardinal and ordinal number arrays', () => {
+    var np = api.data.numberPractice;
+    assert(Array.isArray(np.CARDINAL_NUMBERS), 'CARDINAL_NUMBERS should be an array');
+    assert(np.CARDINAL_NUMBERS.length > 0, 'Should have cardinal numbers');
+    assert(Array.isArray(np.ORDINAL_NUMBERS), 'ORDINAL_NUMBERS should be an array');
+    assert(np.ORDINAL_NUMBERS.length > 0, 'Should have ordinal numbers');
+  });
+
+  it('cardinal numbers have num and es fields', () => {
+    api.data.numberPractice.CARDINAL_NUMBERS.forEach(function (n, i) {
+      assert(n.num !== undefined, 'cardinal[' + i + '] missing num');
+      assert(n.es, 'cardinal[' + i + '] missing es');
+    });
+  });
+});
+
+describe('Curriculum tracks data integrity', () => {
+  it('every track has required fields', () => {
+    api.data.curriculumTracks.forEach(function (t, i) {
+      assertFields(t, ['id', 'title', 'level', 'modules'],
+        'curriculumTracks[' + i + '] (' + t.id + ')');
+    });
+  });
+
+  it('all levels reference valid CEFR levels', () => {
+    api.data.curriculumTracks.forEach(function (t) {
+      // Levels can be single (e.g. "A1") or ranges (e.g. "A1–A2")
+      var parts = t.level.split(/[–-]/);
+      parts.forEach(function (p) {
+        assert(VALID_LEVELS.indexOf(p.trim()) !== -1, t.id + ' has invalid level part: ' + p + ' in ' + t.level);
+      });
+    });
+  });
+
+  it('modules array is non-empty for each track', () => {
+    api.data.curriculumTracks.forEach(function (t) {
+      assert(Array.isArray(t.modules) && t.modules.length > 0,
+        t.id + ' has no modules');
+    });
   });
 });

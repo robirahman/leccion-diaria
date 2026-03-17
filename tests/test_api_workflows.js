@@ -654,6 +654,13 @@ describe('Content ID uniqueness — all types', () => {
     { name: 'phoneticPairs', data: api.data.phoneticPairs },
     { name: 'homophones', data: api.data.homophones },
     { name: 'connectors', data: api.data.connectors },
+    { name: 'conversations', data: api.data.conversations },
+    { name: 'jokes', data: api.data.jokes },
+    { name: 'themedVocab', data: api.data.themedVocab },
+    { name: 'verbPrepositions', data: api.data.verbPrepositions },
+    { name: 'subjunctiveTriggers', data: api.data.subjunctiveTriggers },
+    { name: 'writingPrompts', data: api.data.writingPrompts },
+    { name: 'comparativeGrammar', data: api.data.comparativeGrammar },
   ];
 
   contentTypes.forEach(function (ct) {

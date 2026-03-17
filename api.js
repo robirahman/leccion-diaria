@@ -443,6 +443,17 @@ var buildAPI; // hoisted for vm.createContext access in api-node.js
       get travel()               { return ref('TRAVEL_DATA'); },
       get trivia()               { return ref('TRIVIA_DATA'); },
       get idioms()               { return ref('IDIOMS_DATA'); },
+      // Additional content modules
+      get conversations()        { return ref('CONVERSATIONS_DATA'); },
+      get jokes()                { return ref('JOKES_DATA'); },
+      get themedVocab()          { return ref('THEMED_VOCAB_DATA'); },
+      get curriculumTracks()     { return ref('CURRICULUM_TRACKS'); },
+      get verbPrepositions()     { return ref('VERB_PREPOSITIONS_DATA'); },
+      get subjunctiveTriggerCategories() { return ref('SUBJUNCTIVE_TRIGGER_CATEGORIES'); },
+      get subjunctiveTriggers()  { return ref('SUBJUNCTIVE_TRIGGERS_DATA'); },
+      get writingPrompts()       { return ref('WRITING_PROMPTS_DATA'); },
+      get comparativeGrammar()   { return ref('COMPARATIVE_GRAMMAR_DATA'); },
+      get numberPractice()       { return ref('NUMBER_PRACTICE_DATA'); },
     },
 
     // Session factory

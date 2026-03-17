@@ -38,6 +38,13 @@ const HOMOPHONE_CATEGORIES = {
     description: 'Word pairs spelled almost identically — only the written accent (tilde) distinguishes them. They sound very similar but have completely different grammatical functions.',
     descriptionEs: 'Pares de palabras que se escriben casi igual — solo la tilde las distingue. Suenan muy parecido pero tienen funciones gramaticales completamente distintas.',
   },
+  learned_pairs: {
+    id: 'learned_pairs',
+    label: 'Learned / Literary Pairs',
+    labelEs: 'Pares cultos / literarios',
+    description: 'Word pairs from learned or literary registers that sound identical or nearly identical but have distinct meanings. These distinctions are essential for advanced reading and formal writing.',
+    descriptionEs: 'Pares de palabras de registro culto o literario que suenan igual o casi igual pero tienen significados distintos. Estas distinciones son esenciales para la lectura avanzada y la escritura formal.',
+  },
 };
 
 const HOMOPHONES = [
@@ -428,6 +435,73 @@ const HOMOPHONES = [
     examples: [
       { sentence: 'La ciudad ___ nací es pequeña.', answer: 'donde', english: 'The city where I was born is small.' },
       { sentence: '¿___ está el baño?', answer: 'Dónde', english: 'Where is the bathroom?' },
+    ],
+  },
+  {
+    id: 'hom-23',
+    category: 'accent_meaning',
+    level: 'C1',
+    words: [
+      { word: 'aún', meaning: 'still / yet (temporal)', meaningEs: 'todavía', pos: 'adverb' },
+      { word: 'aun', meaning: 'even (concessive)', meaningEs: 'incluso, hasta', pos: 'adverb' },
+    ],
+    pronunciation: '/a.ˈun/',
+    tip: '"Aún" with accent means "still/yet" (= todavía): "Aún no ha llegado." "Aun" without accent means "even" (= incluso): "Aun así, lo intentó."',
+    tipEs: '"Aún" con tilde significa "todavía": "Aún no ha llegado." "Aun" sin tilde significa "incluso": "Aun así, lo intentó."',
+    examples: [
+      { sentence: '___ no hemos recibido los resultados del análisis.', answer: 'Aún', english: 'We have not yet received the results of the analysis.' },
+      { sentence: '___ reconociendo sus méritos, la propuesta adolece de rigor metodológico.', answer: 'Aun', english: 'Even acknowledging its merits, the proposal lacks methodological rigor.' },
+    ],
+  },
+  {
+    id: 'hom-24',
+    category: 'accent_meaning',
+    level: 'C1',
+    words: [
+      { word: 'porqué', meaning: 'reason / cause (noun)', meaningEs: 'sustantivo: la razón', pos: 'noun' },
+      { word: 'porque', meaning: 'because (conjunction)', meaningEs: 'conjunción causal', pos: 'conjunction' },
+      { word: 'por qué', meaning: 'why (interrogative)', meaningEs: 'interrogativo', pos: 'adverb' },
+      { word: 'por que', meaning: 'for which (relative)', meaningEs: 'preposición + relativo', pos: 'conjunction' },
+    ],
+    pronunciation: '/poɾˈke/',
+    tip: 'Four forms: "¿Por qué?" (why?), "porque" (because), "el porqué" (the reason), "por que" (for which / so that).',
+    tipEs: 'Cuatro formas: "¿Por qué?" (interrogativo), "porque" (causal), "el porqué" (sustantivo), "por que" (preposición + relativo).',
+    examples: [
+      { sentence: '¿___ no viniste a la reunión?', answer: 'Por qué', english: 'Why didn\'t you come to the meeting?' },
+      { sentence: 'No fui ___ estaba enfermo.', answer: 'porque', english: 'I didn\'t go because I was sick.' },
+      { sentence: 'Nadie entiende el ___ de su decisión.', answer: 'porqué', english: 'Nobody understands the reason for his decision.' },
+    ],
+  },
+  {
+    id: 'hom-25',
+    category: 'learned_pairs',
+    level: 'C2',
+    words: [
+      { word: 'aprehender', meaning: 'to apprehend / to seize', meaningEs: 'capturar, asir con la mente', pos: 'verb' },
+      { word: 'aprender', meaning: 'to learn', meaningEs: 'adquirir conocimiento', pos: 'verb' },
+    ],
+    pronunciation: '/a.pɾen.ˈdeɾ/',
+    tip: '"Aprehender" means to apprehend or seize (physically or mentally): "aprehender un concepto filosófico." "Aprender" is the common word for learning. In many dialects they sound identical.',
+    tipEs: '"Aprehender" significa capturar o asir (física o intelectualmente): "aprehender un concepto." "Aprender" es adquirir conocimiento. En muchos dialectos suenan igual.',
+    examples: [
+      { sentence: 'La policía logró ___ al sospechoso en la frontera.', answer: 'aprehender', english: 'The police managed to apprehend the suspect at the border.' },
+      { sentence: 'Necesito ___ a conjugar el subjuntivo.', answer: 'aprender', english: 'I need to learn how to conjugate the subjunctive.' },
+    ],
+  },
+  {
+    id: 'hom-26',
+    category: 'learned_pairs',
+    level: 'C2',
+    words: [
+      { word: 'infestar', meaning: 'to infest / to overrun', meaningEs: 'invadir, plagar', pos: 'verb' },
+      { word: 'infectar', meaning: 'to infect', meaningEs: 'contaminar con un patógeno', pos: 'verb' },
+    ],
+    pronunciation: '/in.fes.ˈtaɾ/',
+    tip: '"Infestar" means to overrun with pests or invaders: "Las ratas infestan el almacén." "Infectar" means to infect with a pathogen: "El virus infectó a miles." Often confused even by native speakers.',
+    tipEs: '"Infestar" significa plagar: "Las ratas infestan el almacén." "Infectar" significa contaminar con patógeno: "El virus infectó a miles." Se confunden frecuentemente.',
+    examples: [
+      { sentence: 'Los mosquitos ___ la zona durante el verano.', answer: 'infestan', english: 'Mosquitoes infest the area during summer.' },
+      { sentence: 'La herida se puede ___ si no se desinfecta.', answer: 'infectar', english: 'The wound can get infected if it is not disinfected.' },
     ],
   },
 ];
